@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b79596faa0d484fa1a66bcf5acca168, type: 3}
+  m_Name: Deck Map Data
+  m_EditorClassIdentifier: 
+  size: {x: 100, y: 100}
+  blockade: {fileID: 1837438376991462495, guid: 462029cb74c8dbe44838ccb8714043c8, type: 3}
+  noiseScale: 0.5
+  blockadeThreshhold: 0.23
+  basePlaneMaterial: {fileID: 2100000, guid: 790889cdd3d9edd4781ac79ccf89f17c, type: 2}
