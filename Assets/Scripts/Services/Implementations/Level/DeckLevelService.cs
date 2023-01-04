@@ -11,6 +11,12 @@ namespace Deck.Services.Implementations.Level
         public DeckCoreGrid deckCoreGrid { get; private set; }
         public DeckGamePlayMap map { get; private set; }
 
+
+        public override void Initialize()
+        {
+            agents = new List<DeckCoreAgent>();
+        }
+
         public void AddCoreAgent(DeckCoreAgent agent)
         {
             DeckLogger.Level("Setting player");

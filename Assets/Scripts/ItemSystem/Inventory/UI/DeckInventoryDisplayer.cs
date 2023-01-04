@@ -1,31 +1,70 @@
 ﻿using System.Collections.Generic;
-using Deck.Data.UI;
+using System.Linq;
 using Deck.Generalnterfaces;
+using Deck.Inventory.Inventory;
 using Deck.Inventory.Item;
+using Deck.UI;
+using Deck.Utility.Logger;
 using UnityEngine;
-using Zenject;
 
 namespace Deck.Inventory.UI
 {
-    public class DeckInventoryDisplayer : MonoBehaviour
+    public class DeckInventoryDisplayer : DeckUIBase
     {
-        [Inject] private DeckUIData uiData;
-        
-        [SerializeField] private CanvasGroup canvasGroup;
         private List<DeckInventoryDisplayerCell> _cells = new();
+        private DeckInventory _currentInventory;
 
-        public void SetItems(IDeckInventoryHolder InventoryHolder)
+        public void SetInventory(IDeckInventoryHolder InventoryHolder)
         {
-            ClearCurrentCells();
-            CreateNewCells(InventoryHolder.GetInventory().GetItems());
+            Debug.LogError("Setting inventory");
+            if (_currentInventory != null)
+            {
+                _currentInventory.RemoveListener(CreateNewCells);
+            }
+
+            _currentInventory = InventoryHolder.GetInventory();
+            if (_currentInventory == null)
+            {
+                DeckLogger.UI("Inventory holder is null");
+                return;
+            }
+
+            _currentInventory.AddListener(CreateNewCells);
+        }
+
+        private void OnDestroy()
+        {
+            if (_currentInventory == null)
+            {
+                _currentInventory.RemoveListener(CreateNewCells);
+            }
+        }
+
+        public override void OnPreAppear()
+        {
+            if (_currentInventory == null)
+            {
+                return;
+            }
+
+            Debug.LogError(_isAppeared + "   " + isAppearing);
+            CreateNewCells(_currentInventory.GetItems());
         }
 
         private void CreateNewCells(IEnumerable<DeckItem> items)
         {
+            if (!_isAppeared && !isAppearing)
+            {
+                Debug.LogError("Returning");
+                return;
+            }
+
+            ClearCurrentCells();
             foreach (var deckItem in items)
             {
                 var newCell = Instantiate(uiData.cellPrefab, transform);
                 newCell.Initialize(deckItem);
+                _cells.Add(newCell);
             }
         }
 
@@ -35,6 +74,8 @@ namespace Deck.Inventory.UI
             {
                 Destroy(cell.gameObject);
             }
+
+            _cells.Clear();
         }
     }
 }

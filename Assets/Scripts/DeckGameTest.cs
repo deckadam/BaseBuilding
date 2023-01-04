@@ -11,7 +11,10 @@ using Deck.Services.Implementations.GridService;
 using Deck.Services.Implementations.Level;
 using Deck.Services.Implementations.MapService;
 using Deck.Services.Implementations.Navigation;
+using Deck.Services.Implementations.UIService;
+using Deck.Test.General;
 using Deck.Utility;
+using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
 
@@ -39,8 +42,8 @@ namespace Deck.Test
 
         private void OnCoreAgentSelected(DeckOnCoreAgentSelected obj)
         {
-            Debug.LogError("Agent selected");
             _lastSelectedAgent = obj.agent;
+            DeckServiceLocator.GetService<DeckUIService>().GetUI<DeckInventoryDisplayer>().SetInventory(_lastSelectedAgent);
         }
 
 
@@ -67,15 +70,23 @@ namespace Deck.Test
                 DeckServiceLocator.GetService<DeckLevelService>().AddCoreAgent(tempAgent);
             }
 
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.T))
             {
-                _lastSelectedAgent.GetInventory().AddItem(itemData.items.GetRandom());
+                var randomItem = itemData.items.GetRandom();
+                if (_lastSelectedAgent == null) return;
+                _lastSelectedAgent.GetInventory().AddItem(randomItem);
+                DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
+                DeckServiceLocator.GetService<DeckUIService>().GetUI<DeckInventoryDisplayer>().SetInventory(_lastSelectedAgent);
             }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                inventoryDisplayer.SetItems(_lastSelectedAgent);
-                inventoryDisplayer.gameObject.SetActive(true);
+                DeckServiceLocator.GetService<DeckUIService>().SwapStatus<DeckInventoryDisplayer>();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                DeckServiceLocator.GetService<DeckUIService>().ShowWindow<DeckGamePlayUI>();
             }
         }
 

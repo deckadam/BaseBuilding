@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: Deck UI Data
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}
+  canvasAppearDuration: 0.25
+  canvasDisapearDuration: 0.25

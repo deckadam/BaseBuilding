@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Deck.UI;
+using Deck.Utility;
+using UnityEngine;
+
+namespace Deck.Services.Implementations.UIService
+{
+    public class DeckUIService : DeckServiceBase
+    {
+        private Dictionary<Type, DeckUIBase> _uiImplementations = new();
+
+        public T GetUI<T>() where T : DeckUIBase
+        {
+            var typeOfT = typeof(T);
+            return (T) _uiImplementations[typeOfT];
+        }
+
+        public async void SwapStatus<T>() where T : DeckUIBase
+        {
+            var typeOfT = typeof(T);
+            var temp = _uiImplementations[typeOfT];
+
+            await DisappearAllWindowsExceptRequired<T>(typeOfT);
+
+            if (temp._isAppeared || temp.isAppearing)
+            {
+                await UniTask.WaitWhile(() => temp.isAppearing);
+                temp.Disappear();
+            }
+            else if (!temp._isAppeared || !temp.isDisappearing)
+            {
+                await UniTask.WaitWhile(() => temp.isDisappearing);
+                temp.Appear();
+            }
+        }
+
+        public async void ShowWindow<T>() where T : DeckUIBase
+        {
+            var typeOfT = typeof(T);
+            var temp = _uiImplementations[typeOfT];
+            if (temp._isAppeared || temp.isAppearing)
+            {
+                return;
+            }
+
+            await DisappearAllWindowsExceptRequired<T>(typeOfT);
+
+            _uiImplementations[typeOfT].Appear();
+        }
+
+        private async Task DisappearAllWindowsExceptRequired<T>(Type typeOfT) where T : DeckUIBase
+        {
+            foreach (var impl in _uiImplementations)
+            {
+                if (impl.Value.GetType() != typeOfT)
+                {
+                    await impl.Value.Disappear();
+                }
+            }
+        }
+
+        public override void Initialize()
+        {
+            var implementations = DeckUtility.GetInheritedClasses<DeckUIBase>();
+
+            foreach (var typeRef in implementations)
+            {
+                var instance = FindObjectOfType(typeRef) as DeckUIBase;
+                if (instance == null)
+                {
+                    continue;
+                }
+
+                _uiImplementations[typeRef] = instance;
+            }
+        }
+    }
+}

@@ -28,5 +28,15 @@ namespace Deck.Utility.Logger
         {
             Debug.Log("#Grid#" + log, obj);
         }
+
+        public static void UI(string log, GameObject obj = null)
+        {
+            Debug.Log("#UI#" + log, obj);
+        }
+
+        public static void Inform(string log, GameObject obj = null)
+        {
+            Debug.Log("#Inform#" + log, obj);
+        }
     }
 }

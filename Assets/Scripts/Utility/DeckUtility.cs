@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Deck.Utility
 {
@@ -36,6 +40,14 @@ namespace Deck.Utility
         {
             var index = Random.Range(0, list.Count);
             return list[index];
+        }
+
+        public static IEnumerable<Type> GetInheritedClasses<T>()
+        {
+            //if you want the abstract classes drop the !TheType.IsAbstract but it is probably to instance so its a good idea to keep it.
+            return Assembly.GetAssembly(typeof(T))
+                .GetTypes()
+                .Where(TheType => TheType.IsClass && !TheType.IsAbstract && TheType.IsSubclassOf(typeof(T)));
         }
     }
 }

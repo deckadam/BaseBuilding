@@ -14,7 +14,7 @@ namespace Deck.Installers
             Container.Bind<CinemachineConfiner>().FromComponentInHierarchy().AsSingle();
             Container.Bind<CinemachineVirtualCamera>().FromComponentInHierarchy().AsSingle();
             Container.Bind<DeckInventory>().FromNewComponentSibling();
-            Container.Bind<DeckInventoryDisplayer>().FromComponentInHierarchy();
+            Container.Bind<DeckInventoryDisplayer>().FromComponentInHierarchy().AsCached();
         }
     }
 }

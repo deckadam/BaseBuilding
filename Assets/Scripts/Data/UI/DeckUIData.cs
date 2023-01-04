@@ -8,7 +8,10 @@ namespace Deck.Data.UI
     public class DeckUIData : ScriptableObjectInstaller
     {
         public DeckInventoryDisplayerCell cellPrefab;
-
+        public float canvasAppearDuration;
+        public float canvasDisapearDuration;
+        
+        
         public override void InstallBindings()
         {
             Container.BindInstance(this);
