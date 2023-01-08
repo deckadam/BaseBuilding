@@ -1,39 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Generalnterfaces;
+using System.Linq;
 using Deck.Inventory.Item;
+using Deck.MVC.DeckMVCController;
 using UnityEngine;
 
 namespace Deck.Inventory.Inventory
 {
-    public class DeckInventory : MonoBehaviour, DeckObservable<IEnumerable<DeckItem>>
+    public class DeckInventory : MonoBehaviour, IDeckModel<DeckItem>
     {
         [SerializeField] private List<DeckItem> items = new();
-        private Action<IEnumerable<DeckItem>> _listeners;
+        private Action<IDeckModel<DeckItem>> _listeners;
 
         public void AddItem(DeckItem deckItemToAdd)
         {
             items.Add(deckItemToAdd);
-            _listeners?.Invoke(items);
+            _listeners?.Invoke(this);
         }
 
         public void RemoveItem(DeckItem deckItemToRemove)
         {
             items.Remove(deckItemToRemove);
-            _listeners?.Invoke(items);
+            _listeners?.Invoke(this);
         }
 
-        public IEnumerable<DeckItem> GetItems()
+
+        public IEnumerable<DeckItem> Getter()
         {
             return items;
         }
 
-        public void AddListener(Action<IEnumerable<DeckItem>> listener)
+        public void Setter(IEnumerable<DeckItem> obj)
+        {
+            items = obj.ToList();
+        }
+
+        public void Register(Action<IDeckModel<DeckItem>> listener)
         {
             _listeners += listener;
         }
 
-        public void RemoveListener(Action<IEnumerable<DeckItem>> listener)
+        public void Unregister(Action<IDeckModel<DeckItem>> listener)
         {
             _listeners -= listener;
         }

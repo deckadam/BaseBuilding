@@ -2,6 +2,7 @@
 using Deck.Data.Item;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
+using Deck.Inventory.Item;
 using Deck.Inventory.UI;
 using Deck.Player;
 using Deck.Services;
@@ -15,6 +16,7 @@ using Deck.Services.Implementations.UIService;
 using Deck.Test.General;
 using Deck.Utility;
 using Deck.Utility.Logger;
+using MVC.DeckMVCUIController;
 using UnityEngine;
 using Zenject;
 
@@ -27,6 +29,12 @@ namespace Deck.Test
         [Inject] private DeckCoreAgent deckCoreAgent;
         [Inject] private DeckItemData itemData;
         [Inject] private DeckInventoryDisplayer inventoryDisplayer;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void InitializeGame()
+        {
+            DeckMVC<DeckItem>.ResetController();
+        }
 
         private DeckCoreAgent _lastSelectedAgent;
 
@@ -42,8 +50,14 @@ namespace Deck.Test
 
         private void OnCoreAgentSelected(DeckOnCoreAgentSelected obj)
         {
+            var inventoryController = DeckMVC<DeckItem>.GetController();
+            if (_lastSelectedAgent != null)
+            {
+                inventoryController.ResetModel();
+            }
+
             _lastSelectedAgent = obj.agent;
-            DeckServiceLocator.GetService<DeckUIService>().GetUI<DeckInventoryDisplayer>().SetInventory(_lastSelectedAgent);
+            inventoryController.SetModel(_lastSelectedAgent.GetInventory());
         }
 
 
@@ -76,7 +90,7 @@ namespace Deck.Test
                 if (_lastSelectedAgent == null) return;
                 _lastSelectedAgent.GetInventory().AddItem(randomItem);
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
-                DeckServiceLocator.GetService<DeckUIService>().GetUI<DeckInventoryDisplayer>().SetInventory(_lastSelectedAgent);
+                DeckMVC<DeckItem>.GetController().SetModel(_lastSelectedAgent.GetInventory());
             }
 
             if (Input.GetKeyDown(KeyCode.I))

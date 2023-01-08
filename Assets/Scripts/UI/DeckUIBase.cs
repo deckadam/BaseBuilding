@@ -23,30 +23,30 @@ namespace Deck.UI
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        private void Awake()
+        private async void Awake()
         {
             _isAppeared = isAppearedOnStartUp;
             if (_isAppeared)
             {
-                Appear();
+                await Appear();
             }
             else
             {
-                Disappear();
+                await Disappear();
             }
         }
 
-        public void SwapAppearanceStatus()
+        public async void SwapAppearanceStatus()
         {
             if (_isAppeared)
             {
                 Debug.LogError("Disappearing");
-                Disappear();
+                await Disappear();
             }
             else
             {
                 Debug.LogError("Appearing");
-                Appear();
+                await Appear();
             }
         }
 
@@ -75,6 +75,14 @@ namespace Deck.UI
             canvasGroup.interactable = false;
             isDisappearing = false;
             OnPostDisappear();
+        }
+
+        public virtual void Initialize()
+        {
+        }
+
+        public virtual void DeInitialize()
+        {
         }
 
         public virtual void OnPreAppear()

@@ -1,66 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Deck.Generalnterfaces;
-using Deck.Inventory.Inventory;
 using Deck.Inventory.Item;
+using Deck.MVC.DeckMVCController;
+using Deck.Test.MVC.DeckMVCController;
 using Deck.UI;
 using Deck.Utility.Logger;
+using MVC.DeckMVCUIController;
 using UnityEngine;
 
 namespace Deck.Inventory.UI
 {
     public class DeckInventoryDisplayer : DeckUIBase
     {
+        private DeckMVCController<DeckItem> _uiController;
         private List<DeckInventoryDisplayerCell> _cells = new();
-        private DeckInventory _currentInventory;
 
-        public void SetInventory(IDeckInventoryHolder InventoryHolder)
+
+        public override void Initialize()
         {
-            Debug.LogError("Setting inventory");
-            if (_currentInventory != null)
-            {
-                _currentInventory.RemoveListener(CreateNewCells);
-            }
-
-            _currentInventory = InventoryHolder.GetInventory();
-            if (_currentInventory == null)
-            {
-                DeckLogger.UI("Inventory holder is null");
-                return;
-            }
-
-            _currentInventory.AddListener(CreateNewCells);
+            _uiController = DeckMVC<DeckItem>.GetController();
+            _uiController.AddModelListener(CreateNewCells);
+            Debug.LogError("INitialized ui");
         }
 
-        private void OnDestroy()
+        public override void DeInitialize()
         {
-            if (_currentInventory == null)
-            {
-                _currentInventory.RemoveListener(CreateNewCells);
-            }
+            _uiController.RemoveModelListener(CreateNewCells);
         }
 
         public override void OnPreAppear()
         {
-            if (_currentInventory == null)
+            Debug.LogError(_uiController == null);
+            var model = _uiController.RequestData();
+            if (model == null)
             {
                 return;
             }
 
-            Debug.LogError(_isAppeared + "   " + isAppearing);
-            CreateNewCells(_currentInventory.GetItems());
+            CreateNewCells(model);
         }
 
-        private void CreateNewCells(IEnumerable<DeckItem> items)
+        private void CreateNewCells(IDeckModel<DeckItem> items)
         {
             if (!_isAppeared && !isAppearing)
             {
-                Debug.LogError("Returning");
                 return;
             }
 
+            DeckLogger.UI("Creating item cells");
+            var temp = items.Getter();
+            Debug.LogError(temp.Count());
             ClearCurrentCells();
-            foreach (var deckItem in items)
+            foreach (var deckItem in items.Getter())
             {
                 var newCell = Instantiate(uiData.cellPrefab, transform);
                 newCell.Initialize(deckItem);

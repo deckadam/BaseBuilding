@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Deck.UI;
 using Deck.Utility;
-using UnityEngine;
+using Deck.Utility.Logger;
 
 namespace Deck.Services.Implementations.UIService
 {
@@ -28,13 +28,15 @@ namespace Deck.Services.Implementations.UIService
             if (temp._isAppeared || temp.isAppearing)
             {
                 await UniTask.WaitWhile(() => temp.isAppearing);
-                temp.Disappear();
+                await temp.Disappear();
             }
             else if (!temp._isAppeared || !temp.isDisappearing)
             {
                 await UniTask.WaitWhile(() => temp.isDisappearing);
-                temp.Appear();
+                await temp.Appear();
             }
+
+            DeckLogger.UI("UI swap finished  " + typeOfT);
         }
 
         public async void ShowWindow<T>() where T : DeckUIBase
@@ -48,7 +50,9 @@ namespace Deck.Services.Implementations.UIService
 
             await DisappearAllWindowsExceptRequired<T>(typeOfT);
 
-            _uiImplementations[typeOfT].Appear();
+            await _uiImplementations[typeOfT].Appear();
+
+            DeckLogger.UI("Show window " + typeOfT);
         }
 
         private async Task DisappearAllWindowsExceptRequired<T>(Type typeOfT) where T : DeckUIBase
@@ -75,6 +79,15 @@ namespace Deck.Services.Implementations.UIService
                 }
 
                 _uiImplementations[typeRef] = instance;
+                instance.Initialize();
+            }
+        }
+
+        public override void DeInitialize()
+        {
+            foreach (var impl in _uiImplementations)
+            {
+                impl.Value.DeInitialize();
             }
         }
     }
