@@ -1,4 +1,5 @@
-﻿using Deck.Inventory.UI;
+﻿using Deck.UI.Health;
+using Deck.UI.Inventory;
 using UnityEngine;
 using Zenject;
 
@@ -8,10 +9,11 @@ namespace Deck.Data.UI
     public class DeckUIData : ScriptableObjectInstaller
     {
         public DeckInventoryDisplayerCell cellPrefab;
+        public DeckHealthBar healthBar;
         public float canvasAppearDuration;
         public float canvasDisapearDuration;
-        
-        
+
+
         public override void InstallBindings()
         {
             Container.BindInstance(this);

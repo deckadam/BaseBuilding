@@ -10,6 +10,7 @@ namespace Deck.UI
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : MonoBehaviour
     {
+        [Inject] protected DiContainer container;
         [Inject] protected DeckUIData uiData;
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
@@ -67,6 +68,11 @@ namespace Deck.UI
 
         public async UniTask Disappear()
         {
+            if (!CanDisappear())
+            {
+                return;
+            }
+
             isDisappearing = true;
             canvasGroup.interactable = true;
             OnPreDisappear();
@@ -99,6 +105,11 @@ namespace Deck.UI
 
         public virtual void OnPostDisappear()
         {
+        }
+
+        public virtual bool CanDisappear()
+        {
+            return true;
         }
     }
 }

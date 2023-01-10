@@ -1,9 +1,10 @@
-﻿using Deck.Data.Gizmo;
+﻿using System.Collections.Generic;
+using Deck.Data.Gizmo;
 using Deck.Data.Item;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Inventory.Item;
-using Deck.Inventory.UI;
+using Deck.Item;
+using Deck.MVC;
 using Deck.Player;
 using Deck.Services;
 using Deck.Services.Implementations.CameraService;
@@ -14,9 +15,9 @@ using Deck.Services.Implementations.MapService;
 using Deck.Services.Implementations.Navigation;
 using Deck.Services.Implementations.UIService;
 using Deck.Test.General;
+using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.Logger;
-using MVC.DeckMVCUIController;
 using UnityEngine;
 using Zenject;
 
@@ -28,12 +29,12 @@ namespace Deck.Test
         [Inject] private DeckGizmoData gizmoData;
         [Inject] private DeckCoreAgent deckCoreAgent;
         [Inject] private DeckItemData itemData;
-        [Inject] private DeckInventoryDisplayer inventoryDisplayer;
+        [Inject] private DeckInventoryUI _inventoryUI;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void InitializeGame()
         {
-            DeckMVC<DeckItem>.ResetController();
+            DeckMVC<DeckItem, IEnumerable<DeckItem>>.ResetController();
         }
 
         private DeckCoreAgent _lastSelectedAgent;
@@ -50,12 +51,7 @@ namespace Deck.Test
 
         private void OnCoreAgentSelected(DeckOnCoreAgentSelected obj)
         {
-            var inventoryController = DeckMVC<DeckItem>.GetController();
-            if (_lastSelectedAgent != null)
-            {
-                inventoryController.ResetModel();
-            }
-
+            var inventoryController = DeckMVC<DeckItem, IEnumerable<DeckItem>>.GetController();
             _lastSelectedAgent = obj.agent;
             inventoryController.SetModel(_lastSelectedAgent.GetInventory());
         }
@@ -88,14 +84,14 @@ namespace Deck.Test
             {
                 var randomItem = itemData.items.GetRandom();
                 if (_lastSelectedAgent == null) return;
-                _lastSelectedAgent.GetInventory().AddItem(randomItem);
+                _lastSelectedAgent.GetInventory().AddData(randomItem);
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
-                DeckMVC<DeckItem>.GetController().SetModel(_lastSelectedAgent.GetInventory());
+                DeckMVC<DeckItem, IEnumerable<DeckItem>>.GetController().SetModel(_lastSelectedAgent.GetInventory());
             }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                DeckServiceLocator.GetService<DeckUIService>().SwapStatus<DeckInventoryDisplayer>();
+                DeckServiceLocator.GetService<DeckUIService>().SwapStatus<DeckInventoryUI>();
             }
 
             if (Input.GetKeyDown(KeyCode.Escape))

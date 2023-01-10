@@ -1,4 +1,4 @@
-﻿using Deck.Inventory.Inventory;
+﻿using Deck.Inventory;
 
 namespace Deck.Generalnterfaces
 {

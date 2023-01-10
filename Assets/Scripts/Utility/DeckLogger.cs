@@ -38,5 +38,10 @@ namespace Deck.Utility.Logger
         {
             Debug.Log("#Inform#" + log, obj);
         }
+
+        public static void Component(string log, GameObject obj = null)
+        {
+            Debug.Log("#Component" + log, obj);
+        }
     }
 }
