@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deck.Data.Component;
 using Deck.MVC;
 using Deck.Player;
-using Deck.Test.Data.Component;
+using Deck.Data.Damage;
 using Deck.Utility.Logger;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Deck.Components
 {
     public class DeckHealthComponent : IDeckComponent
     {
-        private DeckHealthComponentData _healthComponentData;
+        private DeckHealthData _healthData;
         private DeckAgent _agent;
         private int _currentHealth;
         private int _healthLimit;
@@ -19,11 +20,11 @@ namespace Deck.Components
 
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
 
-        public void SetData(DeckHealthComponentData healthComponentData)
+        public void SetData(DeckHealthData healthData)
         {
             _isDataSetted = true;
-            _healthComponentData = healthComponentData;
-            _healthLimit = _healthComponentData.health;
+            _healthData = healthData;
+            _healthLimit = _healthData.health;
         }
 
         public void Initialize(DeckAgent deckCoreAgent)
@@ -33,9 +34,9 @@ namespace Deck.Components
                 throw new Exception("Initializing before data set");
             }
 
-            _currentHealth = _healthComponentData.health;
+            _currentHealth = _healthData.health;
             _agent = deckCoreAgent;
-            
+
             _healthController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
             _healthController.GetModel().AddData(this);
         }
@@ -45,16 +46,16 @@ namespace Deck.Components
             _healthController.GetModel().RemoveData(this);
         }
 
-        public void ChangeHealth(int amount, bool canKill = true)
+        public void ChangeHealth(DeckDamageData damageData, bool canKill = true)
         {
-            _currentHealth += amount;
+            _currentHealth -= damageData.damageAmount;
+            OnHealthChanged();
             if (canKill && _currentHealth <= 0)
             {
                 DeckLogger.Component("Health is zero");
                 _currentHealth = 0;
+                _agent.Die();
             }
-
-            OnHealthChanged();
         }
 
         public int GetHealth()

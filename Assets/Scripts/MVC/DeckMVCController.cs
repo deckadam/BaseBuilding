@@ -13,7 +13,6 @@ namespace Deck.MVC
             _model = model;
             _model.Register(OnDataChanged);
 
-            Debug.LogError("Model changed");
             OnDataChanged(model);
         }
 

@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
 using Deck.MVC;
+using Deck.Services;
+using Deck.Services.Implementations.ObjectPooling;
 using Deck.Utility.Logger;
-using UnityEngine;
 
 namespace Deck.UI.Health
 {
     public class DeckHealthUI : DeckUIBase
     {
+        private DeckPoolingService _poolingService;
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _uiController;
-        private List<GameObject> _healthComponents = new();
+        private List<DeckHealthBar> _healthComponents = new();
 
         public override void Initialize()
         {
+            _poolingService = DeckServiceLocator.GetService<DeckPoolingService>();
             _uiController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
             _uiController.AddModelListener(CreateNewCells);
         }
@@ -31,7 +34,8 @@ namespace Deck.UI.Health
 
             for (var i = 0; i < _healthComponents.Count; i++)
             {
-                Destroy(_healthComponents[i]);
+                _healthComponents[i].gameObject.SetActive(false);
+                _poolingService.ReturnToPool(_healthComponents[i]);
             }
 
             _healthComponents.Clear();
@@ -40,9 +44,11 @@ namespace Deck.UI.Health
             var temp = items.Getter();
             foreach (var healthComponent in temp)
             {
-                var newCell = container.InstantiatePrefab(uiData.healthBar, transform).GetComponent<DeckHealthBar>();
+                var newCell = _poolingService.GetFromPool<DeckHealthBar>();
+                newCell.transform.SetParent(transform, false);
+                newCell.gameObject.SetActive(true);
                 newCell.Initialize(healthComponent);
-                _healthComponents.Add(newCell.gameObject);
+                _healthComponents.Add(newCell);
             }
         }
 

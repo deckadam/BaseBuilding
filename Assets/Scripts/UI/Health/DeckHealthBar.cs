@@ -1,5 +1,6 @@
 ﻿using Deck.Components;
 using Deck.Player;
+using Deck.Services.Implementations.ObjectPooling;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +8,7 @@ using Zenject;
 
 namespace Deck.UI.Health
 {
-    public class DeckHealthBar : MonoBehaviour
+    public class DeckHealthBar : MonoBehaviour, IDeckPoolable
     {
         [SerializeField] private RectTransform rect;
         [SerializeField] private TextMeshProUGUI numberDisplay;
@@ -34,7 +35,7 @@ namespace Deck.UI.Health
 
         private void OnDestroy()
         {
-            _healthComponent.Unregister(OnDataChanged);
+            _healthComponent?.Unregister(OnDataChanged);
         }
 
         private void OnDataChanged()
@@ -46,6 +47,19 @@ namespace Deck.UI.Health
         private void LateUpdate()
         {
             rect.position = _mainCamera.WorldToScreenPoint(_agent.transform.position + Vector3.up * 2f);
+        }
+
+        public void Initialize()
+        {
+        }
+
+        public void DeInitialize()
+        {
+        }
+
+        public MonoBehaviour getMonoBehaviour()
+        {
+            return this;
         }
     }
 }

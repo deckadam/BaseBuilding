@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Deck.Components;
 
-namespace Deck.Test.Data
+namespace Deck.Component
 {
     public class DeckComponentHolder
     {

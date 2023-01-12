@@ -1,4 +1,4 @@
-﻿using Deck.Item;
+﻿using Deck.Data.Item;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

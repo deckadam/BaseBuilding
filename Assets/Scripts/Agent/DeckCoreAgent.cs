@@ -1,8 +1,8 @@
-﻿using Deck.Components;
+﻿using Cysharp.Threading.Tasks;
+using Deck.Components;
+using Deck.Data.Agent;
 using Deck.Generalnterfaces;
 using Deck.Inventory;
-using Deck.Test.Data.Agent;
-using UnityEngine;
 using Zenject;
 
 namespace Deck.Player
@@ -13,21 +13,23 @@ namespace Deck.Player
         private DeckMovementComponent _movementComponent;
         private DeckHealthComponent _healthComponent;
         private DeckInventory _inventory;
+        private DeckDamageDealerComponent _damageDealerComponent;
 
         [Inject]
-        private void Inject(DeckAgentData agentData, DeckMovementComponent movementComponent, DeckHealthComponent healthComponent, DeckInventory inventory)
+        private void Inject(DeckAgentData agentData, DeckMovementComponent movementComponent, DeckHealthComponent healthComponent, DeckInventory inventory, DeckDamageDealerComponent damageDealerComponent)
         {
             _agentData = agentData;
             _movementComponent = movementComponent;
             _healthComponent = healthComponent;
             _inventory = inventory;
+            _damageDealerComponent = damageDealerComponent;
         }
 
         private void OnEnable()
         {
             _inventory.Initialize();
 
-            _healthComponent.SetData(_agentData.healthComponentData);
+            _healthComponent.SetData(_agentData.healthData);
             _healthComponent.Initialize(this);
 
             _movementComponent.Initialize(this);
@@ -36,6 +38,14 @@ namespace Deck.Player
         private void OnDisable()
         {
             _movementComponent.DeInitialize();
+            _healthComponent.DeInitialize();
+        }
+
+        public override async void Die()
+        {
+            await UniTask.NextFrame();
+            OnDisable();
+            Destroy(gameObject);
         }
 
         public DeckInventory GetInventory() => _inventory;

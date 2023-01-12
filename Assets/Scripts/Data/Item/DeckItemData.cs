@@ -1,4 +1,4 @@
-﻿using Deck.Item;
+﻿using Deck.Data.Item;
 using UnityEngine;
 using Zenject;
 

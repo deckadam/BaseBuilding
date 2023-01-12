@@ -19,7 +19,7 @@ namespace Deck.InputHandling
 
         private Plane _basePlane;
 
-        private void Awake()
+        private void OnEnable()
         {
             _deckGridService = DeckServiceLocator.GetService<DeckGridService>();
             _basePlane = new Plane(Vector3.up, 0);

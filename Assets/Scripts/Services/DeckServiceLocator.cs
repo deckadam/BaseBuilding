@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using Sirenix.Utilities;
@@ -43,7 +42,7 @@ namespace Deck.Services
                 try
                 {
                     service.Value.Initialize();
-                    DeckLogger.System(service.Value.GetType().Name + "  initialized succesfully");
+                    DeckLogger.Service(service.Value.GetType().Name + "  initialized succesfully");
                 }
                 catch (Exception e)
                 {

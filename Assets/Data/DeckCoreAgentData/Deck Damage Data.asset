@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdb0abc3ce934697a7676dc58b6b7d59, type: 3}
-  m_Name: Deck Agent Data Binder
+  m_Script: {fileID: 11500000, guid: f0f51f9c10f24cf1929a190d04789646, type: 3}
+  m_Name: Deck Damage Data
   m_EditorClassIdentifier: 
-  coreAgentData:
-    healthData: {fileID: 11400000, guid: e4aad99ccdd7643468380ea94236d8c9, type: 2}
-    damageData: {fileID: 11400000, guid: 404f7f46d4ee33741a5b335c64c23151, type: 2}
+  damageAmount: 1

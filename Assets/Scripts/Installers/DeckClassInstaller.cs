@@ -14,6 +14,8 @@ namespace Deck.Installers
         {
             Container.Bind<DeckMovementComponent>().AsTransient();
             Container.Bind<DeckHealthComponent>().AsTransient();
+            Container.Bind<DeckDamageDealerComponent>().AsTransient();
+            
             Container.Bind<CinemachineConfiner>().FromComponentInHierarchy().AsSingle();
             Container.Bind<CinemachineVirtualCamera>().FromComponentInHierarchy().AsSingle();
             Container.Bind<DeckInventory>().FromNewComponentSibling();

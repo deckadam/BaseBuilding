@@ -1,11 +1,14 @@
 ﻿using System;
-using Deck.Test.Data.Component;
+using Deck.Data.Component;
+using Deck.Component;
+using Deck.Data.Damage;
 
-namespace Deck.Test.Data.Agent
+namespace Deck.Data.Agent
 {
     [Serializable]
     public class DeckAgentData : DeckComponentHolder
     {
-        public DeckHealthComponentData healthComponentData;
+        public DeckHealthData healthData;
+        public DeckDamageData damageData;
     }
 }

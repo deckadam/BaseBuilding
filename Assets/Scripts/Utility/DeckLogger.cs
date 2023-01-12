@@ -4,7 +4,7 @@ namespace Deck.Utility.Logger
 {
     public static class DeckLogger
     {
-        public static void System(string log, GameObject obj = null)
+        public static void Service(string log, GameObject obj = null)
         {
             Debug.Log("#System#" + log, obj);
         }
@@ -41,7 +41,7 @@ namespace Deck.Utility.Logger
 
         public static void Component(string log, GameObject obj = null)
         {
-            Debug.Log("#Component" + log, obj);
+            Debug.Log("#Component#" + log, obj);
         }
     }
 }

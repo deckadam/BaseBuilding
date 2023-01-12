@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Deck.Item;
+using Deck.Data.Item;
 using Deck.MVC;
 using Deck.Utility.Logger;
 using UnityEngine;

@@ -2,7 +2,7 @@
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Test.Data.Agent
+namespace Deck.Data.Agent
 {
     [CreateAssetMenu(menuName = "Deck/Installer/AgentDataBinder", fileName = "Deck Agent Data Binder")]
     public class DeckAgentDataBinder : ScriptableObjectInstaller

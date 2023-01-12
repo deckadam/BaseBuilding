@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Item
+namespace Deck.Data.Item
 {
     [CreateAssetMenu(fileName = "Deck Item", menuName = "Deck/Item", order = 0)]
     public class DeckItem : ScriptableObject
