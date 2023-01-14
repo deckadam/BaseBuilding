@@ -3,11 +3,12 @@ using Deck.Components;
 using Deck.Data.Agent;
 using Deck.Generalnterfaces;
 using Deck.Inventory;
+using Deck.Test.Markers;
 using Zenject;
 
 namespace Deck.Player
 {
-    public class DeckCoreAgent : DeckAgent, IDeckInventoryHolder
+    public class DeckCoreAgent : DeckAgent, IDeckInventoryHolder, IDeckDamagable
     {
         private DeckAgentData _agentData;
         private DeckMovementComponent _movementComponent;
@@ -48,6 +49,16 @@ namespace Deck.Player
             Destroy(gameObject);
         }
 
+        public override DeckAgentData GetAgentData()
+        {
+            return _agentData;
+        }
+
         public DeckInventory GetInventory() => _inventory;
+
+        public DeckHealthComponent GetHealthComponent()
+        {
+            return _healthComponent;
+        }
     }
 }

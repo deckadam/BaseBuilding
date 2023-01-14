@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7288c92a484467807b9196284c080d, type: 3}
   m_Name: Deck Health Component Data
   m_EditorClassIdentifier: 
+  health: 15

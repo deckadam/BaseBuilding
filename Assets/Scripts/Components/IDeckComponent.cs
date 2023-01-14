@@ -4,7 +4,7 @@ namespace Deck.Components
 {
     public interface IDeckComponent
     {
-        void Initialize(DeckAgent deckCoreAgent);
+        void Initialize(DeckAgent agent);
         void DeInitialize();
         DeckAgent GetAgent();
     }

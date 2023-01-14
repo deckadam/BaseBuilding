@@ -36,6 +36,12 @@ namespace Deck.Utility
             return array[index];
         }
 
+        public static T GetRandom<T>(this IEnumerable<T> enumerable)
+        {
+            var index = Random.Range(0, enumerable.Count());
+            return enumerable.ElementAt(index);
+        }
+
         public static T GetRandom<T>(this List<T> list)
         {
             var index = Random.Range(0, list.Count);

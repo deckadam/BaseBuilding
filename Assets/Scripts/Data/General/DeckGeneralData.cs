@@ -11,7 +11,7 @@ namespace Deck.Data.General
 
         public override void InstallBindings()
         {
-            Container.BindInstance(coreAgentPrefab);
+            Container.BindInstance(this);
         }
     }
 }

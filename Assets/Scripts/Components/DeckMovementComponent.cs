@@ -10,9 +10,9 @@ namespace Deck.Components
         private DeckAgent _agent;
         private NavMeshAgent _navMeshAgent;
 
-        public void Initialize(DeckAgent deckCoreAgent)
+        public void Initialize(DeckAgent agent)
         {
-            _agent = deckCoreAgent;
+            _agent = agent;
             _navMeshAgent = _agent.GetComponent<NavMeshAgent>();
             DeckEventManager.Register<DeckOnNavMeshPositionSelection>(SetDestination);
         }

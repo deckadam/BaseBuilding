@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0f51f9c10f24cf1929a190d04789646, type: 3}
   m_Name: Deck Damage Data
   m_EditorClassIdentifier: 
-  damageAmount: 0
+  damageAmount: 1

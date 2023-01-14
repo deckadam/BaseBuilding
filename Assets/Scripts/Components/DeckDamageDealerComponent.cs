@@ -1,15 +1,21 @@
-﻿using Deck.Player;
+﻿using Deck.Data.Damage;
+using Deck.Player;
 
 namespace Deck.Components
 {
-    public class DeckDamageDealerComponent:IDeckComponent
+    public class DeckDamageDealerComponent : IDeckComponent
     {
+        private DeckAgent _bindedAgent;
+        private DeckDamageData _damageData;
+
         public void DealDamage()
         {
         }
 
-        public void Initialize(DeckAgent deckCoreAgent)
+        public void Initialize(DeckAgent agent)
         {
+            _bindedAgent = agent;
+            _damageData = _bindedAgent.GetAgentData().damageData;
         }
 
         public void DeInitialize()

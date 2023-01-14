@@ -24,18 +24,18 @@ namespace Deck.Components
         {
             _isDataSetted = true;
             _healthData = healthData;
-            _healthLimit = _healthData.health;
+            _healthLimit = _healthData.Health;
         }
 
-        public void Initialize(DeckAgent deckCoreAgent)
+        public void Initialize(DeckAgent agent)
         {
             if (!_isDataSetted)
             {
                 throw new Exception("Initializing before data set");
             }
 
-            _currentHealth = _healthData.health;
-            _agent = deckCoreAgent;
+            _currentHealth = _healthData.Health;
+            _agent = agent;
 
             _healthController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
             _healthController.GetModel().AddData(this);
