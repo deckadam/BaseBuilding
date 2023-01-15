@@ -1,21 +1,25 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
 using Deck.MVC;
-using Deck.Services;
-using Deck.Services.Implementations.ObjectPooling;
 using Deck.Utility.Logger;
+using Zenject;
 
 namespace Deck.UI.Health
 {
     public class DeckHealthUI : DeckUIBase
     {
-        private DeckPoolingService _poolingService;
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _uiController;
-        private List<DeckHealthBar> _healthComponents = new();
+        private List<DeckHealthBar> _healthBars = new();
+        private DeckHealthBar.Factory _healthBarFactory;
+
+        [Inject]
+        private void Inject(DeckHealthBar.Factory healthBarFactory)
+        {
+            _healthBarFactory = healthBarFactory;
+        }
 
         public override void Initialize()
         {
-            _poolingService = DeckServiceLocator.GetService<DeckPoolingService>();
             _uiController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
             _uiController.AddModelListener(CreateNewCells);
         }
@@ -32,23 +36,27 @@ namespace Deck.UI.Health
                 return;
             }
 
-            for (var i = 0; i < _healthComponents.Count; i++)
+            for (var i = 0; i < _healthBars.Count; i++)
             {
-                _healthComponents[i].gameObject.SetActive(false);
-                _poolingService.ReturnToPool(_healthComponents[i]);
+                if (_healthBars[i] == null)
+                {
+                    continue;
+                }
+
+                _healthBars[i].Despawn();
             }
 
-            _healthComponents.Clear();
+            _healthBars.Clear();
 
             DeckLogger.UI("Creating health bar");
             var temp = items.Getter();
             foreach (var healthComponent in temp)
             {
-                var newCell = _poolingService.GetFromPool<DeckHealthBar>();
+                var newCell = _healthBarFactory.Create();
                 newCell.transform.SetParent(transform, false);
                 newCell.gameObject.SetActive(true);
                 newCell.Initialize(healthComponent);
-                _healthComponents.Add(newCell);
+                _healthBars.Add(newCell);
             }
         }
 

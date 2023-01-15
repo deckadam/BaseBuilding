@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace Deck.Services
 {
     public class DeckServiceBase : MonoBehaviour
     {
+
         private bool _hasWarmedUp = false;
 
         public virtual int GetWarmUpIndex()

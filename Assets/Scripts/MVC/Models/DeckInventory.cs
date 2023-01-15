@@ -17,6 +17,11 @@ namespace Deck.Inventory
             items = new List<DeckItem>();
         }
 
+        private void OnDestroy()
+        {
+            DeckMVC<DeckItem, IEnumerable<DeckItem>>.GetController().ResetModel(this);
+        }
+
         public void AddData(DeckItem data)
         {
             items.Add(data);

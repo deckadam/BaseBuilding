@@ -21,10 +21,15 @@ namespace Deck.MVC
             return _model;
         }
 
-        public void ResetModel()
+        public void ResetModel(IDeckModel<T, J> model)
         {
-            _modelListener = null;
+            if (_model != model)
+            {
+                return;
+            }
+            
             _model = null;
+            OnDataChanged(null);
         }
 
         private void OnDataChanged(IDeckModel<T, J> obj)

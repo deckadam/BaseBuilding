@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5279ec66b0c84e8b902f4e378eb64dd0, type: 3}
   m_Name: Deck Pool
   m_EditorClassIdentifier: 
-  poolables:
-  - {fileID: 118489632371480136, guid: 312d972a37c5a264cab5311154999da7, type: 3}
+  healthBar: {fileID: 1245273441074704364, guid: 312d972a37c5a264cab5311154999da7, type: 3}
+  inventoryDisplayerCell: {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}

@@ -73,7 +73,6 @@ namespace Deck.InputHandling
 
             RaycastToGround();
             CheckForShiftClick();
-            CheckForMapCreation();
             CheckForPlayerCreation();
             CheckForTestInventoryEntry();
             CheckForInventoryUI();
@@ -136,27 +135,11 @@ namespace Deck.InputHandling
 
         private void CheckForPlayerCreation()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.U))
             {
                 var temp = _container.InstantiatePrefab(_generalData.coreAgentPrefab, Vector3.zero, Quaternion.identity, DeckMapService.map.transform);
                 var tempAgent = temp.GetComponent<DeckCoreAgent>();
                 DeckServiceLocator.GetService<DeckLevelService>().AddCoreAgent(tempAgent);
-            }
-        }
-
-        private void CheckForMapCreation()
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                DeckServiceLocator.GetService<DeckMapService>().CreateMap();
-                DeckServiceLocator.GetService<DeckGridService>().GenerateGrid(out var grid);
-                DeckServiceLocator.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
-                DeckServiceLocator.GetService<DeckMapService>().PopulateMap(grid);
-                DeckServiceLocator.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
-                DeckServiceLocator.GetService<DeckCameraService>().GenerateCameraBounds(grid);
-                DeckServiceLocator.GetService<DeckLevelService>().SetGrid(grid);
-                DeckServiceLocator.GetService<DeckCellSelectionService>().SetMapData(grid.size, groundMaterial);
-                DeckServiceLocator.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
             }
         }
 

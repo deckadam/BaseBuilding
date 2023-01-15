@@ -1,6 +1,5 @@
 ﻿using Deck.Components;
 using Deck.Player;
-using Deck.Services.Implementations.ObjectPooling;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +7,7 @@ using Zenject;
 
 namespace Deck.UI.Health
 {
-    public class DeckHealthBar : MonoBehaviour, IDeckPoolable
+    public class DeckHealthBar : MonoBehaviour, IPoolable<IMemoryPool>
     {
         [SerializeField] private RectTransform rect;
         [SerializeField] private TextMeshProUGUI numberDisplay;
@@ -16,6 +15,7 @@ namespace Deck.UI.Health
         private Camera _mainCamera;
         private DeckAgent _agent;
         private DeckHealthComponent _healthComponent;
+        private IMemoryPool _memory;
 
         [Inject]
         private void Inject(Camera camera)
@@ -33,11 +33,6 @@ namespace Deck.UI.Health
             OnDataChanged();
         }
 
-        private void OnDestroy()
-        {
-            _healthComponent?.Unregister(OnDataChanged);
-        }
-
         private void OnDataChanged()
         {
             numberDisplay.text = _healthComponent.GetHealth().ToString();
@@ -49,17 +44,24 @@ namespace Deck.UI.Health
             rect.position = _mainCamera.WorldToScreenPoint(_agent.transform.position + Vector3.up * 2f);
         }
 
-        public void Initialize()
+        public void Despawn()
         {
+            _memory.Despawn(this);
         }
 
-        public void DeInitialize()
+        public void OnDespawned()
         {
+            _memory = null;
+            _healthComponent?.Unregister(OnDataChanged);
         }
 
-        public MonoBehaviour getMonoBehaviour()
+        public void OnSpawned(IMemoryPool p1)
         {
-            return this;
+            _memory = p1;
+        }
+
+        public class Factory : PlaceholderFactory<DeckHealthBar>
+        {
         }
     }
 }
