@@ -43,5 +43,10 @@ namespace Deck.Utility.Logger
         {
             Debug.Log("#Component#" + log, obj);
         }
+
+        public static void Save(string log, GameObject obj = null)
+        {
+            Debug.Log("#Save#" + log, obj);
+        }
     }
 }
