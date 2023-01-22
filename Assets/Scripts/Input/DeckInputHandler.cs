@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using Deck.Data.Damage;
 using Deck.Data.General;
 using Deck.Data.Item;
-using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Map;
-using Deck.MVC;
 using Deck.Player;
+using Deck.SaveService;
 using Deck.Services;
-using Deck.Services.Implementations.CameraService;
-using Deck.Services.Implementations.CellSelectionService;
+using Deck.Services.Implementations;
 using Deck.Services.Implementations.GridService;
-using Deck.Services.Implementations.HealthService;
 using Deck.Services.Implementations.Level;
 using Deck.Services.Implementations.MapService;
-using Deck.Services.Implementations.Navigation;
-using Deck.Services.Implementations.UIService;
+using Deck.Test;
 using Deck.Test.General;
 using Deck.Test.Markers;
+using Deck.UI.GamePlay;
 using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.Logger;
@@ -38,7 +34,7 @@ namespace Deck.InputHandling
         private DiContainer _container;
         private DeckGeneralData _generalData;
         private DeckItemData _itemData;
-        private DeckCoreAgent _lastSelectedAgent;
+        private IDeckSelectable _lastSelection;
 
         [Inject]
         private void Inject(DiContainer container, DeckGeneralData generalData, DeckItemData tempItem)
@@ -53,18 +49,12 @@ namespace Deck.InputHandling
         private void OnEnable()
         {
             _deckGridService = DeckServiceLocator.GetService<DeckGridService>();
-            DeckEventManager.Register<DeckOnCoreAgentSelected>(OnCoreAgentSelected);
-        }
-
-        private void OnDisable()
-        {
-            DeckEventManager.Unregister<DeckOnCoreAgentSelected>(OnCoreAgentSelected);
         }
 
         private void Update()
         {
             CheckForNavMeshHit();
-            CheckForCoreAgentSelection(out var result);
+            CheckForSelectable(out var result);
 
             if (!result)
             {
@@ -75,9 +65,19 @@ namespace Deck.InputHandling
             CheckForShiftClick();
             CheckForPlayerCreation();
             CheckForTestInventoryEntry();
-            CheckForInventoryUI();
+            OpenInventoryPopUpForSelectable();
             CheckForAttack();
             CheckForEscapeMenu();
+            SaveCheck();
+        }
+
+        private void SaveCheck()
+        {
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                DeckServiceLocator.GetService<DeckGameManager>().Test_FillSaveFile();
+                DeckSaveManager.Save();
+            }
         }
 
         private void CheckForAttack()
@@ -105,31 +105,24 @@ namespace Deck.InputHandling
             }
         }
 
-        private void CheckForInventoryUI()
+        private void OpenInventoryPopUpForSelectable()
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            if (_lastSelection != null && Input.GetKeyDown(KeyCode.I))
             {
-                DeckServiceLocator.GetService<DeckUIService>().SwapStatus<DeckInventoryUI>();
+                var newPopUp = DeckServiceLocator.GetService<DeckPopUpService>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
+                newPopUp.SetTarget(_lastSelection.GetInventory());
             }
-        }
-
-
-        private void OnCoreAgentSelected(DeckOnCoreAgentSelected obj)
-        {
-            var inventoryController = DeckMVC<DeckItem, IEnumerable<DeckItem>>.GetController();
-            _lastSelectedAgent = obj.agent;
-            inventoryController.SetModel(_lastSelectedAgent.GetInventory());
         }
 
         private void CheckForTestInventoryEntry()
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
+                if (_lastSelection == null) return;
                 var randomItem = _itemData.GetItems().GetRandom();
-                if (_lastSelectedAgent == null) return;
-                _lastSelectedAgent.GetInventory().AddData(randomItem);
+                var itemInstance = Instantiate(randomItem);
+                _lastSelection.GetInventory().AddItem(itemInstance);
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
-                DeckMVC<DeckItem, IEnumerable<DeckItem>>.GetController().SetModel(_lastSelectedAgent.GetInventory());
             }
         }
 
@@ -139,6 +132,7 @@ namespace Deck.InputHandling
             {
                 var temp = _container.InstantiatePrefab(_generalData.coreAgentPrefab, Vector3.zero, Quaternion.identity, DeckMapService.map.transform);
                 var tempAgent = temp.GetComponent<DeckCoreAgent>();
+                tempAgent.LoadData(Guid.NewGuid().ToString());
                 DeckServiceLocator.GetService<DeckLevelService>().AddCoreAgent(tempAgent);
             }
         }
@@ -155,7 +149,7 @@ namespace Deck.InputHandling
             }
         }
 
-        private void CheckForCoreAgentSelection(out bool result)
+        private void CheckForSelectable(out bool result)
         {
             result = false;
             if (!Input.GetMouseButtonDown(0))
@@ -164,13 +158,21 @@ namespace Deck.InputHandling
             }
 
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out var hit, 100f, 1 << 7))
+            if (!Physics.Raycast(ray, out var hit, 100f))
             {
                 return;
             }
 
-            var agent = hit.transform.GetComponentInParent<DeckCoreAgent>();
-            DeckOnCoreAgentSelected.Create(agent).Send();
+            if (!hit.transform.TryGetComponent<IDeckSelectable>(out var selectable))
+            {
+                return;
+            }
+
+            _lastSelection?.OnPossesFinished();
+
+            _lastSelection = selectable;
+
+            _lastSelection.OnPossesStarted();
             result = true;
         }
 
@@ -183,12 +185,7 @@ namespace Deck.InputHandling
             var pos = hit.point;
             var cell = _deckGridService.GetCellWithWorldPosition(pos);
             if (cell == null) return;
-            DeckOnCellClicked.Create(cell).Send();
-        }
-
-        private void OnDrawGizmos()
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            DeckOnCellClickedEvent.Create(cell).Send();
         }
 
         private void CheckForNavMeshHit()
@@ -199,7 +196,7 @@ namespace Deck.InputHandling
             var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
             if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1)) return;
 
-            DeckOnNavMeshPositionSelection.Create(navMeshHit.position).Send();
+            DeckOnNavMeshPositionSelectionEvent.Create(navMeshHit.position).Send();
         }
 
         private void RaycastToGround()
@@ -208,7 +205,7 @@ namespace Deck.InputHandling
             var ray = Camera.main.ScreenPointToRay(screenPosition);
             if (!Physics.Raycast(ray, out var hit, 100f, 1 << 6)) return;
             var pos = hit.textureCoord;
-            DeckOnGroundPositionChange.Create(pos).Send();
+            DeckOnGroundPositionChangeEvent.Create(pos).Send();
         }
     }
 }

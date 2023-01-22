@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deck.Component;
 using Deck.Data.Component;
-using Deck.MVC;
-using Deck.Player;
 using Deck.Data.Damage;
+using Deck.MVC;
 using Deck.Utility.Logger;
 using UnityEngine;
 
@@ -11,28 +11,20 @@ namespace Deck.Components
 {
     public class DeckHealthComponent : IDeckComponent
     {
-        private DeckHealthData _healthData;
-        private DeckAgent _agent;
-        private int _currentHealth;
-        private int _healthLimit;
-        private bool _isDataSetted;
         private Action OnHealthChanged;
+
+        private DeckHealthData _healthData;
+        private DeckComponentHolder _agent;
+
+        private int _currentHealth;
+        private int _limitHealth;
 
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
 
-        public void SetData(DeckHealthData healthData)
+        public void Initialize(DeckComponentHolder agent)
         {
-            _isDataSetted = true;
-            _healthData = healthData;
-            _healthLimit = _healthData.Health;
-        }
-
-        public void Initialize(DeckAgent agent)
-        {
-            if (!_isDataSetted)
-            {
-                throw new Exception("Initializing before data set");
-            }
+            _healthData = agent.GetData<DeckHealthData>();
+            _limitHealth = _healthData.Health;
 
             _currentHealth = _healthData.Health;
             _agent = agent;
@@ -54,7 +46,7 @@ namespace Deck.Components
             {
                 DeckLogger.Component("Health is zero");
                 _currentHealth = 0;
-                _agent.Die();
+                _agent.RequestDeath();
             }
         }
 
@@ -65,7 +57,7 @@ namespace Deck.Components
 
         public float GetHealthRatio()
         {
-            return (float) _currentHealth / _healthLimit;
+            return (float) _currentHealth / _limitHealth;
         }
 
         public void SetHealth(int newValue, bool limit = true)
@@ -74,12 +66,12 @@ namespace Deck.Components
 
             if (limit)
             {
-                _currentHealth = Mathf.Clamp(_currentHealth, 0, _healthLimit);
+                _currentHealth = Mathf.Clamp(_currentHealth, 0, _limitHealth);
             }
 
             OnHealthChanged();
 
-            DeckLogger.Component("Setting health to  " + newValue, _agent.gameObject);
+            DeckLogger.Component("Setting health to  " + newValue);
         }
 
         public void Register(Action listener)
@@ -92,9 +84,38 @@ namespace Deck.Components
             OnHealthChanged -= listener;
         }
 
-        public DeckAgent GetAgent()
+        public DeckComponentHolder GetComponentOwner()
         {
             return _agent;
+        }
+
+        public object GetData()
+        {
+            return new DeckHealthComponentData
+            {
+                currentHealth = _currentHealth,
+                limitHealth = _limitHealth
+            };
+        }
+
+        public void LoadData(string value)
+        {
+            var data = JsonUtility.FromJson<DeckHealthComponentData>(value);
+            _currentHealth = data.currentHealth;
+            _limitHealth = data.limitHealth;
+            OnHealthChanged();
+        }
+
+        public void Tick()
+        {
+        }
+
+
+        [Serializable]
+        public class DeckHealthComponentData
+        {
+            public int currentHealth;
+            public int limitHealth;
         }
     }
 }

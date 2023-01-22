@@ -1,5 +1,4 @@
 ﻿using Deck.Components;
-using Deck.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,7 @@ namespace Deck.UI.Health
         [SerializeField] private TextMeshProUGUI numberDisplay;
         [SerializeField] private Image fillBar;
         private Camera _mainCamera;
-        private DeckAgent _agent;
+        private Transform _target;
         private DeckHealthComponent _healthComponent;
         private IMemoryPool _memory;
 
@@ -28,7 +27,7 @@ namespace Deck.UI.Health
             _healthComponent = healthComponent;
             _healthComponent.Register(OnDataChanged);
 
-            _agent = healthComponent.GetAgent();
+            _target = healthComponent.GetComponentOwner().transform;
 
             OnDataChanged();
         }
@@ -41,7 +40,7 @@ namespace Deck.UI.Health
 
         private void LateUpdate()
         {
-            rect.position = _mainCamera.WorldToScreenPoint(_agent.transform.position + Vector3.up * 2f);
+            rect.position = _mainCamera.WorldToScreenPoint(_target.transform.position + Vector3.up * 2f);
         }
 
         public void Despawn()

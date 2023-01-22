@@ -14,6 +14,7 @@ namespace Deck.UI
         [Inject] protected DeckUIData uiData;
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
+        [SerializeField] protected RectTransform rectTransform;
 
         [ShowInInspector, ReadOnly] internal bool _isAppeared;
         internal bool isAppearing;
@@ -22,18 +23,25 @@ namespace Deck.UI
         private void OnValidate()
         {
             canvasGroup = GetComponent<CanvasGroup>();
+            rectTransform = GetComponent<RectTransform>();
         }
 
-        private async void Awake()
+        private void Awake()
         {
             _isAppeared = isAppearedOnStartUp;
             if (_isAppeared)
             {
-                await Appear();
+                canvasGroup.alpha = 1f;
+                _isAppeared = true;
+                canvasGroup.blocksRaycasts = true;
+                canvasGroup.interactable = true;
             }
             else
             {
-                await Disappear();
+                canvasGroup.alpha = 0f;
+                _isAppeared = false;
+                canvasGroup.blocksRaycasts = false;
+                canvasGroup.interactable = false;
             }
         }
 
@@ -54,12 +62,14 @@ namespace Deck.UI
         public async UniTask Appear()
         {
             isAppearing = true;
+            canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
 
             OnPreAppear();
-            await canvasGroup.DOFade(1f, uiData.canvasAppearDuration).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(1f, uiData.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
             _isAppeared = true;
+            canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
             isAppearing = false;
 
@@ -75,12 +85,19 @@ namespace Deck.UI
 
             isDisappearing = true;
             canvasGroup.interactable = true;
+            canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
-            await canvasGroup.DOFade(0f, uiData.canvasDisapearDuration).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(0f, uiData.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
             _isAppeared = false;
             canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
             isDisappearing = false;
             OnPostDisappear();
+        }
+
+        public RectTransform GetRectTransform()
+        {
+            return rectTransform;
         }
 
         public virtual void Initialize()

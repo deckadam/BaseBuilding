@@ -4,6 +4,6 @@ namespace Deck.Generalnterfaces
 {
     public interface IDeckInventoryHolder
     {
-        DeckInventory GetInventory();
+        DeckInventoryComponent GetInventory();
     }
 }

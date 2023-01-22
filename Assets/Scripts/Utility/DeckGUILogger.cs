@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Deck.Utility.Logger
@@ -15,7 +16,7 @@ namespace Deck.Utility.Logger
         private int fontSize;
         public int fontSizeMultiplier = 3;
         public Color textColor = Color.black;
-
+        
         public void SetDebugText(string key, object value, bool showKey = true)
         {
             var displayText = showKey ? (key + ": " + value) : value.ToString();

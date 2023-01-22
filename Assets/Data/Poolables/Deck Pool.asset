@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5279ec66b0c84e8b902f4e378eb64dd0, type: 3}
   m_Name: Deck Pool
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 1245273441074704364, guid: 312d972a37c5a264cab5311154999da7, type: 3}
-  inventoryDisplayerCell: {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}
+  healthBarPrefab: {fileID: 1245273441074704364, guid: 312d972a37c5a264cab5311154999da7, type: 3}
+  inventoryDisplayerCellPrefab: {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}
+  saveDisplayerPrefab: {fileID: 8084667271872032341, guid: 919ca2ecdd5515f46a1fc511ee538610, type: 3}
+  inventoryPopUpPrefab: {fileID: 4610122870488080173, guid: 8dc7e0c4d823cba4bac4e2f37c124a52, type: 3}

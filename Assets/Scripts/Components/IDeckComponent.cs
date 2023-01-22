@@ -1,11 +1,22 @@
-﻿using Deck.Player;
+﻿using System;
+using Deck.Component;
 
 namespace Deck.Components
 {
     public interface IDeckComponent
     {
-        void Initialize(DeckAgent agent);
+        void Initialize(DeckComponentHolder holder);
         void DeInitialize();
-        DeckAgent GetAgent();
+        void Tick();
+        DeckComponentHolder GetComponentOwner();
+        object GetData();
+        void LoadData(string value);
+    }
+
+    [Serializable]
+    public class DeckComponentSaveData
+    {
+        public string id;
+        public string data;
     }
 }

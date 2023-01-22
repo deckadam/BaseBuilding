@@ -15,15 +15,15 @@ namespace Deck.Map
 
         private void OnEnable()
         {
-            DeckEventManager.Register<DeckOnGroundPositionChange>(UpdateGroundMaterial);
+            DeckEventManager.Register<DeckOnGroundPositionChangeEvent>(UpdateGroundMaterial);
         }
 
         private void OnDisable()
         {
-            DeckEventManager.Unregister<DeckOnGroundPositionChange>(UpdateGroundMaterial);
+            DeckEventManager.Unregister<DeckOnGroundPositionChangeEvent>(UpdateGroundMaterial);
         }
 
-        private void UpdateGroundMaterial(DeckOnGroundPositionChange obj)
+        private void UpdateGroundMaterial(DeckOnGroundPositionChangeEvent obj)
         {
             _renderer.material.SetVector(DeckShaderConstants.MousePos, new Vector4(-obj.position.x + 0.5f, -obj.position.y + 0.5f, 0, 0));
         }

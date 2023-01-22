@@ -1,0 +1,10 @@
+﻿using Deck.UI;
+using UnityEngine;
+
+namespace Deck.UI.GamePlay
+{
+    public class DeckGamePlayUI : DeckUIBase
+    {
+        
+    }
+}

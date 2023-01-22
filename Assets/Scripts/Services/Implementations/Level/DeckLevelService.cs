@@ -7,20 +7,20 @@ namespace Deck.Services.Implementations.Level
 {
     public class DeckLevelService : DeckServiceBase
     {
-        public List<DeckCoreAgent> agents { get; private set; }
+        private List<DeckCoreAgent> _agents;
         public DeckCoreGrid deckCoreGrid { get; private set; }
         public DeckGamePlayMap map { get; private set; }
 
 
         public override void Initialize()
         {
-            agents = new List<DeckCoreAgent>();
+            _agents = new List<DeckCoreAgent>();
         }
 
         public void AddCoreAgent(DeckCoreAgent agent)
         {
             DeckLogger.Level("Setting player");
-            agents.Add(agent);
+            _agents.Add(agent);
         }
 
         public void SetGrid(DeckCoreGrid deckCoreGrid)
@@ -33,5 +33,7 @@ namespace Deck.Services.Implementations.Level
         {
             this.map = map;
         }
+
+        public IEnumerable<DeckCoreAgent> GetAgents() => _agents;
     }
 }

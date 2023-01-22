@@ -9,7 +9,7 @@ namespace Utility.Editor
         [MenuItem("Deck/Clear Listeners")]
         private static void ClearListeners()
         {
-            DeckEventManager.ClearEvents<DeckOnNavMeshPositionSelection>();
+            DeckEventManager.ClearEvents<DeckOnNavMeshPositionSelectionEvent>();
         }
     }
 }

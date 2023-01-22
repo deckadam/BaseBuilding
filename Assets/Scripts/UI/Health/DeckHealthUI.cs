@@ -2,6 +2,7 @@
 using Deck.Components;
 using Deck.MVC;
 using Deck.Utility.Logger;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.UI.Health
@@ -44,6 +45,11 @@ namespace Deck.UI.Health
                 }
 
                 _healthBars[i].Despawn();
+            }
+
+            if (transform == null)
+            {
+                return;
             }
 
             _healthBars.Clear();

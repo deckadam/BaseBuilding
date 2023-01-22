@@ -16,12 +16,12 @@ namespace Deck.Services.Implementations.CellSelectionService
 
         public override void Initialize()
         {
-            DeckEventManager.Register<DeckOnCellClicked>(OnCellClicked);
+            DeckEventManager.Register<DeckOnCellClickedEvent>(OnCellClicked);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckOnCellClicked>(OnCellClicked);
+            DeckEventManager.Unregister<DeckOnCellClickedEvent>(OnCellClicked);
         }
 
         public void SetMapData(Vector2Int size, Material groundMaterial)
@@ -32,7 +32,7 @@ namespace Deck.Services.Implementations.CellSelectionService
             _groundMaterial.SetTexture(DeckShaderConstants.SelectionTexture, _selectionTexture);
         }
 
-        private void OnCellClicked(DeckOnCellClicked obj)
+        private void OnCellClicked(DeckOnCellClickedEvent obj)
         {
             _currentDeckCell = obj.deckCell;
             _selectionTexture.SetPixel(_size.x - obj.deckCell.cellIndex.x, _size.y - obj.deckCell.cellIndex.y, Color.red);

@@ -3,62 +3,84 @@ using Deck.Components;
 using Deck.Data.Agent;
 using Deck.Generalnterfaces;
 using Deck.Inventory;
+using Deck.SaveService.Data;
+using Deck.Test.General;
 using Deck.Test.Markers;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.Player
 {
     public class DeckCoreAgent : DeckAgent, IDeckInventoryHolder, IDeckDamagable
     {
-        private DeckAgentData _agentData;
-        private DeckMovementComponent _movementComponent;
-        private DeckHealthComponent _healthComponent;
-        private DeckInventory _inventory;
-        private DeckDamageDealerComponent _damageDealerComponent;
+        [SerializeField] private string _id;
 
         [Inject]
-        private void Inject(DeckAgentData agentData, DeckMovementComponent movementComponent, DeckHealthComponent healthComponent, DeckInventory inventory, DeckDamageDealerComponent damageDealerComponent)
+        private void Inject(DeckAgentData agentData, IDeckComponent[] components)
         {
-            _agentData = agentData;
-            _movementComponent = movementComponent;
-            _healthComponent = healthComponent;
-            _inventory = inventory;
-            _damageDealerComponent = damageDealerComponent;
+            _data = agentData;
+
+            SetComponents(components);
         }
 
-        private void OnEnable()
+        public void LoadData(string id)
         {
-            _inventory.Initialize();
+            _data.Initialize();
+            Initialize();
+            GetDeckComponent<DeckInventoryComponent>().Initialize(this);
+            _id = id;
+        }
 
-            _healthComponent.SetData(_agentData.healthData);
-            _healthComponent.Initialize(this);
-
-            _movementComponent.Initialize(this);
+        public void LoadData(DeckCoreAgentSaveData data)
+        {
+            LoadData(data.id);
+            LoadComponentData(data.componentDatas);
         }
 
         private void OnDisable()
         {
-            _movementComponent.DeInitialize();
-            _healthComponent.DeInitialize();
+            DeInitialize();
         }
 
-        public override async void Die()
+        private void Update()
+        {
+            Tick();
+        }
+
+        public override async void RequestDeath()
         {
             await UniTask.NextFrame();
-            OnDisable();
+            DeInitialize();
             Destroy(gameObject);
         }
 
-        public override DeckAgentData GetAgentData()
+        public override T GetData<T>()
         {
-            return _agentData;
+            return _data.GetData<T>();
         }
 
-        public DeckInventory GetInventory() => _inventory;
-
-        public DeckHealthComponent GetHealthComponent()
+        public override void OnPossesStarted()
         {
-            return _healthComponent;
+            GetDeckComponent<DeckMovementComponent>().StartTracking();
         }
+
+        public override void OnPossesFinished()
+        {
+            GetDeckComponent<DeckMovementComponent>().StopTracking();
+        }
+
+        public override DeckSelectOperations[] GetAvailableOperations()
+        {
+            return new[]
+            {
+                DeckSelectOperations.posess,
+                DeckSelectOperations.showInventory,
+                DeckSelectOperations.takeDamage
+            };
+        }
+
+        public override DeckInventoryComponent GetInventory() => GetDeckComponent<DeckInventoryComponent>();
+        public override DeckHealthComponent GetHealthComponent() => GetDeckComponent<DeckHealthComponent>();
+        public override string GetName() => _id;
     }
 }

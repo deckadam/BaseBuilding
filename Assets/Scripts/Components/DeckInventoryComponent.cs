@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using Deck.Component;
+using Deck.Components;
+using Deck.Data.Item;
+using UnityEngine;
+using Zenject;
+
+namespace Deck.Inventory
+{
+    public class DeckInventoryComponent : IDeckComponent
+    {
+        private List<DeckItem> items;
+        private Action<IEnumerable<DeckItem>> _listeners;
+        private DeckComponentHolder _holder;
+
+        private DeckItemData _itemData;
+
+        [Inject]
+        private void Inject(DeckItemData itemData)
+        {
+            _itemData = itemData;
+        }
+
+        public void Initialize(DeckComponentHolder holder)
+        {
+            items = new List<DeckItem>();
+            _holder = holder;
+        }
+
+        public void AddItem(DeckItem data)
+        {
+            items.Add(data);
+            _listeners?.Invoke(items);
+        }
+
+        public void RemoveItem(DeckItem data)
+        {
+            items.Remove(data);
+        }
+
+        public void AddListener(Action<IEnumerable<DeckItem>> listenerToAdd)
+        {
+            _listeners += listenerToAdd;
+        }
+
+        public void RemoveListener(Action<IEnumerable<DeckItem>> listenerToRemove)
+        {
+            _listeners -= listenerToRemove;
+        }
+        
+        public IEnumerable<DeckItem> GetItems()
+        {
+            return items;
+        }
+
+        public void DeInitialize()
+        {
+        }
+
+        public void Tick()
+        {
+        }
+
+        public DeckComponentHolder GetComponentOwner()
+        {
+            return _holder;
+        }
+
+        public object GetData()
+        {
+            var itemData = new ItemData[items.Count];
+            for (var i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                itemData[i] = new ItemData(item.name, item.amount);
+            }
+
+            return new SaveData(itemData);
+        }
+
+        public void LoadData(string value)
+        {
+            var deserializedData = JsonUtility.FromJson<SaveData>(value);
+
+            foreach (var itemData in deserializedData.itemData)
+            {
+                var newItem = _itemData.GetItemWithName(itemData.name);
+                newItem.amount = itemData.amount;
+                items.Add(newItem);
+            }
+        }
+
+        [Serializable]
+        public class SaveData
+        {
+            public ItemData[] itemData;
+
+            public SaveData(ItemData[] itemData)
+            {
+                this.itemData = itemData;
+            }
+        }
+
+        [Serializable]
+        public class ItemData
+        {
+            public string name;
+            public int amount;
+
+            public ItemData(string name, int amount)
+            {
+                this.name = name;
+                this.amount = amount;
+            }
+        }
+    }
+}

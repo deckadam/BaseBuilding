@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Deck.Component;
+using Deck.Components;
 using Deck.Data.Agent;
-using Deck.Test.Markers;
-using UnityEngine;
+using Deck.Inventory;
+using Deck.Test.General;
 
 namespace Deck.Player
 {
-    public class DeckAgent : MonoBehaviour
+    public abstract class DeckAgent : DeckComponentHolder, IDeckSelectable
     {
-        public virtual DeckAgentData GetAgentData()
-        {
-            throw new NotImplementedException();
-        }
+        protected DeckAgentData _data;
+        public abstract DeckSelectOperations[] GetAvailableOperations();
 
-        public virtual void Die()
-        {
-        }
+        public abstract void OnPossesStarted();
+        public abstract void OnPossesFinished();
+        public abstract DeckInventoryComponent GetInventory();
+        public abstract DeckHealthComponent GetHealthComponent();
+        
     }
 }
