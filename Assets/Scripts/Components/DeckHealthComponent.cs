@@ -13,20 +13,28 @@ namespace Deck.Components
     {
         private Action OnHealthChanged;
 
-        private DeckHealthData _healthData;
+        private DeckDataHealth _dataHealth;
         private DeckComponentHolder _agent;
 
         private int _currentHealth;
         private int _limitHealth;
+        private bool _isInitialized;
 
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
 
         public void Initialize(DeckComponentHolder agent)
         {
-            _healthData = agent.GetData<DeckHealthData>();
-            _limitHealth = _healthData.Health;
+            if (_isInitialized)
+            {
+                return;
+            }
 
-            _currentHealth = _healthData.Health;
+            _isInitialized = true;
+
+            _dataHealth = agent.GetData<DeckDataHealth>();
+            _limitHealth = _dataHealth.Health;
+
+            _currentHealth = _dataHealth.Health;
             _agent = agent;
 
             _healthController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
@@ -35,12 +43,19 @@ namespace Deck.Components
 
         public void DeInitialize()
         {
+            if (!_isInitialized)
+            {
+                return;
+            }
+
+            _isInitialized = false;
+
             _healthController.GetModel().RemoveData(this);
         }
 
-        public void ChangeHealth(DeckDamageData damageData, bool canKill = true)
+        public void ChangeHealth(DeckDataDamage dataDamage, bool canKill = true)
         {
-            _currentHealth -= damageData.damageAmount;
+            _currentHealth -= dataDamage.damageAmount;
             OnHealthChanged();
             if (canKill && _currentHealth <= 0)
             {

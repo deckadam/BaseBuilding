@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Text;
+using Data.Component;
 using Deck.Component;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.AI;
+using Object = UnityEngine.Object;
 
 namespace Deck.Components
 {
@@ -17,11 +17,15 @@ namespace Deck.Components
         public void Initialize(DeckComponentHolder agent)
         {
             _componentHolder = agent;
-            _navMeshAgent = _componentHolder.GetComponent<NavMeshAgent>();
+            _navMeshAgent = _componentHolder.gameObject.AddComponent<NavMeshAgent>();
+            _navMeshAgent.speed = _componentHolder.GetData<DeckDataMovement>().MovementSpeed;
+            _navMeshAgent.acceleration = _componentHolder.GetData<DeckDataMovement>().Acceleration;
         }
 
         public void DeInitialize()
         {
+            Object.Destroy(_navMeshAgent);
+            StopTracking();
         }
 
         public void StartTracking()

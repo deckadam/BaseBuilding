@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb0abc3ce934697a7676dc58b6b7d59, type: 3}
   m_Name: Deck Agent Data Binder
   m_EditorClassIdentifier: 
-  coreAgentData:
-    healthData: {fileID: 11400000, guid: e4aad99ccdd7643468380ea94236d8c9, type: 2}
-    damageData: {fileID: 11400000, guid: 404f7f46d4ee33741a5b335c64c23151, type: 2}
+  coreDataAgent:
+    dataHealth: {fileID: 11400000, guid: e4aad99ccdd7643468380ea94236d8c9, type: 2}
+    dataDamage: {fileID: 11400000, guid: 404f7f46d4ee33741a5b335c64c23151, type: 2}
+    dataMovement: {fileID: 11400000, guid: 6bcc5a01fe3795e49a09be80b320d068, type: 2}

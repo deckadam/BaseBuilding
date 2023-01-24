@@ -12,6 +12,7 @@ namespace Deck.UI.Health
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _uiController;
         private List<DeckHealthBar> _healthBars = new();
         private DeckHealthBar.Factory _healthBarFactory;
+        private bool _canCorrectSelf = true;
 
         [Inject]
         private void Inject(DeckHealthBar.Factory healthBarFactory)
@@ -25,17 +26,29 @@ namespace Deck.UI.Health
             _uiController.AddModelListener(CreateNewCells);
         }
 
+        public override void OnPreAppear()
+        {
+            _canCorrectSelf = true;
+        }
+
         public override void DeInitialize()
         {
             _uiController.RemoveModelListener(CreateNewCells);
         }
 
+        private void OnDisable()
+        {
+            _canCorrectSelf = false;
+        }
+
         private void CreateNewCells(IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>> items)
         {
-            if (!_isAppeared && !isAppearing)
+
+            if (!_isAppeared && !isAppearing ||!_canCorrectSelf)
             {
                 return;
             }
+
 
             for (var i = 0; i < _healthBars.Count; i++)
             {
@@ -47,10 +60,6 @@ namespace Deck.UI.Health
                 _healthBars[i].Despawn();
             }
 
-            if (transform == null)
-            {
-                return;
-            }
 
             _healthBars.Clear();
 

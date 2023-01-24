@@ -4,14 +4,13 @@ using Deck.Components;
 using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.MVC;
-using Deck.Player;
-using Deck.SaveService;
-using Deck.SaveService.Data;
+using Deck.Agent;
+using Deck.Save;
+using Deck.Save.Data;
 using Deck.Services;
 using Deck.Services.Implementations.CameraService;
 using Deck.Services.Implementations.CellSelectionService;
 using Deck.Services.Implementations.GridService;
-using Deck.Services.Implementations.Level;
 using Deck.Services.Implementations.MapService;
 using Deck.Services.Implementations.Navigation;
 using UnityEngine;
@@ -24,81 +23,75 @@ namespace Deck.Test
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void InitializeGame()
         {
-            DeckMVC<DeckItem, IEnumerable<DeckItem>>.ResetController();
+            DeckMVC<DeckDataItem, IEnumerable<DeckDataItem>>.ResetController();
             DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.ResetController();
         }
 
-        private DeckGeneralData _generalData;
+        private DeckBinderGeneral _binderGeneral;
         private DiContainer _container;
+        private DeckCoreAgent.Factory _agentFactory;
 
         [Inject]
-        private void Inject(DiContainer container, DeckGeneralData generalData)
+        private void Inject(DiContainer container, DeckBinderGeneral binderGeneral, DeckCoreAgent.Factory agentFactory)
         {
             _container = container;
-            _generalData = generalData;
+            _binderGeneral = binderGeneral;
+            _agentFactory = agentFactory;
         }
 
         public override void Initialize()
         {
-            
         }
 
 
         public void CreateNewGame()
         {
-            DeckServiceLocator.GetService<DeckMapService>().CreateMap();
-            DeckServiceLocator.GetService<DeckGridService>().GenerateGrid(out var grid);
-            DeckServiceLocator.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
-            DeckServiceLocator.GetService<DeckMapService>().PopulateMap(grid);
-            DeckServiceLocator.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
-            DeckServiceLocator.GetService<DeckCameraService>().GenerateCameraBounds(grid);
-            DeckServiceLocator.GetService<DeckLevelService>().SetGrid(grid);
-            DeckServiceLocator.GetService<DeckCellSelectionService>().SetMapData(grid.size, groundMaterial);
-            DeckServiceLocator.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
+            Services.Deck.GetService<DeckGridService>().GenerateGrid(out var grid);
+            Services.Deck.GetService<DeckMapService>().CreateMap();
+            Services.Deck.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
+            Services.Deck.GetService<DeckMapService>().PopulateMap(grid);
+            Services.Deck.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
+            Services.Deck.GetService<DeckCameraService>().GenerateCameraBounds(grid);
+            Services.Deck.GetService<DeckMapService>().SetGrid(grid);
+            Services.Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
+            Services.Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
 
-
-            var temp = _container.InstantiatePrefab(_generalData.coreAgentPrefab, Vector3.zero, Quaternion.identity, DeckMapService.map.transform);
-            var tempAgent = temp.GetComponent<DeckCoreAgent>();
-            tempAgent.LoadData(Guid.NewGuid().ToString());
-            DeckServiceLocator.GetService<DeckLevelService>().AddCoreAgent(tempAgent);
+            _agentFactory.Create().LoadData(Guid.NewGuid().ToString());
         }
 
         public void LoadGame()
         {
-            DeckServiceLocator.GetService<DeckMapService>().CreateMap();
-            DeckServiceLocator.GetService<DeckGridService>().GenerateGrid(out var grid);
-            DeckServiceLocator.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
-            DeckServiceLocator.GetService<DeckMapService>().PopulateMap(grid);
-            DeckServiceLocator.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
-            DeckServiceLocator.GetService<DeckCameraService>().GenerateCameraBounds(grid);
-            DeckServiceLocator.GetService<DeckLevelService>().SetGrid(grid);
-            DeckServiceLocator.GetService<DeckCellSelectionService>().SetMapData(grid.size, groundMaterial);
-            DeckServiceLocator.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
+            Services.Deck.GetService<DeckMapService>().CreateMap();
+            Services.Deck.GetService<DeckGridService>().GenerateGrid(out var grid);
+            Services.Deck.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
+            Services.Deck.GetService<DeckMapService>().PopulateMap(grid);
+            Services.Deck.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
+            Services.Deck.GetService<DeckCameraService>().GenerateCameraBounds(grid);
+            Services.Deck.GetService<DeckMapService>().SetGrid(grid);
+            Services.Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
+            Services.Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
 
-            var playerData = DeckSaveManager.GetData<DeckCoreAgentSaveDatas>(nameof(DeckCoreAgentSaveDatas));
+            var playerData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             foreach (var deckCoreAgentSaveData in playerData.ids)
             {
-                var newPlayerGO = _container.InstantiatePrefab(_generalData.coreAgentPrefab, Vector3.zero, Quaternion.identity, DeckMapService.map.transform);
-                var newCoreAgent = newPlayerGO.GetComponent<DeckCoreAgent>();
-                newCoreAgent.LoadData(deckCoreAgentSaveData);
-                DeckServiceLocator.GetService<DeckLevelService>().AddCoreAgent(newCoreAgent);
+                _agentFactory.Create().LoadData(deckCoreAgentSaveData);
             }
         }
 
         public void Test_FillSaveFile()
         {
-            var newCoreAgentData = new DeckCoreAgentSaveDatas();
-            newCoreAgentData.ids = new List<DeckCoreAgentSaveData>();
-            foreach (var deckCoreAgent in DeckServiceLocator.GetService<DeckLevelService>().GetAgents())
+            var newCoreAgentData = new DeckComponentHolderSaveDatas();
+            newCoreAgentData.ids = new List<DeckComponentHolderSaveData>();
+            foreach (var deckCoreAgent in Services.Deck.GetService<DeckMapService>().GetAgents())
             {
-                newCoreAgentData.ids.Add(new DeckCoreAgentSaveData
+                newCoreAgentData.ids.Add(new DeckComponentHolderSaveData
                 {
                     id = deckCoreAgent.GetName(),
                     componentDatas = deckCoreAgent.GetSaveData()
                 });
             }
 
-            DeckSaveManager.SetData(nameof(DeckCoreAgentSaveDatas), newCoreAgentData);
+            DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), newCoreAgentData);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using Deck.SaveService;
+﻿using Deck.Save;
+using Deck.Services;
+using Deck.Services.Implementations;
+using Deck.Test.Constants;
+using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using TMPro;
@@ -14,11 +18,11 @@ namespace Deck.UI.SaveListingMenu
         [ClearOnReload] private static DeckSaveDisplayer _currentlySelectedDisplayer;
 
         [SerializeField] private TextMeshProUGUI displayText;
-
-        private DeckSaveManager.SaveFile _saveFile;
+        [SerializeField] private RectTransform rectTransform;
+        private DeckSaveSystem.SaveFile _saveFile;
         private IMemoryPool _pool;
 
-        public void SetData(DeckSaveManager.SaveFile saveFile)
+        public void SetData(DeckSaveSystem.SaveFile saveFile)
         {
             _saveFile = saveFile;
             displayText.text = saveFile.name;
@@ -48,10 +52,14 @@ namespace Deck.UI.SaveListingMenu
 
             if (eventData.clickCount == 2)
             {
-                OnLoadRequestedEvent.Create(_saveFile).Send();
+                var newConfirmationPopUp = Services.Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+                var parent = Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+                newConfirmationPopUp.transform.SetParent(parent);
+                newConfirmationPopUp.transform.localPosition = Vector2.zero;
+                newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
             }
         }
 
-        public DeckSaveManager.SaveFile GetSaveFile() => _saveFile;
+        public DeckSaveSystem.SaveFile GetSaveFile() => _saveFile;
     }
 }

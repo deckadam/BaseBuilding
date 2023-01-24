@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Deck.Utility.Logger
 {
-    public class DeckGUILogger : MonoSingleton<DeckGUILogger>
+    public class DeckGUILogger : DeckSingleton<DeckGUILogger>
     {
         public bool enabledByHotkey;
         public KeyCode enablingKey;

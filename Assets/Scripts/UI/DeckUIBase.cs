@@ -11,7 +11,7 @@ namespace Deck.UI
     public class DeckUIBase : MonoBehaviour
     {
         [Inject] protected DiContainer container;
-        [Inject] protected DeckUIData uiData;
+        [Inject] protected DeckBinderUI BinderUI;
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
         [SerializeField] protected RectTransform rectTransform;
@@ -66,7 +66,7 @@ namespace Deck.UI
             canvasGroup.interactable = false;
 
             OnPreAppear();
-            await canvasGroup.DOFade(1f, uiData.GetCanvasAppearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(1f, BinderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
             _isAppeared = true;
             canvasGroup.blocksRaycasts = true;
@@ -87,7 +87,7 @@ namespace Deck.UI
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
-            await canvasGroup.DOFade(0f, uiData.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(0f, BinderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
             _isAppeared = false;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;

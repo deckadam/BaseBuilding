@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Deck.EventManager;
-using Deck.SaveService;
+using Deck.Save;
 using Deck.Services;
+using Deck.Services.Implementations;
 using Deck.Test;
+using Deck.Test.Constants;
+using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
@@ -39,7 +42,7 @@ namespace Deck.UI.SaveListingMenu
             }
 
 
-            var saveFiles = DeckSaveManager.GetAllSaves();
+            var saveFiles = DeckSaveSystem.GetAllSaves();
             AdjustScrollWindowSize(saveFiles.Length);
 
             for (var index = 0; index < saveFiles.Length; index++)
@@ -79,8 +82,15 @@ namespace Deck.UI.SaveListingMenu
                 return;
             }
 
-            DeckSaveManager.DeleteSaveFile(DeckSaveDisplayer.currentlySelectedDsiplayer.GetSaveFile());
-            InitializeSaveDisplayers();
+            var newConfirmationPopUp = Services.Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+            var parent = Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            newConfirmationPopUp.transform.SetParent(parent);
+            newConfirmationPopUp.transform.localPosition = Vector2.zero;
+            newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.deleteSaveFileDialogue, () =>
+            {
+                DeckSaveSystem.DeleteSaveFile(DeckSaveDisplayer.currentlySelectedDsiplayer.GetSaveFile());
+                InitializeSaveDisplayers();
+            }, null);
         }
     }
 }

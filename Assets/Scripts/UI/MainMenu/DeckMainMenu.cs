@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.EventManager;
-using Deck.SaveService;
-using Deck.Services;
+using Deck.Save;
 using Deck.Services.Implementations;
 using Deck.Test;
 using Deck.UI.SaveListingMenu;
@@ -9,6 +8,7 @@ using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
+#pragma warning disable 4014
 
 namespace Deck.UI.MainMenu
 {
@@ -31,14 +31,14 @@ namespace Deck.UI.MainMenu
 
         private void OnLoadRequested(OnLoadRequestedEvent obj)
         {
-            DeckSaveManager.LoadFromPath(obj.saveFile.path);
-            DeckServiceLocator.GetService<DeckGameManager>().LoadGame();
+            DeckSaveSystem.LoadFromPath(obj.saveFile.path);
+            Services.Deck.GetService<DeckGameManager>().LoadGame();
             Disappear();
         }
 
         public override void OnPreAppear()
         {
-            var result = DeckSaveManager.HasValidSaveFile();
+            var result = DeckSaveSystem.HasValidSaveFile();
             loadLastSaveButton.interactable = result;
             loadLastSaveButton.interactable = result;
         }
@@ -47,7 +47,7 @@ namespace Deck.UI.MainMenu
         {
             DeckLogger.Inform("New game starting");
 
-            DeckServiceLocator.GetService<DeckGameManager>().CreateNewGame();
+            Services.Deck.GetService<DeckGameManager>().CreateNewGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -57,8 +57,8 @@ namespace Deck.UI.MainMenu
 
         public async void OnLastSaveLoad()
         {
-            DeckSaveManager.LoadLastSaveData();
-            DeckServiceLocator.GetService<DeckGameManager>().LoadGame();
+            DeckSaveSystem.LoadLastSaveData();
+            Services.Deck.GetService<DeckGameManager>().LoadGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -68,7 +68,7 @@ namespace Deck.UI.MainMenu
 
         public void OnLoadGame()
         {
-            DeckServiceLocator.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().Appear();
+            Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().Appear();
         }
     }
 }

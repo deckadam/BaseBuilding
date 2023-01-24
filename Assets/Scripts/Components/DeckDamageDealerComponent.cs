@@ -6,7 +6,7 @@ namespace Deck.Components
     public class DeckDamageDealerComponent : IDeckComponent
     {
         private DeckComponentHolder _componentHolder;
-        private DeckDamageData _damageData;
+        private DeckDataDamage _dataDamage;
 
         public void DealDamage()
         {
@@ -15,7 +15,7 @@ namespace Deck.Components
         public void Initialize(DeckComponentHolder holder)
         {
             _componentHolder = holder;
-            _damageData = _componentHolder.GetData<DeckDamageData>();
+            _dataDamage = _componentHolder.GetData<DeckDataDamage>();
         }
 
         public void DeInitialize()

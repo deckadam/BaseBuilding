@@ -16,15 +16,21 @@ namespace Deck.UI
 
         public void OnPointerClick()
         {
-            Debug.LogError("Clicked");
             _clickPosition = Input.mousePosition;
             _startPosition = rect.anchoredPosition;
         }
 
         public void OnPointerDrag()
         {
+            if (!CanDrag)
+            {
+                return;
+            }
+
             var delta = (Vector2) Input.mousePosition - _clickPosition;
             rect.anchoredPosition = delta + _startPosition;
         }
+
+        public virtual bool CanDrag { get; } = true;
     }
 }

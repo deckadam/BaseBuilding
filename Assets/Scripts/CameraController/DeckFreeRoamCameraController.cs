@@ -7,7 +7,7 @@ namespace Deck.CameraController
 {
     public class DeckFreeRoamCameraController : MonoBehaviour
     {
-        [Inject] private DeckCameraData cameraData;
+        [Inject] private DeckBinderCamera _binderCamera;
         [Inject] private CinemachineVirtualCamera _vCam;
         [Inject] private CinemachineConfiner _confiner;
         private new Collider collider;
@@ -20,7 +20,7 @@ namespace Deck.CameraController
             var movement = Vector3.zero;
             movement += Input.GetAxis("Horizontal") * Vector3.right;
             movement += Input.GetAxis("Vertical") * Vector3.forward;
-            var deltaPosition = movement * (Time.deltaTime * cameraData.cameraMovementSpeed);
+            var deltaPosition = movement * (Time.deltaTime * _binderCamera.cameraMovementSpeed);
 
             if (collider.bounds.Contains(transform.position + deltaPosition))
                 transform.position += deltaPosition;

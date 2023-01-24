@@ -13,10 +13,10 @@ namespace Deck.UI.Inventory
 
         private IMemoryPool _pool;
 
-        public void Initialize(DeckItem item)
+        public void Initialize(DeckDataItem dataItem)
         {
-            image.sprite = item.icon;
-            amount.text = item.amount.ToString();
+            image.sprite = dataItem.icon;
+            amount.text = dataItem.amount.ToString();
         }
 
         public class Factory : PlaceholderFactory<DeckInventoryDisplayerCell>

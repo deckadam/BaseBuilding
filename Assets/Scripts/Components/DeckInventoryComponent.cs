@@ -10,46 +10,46 @@ namespace Deck.Inventory
 {
     public class DeckInventoryComponent : IDeckComponent
     {
-        private List<DeckItem> items;
-        private Action<IEnumerable<DeckItem>> _listeners;
+        private List<DeckDataItem> items;
+        private Action<IEnumerable<DeckDataItem>> _listeners;
         private DeckComponentHolder _holder;
 
-        private DeckItemData _itemData;
+        private DeckBinderItem _binderItem;
 
         [Inject]
-        private void Inject(DeckItemData itemData)
+        private void Inject(DeckBinderItem binderItem)
         {
-            _itemData = itemData;
+            _binderItem = binderItem;
         }
 
         public void Initialize(DeckComponentHolder holder)
         {
-            items = new List<DeckItem>();
+            items = new List<DeckDataItem>();
             _holder = holder;
         }
 
-        public void AddItem(DeckItem data)
+        public void AddItem(DeckDataItem data)
         {
             items.Add(data);
             _listeners?.Invoke(items);
         }
 
-        public void RemoveItem(DeckItem data)
+        public void RemoveItem(DeckDataItem data)
         {
             items.Remove(data);
         }
 
-        public void AddListener(Action<IEnumerable<DeckItem>> listenerToAdd)
+        public void AddListener(Action<IEnumerable<DeckDataItem>> listenerToAdd)
         {
             _listeners += listenerToAdd;
         }
 
-        public void RemoveListener(Action<IEnumerable<DeckItem>> listenerToRemove)
+        public void RemoveListener(Action<IEnumerable<DeckDataItem>> listenerToRemove)
         {
             _listeners -= listenerToRemove;
         }
         
-        public IEnumerable<DeckItem> GetItems()
+        public IEnumerable<DeckDataItem> GetItems()
         {
             return items;
         }
@@ -85,7 +85,7 @@ namespace Deck.Inventory
 
             foreach (var itemData in deserializedData.itemData)
             {
-                var newItem = _itemData.GetItemWithName(itemData.name);
+                var newItem = _binderItem.GetItemWithName(itemData.name);
                 newItem.amount = itemData.amount;
                 items.Add(newItem);
             }

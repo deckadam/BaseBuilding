@@ -5,7 +5,6 @@ namespace Deck.Services
 {
     public class DeckServiceBase : MonoBehaviour
     {
-
         private bool _hasWarmedUp = false;
 
         public virtual int GetWarmUpIndex()
@@ -33,7 +32,7 @@ namespace Deck.Services
         {
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             DeInitialize();
         }
