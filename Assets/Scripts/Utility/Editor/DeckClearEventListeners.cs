@@ -1,6 +1,4 @@
-﻿using Deck.EventManager;
-using Deck.InputHandling.Events;
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace Utility.Editor
 {
@@ -9,7 +7,6 @@ namespace Utility.Editor
         [MenuItem("Deck/Clear Listeners")]
         private static void ClearListeners()
         {
-            DeckEventManager.ClearEvents<DeckOnNavMeshPositionSelectionEvent>();
         }
     }
 }

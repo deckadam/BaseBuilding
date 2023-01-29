@@ -7,8 +7,19 @@ namespace Deck.Services.Implementations.CameraService
 {
     public class DeckCameraService : DeckServiceBase
     {
-        [Inject] private CinemachineConfiner confiner;
         private BoxCollider _generatedCollider;
+
+        private CinemachineConfiner _confiner;
+        private CinemachineBrain _brain;
+        private Camera _camera;
+
+        [Inject]
+        private void Inject(CinemachineConfiner confiner, CinemachineBrain brain, Camera camera)
+        {
+            _confiner = confiner;
+            _brain = brain;
+            _camera = camera;
+        }
 
         public void GenerateCameraBounds(DeckCoreGrid deckCoreGrid)
         {
@@ -23,7 +34,12 @@ namespace Deck.Services.Implementations.CameraService
             _generatedCollider.size = size;
             _generatedCollider.center = Vector3.zero;
 
-            confiner.m_BoundingVolume = _generatedCollider;
+            _confiner.m_BoundingVolume = _generatedCollider;
+        }
+
+        public Camera GetCamera()
+        {
+            return _camera;
         }
     }
 }

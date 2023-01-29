@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using Deck.EventManager;
+using Deck.Services.Implementations.CellSelectionService.Events;
 using Deck.Services.Implementations.MapService;
 using Deck.UI.Hotkey.Events;
 using Deck.Utility.Logger;
+using ModestTree;
 using UnityEngine;
 
 namespace Deck.Services.Implementations.CellSelectionService
@@ -11,10 +14,28 @@ namespace Deck.Services.Implementations.CellSelectionService
         private DeckSelectionService _selectionService;
         private DeckMapService _mapService;
 
-        public DeckHotKeySelectionHandler()
+        public void Initialize()
         {
             _mapService = Deck.GetService<DeckMapService>();
             _selectionService = Deck.GetService<DeckSelectionService>();
+            DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+        }
+
+        public void DeInitialize()
+        {
+            DeckEventManager.Unregister<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+        }
+
+        private void OnAgentPossessed(DeckOnAgentPossessedEvent obj)
+        {
+            var agents = _mapService.GetAgents().ToArray();
+            var index = agents.IndexOf(obj.agent);
+            if (index == -1)
+            {
+                return;
+            }
+
+            SelectAgentByIndex(index);
         }
 
         public void Tick()
@@ -63,7 +84,7 @@ namespace Deck.Services.Implementations.CellSelectionService
 
         private void SelectAgentByIndex(int index)
         {
-            var agents = Deck.GetService<DeckMapService>().GetAgents().ToArray();
+            var agents = _mapService.GetAgents().ToArray();
             if (agents.Length <= index)
             {
                 return;

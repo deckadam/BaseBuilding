@@ -16,10 +16,10 @@ namespace Deck.Installers
         public override void InstallBindings()
         {
             //Component references
-            Container.Bind<IDeckComponent>().To<DeckMovementComponent>().AsTransient();
-            Container.Bind<IDeckComponent>().To<DeckHealthComponent>().AsTransient();
-            Container.Bind<IDeckComponent>().To<DeckDamageDealerComponent>().AsTransient();
-            Container.Bind<IDeckComponent>().To<DeckInventoryComponent>().AsTransient();
+            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient();
+            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient();
+            Container.Bind<DeckComponent>().To<DeckDamageDealerComponent>().AsTransient();
+            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient();
 
 
             //Scene references
@@ -29,6 +29,7 @@ namespace Deck.Installers
             Container.Bind<DeckHealthUI>().FromComponentInHierarchy().AsCached();
             Container.Bind<Camera>().FromComponentInHierarchy().AsCached();
             Container.Bind<DeckSelectionHighlighter>().FromComponentInHierarchy().AsCached();
+            Container.Bind<CinemachineBrain>().FromComponentInHierarchy().AsCached();
 
             //Class references
             Container.Bind<DeckPopUpFactoryProvider>().AsSingle();

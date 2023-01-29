@@ -28,7 +28,7 @@ namespace Deck.UI.Inventory
             _inventoryComponent = inventoryComponent;
             _inventoryComponent.AddListener(CreateNewCells);
 
-            var gamePlayUIRect = Services.Deck.GetService<DeckUIService>().GetUI<DeckGamePlayUI>().GetRectTransform();
+            var gamePlayUIRect = Deck.GetService<DeckUIService>().GetUI<DeckGamePlayUI>().GetRectTransform();
             rect.SetParent(gamePlayUIRect);
             rect.anchoredPosition = Vector2.zero;
 

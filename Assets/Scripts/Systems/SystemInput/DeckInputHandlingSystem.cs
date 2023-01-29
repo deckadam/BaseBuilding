@@ -1,17 +1,17 @@
 ﻿using System;
+using Deck.Agent;
 using Deck.Component;
 using Deck.Components;
 using Deck.Data.Damage;
 using Deck.Data.Item;
+using Deck.GameManager;
 using Deck.InputHandling.Events;
 using Deck.Inventory;
 using Deck.Map;
-using Deck.Agent;
 using Deck.Save;
 using Deck.Services.Implementations;
 using Deck.Services.Implementations.CellSelectionService;
 using Deck.Services.Implementations.GridService;
-using Deck.Test;
 using Deck.UI.GamePlay;
 using Deck.UI.Inventory;
 using Deck.Utility;
@@ -28,13 +28,22 @@ namespace Deck.InputHandling
         private float _lastPressTime;
         private DeckBinderItem _binderItem;
         private DeckCoreAgent.Factory _agentFactory;
+        private Camera _camera;
+        private DeckSelectionService _selectionService;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckCoreAgent.Factory agentFactory)
+        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckCoreAgent.Factory agentFactory, Camera camera)
         {
             _binderItem = tempBinderItem;
             _agentFactory = agentFactory;
+            _camera = camera;
         }
+
+        private void Awake()
+        {
+            _selectionService = Deck.GetService<DeckSelectionService>();
+        }
+
 
         private void Update()
         {
@@ -59,7 +68,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                Services.Deck.GetService<DeckGameManager>().Test_FillSaveFile();
+                Deck.GetService<DeckGameManager>().Test_FillSaveFile();
                 DeckSaveSystem.Save();
             }
         }
@@ -74,9 +83,9 @@ namespace Deck.InputHandling
                     return;
                 }
 
-                if (hit.transform.TryGetComponent<DeckComponentHolder>(out var result))
+                if (hit.transform.TryGetComponent<DeckAgent>(out var result))
                 {
-                    result.GetDeckComponent<DeckHealthComponent>().ChangeHealth(testDataDamage);
+                    result.DispatchCommand(new DeckCommandDamage(testDataDamage));
                 }
             }
         }
@@ -85,7 +94,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Services.Deck.GetService<DeckUIService>().ShowWindow<DeckGamePlayUI>();
+                Deck.GetService<DeckUIService>().ShowWindow<DeckGamePlayUI>();
             }
         }
 
@@ -93,7 +102,7 @@ namespace Deck.InputHandling
         {
             if (DeckSelectionService.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
-                var newPopUp = Services.Deck.GetService<DeckPopUpService>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
+                var newPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
                 newPopUp.SetTarget(DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>());
             }
         }
@@ -105,7 +114,7 @@ namespace Deck.InputHandling
                 if (DeckSelectionService.currentSelection == null) return;
                 var randomItem = _binderItem.GetItems().GetRandom();
                 var itemInstance = Instantiate(randomItem);
-                DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>().AddItem(itemInstance);
+                DeckSelectionService.currentSelection.DispatchCommand(new DeckCommandAddItem(itemInstance));
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
             }
         }
@@ -132,7 +141,7 @@ namespace Deck.InputHandling
                 return;
             }
 
-            if (!hit.transform.TryGetComponent<DeckComponentHolder>(out var componentHolder))
+            if (!hit.transform.TryGetComponent<DeckAgent>(out var componentHolder))
             {
                 return;
             }
@@ -145,11 +154,11 @@ namespace Deck.InputHandling
 
             if (canPossess)
             {
-                Services.Deck.GetService<DeckSelectionService>().OnPossession(componentHolder);
+                Deck.GetService<DeckSelectionService>().OnPossession(componentHolder);
             }
             else
             {
-                Services.Deck.GetService<DeckSelectionService>().OnSelection(componentHolder);
+                Deck.GetService<DeckSelectionService>().OnSelection(componentHolder);
             }
 
             result = true;
@@ -162,7 +171,7 @@ namespace Deck.InputHandling
             if (!Physics.Raycast(ray, out var hit, 1000f)) return;
             if (!hit.transform.TryGetComponent<DeckMap>(out var result)) return;
             var pos = hit.point;
-            var cell = Services.Deck.GetService<DeckGridService>().GetCellWithWorldPosition(pos);
+            var cell = Deck.GetService<DeckGridService>().GetCellWithWorldPosition(pos);
             if (cell == null) return;
             DeckOnCellClickedEvent.Create(cell).Send();
         }
@@ -175,7 +184,7 @@ namespace Deck.InputHandling
             var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
             if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1)) return;
 
-            DeckOnNavMeshPositionSelectionEvent.Create(navMeshHit.position).Send();
+            _selectionService.GetAgentToBeCommanded().DispatchCommand(new DeckCommandMove(navMeshHit.position));
         }
 
         private void RaycastToGround()

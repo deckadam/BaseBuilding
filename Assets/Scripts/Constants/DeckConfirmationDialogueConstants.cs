@@ -1,4 +1,4 @@
-﻿namespace Deck.Test.Constants
+﻿namespace Deck.GameManager.Constants
 {
     public static class DeckConfirmationDialogueConstants
     {

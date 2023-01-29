@@ -2,12 +2,13 @@
 using Deck.EventManager;
 using Deck.Save;
 using Deck.Services.Implementations;
-using Deck.Test;
+using Deck.GameManager;
 using Deck.UI.SaveListingMenu;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
+
 #pragma warning disable 4014
 
 namespace Deck.UI.MainMenu
@@ -32,7 +33,7 @@ namespace Deck.UI.MainMenu
         private void OnLoadRequested(OnLoadRequestedEvent obj)
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
-            Services.Deck.GetService<DeckGameManager>().LoadGame();
+            Deck.GetService<DeckGameManager>().LoadGame();
             Disappear();
         }
 
@@ -47,7 +48,7 @@ namespace Deck.UI.MainMenu
         {
             DeckLogger.Inform("New game starting");
 
-            Services.Deck.GetService<DeckGameManager>().CreateNewGame();
+            Deck.GetService<DeckGameManager>().CreateNewGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -58,7 +59,7 @@ namespace Deck.UI.MainMenu
         public async void OnLastSaveLoad()
         {
             DeckSaveSystem.LoadLastSaveData();
-            Services.Deck.GetService<DeckGameManager>().LoadGame();
+            Deck.GetService<DeckGameManager>().LoadGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -68,7 +69,7 @@ namespace Deck.UI.MainMenu
 
         public void OnLoadGame()
         {
-            Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().Appear();
+            Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().Appear();
         }
     }
 }

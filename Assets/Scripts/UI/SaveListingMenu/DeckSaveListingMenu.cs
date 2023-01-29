@@ -4,8 +4,8 @@ using Deck.EventManager;
 using Deck.Save;
 using Deck.Services;
 using Deck.Services.Implementations;
-using Deck.Test;
-using Deck.Test.Constants;
+using Deck.GameManager;
+using Deck.GameManager.Constants;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
@@ -82,8 +82,8 @@ namespace Deck.UI.SaveListingMenu
                 return;
             }
 
-            var newConfirmationPopUp = Services.Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-            var parent = Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+            var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.deleteSaveFileDialogue, () =>

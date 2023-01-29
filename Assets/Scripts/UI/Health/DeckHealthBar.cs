@@ -27,7 +27,7 @@ namespace Deck.UI.Health
             _healthComponent = healthComponent;
             _healthComponent.Register(OnDataChanged);
 
-            _target = healthComponent.GetComponentOwner().transform;
+            _target = healthComponent.GetComponentHolder().transform;
 
             OnDataChanged();
         }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Component;
+using Deck.Components.Operations;
 using Deck.Data.Component;
-using Deck.Data.Damage;
 using Deck.MVC;
 using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.Components
 {
-    public class DeckHealthComponent : IDeckComponent
+    [Serializable]
+    public class DeckHealthComponent : DeckComponent
     {
         private Action OnHealthChanged;
 
         private DeckDataHealth _dataHealth;
-        private DeckComponentHolder _agent;
 
         private int _currentHealth;
         private int _limitHealth;
@@ -22,7 +21,7 @@ namespace Deck.Components
 
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
 
-        public void Initialize(DeckComponentHolder agent)
+        protected override void Initialize()
         {
             if (_isInitialized)
             {
@@ -31,17 +30,16 @@ namespace Deck.Components
 
             _isInitialized = true;
 
-            _dataHealth = agent.GetData<DeckDataHealth>();
+            _dataHealth = holder.GetData<DeckDataHealth>();
             _limitHealth = _dataHealth.Health;
 
             _currentHealth = _dataHealth.Health;
-            _agent = agent;
 
             _healthController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
             _healthController.GetModel().AddData(this);
         }
 
-        public void DeInitialize()
+        public override void DeInitialize()
         {
             if (!_isInitialized)
             {
@@ -53,15 +51,23 @@ namespace Deck.Components
             _healthController.GetModel().RemoveData(this);
         }
 
-        public void ChangeHealth(DeckDataDamage dataDamage, bool canKill = true)
+        private void ChangeHealth(DeckCommand dataCommandDamage)
         {
-            _currentHealth -= dataDamage.damageAmount;
+            var convertedCommand = dataCommandDamage as DeckCommandDamage;
+            _currentHealth -= convertedCommand.damageData.damageAmount;
             OnHealthChanged();
-            if (canKill && _currentHealth <= 0)
+            if (_currentHealth <= 0)
             {
-                DeckLogger.Component("Health is zero");
-                _currentHealth = 0;
-                _agent.RequestDeath();
+                if (convertedCommand.canKill)
+                {
+                    DeckLogger.Component("Health is zero");
+                    _currentHealth = 0;
+                    holder.RequestDeath();
+                }
+                else
+                {
+                    _currentHealth = 1;
+                }
             }
         }
 
@@ -99,12 +105,12 @@ namespace Deck.Components
             OnHealthChanged -= listener;
         }
 
-        public DeckComponentHolder GetComponentOwner()
+        public override DeckCommandListener[] GetSupportedCommandTypes()
         {
-            return _agent;
+            return new[] {DeckCommandListener.Create(DeckCommandType.TakeDamage, ChangeHealth)};
         }
 
-        public object GetData()
+        public override object GetData()
         {
             return new DeckHealthComponentData
             {
@@ -113,18 +119,13 @@ namespace Deck.Components
             };
         }
 
-        public void LoadData(string value)
+        public override void LoadData(string value)
         {
             var data = JsonUtility.FromJson<DeckHealthComponentData>(value);
             _currentHealth = data.currentHealth;
             _limitHealth = data.limitHealth;
             OnHealthChanged();
         }
-
-        public void Tick()
-        {
-        }
-
 
         [Serializable]
         public class DeckHealthComponentData

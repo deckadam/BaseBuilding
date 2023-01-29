@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Component;
 using Deck.Components;
+using Deck.Components.Operations;
 using Deck.Data.Item;
 using UnityEngine;
 using Zenject;
 
 namespace Deck.Inventory
 {
-    public class DeckInventoryComponent : IDeckComponent
+    [Serializable]
+    public class DeckInventoryComponent : DeckComponent
     {
         private List<DeckDataItem> items;
         private Action<IEnumerable<DeckDataItem>> _listeners;
-        private DeckComponentHolder _holder;
 
         private DeckBinderItem _binderItem;
 
@@ -22,15 +22,16 @@ namespace Deck.Inventory
             _binderItem = binderItem;
         }
 
-        public void Initialize(DeckComponentHolder holder)
+        protected override void Initialize()
         {
             items = new List<DeckDataItem>();
-            _holder = holder;
         }
 
-        public void AddItem(DeckDataItem data)
+        private void AddItem(DeckCommand data)
         {
-            items.Add(data);
+            var convertedData = data as DeckCommandAddItem;
+            items.Add(convertedData.itemToAdd);
+
             _listeners?.Invoke(items);
         }
 
@@ -48,26 +49,18 @@ namespace Deck.Inventory
         {
             _listeners -= listenerToRemove;
         }
-        
+
         public IEnumerable<DeckDataItem> GetItems()
         {
             return items;
         }
 
-        public void DeInitialize()
+        public override DeckCommandListener[] GetSupportedCommandTypes()
         {
+            return new[] {DeckCommandListener.Create(DeckCommandType.AddItem, AddItem)};
         }
 
-        public void Tick()
-        {
-        }
-
-        public DeckComponentHolder GetComponentOwner()
-        {
-            return _holder;
-        }
-
-        public object GetData()
+        public override object GetData()
         {
             var itemData = new ItemData[items.Count];
             for (var i = 0; i < items.Count; i++)
@@ -79,7 +72,7 @@ namespace Deck.Inventory
             return new SaveData(itemData);
         }
 
-        public void LoadData(string value)
+        public override void LoadData(string value)
         {
             var deserializedData = JsonUtility.FromJson<SaveData>(value);
 

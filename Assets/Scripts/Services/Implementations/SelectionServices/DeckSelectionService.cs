@@ -14,8 +14,8 @@ namespace Deck.Services.Implementations.CellSelectionService
 {
     public class DeckSelectionService : DeckServiceBase
     {
-        public static DeckComponentHolder currentSelection { get; private set; }
-        public static DeckComponentHolder currentPossession { get; private set; }
+        public static DeckAgent currentSelection { get; private set; }
+        public static DeckAgent currentPossession { get; private set; }
 
         private DeckCell _currentDeckCell;
         private Texture2D _selectionTexture;
@@ -34,16 +34,24 @@ namespace Deck.Services.Implementations.CellSelectionService
         public override void Initialize()
         {
             _hotKeySelectionHandler = new DeckHotKeySelectionHandler();
+            _hotKeySelectionHandler.Initialize();
             DeckEventManager.Register<DeckOnCellClickedEvent>(OnCellClicked);
-            DeckEventManager.Register<DeckOnComponentHolderDeath>(OnSelectableDeath);
+            DeckEventManager.Register<DeckOnAgentDeathEvent>(OnSelectableDeath);
             DeckEventManager.Register<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
         }
 
         public override void DeInitialize()
         {
+            _hotKeySelectionHandler.DeInitialize();
             DeckEventManager.Unregister<DeckOnCellClickedEvent>(OnCellClicked);
-            DeckEventManager.Unregister<DeckOnComponentHolderDeath>(OnSelectableDeath);
+            DeckEventManager.Unregister<DeckOnAgentDeathEvent>(OnSelectableDeath);
             DeckEventManager.Unregister<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
+        }
+
+        public DeckAgent GetAgentToBeCommanded()
+        {
+            OnSelection(currentPossession);
+            return currentPossession;
         }
 
         public void SetMapData(Vector2Int size, Material groundMaterial)
@@ -62,7 +70,7 @@ namespace Deck.Services.Implementations.CellSelectionService
         }
 
 
-        public void OnSelection(DeckComponentHolder selection)
+        public void OnSelection(DeckAgent selection)
         {
             if (selection == currentSelection)
             {
@@ -71,10 +79,11 @@ namespace Deck.Services.Implementations.CellSelectionService
 
             OnSelectableClear();
             currentSelection = selection;
+            DeckOnAgentSelectedEvent.Create(currentSelection).Send();
             _highlighter.SetTarget(selection);
         }
 
-        public void OnPossession(DeckComponentHolder possession)
+        public void OnPossession(DeckAgent possession)
         {
             if (possession == null)
             {
@@ -89,9 +98,15 @@ namespace Deck.Services.Implementations.CellSelectionService
 
             currentSelection = possession;
 
-            currentPossession?.OnPossessionEnd();
+            if (currentPossession != null)
+            {
+                DeckOnAgentReleasedEvent.Create(currentPossession).Send();
+                currentPossession.Release();
+            }
+
             currentPossession = possession;
-            currentPossession.OnPossessionStart();
+            currentPossession.Possess();
+            DeckOnAgentPossessedEvent.Crate(currentPossession).Send();
         }
 
         private void Update()
@@ -99,19 +114,23 @@ namespace Deck.Services.Implementations.CellSelectionService
             _hotKeySelectionHandler.Tick();
         }
 
-        public void OnSelectableDeath(DeckOnComponentHolderDeath dead)
+        public void OnSelectableDeath(DeckOnAgentDeathEvent dead)
         {
-            if (dead.componentHolder == currentSelection)
+            if (dead.agent == currentSelection)
             {
                 currentSelection = null;
+                DeckOnSelectionReleasedEvent.Create(currentSelection).Send();
                 _highlighter.ClearTarget();
             }
 
-            if (dead.componentHolder == currentPossession)
+            if (dead.agent == currentPossession)
             {
                 currentPossession = null;
+                DeckOnAgentReleasedEvent.Create(currentSelection).Send();
                 _highlighter.ClearTarget();
             }
+
+            DeckOnAgentDeathEvent.Create(dead.agent).Send();
         }
 
         public void ResetSelectionToPossession()
@@ -123,6 +142,7 @@ namespace Deck.Services.Implementations.CellSelectionService
         public void OnSelectableClear()
         {
             currentSelection = null;
+            DeckOnSelectionReleasedEvent.Create(currentSelection).Send();
             _highlighter.ClearTarget();
         }
 

@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Deck.Component;
 using Deck.Components;
 using Deck.Data.Agent;
 using Deck.Inventory;
@@ -17,20 +18,17 @@ namespace Deck.Agent
         private IMemoryPool _memory;
 
         [Inject]
-        private void Inject(DeckDataAgent dataAgent, IDeckComponent[] components)
+        private void Inject(DeckDataAgent data, DeckComponent[] components)
         {
-            _data = dataAgent;
-
+            SetComponentDatas(data.GetDataArray());
             SetComponents(components);
         }
 
         public void LoadData(string id)
         {
-            _data.Initialize();
             Initialize();
             GetDeckComponent<DeckInventoryComponent>().Initialize(this);
             _id = id;
-            Debug.LogError("Load data");
         }
 
         public void LoadData(DeckComponentHolderSaveData data)
@@ -39,33 +37,12 @@ namespace Deck.Agent
             LoadComponentData(data.componentDatas);
         }
 
-        private void OnDestroy()
-        {
-            DeInitialize();
-            OnPossessionEnd();
-        }
-
-        private void Update()
-        {
-            Tick();
-        }
-
         public override async void RequestDeath()
         {
-            DeckOnComponentHolderDeath.Create(this).Send();
+            DeckOnAgentDeathEvent.Create(this).Send();
             await UniTask.NextFrame();
             DeInitialize();
             _memory.Despawn(this);
-        }
-
-        public override void OnPossessionStart()
-        {
-            GetDeckComponent<DeckMovementComponent>().StartTracking();
-        }
-
-        public override void OnPossessionEnd()
-        {
-            GetDeckComponent<DeckMovementComponent>().StopTracking();
         }
 
         public void OnSpawned(IMemoryPool p1)
@@ -73,17 +50,12 @@ namespace Deck.Agent
             _memory = p1;
             transform.SetParent(DeckMapService.map.transform);
             transform.localPosition = Vector3.zero;
-            Services.Deck.GetService<DeckMapService>().AddCoreAgent(this);
+            Deck.GetService<DeckMapService>().AddCoreAgent(this);
         }
 
         public void OnDespawned()
         {
-            Services.Deck.GetService<DeckMapService>().RemoveCoreAgent(this);
-        }
-
-        public override T GetData<T>()
-        {
-            return _data.GetData<T>();
+            Deck.GetService<DeckMapService>().RemoveCoreAgent(this);
         }
 
         public override string GetName() => _id;

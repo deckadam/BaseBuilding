@@ -1,7 +1,7 @@
 ﻿using Deck.Save;
 using Deck.Services;
 using Deck.Services.Implementations;
-using Deck.Test.Constants;
+using Deck.GameManager.Constants;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
@@ -52,8 +52,8 @@ namespace Deck.UI.SaveListingMenu
 
             if (eventData.clickCount == 2)
             {
-                var newConfirmationPopUp = Services.Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-                var parent = Services.Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+                var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+                var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
                 newConfirmationPopUp.transform.SetParent(parent);
                 newConfirmationPopUp.transform.localPosition = Vector2.zero;
                 newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);

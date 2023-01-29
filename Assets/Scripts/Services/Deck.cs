@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.Services;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using Sirenix.Utilities;
 using UnityEngine;
 
-namespace Deck.Services
+namespace Deck
 {
     public static class Deck
     {

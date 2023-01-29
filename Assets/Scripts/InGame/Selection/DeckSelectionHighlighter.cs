@@ -8,10 +8,10 @@ namespace Deck.Map.Selection
     public class DeckSelectionHighlighter : MonoBehaviour
     {
         [SerializeField] private float distanceFromGround;
-        private DeckComponentHolder _target;
+        private DeckAgent _target;
         private CancellationTokenSource _tokenSource;
 
-        public void SetTarget(DeckComponentHolder newTarget)
+        public void SetTarget(DeckAgent newTarget)
         {
             _target = newTarget;
             _tokenSource?.Cancel();
@@ -26,7 +26,7 @@ namespace Deck.Map.Selection
             transform.position = Vector3.down * 1000f;
         }
 
-        private async void Follow(DeckComponentHolder target, CancellationToken token)
+        private async void Follow(DeckAgent target, CancellationToken token)
         {
             var cachedTransform = _target.transform;
             transform.localScale = target.GetSize() * Vector3.one;
