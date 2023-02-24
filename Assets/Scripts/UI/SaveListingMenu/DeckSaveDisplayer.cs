@@ -1,7 +1,6 @@
-﻿using Deck.Save;
-using Deck.Services;
+﻿using Deck.GameManager.Constants;
+using Deck.Save;
 using Deck.Services.Implementations;
-using Deck.GameManager.Constants;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
@@ -14,11 +13,11 @@ namespace Deck.UI.SaveListingMenu
 {
     public class DeckSaveDisplayer : MonoBehaviour, IPoolable<IMemoryPool>, IPointerClickHandler
     {
-        public static DeckSaveDisplayer currentlySelectedDsiplayer => _currentlySelectedDisplayer;
-        [ClearOnReload] private static DeckSaveDisplayer _currentlySelectedDisplayer;
+        [field: ClearOnReload] public static DeckSaveDisplayer currentlySelectedDsiplayer { get; private set; }
 
         [SerializeField] private TextMeshProUGUI displayText;
         [SerializeField] private RectTransform rectTransform;
+        
         private DeckSaveSystem.SaveFile _saveFile;
         private IMemoryPool _pool;
 
@@ -26,6 +25,20 @@ namespace Deck.UI.SaveListingMenu
         {
             _saveFile = saveFile;
             displayText.text = saveFile.name;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            currentlySelectedDsiplayer = this;
+
+            if (eventData.clickCount == 2)
+            {
+                var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+                var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+                newConfirmationPopUp.transform.SetParent(parent, false);
+                newConfirmationPopUp.transform.localPosition = Vector2.zero;
+                newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
+            }
         }
 
         public void ReturnToPool()
@@ -42,24 +55,13 @@ namespace Deck.UI.SaveListingMenu
             _pool = p1;
         }
 
+        public DeckSaveSystem.SaveFile GetSaveFile()
+        {
+            return _saveFile;
+        }
+
         public class Factory : PlaceholderFactory<DeckSaveDisplayer>
         {
         }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            _currentlySelectedDisplayer = this;
-
-            if (eventData.clickCount == 2)
-            {
-                var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-                var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
-                newConfirmationPopUp.transform.SetParent(parent);
-                newConfirmationPopUp.transform.localPosition = Vector2.zero;
-                newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
-            }
-        }
-
-        public DeckSaveSystem.SaveFile GetSaveFile() => _saveFile;
     }
 }

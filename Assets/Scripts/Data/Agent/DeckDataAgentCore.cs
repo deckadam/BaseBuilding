@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Deck.Data.Agent
 {
     [Serializable]
-    public class DeckDataAgent
+    public class DeckDataAgentCore
     {
         [SerializeField] private DeckDataHealth dataHealth;
         [SerializeField] private DeckDataDamage dataDamage;

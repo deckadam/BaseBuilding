@@ -27,10 +27,10 @@ namespace Deck.UI
                 return;
             }
 
-            var delta = (Vector2) Input.mousePosition - _clickPosition;
-            rect.anchoredPosition = delta + _startPosition;
+            var delta = (Vector2)Input.mousePosition - _clickPosition;
+            rect.anchoredPosition = delta / 2f + _startPosition;
         }
 
-        public virtual bool CanDrag { get; } = true;
+        public virtual bool CanDrag => true;
     }
 }

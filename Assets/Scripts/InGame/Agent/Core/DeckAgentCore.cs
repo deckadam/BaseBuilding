@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Linq;
+using Cysharp.Threading.Tasks;
 using Deck.Component;
 using Deck.Components;
 using Deck.Data.Agent;
@@ -7,34 +8,27 @@ using Deck.Save.Data;
 using Deck.Services.Implementations.CellSelectionService.Events;
 using Deck.Services.Implementations.MapService;
 using Deck.Utility.Logger;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Agent
 {
-    public class DeckCoreAgent : DeckAgent, IPoolable<IMemoryPool>
+    public class DeckAgentCore : DeckAgent, IPoolable<IMemoryPool>
     {
-        [SerializeField] private string _id;
+        [FormerlySerializedAs("_id"),SerializeField] private string id;
         private IMemoryPool _memory;
 
         [Inject]
-        private void Inject(DeckDataAgent data, DeckComponent[] components)
+        private void Inject(DeckDataAgentCore data,
+            DeckMovementComponent movementComponent,
+            DeckHealthComponent healthComponent,
+            DeckComponentDamageDealer damageDealerComponent,
+            DeckInventoryComponent inventoryComponent)
         {
             SetComponentDatas(data.GetDataArray());
-            SetComponents(components);
-        }
-
-        public void LoadData(string id)
-        {
-            Initialize();
-            GetDeckComponent<DeckInventoryComponent>().Initialize(this);
-            _id = id;
-        }
-
-        public void LoadData(DeckComponentHolderSaveData data)
-        {
-            LoadData(data.id);
-            LoadComponentData(data.componentDatas);
+            SetComponents(movementComponent, healthComponent, damageDealerComponent, inventoryComponent);
         }
 
         public override async void RequestDeath()
@@ -58,9 +52,20 @@ namespace Deck.Agent
             Deck.GetService<DeckMapService>().RemoveCoreAgent(this);
         }
 
-        public override string GetName() => _id;
+        public override string GetName() => id;
 
-        public class Factory : PlaceholderFactory<DeckCoreAgent>
+        [Button]
+        private void Test()
+        {
+            var deckDataItems = GetDeckComponent<DeckInventoryComponent>().GetItems().ToList();
+            Debug.LogError(deckDataItems.Count);
+            foreach (var item in deckDataItems)
+            {
+                Debug.LogError(item == null);
+            }
+        }
+
+        public class Factory : PlaceholderFactory<DeckAgentCore>
         {
         }
     }

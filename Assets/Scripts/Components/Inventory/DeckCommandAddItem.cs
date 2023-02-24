@@ -1,16 +1,25 @@
-﻿using Deck.Components.Operations;
+﻿using Cysharp.Threading.Tasks;
+using Deck.Components.Operations;
 using Deck.Data.Item;
 
 namespace Deck.Inventory
 {
     public class DeckCommandAddItem : DeckCommand
     {
-        public DeckDataItem itemToAdd { get; }
+        private DeckDataItem _itemToAdd;
+        private DeckInventoryComponent _target;
 
-        public DeckCommandAddItem(DeckDataItem itemToAdd)
+        public DeckCommandAddItem(DeckDataItem itemToAdd, DeckInventoryComponent target)
         {
-            this.itemToAdd = itemToAdd;
+            _itemToAdd = itemToAdd;
+            _target = target;
             commandType = DeckCommandType.AddItem;
+        }
+
+        public override UniTask<bool> ProcessCommand()
+        {
+            _target.AddItem(_itemToAdd);
+            return base.ProcessCommand();
         }
     }
 }

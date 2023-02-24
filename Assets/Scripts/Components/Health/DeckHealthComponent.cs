@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Deck.Components.Operations;
 using Deck.Data.Component;
+using Deck.Data.Damage;
 using Deck.MVC;
 using Deck.Utility.Logger;
 using UnityEngine;
@@ -51,14 +53,13 @@ namespace Deck.Components
             _healthController.GetModel().RemoveData(this);
         }
 
-        private void ChangeHealth(DeckCommand dataCommandDamage)
+        public void ChangeHealth(DeckDataDamage damage, bool canKill = true)
         {
-            var convertedCommand = dataCommandDamage as DeckCommandDamage;
-            _currentHealth -= convertedCommand.damageData.damageAmount;
+            _currentHealth -= damage.damageAmount;
             OnHealthChanged();
             if (_currentHealth <= 0)
             {
-                if (convertedCommand.canKill)
+                if (canKill)
                 {
                     DeckLogger.Component("Health is zero");
                     _currentHealth = 0;
@@ -78,7 +79,7 @@ namespace Deck.Components
 
         public float GetHealthRatio()
         {
-            return (float) _currentHealth / _limitHealth;
+            return (float)_currentHealth / _limitHealth;
         }
 
         public void SetHealth(int newValue, bool limit = true)
@@ -103,11 +104,6 @@ namespace Deck.Components
         public void Unregister(Action listener)
         {
             OnHealthChanged -= listener;
-        }
-
-        public override DeckCommandListener[] GetSupportedCommandTypes()
-        {
-            return new[] {DeckCommandListener.Create(DeckCommandType.TakeDamage, ChangeHealth)};
         }
 
         public override object GetData()

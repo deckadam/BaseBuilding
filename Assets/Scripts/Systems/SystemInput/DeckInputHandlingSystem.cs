@@ -8,6 +8,7 @@ using Deck.GameManager;
 using Deck.InputHandling.Events;
 using Deck.Inventory;
 using Deck.Map;
+using Deck.Map.Agent.Chest;
 using Deck.Save;
 using Deck.Services.Implementations;
 using Deck.Services.Implementations.CellSelectionService;
@@ -27,23 +28,24 @@ namespace Deck.InputHandling
         [SerializeField] private DeckDataDamage testDataDamage;
         private float _lastPressTime;
         private DeckBinderItem _binderItem;
-        private DeckCoreAgent.Factory _agentFactory;
+        private DeckAgentCore.Factory _coreAgentFactory;
         private Camera _camera;
         private DeckSelectionService _selectionService;
+        private DeckAgentChest.Factory _chestAgentFactory;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckCoreAgent.Factory agentFactory, Camera camera)
+        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckAgentCore.Factory agentFactory, Camera camera, DeckAgentChest.Factory chestAgentFactory)
         {
             _binderItem = tempBinderItem;
-            _agentFactory = agentFactory;
+            _coreAgentFactory = agentFactory;
             _camera = camera;
+            _chestAgentFactory = chestAgentFactory;
         }
 
         private void Awake()
         {
             _selectionService = Deck.GetService<DeckSelectionService>();
         }
-
 
         private void Update()
         {
@@ -62,6 +64,25 @@ namespace Deck.InputHandling
             CheckForAttack();
             CheckForEscapeMenu();
             SaveCheck();
+            CheckForChestSpawn();
+        }
+
+        private void CheckForChestSpawn()
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                var screenPosition = Input.mousePosition;
+                var ray = Camera.main.ScreenPointToRay(screenPosition);
+                var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
+                if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
+                {
+                    return;
+                }
+
+                var newChest = _chestAgentFactory.Create();
+                newChest.transform.position = navMeshHit.position;
+                newChest.StartWithClearData();
+            }
         }
 
         private void SaveCheck()
@@ -85,7 +106,7 @@ namespace Deck.InputHandling
 
                 if (hit.transform.TryGetComponent<DeckAgent>(out var result))
                 {
-                    result.DispatchCommand(new DeckCommandDamage(testDataDamage));
+                    new DeckCommandDamage(testDataDamage, result).ProcessCommand();
                 }
             }
         }
@@ -114,7 +135,7 @@ namespace Deck.InputHandling
                 if (DeckSelectionService.currentSelection == null) return;
                 var randomItem = _binderItem.GetItems().GetRandom();
                 var itemInstance = Instantiate(randomItem);
-                DeckSelectionService.currentSelection.DispatchCommand(new DeckCommandAddItem(itemInstance));
+                new DeckCommandAddItem(itemInstance, DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>()).ProcessCommand();
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
             }
         }
@@ -123,7 +144,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.U))
             {
-                _agentFactory.Create().LoadData(Guid.NewGuid().ToString());
+                _coreAgentFactory.Create().StartWithClearData();
             }
         }
 
@@ -184,7 +205,7 @@ namespace Deck.InputHandling
             var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
             if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1)) return;
 
-            _selectionService.GetAgentToBeCommanded().DispatchCommand(new DeckCommandMove(navMeshHit.position));
+            new DeckCommandMove(navMeshHit.position, DeckSelectionService.currentPossession).ProcessCommand();
         }
 
         private void RaycastToGround()

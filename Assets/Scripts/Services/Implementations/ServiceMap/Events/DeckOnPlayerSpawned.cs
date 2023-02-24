@@ -5,8 +5,8 @@ namespace Deck.Services.Implementations.MapService.Events
 {
     public class DeckOnPlayerSpawned:DeckEvent
     {
-        public DeckCoreAgent agent { get; private set; }
-        public static DeckOnPlayerSpawned Create(DeckCoreAgent agent)
+        public DeckAgentCore agent { get; private set; }
+        public static DeckOnPlayerSpawned Create(DeckAgentCore agent)
         {
             return new()
             {

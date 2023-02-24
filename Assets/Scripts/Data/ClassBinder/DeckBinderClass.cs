@@ -3,7 +3,6 @@ using Deck.Components;
 using Deck.Inventory;
 using Deck.Map.Selection;
 using Deck.Services.Implementations;
-using Deck.Services.Implementations.CellSelectionService;
 using Deck.UI.Health;
 using Deck.UI.Inventory;
 using UnityEngine;
@@ -15,11 +14,11 @@ namespace Deck.Installers
     {
         public override void InstallBindings()
         {
-            //Component references
-            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient();
-            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient();
-            Container.Bind<DeckComponent>().To<DeckDamageDealerComponent>().AsTransient();
-            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient();
+            //Component binds
+            Container.Bind<DeckMovementComponent>().AsTransient();
+            Container.Bind<DeckHealthComponent>().AsTransient();
+            Container.Bind<DeckComponentDamageDealer>().AsTransient();
+            Container.Bind<DeckInventoryComponent>().AsTransient();
 
 
             //Scene references

@@ -29,10 +29,10 @@ namespace Deck.GameManager
 
         private DeckBinderGeneral _binderGeneral;
         private DiContainer _container;
-        private DeckCoreAgent.Factory _agentFactory;
+        private DeckAgentCore.Factory _agentFactory;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderGeneral binderGeneral, DeckCoreAgent.Factory agentFactory)
+        private void Inject(DiContainer container, DeckBinderGeneral binderGeneral, DeckAgentCore.Factory agentFactory)
         {
             _container = container;
             _binderGeneral = binderGeneral;
@@ -56,7 +56,7 @@ namespace Deck.GameManager
             Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
             Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
 
-            _agentFactory.Create().LoadData(Guid.NewGuid().ToString());
+            _agentFactory.Create().StartWithClearData();
         }
 
         public void LoadGame()

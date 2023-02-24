@@ -1,11 +1,12 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Deck.Components.Operations;
 using Deck.Data.Damage;
 
 namespace Deck.Components
 {
     [Serializable]
-    public class DeckDamageDealerComponent : DeckComponent
+    public class DeckComponentDamageDealer : DeckComponent
     {
         private DeckDataDamage _dataDamage;
 
@@ -14,13 +15,9 @@ namespace Deck.Components
             _dataDamage = holder.GetData<DeckDataDamage>();
         }
 
-        private void DealDamage(DeckCommand command)
+        private UniTask<bool> DealDamage(DeckCommand command)
         {
-        }
-
-        public override DeckCommandListener[] GetSupportedCommandTypes()
-        {
-            return new[] {DeckCommandListener.Create(DeckCommandType.DealDamage, DealDamage)};
+            return default;
         }
     }
 }

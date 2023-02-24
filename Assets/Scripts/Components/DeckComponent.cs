@@ -1,7 +1,5 @@
 ﻿using System;
 using Deck.Component;
-using Deck.Components.Operations;
-using UnityEngine;
 
 namespace Deck.Components
 {
@@ -32,7 +30,14 @@ namespace Deck.Components
         {
         }
 
-        public abstract DeckCommandListener[] GetSupportedCommandTypes();
+        public virtual void Release()
+        {
+        }
+
+        public virtual void Possess()
+        {
+        }
+
         public DeckAgent GetComponentHolder() => holder;
 
         public virtual object GetData()

@@ -5,25 +5,33 @@ using Zenject;
 
 namespace Deck.CameraController
 {
-    public class DeckFreeRoamCameraController : MonoBehaviour
-    {
-        [Inject] private DeckBinderCamera _binderCamera;
-        [Inject] private CinemachineVirtualCamera _vCam;
-        [Inject] private CinemachineConfiner _confiner;
-        private new Collider collider;
+	public class DeckFreeRoamCameraController : MonoBehaviour
+	{
+		private Collider _collider;
 
-        private void Update()
-        {
-            if (_confiner.m_BoundingVolume == null) return;
-            collider = _confiner.m_BoundingVolume;
+		private DeckBinderCamera _binderCamera;
+		private CinemachineVirtualCamera _vCam;
+		private CinemachineConfiner _confiner;
 
-            var movement = Vector3.zero;
-            movement += Input.GetAxis("Horizontal") * Vector3.right;
-            movement += Input.GetAxis("Vertical") * Vector3.forward;
-            var deltaPosition = movement * (Time.deltaTime * _binderCamera.cameraMovementSpeed);
+		[Inject]
+		private void Inject(DeckBinderCamera binderCamera, CinemachineVirtualCamera vCam, CinemachineConfiner confiner)
+		{
+			_binderCamera = binderCamera;
+			_vCam = vCam;
+			_confiner = confiner;
+		}
 
-            if (collider.bounds.Contains(transform.position + deltaPosition))
-                transform.position += deltaPosition;
-        }
-    }
+		private void Update()
+		{
+			if (_confiner.m_BoundingVolume == null) return;
+			_collider = _confiner.m_BoundingVolume;
+
+			var movement = Vector3.zero;
+			movement += Input.GetAxis("Horizontal") * Vector3.right;
+			movement += Input.GetAxis("Vertical") * Vector3.forward;
+			var deltaPosition = movement * (Time.deltaTime * _binderCamera.CameraMovementSpeed);
+			if (_collider.bounds.Contains(transform.position + deltaPosition))
+				transform.position += deltaPosition;
+		}
+	}
 }

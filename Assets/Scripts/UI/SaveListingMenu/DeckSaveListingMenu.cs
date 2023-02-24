@@ -49,7 +49,7 @@ namespace Deck.UI.SaveListingMenu
             {
                 var newDisplayer = _saveDisplayerFactory.Create();
                 newDisplayer.SetData(saveFiles[index]);
-                newDisplayer.transform.SetParent(scrollParent);
+                newDisplayer.transform.SetParent(scrollParent, false);
                 newDisplayer.transform.localPosition = Vector2.zero;
                 _activeDisplayers.Add(newDisplayer);
             }
@@ -84,7 +84,7 @@ namespace Deck.UI.SaveListingMenu
 
             var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
             var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
-            newConfirmationPopUp.transform.SetParent(parent);
+            newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.deleteSaveFileDialogue, () =>
             {

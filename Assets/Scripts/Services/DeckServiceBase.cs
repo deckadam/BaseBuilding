@@ -5,12 +5,7 @@ namespace Deck.Services
 {
     public class DeckServiceBase : MonoBehaviour
     {
-        private bool _hasWarmedUp = false;
-
-        public virtual int GetWarmUpIndex()
-        {
-            return 0;
-        }
+        private bool _hasWarmedUp;
 
         public void ControlledWarmUp(int index)
         {
@@ -20,41 +15,25 @@ namespace Deck.Services
             _hasWarmedUp = true;
         }
 
-        public virtual void WarmUp()
-        {
-        }
-
-        public virtual void Initialize()
-        {
-        }
-
-        private void OnEnable()
-        {
-        }
-
         private void OnDestroy()
         {
             DeInitialize();
         }
 
-        protected T GetData<T>() where T : ScriptableObject
+        public virtual int GetWarmUpIndex()
         {
-            var typeName = typeof(T).Name;
-            var result = Resources.Load<T>("Services\\" + typeName);
+            return 0;
+        }
 
-            if (result == null)
-            {
-                Debug.LogError(typeName + "   resource not found");
-            }
-            else
-            {
-                Debug.Log(typeName + "   resource loaded succesfully");
-            }
-
-            return result;
+        public virtual void WarmUp()
+        {
         }
 
         public virtual void DeInitialize()
+        {
+        }
+
+        public virtual void Initialize()
         {
         }
     }

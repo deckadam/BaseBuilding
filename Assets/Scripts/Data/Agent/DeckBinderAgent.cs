@@ -1,5 +1,7 @@
 ﻿using Deck.Agent;
+using Deck.Map.Agent.Chest;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Data.Agent
@@ -7,11 +9,14 @@ namespace Deck.Data.Agent
     [CreateAssetMenu(menuName = "Deck/Binder/Agent", fileName = "Deck Binder Agent")]
     public class DeckBinderAgent : ScriptableObjectInstaller
     {
-        [SerializeField] private DeckDataAgent coreDataAgent;
+        [SerializeField] private DeckDataAgentCore coreDataAgentCore;
+        [SerializeField] private DeckDataAgentChest chestAgentData;
+
 
         public override void InstallBindings()
         {
-            Container.BindInstance(coreDataAgent).WhenInjectedInto<DeckCoreAgent>();
+            Container.BindInstance(coreDataAgentCore).WhenInjectedInto<DeckAgentCore>();
+            Container.BindInstance(chestAgentData).WhenInjectedInto<DeckAgentChest>();
         }
     }
 }

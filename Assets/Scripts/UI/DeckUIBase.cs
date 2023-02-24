@@ -128,5 +128,10 @@ namespace Deck.UI
         {
             return true;
         }
+
+        public virtual void OnCloseRequested()
+        {
+            Disappear();
+        }
     }
 }

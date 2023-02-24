@@ -1,4 +1,5 @@
 ﻿using Deck.Component;
+using Deck.Components.Operations;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Map;
@@ -101,11 +102,11 @@ namespace Deck.Services.Implementations.CellSelectionService
             if (currentPossession != null)
             {
                 DeckOnAgentReleasedEvent.Create(currentPossession).Send();
-                currentPossession.Release();
+                new DeckCommandRelease(currentPossession).ProcessCommand();
             }
 
             currentPossession = possession;
-            currentPossession.Possess();
+            new DeckCommandPossess(currentPossession).ProcessCommand();
             DeckOnAgentPossessedEvent.Crate(currentPossession).Send();
         }
 

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Components;
-using Deck.Components.Operations;
 using Deck.Data.Item;
 using UnityEngine;
 using Zenject;
 
 namespace Deck.Inventory
 {
-    [Serializable]
     public class DeckInventoryComponent : DeckComponent
     {
         private List<DeckDataItem> items;
@@ -27,37 +25,17 @@ namespace Deck.Inventory
             items = new List<DeckDataItem>();
         }
 
-        private void AddItem(DeckCommand data)
+        public void AddItem(DeckDataItem data)
         {
-            var convertedData = data as DeckCommandAddItem;
-            items.Add(convertedData.itemToAdd);
-
+            items.Add(data);
             _listeners?.Invoke(items);
         }
 
         public void RemoveItem(DeckDataItem data)
         {
+            Debug.LogError("REMOVE");
             items.Remove(data);
-        }
-
-        public void AddListener(Action<IEnumerable<DeckDataItem>> listenerToAdd)
-        {
-            _listeners += listenerToAdd;
-        }
-
-        public void RemoveListener(Action<IEnumerable<DeckDataItem>> listenerToRemove)
-        {
-            _listeners -= listenerToRemove;
-        }
-
-        public IEnumerable<DeckDataItem> GetItems()
-        {
-            return items;
-        }
-
-        public override DeckCommandListener[] GetSupportedCommandTypes()
-        {
-            return new[] {DeckCommandListener.Create(DeckCommandType.AddItem, AddItem)};
+            _listeners?.Invoke(items);
         }
 
         public override object GetData()
@@ -82,6 +60,21 @@ namespace Deck.Inventory
                 newItem.amount = itemData.amount;
                 items.Add(newItem);
             }
+        }
+
+        public void AddListener(Action<IEnumerable<DeckDataItem>> listenerToAdd)
+        {
+            _listeners += listenerToAdd;
+        }
+
+        public void RemoveListener(Action<IEnumerable<DeckDataItem>> listenerToRemove)
+        {
+            _listeners -= listenerToRemove;
+        }
+
+        public IEnumerable<DeckDataItem> GetItems()
+        {
+            return items;
         }
 
         [Serializable]

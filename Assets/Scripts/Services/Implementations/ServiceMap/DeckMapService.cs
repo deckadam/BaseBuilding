@@ -19,15 +19,15 @@ namespace Deck.Services.Implementations.MapService
 
         public static DeckMap map { get; private set; }
 
-        private List<DeckCoreAgent> _agents;
+        private List<DeckAgentCore> _agents;
         public DeckCoreGrid deckCoreGrid { get; private set; }
 
         public override void Initialize()
         {
-            _agents = new List<DeckCoreAgent>();
+            _agents = new List<DeckAgentCore>();
         }
 
-        public void AddCoreAgent(DeckCoreAgent agent)
+        public void AddCoreAgent(DeckAgentCore agent)
         {
             DeckLogger.Level("Adding player");
             _agents.Add(agent);
@@ -35,7 +35,7 @@ namespace Deck.Services.Implementations.MapService
             DeckOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
         }
 
-        public void RemoveCoreAgent(DeckCoreAgent agent)
+        public void RemoveCoreAgent(DeckAgentCore agent)
         {
             DeckLogger.Level("Removing player");
             _agents.Remove(agent);
@@ -99,6 +99,6 @@ namespace Deck.Services.Implementations.MapService
             DeckLogger.Map("Finished populating them map");
         }
 
-        public IEnumerable<DeckCoreAgent> GetAgents() => _agents;
+        public IEnumerable<DeckAgentCore> GetAgents() => _agents;
     }
 }

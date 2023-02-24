@@ -1,24 +1,15 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 
 namespace Deck.Components.Operations
 {
     public class DeckCommand
     {
         public DeckCommandType commandType;
-    }
 
-    public class DeckCommandListener
-    {
-        public DeckCommandType commandType { get; private set; }
-        public Action<DeckCommand> listener { get; private set; }
-
-        public static DeckCommandListener Create(DeckCommandType commandType, Action<DeckCommand> listener)
+        public virtual UniTask<bool> ProcessCommand()
         {
-            return new()
-            {
-                listener = listener,
-                commandType = commandType
-            };
+            return default;
         }
     }
 
@@ -27,7 +18,7 @@ namespace Deck.Components.Operations
         Select,
         Possess,
         Release,
-        Move,
+        Movement,
         TakeDamage,
         DealDamage,
         AddItem,

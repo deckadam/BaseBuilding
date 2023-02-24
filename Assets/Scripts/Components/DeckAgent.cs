@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Component;
 using Deck.Components;
-using Deck.Components.Operations;
+using Deck.Save.Data;
 using UnityEngine;
 
 namespace Deck.Component
@@ -11,45 +11,29 @@ namespace Deck.Component
     [Serializable]
     public abstract class DeckAgent : MonoBehaviour
     {
+        public DeckComponent[] components { get; private set; }
         public float defaultSize = 1f;
-
-        [SerializeReference] public DeckComponent[] components;
-        private Dictionary<Type, DeckComponentData> _datas;
-        private Dictionary<DeckCommandType, List<Action<DeckCommand>>> _commandListeners;
-        private bool _hasSetComponents;
         [SerializeField] private float _activeSize = -1f;
+        private Dictionary<Type, DeckComponentData> _datas;
+        private bool _hasSetComponents;
+        protected string id;
+
+        public void StartWithClearData()
+        {
+            Initialize();
+            id = Guid.NewGuid().ToString();
+        }
 
         protected void SetComponents(params DeckComponent[] components)
         {
             _hasSetComponents = true;
             this.components = components;
-            GenerateCommandListeners(components);
         }
 
-        private void GenerateCommandListeners(DeckComponent[] components)
-        {
-            _commandListeners = new Dictionary<DeckCommandType, List<Action<DeckCommand>>>();
-            for (var i = 0; i < components.Length; i++)
-            {
-                var listener = components[i].GetSupportedCommandTypes();
-                for (var j = 0; j < listener.Length; j++)
-                {
-                    if (_commandListeners.ContainsKey(listener[j].commandType))
-                    {
-                        _commandListeners[listener[j].commandType].Add(listener[j].listener);
-                    }
-                    else
-                    {
-                        _commandListeners[listener[j].commandType] = new List<Action<DeckCommand>>();
-                        _commandListeners[listener[j].commandType].Add(listener[j].listener);
-                    }
-                }
-            }
-        }
 
         public T GetDeckComponent<T>() where T : DeckComponent
         {
-            return (T) components.First(item => item.GetType() == typeof(T));
+            return (T)components.First(item => item.GetType() == typeof(T));
         }
 
         public T[] GetDeckComponents<T>() where T : DeckComponent
@@ -107,7 +91,7 @@ namespace Deck.Component
             foreach (var deckComponent in components)
             {
                 var temp = deckComponent.GetData();
-                if (temp != null)
+                if (temp == null)
                 {
                     continue;
                 }
@@ -123,9 +107,11 @@ namespace Deck.Component
             return result;
         }
 
-        protected void LoadComponentData(List<DeckComponentSaveData> data)
+        public void LoadData(DeckComponentHolderSaveData data)
         {
-            foreach (var saveData in data)
+            Initialize();
+            id = data.id;
+            foreach (var saveData in data.componentDatas)
             {
                 foreach (var component in components)
                 {
@@ -137,33 +123,11 @@ namespace Deck.Component
             }
         }
 
-        public void Possess()
-        {
-            DispatchCommand(new DeckCommandPossess());
-        }
-
-        public void Release()
-        {
-            DispatchCommand(new DeckCommandRelease());
-        }
-
-        public void DispatchCommand(DeckCommand command)
-        {
-            var commandType = command.commandType;
-            if (_commandListeners.TryGetValue(commandType, out var listeners))
-            {
-                foreach (var deckComponent in listeners)
-                {
-                    deckComponent(command);
-                }
-            }
-        }
-
         public T GetData<T>() where T : DeckComponentData
         {
             if (_datas.TryGetValue(typeof(T), out var result))
             {
-                return (T) result;
+                return (T)result;
             }
 
             return null;

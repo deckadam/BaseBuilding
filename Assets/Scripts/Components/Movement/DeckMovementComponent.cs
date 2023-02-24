@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Data.Component;
 using Deck.Components.Operations;
 using UnityEngine;
@@ -24,16 +25,18 @@ namespace Deck.Components
             Object.Destroy(_navMeshAgent);
         }
 
-        private void SetDestination(DeckCommand command)
+        public bool SetDestination(Vector3 target)
         {
-            var movementCommand = command as DeckCommandMove;
-            _navMeshAgent.SetDestination(movementCommand.targetPosition);
-        }
+            _navMeshAgent.SetDestination(target);
+            
+            var distance = Vector3.Distance(_navMeshAgent.transform.position, target);
+            
+            if (distance < 1f)
+            {
+                return true;
+            }
 
-
-        public override DeckCommandListener[] GetSupportedCommandTypes()
-        {
-            return new[] {DeckCommandListener.Create(DeckCommandType.Move, SetDestination)};
+            return false;
         }
 
         public override object GetData()
