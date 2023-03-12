@@ -1,5 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.Component;
+using Deck.Agent;
 
 namespace Deck.Components.Operations
 {
@@ -20,7 +20,7 @@ namespace Deck.Components.Operations
                 deckComponent.Release();
             }
 
-            return base.ProcessCommand();
+            return default;
         }
     }
 }

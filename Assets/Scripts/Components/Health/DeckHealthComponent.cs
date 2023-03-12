@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Deck.Components.Operations;
 using Deck.Data.Component;
 using Deck.Data.Damage;
 using Deck.MVC;
@@ -19,19 +17,11 @@ namespace Deck.Components
 
         private int _currentHealth;
         private int _limitHealth;
-        private bool _isInitialized;
 
         private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
 
         protected override void Initialize()
         {
-            if (_isInitialized)
-            {
-                return;
-            }
-
-            _isInitialized = true;
-
             _dataHealth = holder.GetData<DeckDataHealth>();
             _limitHealth = _dataHealth.Health;
 
@@ -43,13 +33,6 @@ namespace Deck.Components
 
         public override void DeInitialize()
         {
-            if (!_isInitialized)
-            {
-                return;
-            }
-
-            _isInitialized = false;
-
             _healthController.GetModel().RemoveData(this);
         }
 

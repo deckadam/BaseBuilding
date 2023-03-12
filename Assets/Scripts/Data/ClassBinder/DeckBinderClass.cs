@@ -1,7 +1,10 @@
 ﻿using Cinemachine;
+using Deck.Agent;
 using Deck.Components;
 using Deck.Inventory;
+using Deck.Map.Agent.Chest;
 using Deck.Map.Selection;
+using Deck.Save;
 using Deck.Services.Implementations;
 using Deck.UI.Health;
 using Deck.UI.Inventory;
@@ -15,11 +18,14 @@ namespace Deck.Installers
         public override void InstallBindings()
         {
             //Component binds
-            Container.Bind<DeckMovementComponent>().AsTransient();
-            Container.Bind<DeckHealthComponent>().AsTransient();
-            Container.Bind<DeckComponentDamageDealer>().AsTransient();
-            Container.Bind<DeckInventoryComponent>().AsTransient();
+            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckComponentDamageDealer>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
 
+            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
 
             //Scene references
             Container.Bind<CinemachineConfiner>().FromComponentInHierarchy().AsSingle();
@@ -32,6 +38,7 @@ namespace Deck.Installers
 
             //Class references
             Container.Bind<DeckPopUpFactoryProvider>().AsSingle();
+            Container.Bind<DeckAgentLoadResolver>().AsSingle();
         }
     }
 }

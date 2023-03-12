@@ -1,11 +1,10 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace Deck.Components.Operations
 {
     public class DeckCommand
     {
-        public DeckCommandType commandType;
+        protected DeckCommandType commandType;
 
         public virtual UniTask<bool> ProcessCommand()
         {

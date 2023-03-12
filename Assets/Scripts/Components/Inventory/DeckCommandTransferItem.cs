@@ -2,6 +2,7 @@
 using Deck.Components;
 using Deck.Components.Operations;
 using Deck.Data.Item;
+using Deck.Services.Implementations.CellSelectionService;
 using Deck.Utility.Logger;
 
 namespace Deck.Inventory
@@ -25,6 +26,7 @@ namespace Deck.Inventory
 
         public override async UniTask<bool> ProcessCommand()
         {
+            DeckSelectionService.ResetSelectionToPossession();
             var movementComponent = _from.GetComponentHolder().GetDeckComponent<DeckMovementComponent>();
             if (movementComponent == null)
             {
@@ -34,10 +36,10 @@ namespace Deck.Inventory
 
             await UniTask.WaitWhile(() => movementComponent.SetDestination(_to.GetComponentHolder().transform.position));
 
-            _removeCommand.ProcessCommand();
-            _addCommand.ProcessCommand();
+            await _removeCommand.ProcessCommand();
+            await _addCommand.ProcessCommand();
 
-            return await new UniTask<bool>(true);
+            return default;
         }
     }
 }

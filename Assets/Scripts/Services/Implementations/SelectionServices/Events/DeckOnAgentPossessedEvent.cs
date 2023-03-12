@@ -1,4 +1,4 @@
-﻿using Deck.Component;
+﻿using Deck.Agent;
 using Deck.EventManager;
 
 namespace Deck.Services.Implementations.CellSelectionService.Events

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Components;
 using Data.Component;
 using Deck.Components;
+using Deck.Components.Operations;
 using Deck.Save.Data;
 using UnityEngine;
 
-namespace Deck.Component
+namespace Deck.Agent
 {
-    [Serializable]
     public abstract class DeckAgent : MonoBehaviour
     {
         public DeckComponent[] components { get; private set; }
@@ -16,12 +17,13 @@ namespace Deck.Component
         [SerializeField] private float _activeSize = -1f;
         private Dictionary<Type, DeckComponentData> _datas;
         private bool _hasSetComponents;
+        private DeckAgentCommandProcessor _commandProcessor;
         protected string id;
 
         public void StartWithClearData()
         {
             Initialize();
-            id = Guid.NewGuid().ToString();
+            id = GetType().ToString().Split('.')[^1];
         }
 
         protected void SetComponents(params DeckComponent[] components)
@@ -30,10 +32,9 @@ namespace Deck.Component
             this.components = components;
         }
 
-
         public T GetDeckComponent<T>() where T : DeckComponent
         {
-            return (T)components.First(item => item.GetType() == typeof(T));
+            return (T)components.FirstOrDefault(item => item.GetType() == typeof(T));
         }
 
         public T[] GetDeckComponents<T>() where T : DeckComponent
@@ -52,6 +53,8 @@ namespace Deck.Component
             {
                 deckComponent.Initialize(this);
             }
+
+            _commandProcessor = new DeckAgentCommandProcessor();
         }
 
         protected void DeInitialize()
@@ -65,6 +68,8 @@ namespace Deck.Component
             {
                 deckComponent.DeInitialize();
             }
+
+            _commandProcessor.StopExecutions();
         }
 
         private void OnDestroy()
@@ -142,8 +147,17 @@ namespace Deck.Component
             }
         }
 
+        public string GetId()
+        {
+            return id;
+        }
+
+        public void AddCommand(DeckCommand command)
+        {
+            _commandProcessor.AddCommand(command);
+        }
+
         public virtual float GetSize() => Math.Abs(_activeSize + 1) < 0.001f ? defaultSize : _activeSize;
         public abstract void RequestDeath();
-        public abstract string GetName();
     }
 }

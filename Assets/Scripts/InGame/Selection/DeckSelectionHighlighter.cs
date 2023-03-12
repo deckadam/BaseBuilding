@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Component;
+using Deck.Agent;
 using UnityEngine;
 
 namespace Deck.Map.Selection

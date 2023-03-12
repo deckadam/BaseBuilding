@@ -19,7 +19,7 @@ namespace Deck.Inventory
         public override UniTask<bool> ProcessCommand()
         {
             _target.RemoveItem(_itemToRemove);
-            return base.ProcessCommand();
+            return default;
         }
     }
 }

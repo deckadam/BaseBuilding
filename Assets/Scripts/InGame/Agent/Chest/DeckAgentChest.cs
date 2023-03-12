@@ -1,7 +1,6 @@
-﻿using Deck.Component;
+﻿using Deck.Agent;
 using Deck.Components;
 using Deck.Data.Agent;
-using Deck.Inventory;
 using Zenject;
 
 namespace Deck.Map.Agent.Chest
@@ -9,21 +8,15 @@ namespace Deck.Map.Agent.Chest
     public class DeckAgentChest : DeckAgent
     {
         [Inject]
-        private void Inject(DeckDataAgentChest chestData, DeckInventoryComponent inventoryComponent,
-            DeckHealthComponent healthComponent)
+        private void Inject(DeckDataAgentChest chestData, DeckComponent[] components)
         {
             SetComponentDatas(chestData.GetDataArray());
-            SetComponents(inventoryComponent, healthComponent);
+            SetComponents(components);
         }
 
         public override void RequestDeath()
         {
             Destroy(gameObject);
-        }
-
-        public override string GetName()
-        {
-            return null;
         }
 
         public class Factory : PlaceholderFactory<DeckAgentChest>

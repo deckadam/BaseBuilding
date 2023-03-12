@@ -1,10 +1,8 @@
-﻿using Deck.Agent;
-using Deck.Map.Agent.Chest;
+﻿using Deck.Map.Agent.Chest;
 using Deck.UI.Health;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Data.Pool
@@ -16,9 +14,7 @@ namespace Deck.Data.Pool
         [SerializeField] private DeckInventoryDisplayerCell inventoryDisplayerCellPrefab;
         [SerializeField] private DeckSaveDisplayer saveDisplayerPrefab;
         [SerializeField] private DeckInventoryPopUp inventoryPopUpPrefab;
-        [SerializeField] private DeckAgentCore agentCorePrefab;
         [SerializeField] private DeckConfirmationPopUp confirmationPopUpPrefab;
-        [SerializeField] private DeckAgentChest chestAgentPrefab;
 
         public override void InstallBindings()
         {
@@ -26,9 +22,7 @@ namespace Deck.Data.Pool
             Container.BindFactory<DeckInventoryDisplayerCell, DeckInventoryDisplayerCell.Factory>().FromPoolableMemoryPool<DeckInventoryDisplayerCell, DeckInventoryDisplayerCellPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(inventoryDisplayerCellPrefab).UnderTransformGroup("UIPool"));
             Container.BindFactory<DeckSaveDisplayer, DeckSaveDisplayer.Factory>().FromPoolableMemoryPool<DeckSaveDisplayer, DeckSaveDisplayerPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(saveDisplayerPrefab).UnderTransformGroup("UIPool"));
             Container.BindFactory<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().FromPoolableMemoryPool<DeckInventoryPopUp, DeckInventoryPopUpPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(inventoryPopUpPrefab).UnderTransformGroup("UIPool"));
-            Container.BindFactory<DeckAgentCore, DeckAgentCore.Factory>().FromPoolableMemoryPool<DeckAgentCore, DeckCoreAgentPool>(poolBinder => poolBinder.WithInitialSize(0).FromComponentInNewPrefab(agentCorePrefab).UnderTransformGroup("Agent"));
             Container.BindFactory<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().FromPoolableMemoryPool<DeckConfirmationPopUp, DeckConfirmationPopUpPool>(poolBinder => poolBinder.WithInitialSize(0).FromComponentInNewPrefab(confirmationPopUpPrefab).UnderTransformGroup("UIPool"));
-            Container.BindFactory<DeckAgentChest, DeckAgentChest.Factory>().FromComponentInNewPrefab(chestAgentPrefab);
         }
 
         private class DeckHealthBarPool : MonoPoolableMemoryPool<IMemoryPool, DeckHealthBar>
@@ -46,11 +40,6 @@ namespace Deck.Data.Pool
         private class DeckInventoryPopUpPool : MonoPoolableMemoryPool<IMemoryPool, DeckInventoryPopUp>
         {
         }
-
-        private class DeckCoreAgentPool : MonoPoolableMemoryPool<IMemoryPool, DeckAgentCore>
-        {
-        }
-
 
         private class DeckConfirmationPopUpPool : MonoPoolableMemoryPool<IMemoryPool, DeckConfirmationPopUp>
         {

@@ -18,3 +18,4 @@ MonoBehaviour:
     dataMovement: {fileID: 11400000, guid: 6bcc5a01fe3795e49a09be80b320d068, type: 2}
   chestAgentData:
     dataHealth: {fileID: 11400000, guid: 653bd65eb953b3346a1b135d124d07cc, type: 2}
+    dataMovement: {fileID: 11400000, guid: a316220ecc5f93a41a1f481b49fd7a1e, type: 2}

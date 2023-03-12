@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Deck.Agent;
 using Deck.Components;
-using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.MVC;
 using Deck.Save;
@@ -27,22 +25,17 @@ namespace Deck.GameManager
             DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.ResetController();
         }
 
-        private DeckBinderGeneral _binderGeneral;
         private DiContainer _container;
+        private DeckAgentLoadResolver _loadResolver;
         private DeckAgentCore.Factory _agentFactory;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderGeneral binderGeneral, DeckAgentCore.Factory agentFactory)
+        private void Inject(DiContainer container, DeckAgentLoadResolver loadResolver, DeckAgentCore.Factory agentFactory)
         {
             _container = container;
-            _binderGeneral = binderGeneral;
+            _loadResolver = loadResolver;
             _agentFactory = agentFactory;
         }
-
-        public override void Initialize()
-        {
-        }
-
 
         public void CreateNewGame()
         {
@@ -72,25 +65,20 @@ namespace Deck.GameManager
             Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
 
             var playerData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
-            foreach (var deckCoreAgentSaveData in playerData.ids)
-            {
-                _agentFactory.Create().LoadData(deckCoreAgentSaveData);
-            }
+            _loadResolver.ResolveAndLoad(playerData);
         }
 
         public void Test_FillSaveFile()
         {
             var newCoreAgentData = new DeckComponentHolderSaveDatas();
-            newCoreAgentData.ids = new List<DeckComponentHolderSaveData>();
-            foreach (var deckCoreAgent in Deck.GetService<DeckMapService>().GetAgents())
+            foreach (var deckCoreAgent in FindObjectsOfType<DeckAgent>())
             {
-                newCoreAgentData.ids.Add(new DeckComponentHolderSaveData
+                newCoreAgentData.datas.Add(new DeckComponentHolderSaveData
                 {
-                    id = deckCoreAgent.GetName(),
+                    id = deckCoreAgent.GetId(),
                     componentDatas = deckCoreAgent.GetSaveData()
                 });
             }
-
             DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), newCoreAgentData);
         }
     }

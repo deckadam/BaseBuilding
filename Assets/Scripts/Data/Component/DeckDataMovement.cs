@@ -7,8 +7,10 @@ namespace Data.Component
     {
         [SerializeField] private float movementSpeed;
         [SerializeField] private float acceleration;
+        [SerializeField] private float angularSpeed;
 
         public float MovementSpeed => movementSpeed;
         public float Acceleration => acceleration;
+        public float AngularSpeed => angularSpeed;
     }
 }

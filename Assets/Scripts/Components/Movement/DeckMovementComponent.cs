@@ -1,7 +1,5 @@
 ﻿using System;
-using Cysharp.Threading.Tasks;
 using Data.Component;
-using Deck.Components.Operations;
 using UnityEngine;
 using UnityEngine.AI;
 using Object = UnityEngine.Object;
@@ -16,8 +14,11 @@ namespace Deck.Components
         protected override void Initialize()
         {
             _navMeshAgent = holder.gameObject.AddComponent<NavMeshAgent>();
-            _navMeshAgent.speed = holder.GetData<DeckDataMovement>().MovementSpeed;
-            _navMeshAgent.acceleration = holder.GetData<DeckDataMovement>().Acceleration;
+            
+            var data = holder.GetData<DeckDataMovement>();
+            _navMeshAgent.speed = data.MovementSpeed;
+            _navMeshAgent.acceleration = data.Acceleration;
+            _navMeshAgent.angularSpeed = data.AngularSpeed;
         }
 
         public override void DeInitialize()
@@ -28,9 +29,9 @@ namespace Deck.Components
         public bool SetDestination(Vector3 target)
         {
             _navMeshAgent.SetDestination(target);
-            
+
             var distance = Vector3.Distance(_navMeshAgent.transform.position, target);
-            
+
             if (distance < 1f)
             {
                 return true;

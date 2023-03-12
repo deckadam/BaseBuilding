@@ -131,7 +131,7 @@ namespace Deck.UI
 
         public virtual void OnCloseRequested()
         {
-            Disappear();
+            Disappear().Forget();
         }
     }
 }

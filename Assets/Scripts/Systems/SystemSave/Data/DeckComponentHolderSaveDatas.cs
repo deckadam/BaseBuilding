@@ -7,7 +7,7 @@ namespace Deck.Save.Data
     [Serializable]
     public class DeckComponentHolderSaveDatas
     {
-        public List<DeckComponentHolderSaveData> ids;
+        public List<DeckComponentHolderSaveData> datas = new();
     }
 
     public class DeckComponentHolderSaveData

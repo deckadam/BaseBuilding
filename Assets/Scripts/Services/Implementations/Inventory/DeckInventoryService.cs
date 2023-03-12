@@ -29,7 +29,6 @@ namespace Services.Implementations.Inventory
 
         public bool TryToPlace()
         {
-
             if (_hovered == _cell.GetPopUp())
             {
                 return true;
@@ -41,7 +40,11 @@ namespace Services.Implementations.Inventory
             }
 
             var item = _cell.GetItem();
-            _ = new DeckCommandTransferItem(item, _cell.GetPopUp().GetBindedInventory(), _hovered.GetBindedInventory()).ProcessCommand();
+            var inventory = _cell.GetPopUp().GetBindedInventory();
+            var agent = inventory.GetComponentHolder();
+            
+            agent.AddCommand(new DeckCommandTransferItem(item, inventory, _hovered.GetBindedInventory()));
+            
             return true;
         }
     }

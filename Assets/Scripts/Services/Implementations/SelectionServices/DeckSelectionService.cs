@@ -1,4 +1,4 @@
-﻿using Deck.Component;
+﻿using Deck.Agent;
 using Deck.Components.Operations;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
@@ -24,7 +24,7 @@ namespace Deck.Services.Implementations.CellSelectionService
         private Vector2Int _size;
         private DeckHotKeySelectionHandler _hotKeySelectionHandler;
 
-        private DeckSelectionHighlighter _highlighter;
+        private static DeckSelectionHighlighter _highlighter;
 
         [Inject]
         private void Inject(DeckSelectionHighlighter highlighter)
@@ -134,7 +134,7 @@ namespace Deck.Services.Implementations.CellSelectionService
             DeckOnAgentDeathEvent.Create(dead.agent).Send();
         }
 
-        public void ResetSelectionToPossession()
+        public static void ResetSelectionToPossession()
         {
             currentSelection = currentPossession;
             _highlighter.SetTarget(currentPossession);

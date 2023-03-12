@@ -19,7 +19,7 @@ namespace Deck.Inventory
         public override UniTask<bool> ProcessCommand()
         {
             _target.AddItem(_itemToAdd);
-            return base.ProcessCommand();
+            return default;
         }
     }
 }

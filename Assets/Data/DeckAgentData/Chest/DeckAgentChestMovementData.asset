@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0f51f9c10f24cf1929a190d04789646, type: 3}
-  m_Name: Deck Damage Data
+  m_Script: {fileID: 11500000, guid: 172f0a94972c466fb6f1d86db5d70491, type: 3}
+  m_Name: DeckAgentChestMovementData
   m_EditorClassIdentifier: 
-  damageAmount: 1
+  movementSpeed: 0
+  acceleration: 0
+  angularSpeed: 0

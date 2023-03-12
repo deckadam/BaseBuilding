@@ -1,6 +1,5 @@
 ﻿using System;
 using Deck.Agent;
-using Deck.Component;
 using Deck.Components;
 using Deck.Data.Damage;
 using Deck.Data.Item;
@@ -124,7 +123,12 @@ namespace Deck.InputHandling
             if (DeckSelectionService.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
                 var newPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
-                newPopUp.SetTarget(DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>());
+                var inventoryComponent = DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>();
+                if (inventoryComponent != null)
+                {
+                }
+
+                newPopUp.SetTarget(inventoryComponent);
             }
         }
 
@@ -135,7 +139,7 @@ namespace Deck.InputHandling
                 if (DeckSelectionService.currentSelection == null) return;
                 var randomItem = _binderItem.GetItems().GetRandom();
                 var itemInstance = Instantiate(randomItem);
-                new DeckCommandAddItem(itemInstance, DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>()).ProcessCommand();
+                DeckSelectionService.currentSelection.AddCommand(new DeckCommandAddItem(itemInstance, DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>()));
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
             }
         }

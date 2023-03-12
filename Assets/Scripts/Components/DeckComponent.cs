@@ -1,5 +1,5 @@
 ﻿using System;
-using Deck.Component;
+using Deck.Agent;
 
 namespace Deck.Components
 {

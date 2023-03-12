@@ -28,7 +28,7 @@ namespace Deck.UI
             }
 
             var delta = (Vector2)Input.mousePosition - _clickPosition;
-            rect.anchoredPosition = delta / 2f + _startPosition;
+            rect.anchoredPosition = delta + _startPosition;
         }
 
         public virtual bool CanDrag => true;
