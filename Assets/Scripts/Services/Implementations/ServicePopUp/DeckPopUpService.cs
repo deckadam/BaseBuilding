@@ -1,4 +1,4 @@
-﻿using Deck.UI;
+﻿using Deck.Utility.Constants;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;

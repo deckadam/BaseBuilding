@@ -5,17 +5,18 @@ using Deck.Services.Implementations.CellSelectionService.Events;
 using Deck.Services.Implementations.MapService;
 using Deck.Utility.Logger;
 using UnityEngine;
+using UnityEngine.AI;
 using Zenject;
 
 namespace Deck.Agent
 {
+    [RequireComponent(typeof(NavMeshAgent))]
     public class DeckAgentCore : DeckAgent
     {
         [Inject]
         private void Inject(DeckDataAgentCore data, DeckComponent[] components)
         {
             SetComponentDatas(data.GetDataArray());
-            Debug.LogError(components.Length);
             SetComponents(components);
         }
 

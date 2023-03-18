@@ -23,13 +23,16 @@ namespace Deck.Data.Item
         {
             if (_itemsWithNameAccess.TryGetValue(name, out var item))
             {
-                return item;
+                var newItem = Instantiate(item);
+                newItem.ResetAmount();
+                newItem.AddToAmount(item.GetAmount());
+                return newItem;
             }
 
             throw new Exception("Item with name not found  " + name);
         }
 
-        public IEnumerable<DeckDataItem> GetItems()
+        public List<DeckDataItem> GetItems()
         {
             return items;
         }

@@ -14,6 +14,7 @@ namespace Deck.Map.Selection
         public void SetTarget(DeckAgent newTarget)
         {
             _target = newTarget;
+            _target.OnAgentSizeChanged -= OnTargetSizeChanged;
             _tokenSource?.Cancel();
             _tokenSource = new CancellationTokenSource();
             Follow(_target, _tokenSource.Token);
@@ -22,8 +23,14 @@ namespace Deck.Map.Selection
         public void ClearTarget()
         {
             _tokenSource?.Cancel();
+            _target.OnAgentSizeChanged -= OnTargetSizeChanged;
             _target = null;
             transform.position = Vector3.down * 1000f;
+        }
+
+        private void OnTargetSizeChanged(float newSize)
+        {
+            transform.localScale = newSize * Vector3.one;
         }
 
         private async void Follow(DeckAgent target, CancellationToken token)

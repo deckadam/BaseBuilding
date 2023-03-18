@@ -2,7 +2,7 @@
 using Deck.InputHandling.Events;
 using UnityEngine;
 using UnityEngine.AI;
-using Utility;
+using Deck.Utility;
 
 namespace Deck.Map
 {

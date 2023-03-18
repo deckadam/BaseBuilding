@@ -7,37 +7,35 @@ using Object = UnityEngine.Object;
 namespace Deck.Components
 {
     [Serializable]
-    public class DeckMovementComponent : DeckComponent
+    public class DeckComponentMovement : DeckComponent
     {
         private NavMeshAgent _navMeshAgent;
+        private bool _static;
 
         protected override void Initialize()
         {
-            _navMeshAgent = holder.gameObject.AddComponent<NavMeshAgent>();
-            
+            if (!holder.TryGetComponent<NavMeshAgent>(out var result))
+            {
+                _static = true;
+                return;
+            }
+
+            _navMeshAgent = result;
             var data = holder.GetData<DeckDataMovement>();
             _navMeshAgent.speed = data.MovementSpeed;
             _navMeshAgent.acceleration = data.Acceleration;
             _navMeshAgent.angularSpeed = data.AngularSpeed;
         }
 
-        public override void DeInitialize()
-        {
-            Object.Destroy(_navMeshAgent);
-        }
-
         public bool SetDestination(Vector3 target)
         {
-            _navMeshAgent.SetDestination(target);
-
-            var distance = Vector3.Distance(_navMeshAgent.transform.position, target);
-
-            if (distance < 1f)
+            if (!_static)
             {
-                return true;
+                _navMeshAgent.SetDestination(target);
             }
 
-            return false;
+            var distance = Vector3.Distance(holder.transform.position, target);
+            return distance < 1f;
         }
 
         public override object GetData()
@@ -51,6 +49,11 @@ namespace Deck.Components
 
         public override void LoadData(string value)
         {
+            if (_static)
+            {
+                return;
+            }
+
             var data = JsonUtility.FromJson<DeckMovementComponentData>(value);
             _navMeshAgent.Warp(data.position);
             holder.transform.rotation = Quaternion.Euler(data.rotation);

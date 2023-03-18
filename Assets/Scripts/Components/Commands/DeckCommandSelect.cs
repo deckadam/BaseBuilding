@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 
-namespace Deck.Components.Operations
+namespace Deck.Components
 {
     public class DeckCommandSelect : DeckCommand
     {

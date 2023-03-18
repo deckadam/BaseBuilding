@@ -1,6 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Deck.Components.Operations;
+using Deck.Components;
 using Deck.Data.Damage;
 
 namespace Deck.Components

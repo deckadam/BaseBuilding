@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Components;
 using Data.Component;
 using Deck.Components;
-using Deck.Components.Operations;
 using Deck.Save.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Utility.Enums;
 
 namespace Deck.Agent
 {
     public abstract class DeckAgent : MonoBehaviour
     {
+        [SerializeField] private float activeSize = -1f;
+        [FormerlySerializedAs("shape"),SerializeField] private DeckAgentShape shape;
+        public event Action<float> OnAgentSizeChanged;
         public DeckComponent[] components { get; private set; }
-        public float defaultSize = 1f;
-        [SerializeField] private float _activeSize = -1f;
         private Dictionary<Type, DeckComponentData> _datas;
         private bool _hasSetComponents;
         private DeckAgentCommandProcessor _commandProcessor;
@@ -44,6 +45,11 @@ namespace Deck.Agent
 
         protected void Initialize()
         {
+            if (activeSize < 0f)
+            {
+                throw new Exception("Size value can not be lower than zero");
+            }
+
             if (!_hasSetComponents)
             {
                 throw new Exception("Components hasn't been set");
@@ -157,7 +163,14 @@ namespace Deck.Agent
             _commandProcessor.AddCommand(command);
         }
 
-        public virtual float GetSize() => Math.Abs(_activeSize + 1) < 0.001f ? defaultSize : _activeSize;
+        protected void SetSize(float newSize)
+        {
+            activeSize = newSize;
+            OnAgentSizeChanged?.Invoke(activeSize);
+        }
+
+        public float GetSize() => activeSize;
+        public DeckAgentShape GetShape() => shape;
         public abstract void RequestDeath();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.UI
+namespace Deck.Utility.Constants
 {
     public class DeckPopUpBase : MonoBehaviour
     {

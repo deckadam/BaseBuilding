@@ -1,7 +1,7 @@
 ﻿using Deck.Map.Agent.Chest;
-using Deck.UI.Health;
-using Deck.UI.Inventory;
-using Deck.UI.SaveListingMenu;
+using Deck.Utility.Constants.Health;
+using Deck.Utility.Constants.Inventory;
+using Deck.Utility.Constants.SaveListingMenu;
 using UnityEngine;
 using Zenject;
 

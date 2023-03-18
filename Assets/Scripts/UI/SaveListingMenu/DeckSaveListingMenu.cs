@@ -6,14 +6,14 @@ using Deck.Services;
 using Deck.Services.Implementations;
 using Deck.GameManager;
 using Deck.GameManager.Constants;
-using Deck.UI.Inventory;
-using Deck.UI.SaveListingMenu.Events;
+using Deck.Utility.Constants.Inventory;
+using Deck.Utility.Constants.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.UI.SaveListingMenu
+namespace Deck.Utility.Constants.SaveListingMenu
 {
     public class DeckSaveListingMenu : DeckUIBase
     {

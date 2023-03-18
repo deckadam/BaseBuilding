@@ -6,10 +6,10 @@ using Deck.MVC;
 
 namespace Deck.Services.Implementations.HealthService
 {
-    public class DeckHealthService : DeckServiceBase, IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>>
+    public class DeckHealthService : DeckServiceBase, IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>>
     {
-        private List<DeckHealthComponent> _healthComponents;
-        private Action<IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>>> _listeners;
+        private List<DeckComponentHealth> _healthComponents;
+        private Action<IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>>> _listeners;
         private bool _hasInitialized;
 
         public override void Initialize()
@@ -19,38 +19,38 @@ namespace Deck.Services.Implementations.HealthService
                 return;
             }
 
-            _healthComponents = new List<DeckHealthComponent>();
-            DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController().SetModel(this);
+            _healthComponents = new List<DeckComponentHealth>();
+            DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController().SetModel(this);
         }
 
-        public void AddData(DeckHealthComponent data)
+        public void AddData(DeckComponentHealth data)
         {
             _healthComponents.Add(data);
             Raise();
         }
 
-        public void RemoveData(DeckHealthComponent data)
+        public void RemoveData(DeckComponentHealth data)
         {
             _healthComponents.Remove(data);
             Raise();
         }
 
-        public IEnumerable<DeckHealthComponent> Getter()
+        public IEnumerable<DeckComponentHealth> Getter()
         {
             return _healthComponents;
         }
 
-        public void Setter(IEnumerable<DeckHealthComponent> obj)
+        public void Setter(IEnumerable<DeckComponentHealth> obj)
         {
             _healthComponents = obj.ToList();
         }
 
-        public void Register(Action<IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>>> listener)
+        public void Register(Action<IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>>> listener)
         {
             _listeners += listener;
         }
 
-        public void Unregister(Action<IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>>> listener)
+        public void Unregister(Action<IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>>> listener)
         {
             _listeners -= listener;
         }

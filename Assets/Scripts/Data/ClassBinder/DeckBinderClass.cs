@@ -1,13 +1,12 @@
 ﻿using Cinemachine;
 using Deck.Agent;
 using Deck.Components;
-using Deck.Inventory;
 using Deck.Map.Agent.Chest;
 using Deck.Map.Selection;
 using Deck.Save;
 using Deck.Services.Implementations;
-using Deck.UI.Health;
-using Deck.UI.Inventory;
+using Deck.Utility.Constants.Health;
+using Deck.Utility.Constants.Inventory;
 using UnityEngine;
 using Zenject;
 
@@ -18,14 +17,15 @@ namespace Deck.Installers
         public override void InstallBindings()
         {
             //Component binds
-            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
-            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckComponentMovement>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentCore>();
             Container.Bind<DeckComponent>().To<DeckComponentDamageDealer>().AsTransient().WhenInjectedInto<DeckAgentCore>();
-            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckComponentInventory>().AsTransient().WhenInjectedInto<DeckAgentCore>();
 
-            Container.Bind<DeckComponent>().To<DeckHealthComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
-            Container.Bind<DeckComponent>().To<DeckInventoryComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
-            Container.Bind<DeckComponent>().To<DeckMovementComponent>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckComponentInventory>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckComponentMovement>().AsTransient().WhenInjectedInto<DeckAgentChest>();
+            Container.Bind<DeckComponent>().To<DeckComponentAnimatorChest>().AsTransient().WhenInjectedInto<DeckAgentChest>();
 
             //Scene references
             Container.Bind<CinemachineConfiner>().FromComponentInHierarchy().AsSingle();

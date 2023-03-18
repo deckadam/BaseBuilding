@@ -5,11 +5,11 @@ using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI.Health
+namespace Deck.Utility.Constants.Health
 {
     public class DeckHealthUI : DeckUIBase
     {
-        private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _uiController;
+        private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _uiController;
         private List<DeckHealthBar> _healthBars = new();
         private DeckHealthBar.Factory _healthBarFactory;
         private bool _canCorrectSelf = true;
@@ -22,7 +22,7 @@ namespace Deck.UI.Health
 
         public override void Initialize()
         {
-            _uiController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
+            _uiController = DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController();
             _uiController.AddModelListener(CreateNewCells);
         }
 
@@ -41,7 +41,7 @@ namespace Deck.UI.Health
             _canCorrectSelf = false;
         }
 
-        private void CreateNewCells(IDeckModel<DeckHealthComponent, IEnumerable<DeckHealthComponent>> items)
+        private void CreateNewCells(IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>> items)
         {
 
             if (!_isAppeared && !isAppearing ||!_canCorrectSelf)

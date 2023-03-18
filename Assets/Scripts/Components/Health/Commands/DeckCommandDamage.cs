@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Agent;
-using Deck.Components.Operations;
+using Deck.Components;
 using Deck.Data.Damage;
 
 namespace Deck.Components
@@ -21,7 +21,7 @@ namespace Deck.Components
 
         public override UniTask<bool> ProcessCommand()
         {
-            _target.GetDeckComponent<DeckHealthComponent>().ChangeHealth(_damageData, _canKill);
+            _target.GetDeckComponent<DeckComponentHealth>().ChangeHealth(_damageData, _canKill);
             return default;
         }
     }

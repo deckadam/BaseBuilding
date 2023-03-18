@@ -1,5 +1,5 @@
 ﻿using Deck.Agent;
-using Deck.Components.Operations;
+using Deck.Components;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Map;
@@ -8,7 +8,6 @@ using Deck.Services.Implementations.CellSelectionService.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
-using Utility;
 using Zenject;
 
 namespace Deck.Services.Implementations.CellSelectionService

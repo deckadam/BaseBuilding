@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Deck.Components
 {
     [Serializable]
-    public class DeckHealthComponent : DeckComponent
+    public class DeckComponentHealth : DeckComponent
     {
         private Action OnHealthChanged;
 
@@ -18,7 +18,7 @@ namespace Deck.Components
         private int _currentHealth;
         private int _limitHealth;
 
-        private DeckMVCController<DeckHealthComponent, IEnumerable<DeckHealthComponent>> _healthController;
+        private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
 
         protected override void Initialize()
         {
@@ -27,7 +27,7 @@ namespace Deck.Components
 
             _currentHealth = _dataHealth.Health;
 
-            _healthController = DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.GetController();
+            _healthController = DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController();
             _healthController.GetModel().AddData(this);
         }
 

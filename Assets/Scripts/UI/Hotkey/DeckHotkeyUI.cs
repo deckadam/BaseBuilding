@@ -1,8 +1,8 @@
 ﻿using Deck.EventManager;
-using Deck.UI.Hotkey.Events;
+using Deck.Utility.Constants.Hotkey.Events;
 using UnityEngine;
 
-namespace Deck.UI.Hotkey
+namespace Deck.Utility.Constants.Hotkey
 {
     public class DeckHotkeyUI : DeckUIBase
     {

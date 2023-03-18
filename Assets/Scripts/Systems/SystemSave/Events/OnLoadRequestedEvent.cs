@@ -1,7 +1,7 @@
 ﻿using Deck.EventManager;
 using Deck.Save;
 
-namespace Deck.UI.SaveListingMenu.Events
+namespace Deck.Utility.Constants.SaveListingMenu.Events
 {
     public class OnLoadRequestedEvent : DeckEvent
     {

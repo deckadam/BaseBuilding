@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI
+namespace Deck.Utility.Constants
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : MonoBehaviour

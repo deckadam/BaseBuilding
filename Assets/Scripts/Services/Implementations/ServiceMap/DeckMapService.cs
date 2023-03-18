@@ -3,12 +3,13 @@ using Deck.Data.Map;
 using Deck.InputHandling.Events;
 using Deck.Map;
 using Deck.Agent;
-using Deck.UI.Hotkey.Events;
+using Deck.Utility.Constants.Hotkey.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using GameEvents;
 using UnityEngine;
 using UnityEngine.AI;
+using Deck.Utility.Constants;
 using Zenject;
 
 namespace Deck.Services.Implementations.MapService
@@ -51,7 +52,8 @@ namespace Deck.Services.Implementations.MapService
         public void CreateMap()
         {
             if (map) Destroy(map.gameObject);
-            var temp = new GameObject {name = "Test map"};
+            var temp = new GameObject { name = "Test map" };
+            temp.tag = DeckConstantsTag.MAP;
             map = temp.AddComponent<DeckMap>();
             DeckOnMapLoadedEvent.Create().Send();
         }
@@ -72,7 +74,7 @@ namespace Deck.Services.Implementations.MapService
 
             var renderer = ground.GetComponent<MeshRenderer>();
             renderer.material = _binderMap.basePlaneMaterial;
-            renderer.material.SetVector("_Tiling", new Vector4(deckCoreGrid.size.x, deckCoreGrid.size.y));
+            renderer.material.SetVector(DeckConstantsShader.Tiling, new Vector4(deckCoreGrid.size.x, deckCoreGrid.size.y));
 
             groundMaterial = renderer.material;
             DeckLogger.Map("Finished ground creation");

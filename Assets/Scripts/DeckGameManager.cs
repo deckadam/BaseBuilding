@@ -22,7 +22,7 @@ namespace Deck.GameManager
         private static void InitializeGame()
         {
             DeckMVC<DeckDataItem, IEnumerable<DeckDataItem>>.ResetController();
-            DeckMVC<DeckHealthComponent, IEnumerable<DeckHealthComponent>>.ResetController();
+            DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.ResetController();
         }
 
         private DiContainer _container;
@@ -48,7 +48,6 @@ namespace Deck.GameManager
             Deck.GetService<DeckMapService>().SetGrid(grid);
             Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
             Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
-
             _agentFactory.Create().StartWithClearData();
         }
 
@@ -79,6 +78,7 @@ namespace Deck.GameManager
                     componentDatas = deckCoreAgent.GetSaveData()
                 });
             }
+
             DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), newCoreAgentData);
         }
     }

@@ -1,15 +1,15 @@
 ﻿using Deck.GameManager.Constants;
 using Deck.Save;
 using Deck.Services.Implementations;
-using Deck.UI.Inventory;
-using Deck.UI.SaveListingMenu.Events;
+using Deck.Utility.Constants.Inventory;
+using Deck.Utility.Constants.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Deck.UI.SaveListingMenu
+namespace Deck.Utility.Constants.SaveListingMenu
 {
     public class DeckSaveDisplayer : MonoBehaviour, IPoolable<IMemoryPool>, IPointerClickHandler
     {

@@ -1,6 +1,6 @@
 ﻿using Deck.EventManager;
 
-namespace Deck.UI.Hotkey.Events
+namespace Deck.Utility.Constants.Hotkey.Events
 {
     public class DeckOnHotkeySelected : DeckEvent
     {

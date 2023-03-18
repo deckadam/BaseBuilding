@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af49624f272d4f11b419ed0f6f212ba0, type: 3}
-  m_Name: Deck item
+  m_Script: {fileID: 11500000, guid: bf334e42a21b42f680bbf640af99d30c, type: 3}
+  m_Name: DeckChestLidClosingAnimationData
   m_EditorClassIdentifier: 
-  name: Money
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  amount: 5
+  isLocal: 0
+  amount: {x: 0, y: 0, z: 0}
+  duration: 0.3
+  ease: 2

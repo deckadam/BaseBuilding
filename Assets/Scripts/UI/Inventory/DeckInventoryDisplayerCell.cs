@@ -2,14 +2,14 @@
 using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
 using Deck.Services.Implementations;
-using Deck.UI.GamePlay;
+using Deck.Utility.Constants.GamePlay;
 using Services.Implementations.Inventory;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.UI.Inventory
+namespace Deck.Utility.Constants.Inventory
 {
     public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>
     {
@@ -28,8 +28,8 @@ namespace Deck.UI.Inventory
         public void Initialize(DeckDataItem dataItem, DeckInventoryPopUp popup)
         {
             _item = dataItem;
-            image.sprite = _item.icon;
-            amount.text = _item.amount.ToString();
+            image.sprite = _item.GetIcon();
+            amount.text = _item.GetAmount().ToString();
             _popup = popup;
         }
 
@@ -56,7 +56,6 @@ namespace Deck.UI.Inventory
             }
 
             _isClicked = true;
-            Debug.LogError("Clicked");
             _source?.Cancel();
             _source = new CancellationTokenSource();
             FollowCursor(_source);
@@ -70,7 +69,6 @@ namespace Deck.UI.Inventory
             }
 
             _isClicked = false;
-            Debug.LogError("Released");
             _source?.Cancel();
         }
 

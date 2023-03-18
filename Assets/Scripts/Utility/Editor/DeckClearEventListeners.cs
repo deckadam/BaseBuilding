@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Utility.Editor
+namespace Deck.Utility.Editor
 {
     public static class DeckClearEventListeners
     {

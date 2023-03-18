@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Agent;
 
-namespace Deck.Components.Operations
+namespace Deck.Components
 {
     public class DeckCommandPossess : DeckCommand
     {

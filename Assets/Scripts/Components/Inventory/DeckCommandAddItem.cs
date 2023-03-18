@@ -1,15 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.Components.Operations;
+using Deck.Components;
 using Deck.Data.Item;
 
-namespace Deck.Inventory
+namespace Deck.Components
 {
     public class DeckCommandAddItem : DeckCommand
     {
         private DeckDataItem _itemToAdd;
-        private DeckInventoryComponent _target;
+        private DeckComponentInventory _target;
 
-        public DeckCommandAddItem(DeckDataItem itemToAdd, DeckInventoryComponent target)
+        public DeckCommandAddItem(DeckDataItem itemToAdd, DeckComponentInventory target)
         {
             _itemToAdd = itemToAdd;
             _target = target;

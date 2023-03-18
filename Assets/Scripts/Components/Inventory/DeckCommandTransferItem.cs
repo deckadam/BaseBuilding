@@ -1,21 +1,19 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.Components;
-using Deck.Components.Operations;
 using Deck.Data.Item;
 using Deck.Services.Implementations.CellSelectionService;
 using Deck.Utility.Logger;
 
-namespace Deck.Inventory
+namespace Deck.Components
 {
     public class DeckCommandTransferItem : DeckCommand
     {
         private DeckCommandAddItem _addCommand;
         private DeckCommandRemoveItem _removeCommand;
-        private DeckInventoryComponent _from;
-        private DeckInventoryComponent _to;
+        private DeckComponentInventory _from;
+        private DeckComponentInventory _to;
         private DeckDataItem _itemOfInterest;
 
-        public DeckCommandTransferItem(DeckDataItem itemOfInterest, DeckInventoryComponent from, DeckInventoryComponent to)
+        public DeckCommandTransferItem(DeckDataItem itemOfInterest, DeckComponentInventory from, DeckComponentInventory to)
         {
             commandType = DeckCommandType.Movement;
             _addCommand = new DeckCommandAddItem(itemOfInterest, to);
@@ -27,7 +25,7 @@ namespace Deck.Inventory
         public override async UniTask<bool> ProcessCommand()
         {
             DeckSelectionService.ResetSelectionToPossession();
-            var movementComponent = _from.GetComponentHolder().GetDeckComponent<DeckMovementComponent>();
+            var movementComponent = _from.GetComponentHolder().GetDeckComponent<DeckComponentMovement>();
             if (movementComponent == null)
             {
                 DeckLogger.Inform("Source of item doesn't contain movement component");

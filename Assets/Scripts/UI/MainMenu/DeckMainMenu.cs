@@ -3,15 +3,15 @@ using Deck.EventManager;
 using Deck.Save;
 using Deck.Services.Implementations;
 using Deck.GameManager;
-using Deck.UI.SaveListingMenu;
-using Deck.UI.SaveListingMenu.Events;
+using Deck.Utility.Constants.SaveListingMenu;
+using Deck.Utility.Constants.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
 #pragma warning disable 4014
 
-namespace Deck.UI.MainMenu
+namespace Deck.Utility.Constants.MainMenu
 {
     public class DeckMainMenu : DeckUIBase
     {

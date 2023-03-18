@@ -1,7 +1,7 @@
-﻿using Deck.UI;
+﻿using Deck.Utility.Constants;
 using UnityEngine;
 
-namespace Deck.UI.GamePlay
+namespace Deck.Utility.Constants.GamePlay
 {
     public class DeckGamePlayUI : DeckUIBase
     {

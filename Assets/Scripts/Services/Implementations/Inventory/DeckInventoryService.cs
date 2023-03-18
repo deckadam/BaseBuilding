@@ -1,6 +1,6 @@
-﻿using Deck.Inventory;
+﻿using Deck.Components;
 using Deck.Services;
-using Deck.UI.Inventory;
+using Deck.Utility.Constants.Inventory;
 
 namespace Services.Implementations.Inventory
 {

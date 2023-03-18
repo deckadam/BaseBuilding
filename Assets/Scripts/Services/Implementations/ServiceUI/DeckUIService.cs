@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Deck.UI;
+using Deck.Utility.Constants;
 using Deck.Utility;
 using Deck.Utility.Logger;
 

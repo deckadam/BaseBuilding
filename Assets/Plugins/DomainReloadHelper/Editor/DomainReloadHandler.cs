@@ -67,7 +67,7 @@ public class DomainReloadHandler
                 executedMethods++;
             }
         }
-        Debug.Log($"Cleared {clearedValues} members; executed {executedMethods} methods.");
+        // Debug.Log($"Cleared {clearedValues} members; executed {executedMethods} methods.");
 
         Profiler.EndSample();
     }

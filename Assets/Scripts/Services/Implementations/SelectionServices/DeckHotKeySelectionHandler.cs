@@ -2,7 +2,7 @@
 using Deck.EventManager;
 using Deck.Services.Implementations.CellSelectionService.Events;
 using Deck.Services.Implementations.MapService;
-using Deck.UI.Hotkey.Events;
+using Deck.Utility.Constants.Hotkey.Events;
 using Deck.Utility.Logger;
 using ModestTree;
 using UnityEngine;

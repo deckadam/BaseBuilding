@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Deck.Data.Item;
-using Deck.Inventory;
+using Deck.Components;
 using Deck.Services.Implementations;
-using Deck.UI.GamePlay;
+using Deck.Utility.Constants.GamePlay;
 using Services.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Deck.UI.Inventory
+namespace Deck.Utility.Constants.Inventory
 {
     public class DeckInventoryPopUp : DeckPopUpBase, IPoolable<IMemoryPool>, IPointerEnterHandler, IPointerExitHandler
     {
@@ -17,7 +17,7 @@ namespace Deck.UI.Inventory
         private DeckInventoryDisplayerCell.Factory _inventoryCellFactory;
         private DeckInventoryService _inventoryService;
         private List<DeckInventoryDisplayerCell> _cells = new();
-        private DeckInventoryComponent _inventoryComponent;
+        private DeckComponentInventory _componentInventory;
         private IMemoryPool _pool;
 
         [Inject]
@@ -26,16 +26,17 @@ namespace Deck.UI.Inventory
             _inventoryCellFactory = factory;
         }
 
-        public void SetTarget(DeckInventoryComponent inventoryComponent)
+        public void SetTarget(DeckComponentInventory componentInventory)
         {
-            _inventoryComponent = inventoryComponent;
-            _inventoryComponent.AddListener(CreateNewCells);
+            _componentInventory = componentInventory;
+            _componentInventory.AddListener(CreateNewCells);
+            _componentInventory.OnInventoryViewStatusChanged(true);
 
             var gamePlayUIRect = Deck.GetService<DeckUIService>().GetUI<DeckGamePlayUI>().GetRectTransform();
             rect.SetParent(gamePlayUIRect, false);
             rect.anchoredPosition = Vector2.zero;
 
-            CreateNewCells(inventoryComponent.GetItems());
+            CreateNewCells(componentInventory.GetItems());
         }
 
         private void CreateNewCells(IEnumerable<DeckDataItem> items)
@@ -75,8 +76,9 @@ namespace Deck.UI.Inventory
         {
             _pool = null;
             ClearCurrentCells();
-            _inventoryComponent.RemoveListener(CreateNewCells);
-            _inventoryComponent = null;
+            _componentInventory.RemoveListener(CreateNewCells);
+            _componentInventory.OnInventoryViewStatusChanged(false);
+            _componentInventory = null;
         }
 
         public void OnSpawned(IMemoryPool p1)
@@ -85,7 +87,7 @@ namespace Deck.UI.Inventory
             _inventoryService = Deck.GetService<DeckInventoryService>();
         }
 
-        public DeckInventoryComponent GetBindedInventory() => _inventoryComponent;
+        public DeckComponentInventory GetBindedInventory() => _componentInventory;
 
         public class Factory : PlaceholderFactory<DeckInventoryPopUp>
         {

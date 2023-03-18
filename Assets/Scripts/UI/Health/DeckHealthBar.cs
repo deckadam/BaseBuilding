@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.UI.Health
+namespace Deck.Utility.Constants.Health
 {
     public class DeckHealthBar : MonoBehaviour, IPoolable<IMemoryPool>
     {
@@ -13,7 +13,7 @@ namespace Deck.UI.Health
         [SerializeField] private Image fillBar;
         private Camera _mainCamera;
         private Transform _target;
-        private DeckHealthComponent _healthComponent;
+        private DeckComponentHealth _componentHealth;
         private IMemoryPool _memory;
 
         [Inject]
@@ -22,20 +22,20 @@ namespace Deck.UI.Health
             _mainCamera = camera;
         }
 
-        public void Initialize(DeckHealthComponent healthComponent)
+        public void Initialize(DeckComponentHealth componentHealth)
         {
-            _healthComponent = healthComponent;
-            _healthComponent.Register(OnDataChanged);
+            _componentHealth = componentHealth;
+            _componentHealth.Register(OnDataChanged);
 
-            _target = healthComponent.GetComponentHolder().transform;
+            _target = componentHealth.GetComponentHolder().transform;
 
             OnDataChanged();
         }
 
         private void OnDataChanged()
         {
-            numberDisplay.text = _healthComponent.GetHealth().ToString();
-            fillBar.fillAmount = _healthComponent.GetHealthRatio();
+            numberDisplay.text = _componentHealth.GetHealth().ToString();
+            fillBar.fillAmount = _componentHealth.GetHealthRatio();
         }
 
         private void LateUpdate()
@@ -51,7 +51,7 @@ namespace Deck.UI.Health
         public void OnDespawned()
         {
             _memory = null;
-            _healthComponent?.Unregister(OnDataChanged);
+            _componentHealth?.Unregister(OnDataChanged);
         }
 
         public void OnSpawned(IMemoryPool p1)

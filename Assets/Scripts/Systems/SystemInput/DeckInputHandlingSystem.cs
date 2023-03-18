@@ -1,23 +1,22 @@
-﻿using System;
-using Deck.Agent;
+﻿using Deck.Agent;
 using Deck.Components;
 using Deck.Data.Damage;
 using Deck.Data.Item;
 using Deck.GameManager;
 using Deck.InputHandling.Events;
-using Deck.Inventory;
-using Deck.Map;
 using Deck.Map.Agent.Chest;
 using Deck.Save;
+using Deck.Services.Building;
 using Deck.Services.Implementations;
 using Deck.Services.Implementations.CellSelectionService;
 using Deck.Services.Implementations.GridService;
-using Deck.UI.GamePlay;
-using Deck.UI.Inventory;
+using Deck.Utility.Constants.GamePlay;
+using Deck.Utility.Constants.Inventory;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.AI;
+using Deck.Utility.Constants;
 using Zenject;
 
 namespace Deck.InputHandling
@@ -30,15 +29,13 @@ namespace Deck.InputHandling
         private DeckAgentCore.Factory _coreAgentFactory;
         private Camera _camera;
         private DeckSelectionService _selectionService;
-        private DeckAgentChest.Factory _chestAgentFactory;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckAgentCore.Factory agentFactory, Camera camera, DeckAgentChest.Factory chestAgentFactory)
+        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckAgentCore.Factory agentFactory, Camera camera)
         {
             _binderItem = tempBinderItem;
             _coreAgentFactory = agentFactory;
             _camera = camera;
-            _chestAgentFactory = chestAgentFactory;
         }
 
         private void Awake()
@@ -63,25 +60,41 @@ namespace Deck.InputHandling
             CheckForAttack();
             CheckForEscapeMenu();
             SaveCheck();
-            CheckForChestSpawn();
+            CheckForBuilding();
         }
 
-        private void CheckForChestSpawn()
+        private void CheckForBuilding()
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetKeyDown(KeyCode.B))
             {
-                var screenPosition = Input.mousePosition;
-                var ray = Camera.main.ScreenPointToRay(screenPosition);
-                var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
-                if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
+                var buildService = Deck.GetService<DeckBuildingService>();
+                var buildData = buildService.GetBuildable("Chest");
+
+                var hasItems = DeckSelectionService.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(buildData.GetMaterials());
+                if (!hasItems)
                 {
+                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
                     return;
                 }
 
-                var newChest = _chestAgentFactory.Create();
-                newChest.transform.position = navMeshHit.position;
+                var newChest = buildService.Build<DeckAgentChest>(buildData);
+                newChest.transform.position = GetWorldPosition();
                 newChest.StartWithClearData();
             }
+        }
+
+        private Vector3 GetWorldPosition()
+        {
+            var screenPosition = Input.mousePosition;
+            var ray = Camera.main.ScreenPointToRay(screenPosition);
+            var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
+
+            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
+            {
+                return Vector3.zero;
+            }
+
+            return navMeshHit.position;
         }
 
         private void SaveCheck()
@@ -123,7 +136,7 @@ namespace Deck.InputHandling
             if (DeckSelectionService.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
                 var newPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
-                var inventoryComponent = DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>();
+                var inventoryComponent = DeckSelectionService.currentSelection.GetDeckComponent<DeckComponentInventory>();
                 if (inventoryComponent != null)
                 {
                 }
@@ -139,7 +152,7 @@ namespace Deck.InputHandling
                 if (DeckSelectionService.currentSelection == null) return;
                 var randomItem = _binderItem.GetItems().GetRandom();
                 var itemInstance = Instantiate(randomItem);
-                DeckSelectionService.currentSelection.AddCommand(new DeckCommandAddItem(itemInstance, DeckSelectionService.currentSelection.GetDeckComponent<DeckInventoryComponent>()));
+                DeckSelectionService.currentSelection.AddCommand(new DeckCommandAddItem(itemInstance, DeckSelectionService.currentSelection.GetDeckComponent<DeckComponentInventory>()));
                 DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
             }
         }
@@ -194,7 +207,7 @@ namespace Deck.InputHandling
             if (!Input.GetMouseButtonDown(0)) return;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (!Physics.Raycast(ray, out var hit, 1000f)) return;
-            if (!hit.transform.TryGetComponent<DeckMap>(out var result)) return;
+            if (!hit.transform.CompareTag(DeckConstantsTag.MAP)) return;
             var pos = hit.point;
             var cell = Deck.GetService<DeckGridService>().GetCellWithWorldPosition(pos);
             if (cell == null) return;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.UI.Inventory;
+using Deck.Utility.Constants.Inventory;
 using Zenject;
 
 namespace Deck.Services.Implementations

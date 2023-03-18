@@ -1,6 +1,7 @@
 ﻿using Deck.Components;
 using Deck.Data.Component;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Map.Residents
@@ -8,12 +9,12 @@ namespace Deck.Map.Residents
     public class DeckMapObstacle : MonoBehaviour
     {
         [SerializeField] private DeckDataHealth dataHealth;
-        public DeckHealthComponent _healthComponent;
+        [FormerlySerializedAs("_healthComponent")] public DeckComponentHealth componentHealth;
 
         [Inject]
-        private void Inject(DeckHealthComponent healthComponent)
+        private void Inject(DeckComponentHealth componentHealth)
         {
-            _healthComponent = healthComponent;
+            this.componentHealth = componentHealth;
         }
     }
 }
