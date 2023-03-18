@@ -5,7 +5,7 @@ namespace Deck.Map
     public class DeckCell
     {
         public Vector3 position { get; }
-        public DeckCellResident resident { get; private set; }
+        public DeckAgentBlockade resident { get; private set; }
         public Vector2Int cellIndex { get; }
 
         public DeckCell(Vector3 position, Vector2Int cellIndex)
@@ -14,7 +14,7 @@ namespace Deck.Map
             this.cellIndex = cellIndex;
         }
 
-        public void SetResident(DeckCellResident newResident)
+        public void SetResident(DeckAgentBlockade newResident)
         {
             resident = newResident;
         }

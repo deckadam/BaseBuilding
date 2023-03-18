@@ -23,7 +23,12 @@ namespace Deck.Map.Selection
         public void ClearTarget()
         {
             _tokenSource?.Cancel();
-            _target.OnAgentSizeChanged -= OnTargetSizeChanged;
+
+            if (_target != null)
+            {
+                _target.OnAgentSizeChanged -= OnTargetSizeChanged;
+            }
+
             _target = null;
             transform.position = Vector3.down * 1000f;
         }

@@ -29,6 +29,7 @@ namespace Deck.Services.Implementations.CameraService
             }
 
             var temp = new GameObject();
+            temp.name = "Camera confiner";
             _generatedCollider = temp.AddComponent<BoxCollider>();
             var size = new Vector3(deckCoreGrid.size.x, 100f, deckCoreGrid.size.y);
             _generatedCollider.size = size;

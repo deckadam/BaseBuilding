@@ -109,7 +109,7 @@ namespace Deck.Components
             for (var i = 0; i < items.Count; i++)
             {
                 var item = items[i];
-                itemData[i] = new ItemData(item.name, item.GetAmount());
+                itemData[i] = new ItemData(item.GetName(), item.GetAmount());
             }
 
             return new SaveData(itemData);

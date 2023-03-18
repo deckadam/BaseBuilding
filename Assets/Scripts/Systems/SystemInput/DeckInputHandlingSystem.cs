@@ -1,5 +1,6 @@
 ﻿using Deck.Agent;
 using Deck.Components;
+using Deck.Data.Buildable;
 using Deck.Data.Damage;
 using Deck.Data.Item;
 using Deck.GameManager;
@@ -10,13 +11,13 @@ using Deck.Services.Building;
 using Deck.Services.Implementations;
 using Deck.Services.Implementations.CellSelectionService;
 using Deck.Services.Implementations.GridService;
+using Deck.Utility;
+using Deck.Utility.Constants;
 using Deck.Utility.Constants.GamePlay;
 using Deck.Utility.Constants.Inventory;
-using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.AI;
-using Deck.Utility.Constants;
 using Zenject;
 
 namespace Deck.InputHandling
@@ -69,6 +70,13 @@ namespace Deck.InputHandling
             {
                 var buildService = Deck.GetService<DeckBuildingService>();
                 var buildData = buildService.GetBuildable("Chest");
+                var worldPos = GetWorldPosition();
+
+                if (!buildService.CheckIfAgentBuildableInArea(buildData, worldPos))
+                {
+                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
+                    return;
+                }
 
                 var hasItems = DeckSelectionService.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(buildData.GetMaterials());
                 if (!hasItems)
@@ -78,10 +86,11 @@ namespace Deck.InputHandling
                 }
 
                 var newChest = buildService.Build<DeckAgentChest>(buildData);
-                newChest.transform.position = GetWorldPosition();
+                newChest.transform.position = worldPos;
                 newChest.StartWithClearData();
             }
         }
+
 
         private Vector3 GetWorldPosition()
         {

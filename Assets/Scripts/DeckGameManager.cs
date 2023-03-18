@@ -72,6 +72,11 @@ namespace Deck.GameManager
             var newCoreAgentData = new DeckComponentHolderSaveDatas();
             foreach (var deckCoreAgent in FindObjectsOfType<DeckAgent>())
             {
+                if (!deckCoreAgent.WillSave())
+                {
+                    continue;
+                }
+
                 newCoreAgentData.datas.Add(new DeckComponentHolderSaveData
                 {
                     id = deckCoreAgent.GetId(),

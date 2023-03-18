@@ -98,8 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1cdafe3d7e449afb3282d1ecb3778cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSize: 1.5
-  _activeSize: -1
+  activeSize: 1
+  shape: 1
+  willSave: 1
 --- !u!136 &7533218056992631309
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ namespace Deck.Data.Agent
 
         public DeckComponentData[] GetDataArray()
         {
-            return new DeckComponentData[] {dataHealth, dataDamage, dataMovement};
+            return new DeckComponentData[] { dataHealth, dataDamage, dataMovement };
         }
     }
 }

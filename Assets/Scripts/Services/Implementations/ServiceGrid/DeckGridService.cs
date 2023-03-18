@@ -8,9 +8,15 @@ namespace Deck.Services.Implementations.GridService
 {
     public class DeckGridService : DeckServiceBase
     {
-        [Inject] private DeckBinderMap _binderMap;
+        private DeckBinderMap _binderMap;
         private DeckCoreGrid _activeGrid;
         private Vector2Int _activeGridSize;
+
+        [Inject]
+        private void Inject(DeckBinderMap binderMap)
+        {
+            _binderMap = binderMap;
+        }
 
         public void GenerateGrid(out DeckCoreGrid deckCoreGrid)
         {
@@ -26,8 +32,8 @@ namespace Deck.Services.Implementations.GridService
         public DeckCell GetCellWithWorldPosition(Vector3 worldPosition)
         {
             if (_activeGrid == null) return null;
-            var x = (int) Mathf.Ceil(worldPosition.x) + _activeGridSize.x / 2;
-            var y = (int) Mathf.Ceil(worldPosition.z) + _activeGridSize.y / 2;
+            var x = (int)Mathf.Ceil(worldPosition.x) + _activeGridSize.x / 2;
+            var y = (int)Mathf.Ceil(worldPosition.z) + _activeGridSize.y / 2;
 
             return _activeGrid.cells[x, y];
         }

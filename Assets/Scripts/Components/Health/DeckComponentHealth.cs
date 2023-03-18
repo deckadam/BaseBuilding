@@ -38,7 +38,7 @@ namespace Deck.Components
 
         public void ChangeHealth(DeckDataDamage damage, bool canKill = true)
         {
-            _currentHealth -= damage.damageAmount;
+            _currentHealth -= damage.GetDamageAmount();
             OnHealthChanged();
             if (_currentHealth <= 0)
             {

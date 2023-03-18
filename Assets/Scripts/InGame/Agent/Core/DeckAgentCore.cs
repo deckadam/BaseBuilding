@@ -14,10 +14,10 @@ namespace Deck.Agent
     public class DeckAgentCore : DeckAgent
     {
         [Inject]
-        private void Inject(DeckDataAgentCore data, DeckComponent[] components)
+        private void Inject(DeckDataAgentCore data, DeckComponent[] injectedComponents)
         {
             SetComponentDatas(data.GetDataArray());
-            SetComponents(components);
+            SetComponents(injectedComponents);
         }
 
         public override async void RequestDeath()

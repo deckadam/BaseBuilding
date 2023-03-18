@@ -2,7 +2,6 @@
 using Data.Component;
 using UnityEngine;
 using UnityEngine.AI;
-using Object = UnityEngine.Object;
 
 namespace Deck.Components
 {
@@ -49,12 +48,15 @@ namespace Deck.Components
 
         public override void LoadData(string value)
         {
+            var data = JsonUtility.FromJson<DeckMovementComponentData>(value);
+
             if (_static)
             {
+                holder.transform.position = data.position;
+                holder.transform.rotation = Quaternion.Euler(data.rotation);
                 return;
             }
 
-            var data = JsonUtility.FromJson<DeckMovementComponentData>(value);
             _navMeshAgent.Warp(data.position);
             holder.transform.rotation = Quaternion.Euler(data.rotation);
         }

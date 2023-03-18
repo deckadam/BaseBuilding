@@ -44,7 +44,7 @@ namespace Deck.Data.Item
             _itemsWithNameAccess = new Dictionary<string, DeckDataItem>();
             foreach (var deckItem in items)
             {
-                _itemsWithNameAccess[deckItem.name] = deckItem;
+                _itemsWithNameAccess[deckItem.GetName()] = deckItem;
             }
         }
     }
