@@ -1,5 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
-using Deck.Components;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
 
 namespace Deck.Components
@@ -11,12 +11,11 @@ namespace Deck.Components
 
         public DeckCommandRemoveItem(DeckDataItem itemToRemove, DeckComponentInventory target)
         {
-            commandType = DeckCommandType.RemoveItem;
             _itemToRemove = itemToRemove;
             _target = target;
         }
 
-        public override UniTask<bool> ProcessCommand()
+        public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
             _target.RemoveItem(_itemToRemove);
             return default;

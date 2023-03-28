@@ -1,10 +1,7 @@
-﻿using Deck.Agent;
-using Deck.Map.Agent.Chest;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using Zenject;
 
-namespace Deck.Data.Agent
+namespace Deck.Data
 {
     [CreateAssetMenu(menuName = "Deck/Binder/Agent", fileName = "Deck Binder Agent")]
     public class DeckBinderAgent : ScriptableObjectInstaller
@@ -15,8 +12,8 @@ namespace Deck.Data.Agent
 
         public override void InstallBindings()
         {
-            Container.BindInstance(coreDataAgentCore).WhenInjectedInto<DeckAgentCore>();
-            Container.BindInstance(chestAgentData).WhenInjectedInto<DeckAgentChest>();
+            Container.BindInstance(coreDataAgentCore);
+            Container.BindInstance(chestAgentData);
         }
     }
 }

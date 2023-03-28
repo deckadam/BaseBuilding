@@ -1,19 +1,33 @@
 ﻿using System;
-using Deck.Agent;
+using Deck.Components;
+using Deck;
 
 namespace Deck.Components
 {
-    public abstract class DeckComponent
+    public abstract class DeckComponent : IDeckComponent
     {
         protected DeckAgent holder { get; private set; }
 
-        public void Initialize(DeckAgent holder)
+        public void PreInitialize(DeckAgent holder)
         {
             this.holder = holder;
-            Initialize();
+            InternalPreInitialize();
         }
 
-        protected virtual void Initialize()
+        public void PostInitialize()
+        {
+            InternalPostInitialize();
+        }
+
+        public virtual void OnDeath()
+        {
+        }
+
+        protected virtual void InternalPreInitialize()
+        {
+        }
+
+        protected virtual void InternalPostInitialize()
         {
         }
 

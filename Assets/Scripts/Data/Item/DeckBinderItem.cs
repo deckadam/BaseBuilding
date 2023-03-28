@@ -25,7 +25,7 @@ namespace Deck.Data.Item
             {
                 var newItem = Instantiate(item);
                 newItem.ResetAmount();
-                newItem.AddToAmount(item.GetAmount());
+                newItem.AddToAmount(item.Amount);
                 return newItem;
             }
 
@@ -44,7 +44,7 @@ namespace Deck.Data.Item
             _itemsWithNameAccess = new Dictionary<string, DeckDataItem>();
             foreach (var deckItem in items)
             {
-                _itemsWithNameAccess[deckItem.GetName()] = deckItem;
+                _itemsWithNameAccess[deckItem.Name] = deckItem;
             }
         }
     }

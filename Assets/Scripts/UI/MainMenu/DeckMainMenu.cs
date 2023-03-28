@@ -1,17 +1,16 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.EventManager;
 using Deck.Save;
-using Deck.Services.Implementations;
-using Deck.GameManager;
-using Deck.Utility.Constants.SaveListingMenu;
-using Deck.Utility.Constants.SaveListingMenu.Events;
+using Deck.Events;
+using Deck.UI.SaveListingMenu;
+using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
 #pragma warning disable 4014
 
-namespace Deck.Utility.Constants.MainMenu
+namespace Deck.UI
 {
     public class DeckMainMenu : DeckUIBase
     {
@@ -33,11 +32,11 @@ namespace Deck.Utility.Constants.MainMenu
         private void OnLoadRequested(OnLoadRequestedEvent obj)
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
-            Deck.GetService<DeckGameManager>().LoadGame();
+            global::Deck.Deck.GetService<DeckGameManager>().LoadGame();
             Disappear();
         }
 
-        public override void OnPreAppear()
+        protected override void OnPreAppear()
         {
             var result = DeckSaveSystem.HasValidSaveFile();
             loadLastSaveButton.interactable = result;
@@ -48,7 +47,7 @@ namespace Deck.Utility.Constants.MainMenu
         {
             DeckLogger.Inform("New game starting");
 
-            Deck.GetService<DeckGameManager>().CreateNewGame();
+            global::Deck.Deck.GetService<DeckGameManager>().CreateNewGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -59,7 +58,7 @@ namespace Deck.Utility.Constants.MainMenu
         public async void OnLastSaveLoad()
         {
             DeckSaveSystem.LoadLastSaveData();
-            Deck.GetService<DeckGameManager>().LoadGame();
+            global::Deck.Deck.GetService<DeckGameManager>().LoadGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -69,7 +68,7 @@ namespace Deck.Utility.Constants.MainMenu
 
         public void OnLoadGame()
         {
-            Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().Appear();
+            global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().Appear();
         }
     }
 }

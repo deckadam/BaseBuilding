@@ -7,24 +7,41 @@ using Deck.Save.Data;
 using UnityEngine;
 using Utility.Enums;
 
-namespace Deck.Agent
+namespace Deck
 {
+    [RequireComponent(typeof(Collider))]
     public abstract class DeckAgent : MonoBehaviour
     {
         [SerializeField] private float activeSize = -1f;
         [SerializeField] private DeckAgentShape shape;
         [SerializeField] private bool willSave;
+        [SerializeField] private new Collider collider;
+        [SerializeField] protected Transform centerPosition;
         public event Action<float> OnAgentSizeChanged;
-        public DeckComponent[] components { get; private set; }
-        private Dictionary<Type, DeckComponentData> _datas;
-        private bool _hasSetComponents;
-        private DeckAgentCommandProcessor _commandProcessor;
+
+        protected DeckComponent[] components { get; private set; }
         protected string id;
+
+        private Dictionary<Type, DeckDataComponent> _datas;
+        private bool _hasSetComponents;
+        private DeckCommandProcessor _commandProcessor;
+        private bool _alreadyDeinitialized;
+        private bool _hasBeenInitialized;
 
         public void StartWithClearData()
         {
             Initialize();
             id = GetType().ToString().Split('.')[^1];
+        }
+
+        private void Start()
+        {
+            Initialize();
+        }
+
+        private void OnValidate()
+        {
+            collider = GetComponent<Collider>();
         }
 
         protected void SetComponents(params DeckComponent[] components)
@@ -33,9 +50,17 @@ namespace Deck.Agent
             this.components = components;
         }
 
-        public T GetDeckComponent<T>() where T : DeckComponent
+        public T GetDeckComponent<T>() where T : class
         {
-            return (T)components.FirstOrDefault(item => item.GetType() == typeof(T));
+            for (var i = 0; i < components.Length; i++)
+            {
+                if (components[i] is T component)
+                {
+                    return component;
+                }
+            }
+
+            return null;
         }
 
         public T[] GetDeckComponents<T>() where T : DeckComponent
@@ -45,30 +70,49 @@ namespace Deck.Agent
 
         protected void Initialize()
         {
+            if (_hasBeenInitialized)
+            {
+                return;
+            }
+
             if (activeSize < 0f)
             {
                 throw new Exception("Size value can not be lower than zero");
             }
 
-            _commandProcessor = new DeckAgentCommandProcessor();
+            _commandProcessor = new DeckCommandProcessor();
 
             if (!_hasSetComponents)
             {
                 throw new Exception("Components hasn't been set");
             }
 
+            _hasBeenInitialized = true;
+
             foreach (var deckComponent in components)
             {
-                deckComponent.Initialize(this);
+                deckComponent.PreInitialize(this);
+            }
+
+            foreach (var deckComponent in components)
+            {
+                deckComponent.PostInitialize();
             }
         }
 
         protected void DeInitialize()
         {
+            if (_alreadyDeinitialized)
+            {
+                return;
+            }
+
             if (!_hasSetComponents)
             {
                 throw new Exception("Components hasn't been set");
             }
+
+            _alreadyDeinitialized = true;
 
             foreach (var deckComponent in components)
             {
@@ -84,19 +128,6 @@ namespace Deck.Agent
         private void OnDestroy()
         {
             DeInitialize();
-        }
-
-        private void Update()
-        {
-            if (!_hasSetComponents)
-            {
-                throw new Exception("Components hasn't been set");
-            }
-
-            foreach (var deckComponent in components)
-            {
-                deckComponent.Tick();
-            }
         }
 
         public List<DeckComponentSaveData> GetSaveData()
@@ -137,7 +168,7 @@ namespace Deck.Agent
             }
         }
 
-        public T GetData<T>() where T : DeckComponentData
+        public T GetData<T>() where T : DeckDataComponent
         {
             if (_datas.TryGetValue(typeof(T), out var result))
             {
@@ -147,9 +178,9 @@ namespace Deck.Agent
             return null;
         }
 
-        protected void SetComponentDatas(DeckComponentData[] data)
+        protected void SetComponentDatas(DeckDataComponent[] data)
         {
-            _datas = new Dictionary<Type, DeckComponentData>();
+            _datas = new Dictionary<Type, DeckDataComponent>();
             foreach (var temp in data)
             {
                 _datas[temp.GetType()] = Instantiate(temp);
@@ -172,9 +203,22 @@ namespace Deck.Agent
             OnAgentSizeChanged?.Invoke(activeSize);
         }
 
+        public void RequestDeath()
+        {
+            collider.enabled = false;
+
+            foreach (var deckComponent in components)
+            {
+                deckComponent.OnDeath();
+            }
+
+            InternalRequestDeath();
+        }
+
+        public Transform GetCenter() => centerPosition;
         public float GetSize() => activeSize;
         public DeckAgentShape GetShape() => shape;
-        public abstract void RequestDeath();
+        protected abstract void InternalRequestDeath();
         public bool WillSave() => willSave;
     }
 }

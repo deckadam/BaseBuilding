@@ -1,4 +1,5 @@
 ﻿using System;
+using Deck.Item;
 using UnityEngine;
 
 namespace Deck.Data.Item
@@ -9,10 +10,16 @@ namespace Deck.Data.Item
         [SerializeField] private new string name;
         [SerializeField] private Sprite icon;
         [SerializeField] private int amount;
+        [SerializeField] private DeckItemVisual representation;
+        [SerializeField] private bool holdable;
+        [SerializeField] private string animationName;
 
-        public string GetName() => name;
-        public Sprite GetIcon() => icon;
-        public int GetAmount() => amount;
+        public string Name => name;
+        public Sprite Icon => icon;
+        public DeckItemVisual Representation => representation;
+        public string AnimationName => animationName;
+        public int Amount => amount;
+        public bool Holdable => holdable;
 
         public void AddToAmount(int amountToAdd)
         {

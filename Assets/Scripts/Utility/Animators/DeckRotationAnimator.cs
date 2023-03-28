@@ -1,7 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 
-namespace Animators
+namespace Deck.Animators
 {
     [Serializable]
     public class DeckRotationAnimator : DeckAnimator
@@ -11,13 +11,13 @@ namespace Animators
 
         public void Initialize()
         {
-            if (parameters.isLocal)
+            if (parameters.IsLocal)
             {
-                onCall = () => { _tween = target.DOLocalRotate(parameters.amount, parameters.duration).SetEase(parameters.ease); };
+                onCall = () => { _tween = target.DOLocalRotate(parameters.Amount, parameters.Duration).SetEase(parameters.Ease); };
             }
             else
             {
-                onCall = () => { _tween = target.DORotate(parameters.amount, parameters.duration).SetEase(parameters.ease); };
+                onCall = () => { _tween = target.DORotate(parameters.Amount, parameters.Duration).SetEase(parameters.Ease); };
             }
         }
 

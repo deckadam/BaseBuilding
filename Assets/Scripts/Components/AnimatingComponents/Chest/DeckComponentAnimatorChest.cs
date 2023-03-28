@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Linq;
-using Unility.Animators;
-using Deck.Utility.Constants;
+using Deck.Components;
+using Deck.Utility;
+using Deck.Animators;
+using Deck.Utility.Logger;
 
 namespace Deck.Components
 {
-    public class DeckComponentAnimatorChest : DeckComponent
+    public class DeckComponentAnimatorChest : DeckComponent, IDeckAnimationImmediatePlay
     {
         private DeckRotationAnimationSwitcher _rotationAnimationSwitcher;
         private DeckComponentInventory _componentInventory;
 
-        protected override void Initialize()
+        protected override void InternalPreInitialize()
         {
             _componentInventory = holder.GetDeckComponent<DeckComponentInventory>();
             if (_componentInventory == null)
@@ -31,6 +33,11 @@ namespace Deck.Components
         private void Animate(bool state)
         {
             _rotationAnimationSwitcher.Animate(state);
+        }
+
+        public void Animate(string name)
+        {
+            DeckLogger.Inform(holder.GetId() + " can not be animated with with this method");
         }
     }
 }

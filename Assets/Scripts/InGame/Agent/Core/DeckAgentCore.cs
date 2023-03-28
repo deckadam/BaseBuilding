@@ -1,42 +1,51 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Components;
-using Deck.Data.Agent;
-using Deck.Services.Implementations.CellSelectionService.Events;
-using Deck.Services.Implementations.MapService;
+using Deck.Data;
+using Deck.Events;
+using Deck.Events.MapService;
+using Deck.InputHandling.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
-namespace Deck.Agent
+namespace Deck
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class DeckAgentCore : DeckAgent
     {
+        [SerializeField] private DeckDataAgentCore data;
+
         [Inject]
-        private void Inject(DeckDataAgentCore data, DeckComponent[] injectedComponents)
+        private void Inject(DeckComponent[] injectedComponents)
         {
             SetComponentDatas(data.GetDataArray());
             SetComponents(injectedComponents);
         }
 
-        public override async void RequestDeath()
+        private void Update()
         {
-            DeckOnAgentDeathEvent.Create(this).Send();
+            foreach (var deckComponent in components)
+            {
+                deckComponent.Tick();
+            }
+        }
+
+        protected override async void InternalRequestDeath()
+        {
+            DeckOnCoreAgentDeathEvent.Create(this).Send();
             await UniTask.NextFrame();
             DeInitialize();
-            Deck.GetService<DeckMapService>().RemoveCoreAgent(this);
+            DeckLogger.Level("Removing player");
+            Destroy(gameObject);
         }
 
         private void OnEnable()
         {
-            transform.SetParent(DeckMapService.map.transform);
+            transform.SetParent(DeckServiceMap.GetMap().transform);
             transform.localPosition = Vector3.zero;
-            Deck.GetService<DeckMapService>().AddCoreAgent(this);
-        }
-
-        public class Factory : PlaceholderFactory<DeckAgentCore>
-        {
+            DeckLogger.Level("Adding player");
+            DeckOnCoreAgentCreatedEvent.Create(this).Send();
         }
     }
 }

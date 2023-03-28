@@ -5,13 +5,14 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Utility.Constants
+namespace Deck.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : MonoBehaviour
     {
-        [Inject] protected DiContainer container;
-        [Inject] protected DeckBinderUI BinderUI;
+        protected DiContainer container;
+        protected DeckBinderUI binderUI;
+
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
         [SerializeField] protected RectTransform rectTransform;
@@ -19,6 +20,13 @@ namespace Deck.Utility.Constants
         [ShowInInspector, ReadOnly] internal bool _isAppeared;
         internal bool isAppearing;
         internal bool isDisappearing;
+
+        [Inject]
+        private void Inject(DiContainer container, DeckBinderUI binderUI)
+        {
+            this.container = container;
+            this.binderUI = binderUI;
+        }
 
         private void OnValidate()
         {
@@ -49,12 +57,10 @@ namespace Deck.Utility.Constants
         {
             if (_isAppeared)
             {
-                Debug.LogError("Disappearing");
                 await Disappear();
             }
             else
             {
-                Debug.LogError("Appearing");
                 await Appear();
             }
         }
@@ -66,7 +72,7 @@ namespace Deck.Utility.Constants
             canvasGroup.interactable = false;
 
             OnPreAppear();
-            await canvasGroup.DOFade(1f, BinderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
             _isAppeared = true;
             canvasGroup.blocksRaycasts = true;
@@ -87,7 +93,7 @@ namespace Deck.Utility.Constants
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
-            await canvasGroup.DOFade(0f, BinderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
             _isAppeared = false;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
@@ -108,23 +114,23 @@ namespace Deck.Utility.Constants
         {
         }
 
-        public virtual void OnPreAppear()
+        protected virtual void OnPreAppear()
         {
         }
 
-        public virtual void OnPostAppear()
+        protected virtual void OnPostAppear()
         {
         }
 
-        public virtual void OnPreDisappear()
+        protected virtual void OnPreDisappear()
         {
         }
 
-        public virtual void OnPostDisappear()
+        protected virtual void OnPostDisappear()
         {
         }
 
-        public virtual bool CanDisappear()
+        protected virtual bool CanDisappear()
         {
             return true;
         }

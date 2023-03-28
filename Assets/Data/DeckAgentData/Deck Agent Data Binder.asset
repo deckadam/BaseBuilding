@@ -19,3 +19,7 @@ MonoBehaviour:
   chestAgentData:
     dataHealth: {fileID: 11400000, guid: 653bd65eb953b3346a1b135d124d07cc, type: 2}
     dataMovement: {fileID: 11400000, guid: a316220ecc5f93a41a1f481b49fd7a1e, type: 2}
+  treeAgentData:
+    itemDrop: {fileID: 11400000, guid: fa538bc23c3036e4a8cfb8413e3519bf, type: 2}
+    healthData: {fileID: 11400000, guid: 2302b344272a4ec43ae87a76ad0da5b4, type: 2}
+    shakeDataAnimation: {fileID: 11400000, guid: e3ed2c83481131647b52c26fee32ea27, type: 2}

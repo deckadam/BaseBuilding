@@ -1,17 +1,20 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Components;
 using Deck.Data.Item;
-using Deck.Services.Implementations;
-using Deck.Utility.Constants.GamePlay;
+using Deck.Events;
+using Deck.Events.CellSelectionService;
+using Deck.UI.GamePlay;
 using Services.Implementations.Inventory;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.Utility.Constants.Inventory
+namespace Deck.UI.Inventory
 {
-    public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>
+    public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         private readonly Vector2 _centeredAnchor = Vector2.one / 2f;
 
@@ -24,12 +27,13 @@ namespace Deck.Utility.Constants.Inventory
         private CancellationTokenSource _source;
         private DeckDataItem _item;
         private bool _isClicked;
+        private bool _isHovering;
 
         public void Initialize(DeckDataItem dataItem, DeckInventoryPopUp popup)
         {
             _item = dataItem;
-            image.sprite = _item.GetIcon();
-            amount.text = _item.GetAmount().ToString();
+            image.sprite = _item.Icon;
+            amount.text = _item.Amount.ToString();
             _popup = popup;
         }
 
@@ -40,6 +44,9 @@ namespace Deck.Utility.Constants.Inventory
 
         public void OnDespawned()
         {
+            _source?.Cancel();
+            _source?.Dispose();
+            _source = null;
             _pool = null;
         }
 
@@ -48,36 +55,12 @@ namespace Deck.Utility.Constants.Inventory
             _pool = pool;
         }
 
-        public void OnPointerDown()
-        {
-            if (_isClicked)
-            {
-                return;
-            }
-
-            _isClicked = true;
-            _source?.Cancel();
-            _source = new CancellationTokenSource();
-            FollowCursor(_source);
-        }
-
-        public void OnPointerUp()
-        {
-            if (!_isClicked)
-            {
-                return;
-            }
-
-            _isClicked = false;
-            _source?.Cancel();
-        }
-
         private async void FollowCursor(CancellationTokenSource tokenSource)
         {
             visualParent.anchorMin = Vector2.zero;
             visualParent.anchorMax = Vector2.zero;
-            visualParent.SetParent(Deck.GetService<DeckUIService>().GetUI<DeckGamePlayUI>().GetRectTransform());
-            Deck.GetService<DeckInventoryService>().OnDragBegin(this);
+            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform());
+            Deck.GetService<DeckServiceInventory>().OnDragBegin(this);
             image.raycastTarget = false;
             while (!tokenSource.IsCancellationRequested)
             {
@@ -85,7 +68,7 @@ namespace Deck.Utility.Constants.Inventory
                 await UniTask.NextFrame();
             }
 
-            var isPlaced = Deck.GetService<DeckInventoryService>().TryToPlace();
+            var isPlaced = Deck.GetService<DeckServiceInventory>().TryToPlace();
 
 
             image.raycastTarget = true;
@@ -105,6 +88,56 @@ namespace Deck.Utility.Constants.Inventory
 
         public class Factory : PlaceholderFactory<DeckInventoryDisplayerCell>
         {
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (_isClicked)
+            {
+                return;
+            }
+
+            _isClicked = true;
+            _source?.Cancel();
+            _source.Dispose();
+            _source = new CancellationTokenSource();
+            FollowCursor(_source);
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (!_isClicked)
+            {
+                return;
+            }
+
+            _isClicked = false;
+            _source?.Cancel();
+            _source?.Dispose();
+            _source = null;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            _isHovering = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            _isHovering = false;
+        }
+
+        private void Update()
+        {
+            if (!_isHovering)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                DeckServiceSelection.currentPossession.GetDeckComponent<IDeckItemItemHolder>().SetItemToHold(_item);
+            }
         }
     }
 }

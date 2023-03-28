@@ -1,46 +1,24 @@
-﻿using Deck.Components;
+﻿using Deck.Events;
+using Deck.UI;
+using Deck.UI.Health;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.Utility.Constants.Health
+namespace Deck.Utility.Health
 {
-    public class DeckHealthBar : MonoBehaviour, IPoolable<IMemoryPool>
+    public class DeckHealthBar : DeckUIWorldDisplay, IPoolable<IMemoryPool>
     {
-        [SerializeField] private RectTransform rect;
         [SerializeField] private TextMeshProUGUI numberDisplay;
         [SerializeField] private Image fillBar;
-        private Camera _mainCamera;
-        private Transform _target;
-        private DeckComponentHealth _componentHealth;
+
         private IMemoryPool _memory;
 
-        [Inject]
-        private void Inject(Camera camera)
+        public void OnDataChanged(int value, float ratio)
         {
-            _mainCamera = camera;
-        }
-
-        public void Initialize(DeckComponentHealth componentHealth)
-        {
-            _componentHealth = componentHealth;
-            _componentHealth.Register(OnDataChanged);
-
-            _target = componentHealth.GetComponentHolder().transform;
-
-            OnDataChanged();
-        }
-
-        private void OnDataChanged()
-        {
-            numberDisplay.text = _componentHealth.GetHealth().ToString();
-            fillBar.fillAmount = _componentHealth.GetHealthRatio();
-        }
-
-        private void LateUpdate()
-        {
-            rect.position = _mainCamera.WorldToScreenPoint(_target.transform.position + Vector3.up * 2f);
+            numberDisplay.text = value.ToString();
+            fillBar.fillAmount = ratio;
         }
 
         public void Despawn()
@@ -50,13 +28,14 @@ namespace Deck.Utility.Constants.Health
 
         public void OnDespawned()
         {
+            global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
             _memory = null;
-            _componentHealth?.Unregister(OnDataChanged);
         }
 
         public void OnSpawned(IMemoryPool p1)
         {
             _memory = p1;
+            global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
         }
 
         public class Factory : PlaceholderFactory<DeckHealthBar>

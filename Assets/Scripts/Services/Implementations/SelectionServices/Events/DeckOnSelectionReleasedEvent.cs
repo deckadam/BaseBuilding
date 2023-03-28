@@ -1,7 +1,7 @@
-﻿using Deck.Agent;
+﻿using Deck;
 using Deck.EventManager;
 
-namespace Deck.Services.Implementations.CellSelectionService.Events
+namespace Deck.Events
 {
     public class DeckOnSelectionReleasedEvent : DeckEvent
     {

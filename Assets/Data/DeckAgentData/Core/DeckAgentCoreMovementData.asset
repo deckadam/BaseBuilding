@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 13
   acceleration: 100
+  angularSpeed: 600

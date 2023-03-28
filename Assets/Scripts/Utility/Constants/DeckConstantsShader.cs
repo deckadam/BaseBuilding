@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Utility.Constants
+namespace Deck.UI
 {
     public class DeckConstantsShader
     {

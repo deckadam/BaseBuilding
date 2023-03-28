@@ -16,6 +16,5 @@ MonoBehaviour:
   inventoryDisplayerCellPrefab: {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}
   saveDisplayerPrefab: {fileID: 8084667271872032341, guid: 919ca2ecdd5515f46a1fc511ee538610, type: 3}
   inventoryPopUpPrefab: {fileID: 4610122870488080173, guid: 8dc7e0c4d823cba4bac4e2f37c124a52, type: 3}
-  agentCorePrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   confirmationPopUpPrefab: {fileID: 7992348406185406158, guid: 524e3c986bd1ca447863e30d3c25459a, type: 3}
-  chestAgentPrefab: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
+  itemDisplayer: {fileID: 2567935391902249751, guid: ae04ee79bcdab08408cec2e659aa41b9, type: 3}

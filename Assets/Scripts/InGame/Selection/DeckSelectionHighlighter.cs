@@ -1,9 +1,11 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
+using Deck;
+using Deck.EventManager;
+using Deck.Events;
 using UnityEngine;
 
-namespace Deck.Map.Selection
+namespace Deck.Selection
 {
     public class DeckSelectionHighlighter : MonoBehaviour
     {
@@ -11,19 +13,51 @@ namespace Deck.Map.Selection
         private DeckAgent _target;
         private CancellationTokenSource _tokenSource;
 
-        public void SetTarget(DeckAgent newTarget)
+        private void OnEnable()
         {
-            _target = newTarget;
-            _target.OnAgentSizeChanged -= OnTargetSizeChanged;
-            _tokenSource?.Cancel();
+            DeckEventManager.Register<DeckOnAgentSelectedEvent>(OnAgentSelected);
+            DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+            DeckEventManager.Register<DeckOnAgentReleasedEvent>(ClearTarget);
+            DeckEventManager.Register<DeckOnSelectionReleasedEvent>(ClearTarget);
             _tokenSource = new CancellationTokenSource();
-            Follow(_target, _tokenSource.Token);
+            Follow(_tokenSource.Token);
         }
 
-        public void ClearTarget()
-        {
-            _tokenSource?.Cancel();
 
+        private void OnDisable()
+        {
+            DeckEventManager.Unregister<DeckOnAgentSelectedEvent>(OnAgentSelected);
+            DeckEventManager.Unregister<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+            DeckEventManager.Unregister<DeckOnAgentReleasedEvent>(ClearTarget);
+            DeckEventManager.Unregister<DeckOnSelectionReleasedEvent>(ClearTarget);
+            _tokenSource.Cancel();
+            _tokenSource.Dispose();
+        }
+
+        private void OnAgentPossessed(DeckOnAgentPossessedEvent obj)
+        {
+            SetTarget(obj.agent);
+        }
+
+        private void OnAgentSelected(DeckOnAgentSelectedEvent obj)
+        {
+            SetTarget(obj.agent);
+        }
+
+        private void SetTarget(DeckAgent obj)
+        {
+            if (_target != null)
+            {
+                _target.OnAgentSizeChanged -= OnTargetSizeChanged;
+            }
+
+            _target = obj;
+            transform.localScale = _target.GetSize() * Vector3.one;
+            _target.OnAgentSizeChanged += OnTargetSizeChanged;
+        }
+
+        private void ClearTarget(DeckEvent obj)
+        {
             if (_target != null)
             {
                 _target.OnAgentSizeChanged -= OnTargetSizeChanged;
@@ -38,17 +72,20 @@ namespace Deck.Map.Selection
             transform.localScale = newSize * Vector3.one;
         }
 
-        private async void Follow(DeckAgent target, CancellationToken token)
+        private async void Follow(CancellationToken token)
         {
-            var cachedTransform = _target.transform;
-            transform.localScale = target.GetSize() * Vector3.one;
-            var destroyToken = target.gameObject.GetCancellationTokenOnDestroy();
-            while (!token.IsCancellationRequested && !destroyToken.IsCancellationRequested)
+            while (!token.IsCancellationRequested)
             {
-                var elevatedPos = cachedTransform.position;
+                if (_target == null)
+                {
+                    await UniTask.Yield();
+                    continue;
+                }
+
+                var elevatedPos = _target.transform.position;
                 elevatedPos.y = distanceFromGround;
                 transform.position = elevatedPos;
-                await UniTask.NextFrame();
+                await UniTask.Yield();
             }
         }
     }

@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bd8ae540a04c1c9ddef8368ccfb13d, type: 3}
   m_Name: Deck Camera Data
   m_EditorClassIdentifier: 
-  cameraMovementSpeed: 25
+  getCameraMovementSpeed: 25
+  scrollSpeed: 250
+  minimumHeight: 8
+  maximumHeight: 40

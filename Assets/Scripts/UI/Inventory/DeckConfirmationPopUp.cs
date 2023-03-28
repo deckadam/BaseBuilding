@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Utility.Constants.Inventory
+namespace Deck.UI.Inventory
 {
     public class DeckConfirmationPopUp : DeckPopUpBase, IPoolable<IMemoryPool>
     {

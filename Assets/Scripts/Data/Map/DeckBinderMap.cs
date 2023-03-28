@@ -6,11 +6,11 @@ namespace Deck.Data.Map
     [CreateAssetMenu(menuName = "Deck/Binder/Map", fileName = "Deck Binder Map")]
     public class DeckBinderMap : ScriptableObjectInstaller
     {
-        public Vector2Int size;
-        public GameObject blockade;
-        public float noiseScale;
-        public float blockadeThreshhold;
-        public Material basePlaneMaterial;
+        [SerializeField] private Vector2Int size;
+        [SerializeField] private Material basePlaneMaterial;
+
+        public Vector2Int GetSize() => size;
+        public Material GetBasePlaneMaterial() => basePlaneMaterial;
 
         public override void InstallBindings()
         {

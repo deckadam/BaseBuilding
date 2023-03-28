@@ -17,3 +17,10 @@ MonoBehaviour:
     requiredAmount: 13
   agent: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   name: Chest
+  silouetteData:
+  - mesh: {fileID: 2959467708922500008, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: -0, y: 0, z: 0}
+  - mesh: {fileID: 4293751317952506913, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
+    position: {x: -0.00000003774895, y: 1.0009878, z: 0.5}
+    rotation: {x: -0, y: 0, z: 0}

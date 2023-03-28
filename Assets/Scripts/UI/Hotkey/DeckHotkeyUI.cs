@@ -1,8 +1,7 @@
 ﻿using Deck.EventManager;
-using Deck.Utility.Constants.Hotkey.Events;
-using UnityEngine;
+using Deck.UI.Hotkey.Events;
 
-namespace Deck.Utility.Constants.Hotkey
+namespace Deck.UI.Hotkey
 {
     public class DeckHotkeyUI : DeckUIBase
     {
@@ -43,7 +42,7 @@ namespace Deck.Utility.Constants.Hotkey
             hotkeyObjects[obj.index].Highlight();
         }
 
-        public override bool CanDisappear()
+        protected override bool CanDisappear()
         {
             return false;
         }

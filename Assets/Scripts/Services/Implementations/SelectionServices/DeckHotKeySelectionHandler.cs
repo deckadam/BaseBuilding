@@ -1,24 +1,38 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using Deck;
 using Deck.EventManager;
-using Deck.Services.Implementations.CellSelectionService.Events;
-using Deck.Services.Implementations.MapService;
-using Deck.Utility.Constants.Hotkey.Events;
+using Deck.InputHandling.Events;
 using Deck.Utility.Logger;
-using ModestTree;
+using Deck.Events;
+using Deck.UI.Hotkey.Events;
 using UnityEngine;
 
-namespace Deck.Services.Implementations.CellSelectionService
+namespace Deck.Events.CellSelectionService
 {
     public class DeckHotKeySelectionHandler
     {
-        private DeckSelectionService _selectionService;
-        private DeckMapService _mapService;
+        private DeckServiceSelection _serviceSelection;
+        private List<DeckAgentCore> _agents;
 
         public void Initialize()
         {
-            _mapService = Deck.GetService<DeckMapService>();
-            _selectionService = Deck.GetService<DeckSelectionService>();
+            _agents = new List<DeckAgentCore>();
+            _serviceSelection = global::Deck.Deck.GetService<DeckServiceSelection>();
             DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+            DeckEventManager.Register<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
+            DeckEventManager.Register<DeckOnCoreAgentDeathEvent>(OnCoreAgentDeath);
+        }
+
+        private void OnCoreAgentDeath(DeckOnCoreAgentDeathEvent obj)
+        {
+            _agents.Remove(obj.agent);
+            DeckOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
+        }
+
+        private void OnCoreAgentCreated(DeckOnCoreAgentCreatedEvent obj)
+        {
+            _agents.Add(obj.agent);
+            DeckOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
         }
 
         public void DeInitialize()
@@ -28,8 +42,7 @@ namespace Deck.Services.Implementations.CellSelectionService
 
         private void OnAgentPossessed(DeckOnAgentPossessedEvent obj)
         {
-            var agents = _mapService.GetAgents().ToArray();
-            var index = agents.IndexOf(obj.agent);
+            var index = _agents.IndexOf(obj.agent);
             if (index == -1)
             {
                 return;
@@ -84,15 +97,14 @@ namespace Deck.Services.Implementations.CellSelectionService
 
         private void SelectAgentByIndex(int index)
         {
-            var agents = _mapService.GetAgents().ToArray();
-            if (agents.Length <= index)
+            if (_agents.Count <= index)
             {
                 return;
             }
 
             DeckOnHotkeySelected.Create(index).Send();
-            var agentToPossess = agents[index];
-            _selectionService.OnPossession(agentToPossess);
+            var agentToPossess = _agents[index];
+            _serviceSelection.OnPossession(agentToPossess);
         }
     }
 }

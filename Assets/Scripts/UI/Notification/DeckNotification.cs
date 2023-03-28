@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Deck.Utility.Constants
+namespace Deck.UI
 {
     public class DeckNotification : MonoBehaviour
     {

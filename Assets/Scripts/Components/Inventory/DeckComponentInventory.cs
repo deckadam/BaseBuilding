@@ -29,7 +29,7 @@ namespace Deck.Components
             {
                 foreach (var requiredItem in itemArray)
                 {
-                    if (ownedItem.GetName() == requiredItem.item.GetName() && ownedItem.GetAmount() >= requiredItem.requiredAmount)
+                    if (ownedItem.Name == requiredItem.Item.Name && ownedItem.Amount >= requiredItem.RequiredAmount)
                     {
                         matchCount++;
                     }
@@ -46,7 +46,7 @@ namespace Deck.Components
             {
                 foreach (var requiredItem in itemArray)
                 {
-                    if (ownedItem.GetName() == requiredItem.item.GetName() && ownedItem.GetAmount() >= requiredItem.requiredAmount)
+                    if (ownedItem.Name == requiredItem.Item.Name && ownedItem.Amount >= requiredItem.RequiredAmount)
                     {
                         matchCount++;
                     }
@@ -62,9 +62,9 @@ namespace Deck.Components
             {
                 foreach (var requiredItem in itemArray)
                 {
-                    if (ownedItem.GetName() == requiredItem.item.GetName() && ownedItem.GetAmount() >= requiredItem.requiredAmount)
+                    if (ownedItem.Name == requiredItem.Item.Name && ownedItem.Amount >= requiredItem.RequiredAmount)
                     {
-                        ownedItem.RemoveFromAmount(requiredItem.requiredAmount);
+                        ownedItem.RemoveFromAmount(requiredItem.RequiredAmount);
                     }
                 }
             }
@@ -73,7 +73,7 @@ namespace Deck.Components
             return true;
         }
 
-        protected override void Initialize()
+        protected override void InternalPreInitialize()
         {
             items = new List<DeckDataItem>();
         }
@@ -83,7 +83,7 @@ namespace Deck.Components
             var matchingItem = items.FirstOrDefault(item => item.name == data.name);
             if (matchingItem != null)
             {
-                matchingItem.AddToAmount(data.GetAmount());
+                matchingItem.AddToAmount(data.Amount);
                 _listeners?.Invoke(items);
                 return;
             }
@@ -109,7 +109,7 @@ namespace Deck.Components
             for (var i = 0; i < items.Count; i++)
             {
                 var item = items[i];
-                itemData[i] = new ItemData(item.GetName(), item.GetAmount());
+                itemData[i] = new ItemData(item.Name, item.Amount);
             }
 
             return new SaveData(itemData);

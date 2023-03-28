@@ -1,26 +1,24 @@
-﻿using Deck.Agent;
-using Deck.Components;
-using Deck.Data.Agent;
+﻿using Deck.Components;
+using Deck.Data;
+using UnityEngine;
 using Zenject;
 
-namespace Deck.Map.Agent.Chest
+namespace Deck
 {
     public class DeckAgentChest : DeckAgent
     {
+        [SerializeField] private DeckDataAgentChest chestData;
+
         [Inject]
-        private void Inject(DeckDataAgentChest chestData, DeckComponent[] components)
+        private void Inject(DeckComponent[] components)
         {
             SetComponentDatas(chestData.GetDataArray());
             SetComponents(components);
         }
 
-        public override void RequestDeath()
+        protected override void InternalRequestDeath()
         {
             Destroy(gameObject);
-        }
-
-        public class Factory : PlaceholderFactory<DeckAgentChest>
-        {
         }
     }
 }

@@ -4,7 +4,7 @@ using Deck.Data.Component;
 using Deck.Data.Damage;
 using UnityEngine;
 
-namespace Deck.Data.Agent
+namespace Deck.Data
 {
     [Serializable]
     public class DeckDataAgentCore
@@ -13,9 +13,9 @@ namespace Deck.Data.Agent
         [SerializeField] private DeckDataDamage dataDamage;
         [SerializeField] private DeckDataMovement dataMovement;
 
-        public DeckComponentData[] GetDataArray()
+        public DeckDataComponent[] GetDataArray()
         {
-            return new DeckComponentData[] { dataHealth, dataDamage, dataMovement };
+            return new DeckDataComponent[] { dataHealth, dataDamage, dataMovement };
         }
     }
 }

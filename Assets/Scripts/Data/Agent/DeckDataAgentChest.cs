@@ -3,7 +3,7 @@ using Data.Component;
 using Deck.Data.Component;
 using UnityEngine;
 
-namespace Deck.Data.Agent
+namespace Deck.Data
 {
     [Serializable]
     public class DeckDataAgentChest
@@ -11,9 +11,9 @@ namespace Deck.Data.Agent
         [SerializeField] private DeckDataHealth dataHealth;
         [SerializeField] private DeckDataMovement dataMovement;
 
-        public DeckComponentData[] GetDataArray()
+        public DeckDataComponent[] GetDataArray()
         {
-            return new DeckComponentData[] { dataHealth, dataMovement };
+            return new DeckDataComponent[] { dataHealth, dataMovement };
         }
     }
 }

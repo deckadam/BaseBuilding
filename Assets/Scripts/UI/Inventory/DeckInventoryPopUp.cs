@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
-using Deck.Data.Item;
 using Deck.Components;
-using Deck.Services.Implementations;
-using Deck.Utility.Constants.GamePlay;
+using Deck.Data.Item;
+using Deck.Events;
+using Deck.UI.GamePlay;
 using Services.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Deck.Utility.Constants.Inventory
+namespace Deck.UI.Inventory
 {
     public class DeckInventoryPopUp : DeckPopUpBase, IPoolable<IMemoryPool>, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private RectTransform cellParent;
 
         private DeckInventoryDisplayerCell.Factory _inventoryCellFactory;
-        private DeckInventoryService _inventoryService;
+        private DeckServiceInventory _serviceInventory;
         private List<DeckInventoryDisplayerCell> _cells = new();
         private DeckComponentInventory _componentInventory;
         private IMemoryPool _pool;
@@ -32,7 +32,7 @@ namespace Deck.Utility.Constants.Inventory
             _componentInventory.AddListener(CreateNewCells);
             _componentInventory.OnInventoryViewStatusChanged(true);
 
-            var gamePlayUIRect = Deck.GetService<DeckUIService>().GetUI<DeckGamePlayUI>().GetRectTransform();
+            var gamePlayUIRect = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform();
             rect.SetParent(gamePlayUIRect, false);
             rect.anchoredPosition = Vector2.zero;
 
@@ -84,7 +84,7 @@ namespace Deck.Utility.Constants.Inventory
         public void OnSpawned(IMemoryPool p1)
         {
             _pool = p1;
-            _inventoryService = Deck.GetService<DeckInventoryService>();
+            _serviceInventory = global::Deck.Deck.GetService<DeckServiceInventory>();
         }
 
         public DeckComponentInventory GetBindedInventory() => _componentInventory;
@@ -95,12 +95,12 @@ namespace Deck.Utility.Constants.Inventory
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _inventoryService.OnInventoryHoverStart(this);
+            _serviceInventory.OnInventoryHoverStart(this);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _inventoryService.OnInventoryHoverEnd(this);
+            _serviceInventory.OnInventoryHoverEnd(this);
         }
     }
 }

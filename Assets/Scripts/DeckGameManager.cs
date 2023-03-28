@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
-using Deck.Agent;
+using Cysharp.Threading.Tasks;
+using Deck;
 using Deck.Components;
 using Deck.Data.Item;
+using Deck.Data.Map;
 using Deck.MVC;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services;
-using Deck.Services.Implementations.CameraService;
-using Deck.Services.Implementations.CellSelectionService;
-using Deck.Services.Implementations.GridService;
-using Deck.Services.Implementations.MapService;
-using Deck.Services.Implementations.Navigation;
+using Deck.Events.CameraService;
+using Deck.Events.MapService;
+using Deck.Events.Navigation;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.GameManager
+namespace Deck.UI
 {
     public class DeckGameManager : DeckServiceBase
     {
@@ -27,41 +28,39 @@ namespace Deck.GameManager
 
         private DiContainer _container;
         private DeckAgentLoadResolver _loadResolver;
-        private DeckAgentCore.Factory _agentFactory;
+        private DeckAgentCore _coreAgentPrefab;
+
+        [SerializeField] private DeckBinderMap binderMap;
 
         [Inject]
-        private void Inject(DiContainer container, DeckAgentLoadResolver loadResolver, DeckAgentCore.Factory agentFactory)
+        private void Inject(DiContainer container, DeckAgentLoadResolver loadResolver, DeckAgentCore agentCorePrefab)
         {
             _container = container;
             _loadResolver = loadResolver;
-            _agentFactory = agentFactory;
+            _coreAgentPrefab = agentCorePrefab;
         }
 
-        public void CreateNewGame()
+        [Button]
+        public void CreateNewGameButton()
         {
-            Deck.GetService<DeckGridService>().GenerateGrid(out var grid);
-            Deck.GetService<DeckMapService>().CreateMap();
-            Deck.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
-            Deck.GetService<DeckMapService>().PopulateMap(grid);
-            Deck.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
-            Deck.GetService<DeckCameraService>().GenerateCameraBounds(grid);
-            Deck.GetService<DeckMapService>().SetGrid(grid);
-            Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
-            Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
-            _agentFactory.Create().StartWithClearData();
+            FindObjectOfType<DeckServiceMap>().CreateGround(binderMap);
+            FindObjectOfType<DeckServiceNavigation>().GenerateNavigation(binderMap);
+            FindObjectOfType<DeckServiceCamera>().GenerateCameraBounds(binderMap);
         }
 
-        public void LoadGame()
+        public async void CreateNewGame()
         {
-            Deck.GetService<DeckMapService>().CreateMap();
-            Deck.GetService<DeckGridService>().GenerateGrid(out var grid);
-            Deck.GetService<DeckMapService>().CreateGround(grid, out var ground, out var groundMaterial);
-            Deck.GetService<DeckMapService>().PopulateMap(grid);
-            Deck.GetService<DeckNavigationService>().GenerateNavigation(out var surface);
-            Deck.GetService<DeckCameraService>().GenerateCameraBounds(grid);
-            Deck.GetService<DeckMapService>().SetGrid(grid);
-            Deck.GetService<DeckSelectionService>().SetMapData(grid.size, groundMaterial);
-            Deck.GetService<DeckMapService>().InitializeMap(grid, surface, ground);
+            await global::Deck.Deck.GetService<DeckServiceMap>().LoadMap();
+            await UniTask.Delay(1000);
+            _container.InstantiatePrefab(_coreAgentPrefab).GetComponent<DeckAgentCore>().StartWithClearData();
+        }
+
+        public async void LoadGame()
+        {
+            await global::Deck.Deck.GetService<DeckServiceMap>().LoadMap();
+            global::Deck.Deck.GetService<DeckServiceMap>().CreateGround(binderMap);
+            global::Deck.Deck.GetService<DeckServiceNavigation>().GenerateNavigation(binderMap);
+            global::Deck.Deck.GetService<DeckServiceCamera>().GenerateCameraBounds(binderMap);
 
             var playerData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             _loadResolver.ResolveAndLoad(playerData);

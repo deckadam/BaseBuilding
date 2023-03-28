@@ -1,6 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
-using Deck.Components;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
+using Deck.Components;
 
 namespace Deck.Components
 {
@@ -13,10 +14,9 @@ namespace Deck.Components
         {
             _itemToAdd = itemToAdd;
             _target = target;
-            commandType = DeckCommandType.AddItem;
         }
 
-        public override UniTask<bool> ProcessCommand()
+        public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
             _target.AddItem(_itemToAdd);
             return default;

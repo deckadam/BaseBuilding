@@ -1,7 +1,9 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
-using Deck.Services.Implementations.CellSelectionService;
-using Deck.Utility.Logger;
+using Deck.Events.CellSelectionService;
+using Deck.UI;
+using Utility;
 
 namespace Deck.Components
 {
@@ -15,27 +17,26 @@ namespace Deck.Components
 
         public DeckCommandTransferItem(DeckDataItem itemOfInterest, DeckComponentInventory from, DeckComponentInventory to)
         {
-            commandType = DeckCommandType.Movement;
             _addCommand = new DeckCommandAddItem(itemOfInterest, to);
             _removeCommand = new DeckCommandRemoveItem(itemOfInterest, from);
             _from = from;
             _to = to;
         }
 
-        public override async UniTask<bool> ProcessCommand()
+        public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            DeckSelectionService.ResetSelectionToPossession();
-            var movementComponent = _from.GetComponentHolder().GetDeckComponent<DeckComponentMovement>();
-            if (movementComponent == null)
+            DeckServiceSelection.ResetSelectionToPossession();
+            var movement = _from.GetComponentHolder().GetDeckComponent<DeckComponentMovement>();
+
+            if (movement == null)
             {
-                DeckLogger.Inform("Source of item doesn't contain movement component");
-                return await new UniTask<bool>(false);
+                return default;
             }
 
-            await UniTask.WaitWhile(() => movementComponent.SetDestination(_to.GetComponentHolder().transform.position));
+            await DeckCommandUtility.AwaitTillDestinationIsReached(movement, _to.GetComponentHolder().transform, DeckConstantsPrimitive.ITEM_TRANSFER_RANGE, token);
 
-            await _removeCommand.ProcessCommand();
-            await _addCommand.ProcessCommand();
+            await _removeCommand.ProcessCommand(token);
+            await _addCommand.ProcessCommand(token);
 
             return default;
         }

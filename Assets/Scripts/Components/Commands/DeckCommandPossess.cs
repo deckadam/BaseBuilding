@@ -1,5 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-using Deck.Agent;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
+using Deck;
 
 namespace Deck.Components
 {
@@ -9,11 +10,10 @@ namespace Deck.Components
 
         public DeckCommandPossess(DeckAgent agent)
         {
-            commandType = DeckCommandType.Possess;
             _agent = agent;
         }
 
-        public override UniTask<bool> ProcessCommand()
+        public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
             foreach (var deckComponent in _agent.GetDeckComponents<DeckComponent>())
             {

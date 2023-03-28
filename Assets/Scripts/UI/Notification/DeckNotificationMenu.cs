@@ -2,7 +2,7 @@
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.Utility.Constants
+namespace Deck.UI
 {
     public class DeckNotificationMenu : DeckUIBase
     {
@@ -33,7 +33,7 @@ namespace Deck.Utility.Constants
             newNotification.SetMessage(obj.message);
         }
 
-        public override bool CanDisappear()
+        protected override bool CanDisappear()
         {
             return false;
         }

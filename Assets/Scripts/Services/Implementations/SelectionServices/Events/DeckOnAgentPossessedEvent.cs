@@ -1,15 +1,15 @@
-﻿using Deck.Agent;
+﻿using Deck;
 using Deck.EventManager;
 
-namespace Deck.Services.Implementations.CellSelectionService.Events
+namespace Deck.Events
 {
     public class DeckOnAgentPossessedEvent : DeckEvent
     {
-        public DeckAgent agent { get; private set; }
+        public DeckAgentCore agent { get; private set; }
 
-        public static DeckOnAgentPossessedEvent Crate(DeckAgent agent)
+        public static DeckOnAgentPossessedEvent Crate(DeckAgentCore agent)
         {
-            return new()
+            return new DeckOnAgentPossessedEvent
             {
                 agent = agent
             };

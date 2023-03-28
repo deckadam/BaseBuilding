@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b60826ec265c47e28c408dc3625bc6b4, type: 3}
+  m_Name: Deck Data Item Drop Tree
+  m_EditorClassIdentifier: 
+  dropables:
+  - chances:
+    - chance: 0.19145732
+      amount: 3
+    - chance: 0.43332535
+      amount: 4
+    - chance: 0.28016964
+      amount: 5
+    - chance: 0.09504766
+      amount: 6
+    itemToDrop: {fileID: 11400000, guid: 0c9e3f0b39c037241bc51670a3359fa6, type: 2}

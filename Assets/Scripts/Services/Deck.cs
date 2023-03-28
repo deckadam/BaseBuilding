@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Services;
-using Deck.Utility;
+using Deck.Utility.Class;
 using Deck.Utility.Logger;
 using Sirenix.Utilities;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Deck
 {
@@ -18,11 +19,11 @@ namespace Deck
         {
             _services = new Dictionary<Type, DeckServiceBase>();
 
-            var classes = DeckUtility.GetInheritedClasses<DeckServiceBase>();
+            var classes = DeckClassUtility.GetInheritedClasses<DeckServiceBase>();
 
             foreach (var typeRef in classes)
             {
-                var instance = GameObject.FindObjectOfType(typeRef) as DeckServiceBase;
+                var instance = Object.FindObjectOfType(typeRef) as DeckServiceBase;
                 if (instance == null)
                 {
                     Debug.LogWarning(typeRef.Name + "  service type not instantiated in scene");
@@ -57,7 +58,7 @@ namespace Deck
         public static T GetService<T>() where T : DeckServiceBase
         {
             var typeOfT = typeof(T);
-            return (T) _services[typeOfT];
+            return (T)_services[typeOfT];
         }
     }
 }

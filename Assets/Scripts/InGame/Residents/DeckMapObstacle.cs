@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
 
-namespace Deck.Map.Residents
+namespace Deck.Residents
 {
     public class DeckMapObstacle : MonoBehaviour
     {

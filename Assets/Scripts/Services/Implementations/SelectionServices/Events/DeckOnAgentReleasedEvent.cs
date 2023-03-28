@@ -1,7 +1,7 @@
-﻿using Deck.Agent;
+﻿using Deck;
 using Deck.EventManager;
 
-namespace Deck.Services.Implementations.CellSelectionService.Events
+namespace Deck.Events
 {
     public class DeckOnAgentReleasedEvent : DeckEvent
     {
@@ -9,7 +9,7 @@ namespace Deck.Services.Implementations.CellSelectionService.Events
 
         public static DeckOnAgentReleasedEvent Create(DeckAgent agent)
         {
-            return new()
+            return new DeckOnAgentReleasedEvent
             {
                 agent = agent
             };

@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Deck.EventManager;
 using Deck.Save;
-using Deck.Services;
-using Deck.Services.Implementations;
-using Deck.GameManager;
-using Deck.GameManager.Constants;
-using Deck.Utility.Constants.Inventory;
-using Deck.Utility.Constants.SaveListingMenu.Events;
+using Deck.Events;
 using Deck.Utility.Logger;
+using Deck.UI.Inventory;
+using Deck.UI.SaveListingMenu.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.Utility.Constants.SaveListingMenu
+namespace Deck.UI.SaveListingMenu
 {
     public class DeckSaveListingMenu : DeckUIBase
     {
@@ -28,7 +23,7 @@ namespace Deck.Utility.Constants.SaveListingMenu
             _saveDisplayerFactory = saveDisplayerFactory;
         }
 
-        public override void OnPreAppear()
+        protected override void OnPreAppear()
         {
             InitializeSaveDisplayers();
         }
@@ -82,11 +77,11 @@ namespace Deck.Utility.Constants.SaveListingMenu
                 return;
             }
 
-            var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-            var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+            var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
-            newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.deleteSaveFileDialogue, () =>
+            newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.deleteSaveFileDialogue, () =>
             {
                 DeckSaveSystem.DeleteSaveFile(DeckSaveDisplayer.currentlySelectedDsiplayer.GetSaveFile());
                 InitializeSaveDisplayers();

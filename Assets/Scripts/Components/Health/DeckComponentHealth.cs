@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Data.Component;
-using Deck.Data.Damage;
 using Deck.MVC;
+using Deck.Utility.Health;
 using Deck.Utility.Logger;
 using UnityEngine;
+using Zenject;
 
 namespace Deck.Components
 {
     [Serializable]
     public class DeckComponentHealth : DeckComponent
     {
-        private Action OnHealthChanged;
-
+        private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
+        private DeckHealthBar.Factory _healthBarFactory;
         private DeckDataHealth _dataHealth;
-
+        private DeckHealthBar _healthBar;
+        private bool _hasHealthBar;
         private int _currentHealth;
         private int _limitHealth;
+        public event Action OnDamageTaken;
 
-        private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
+        [Inject]
+        private void Inject(DeckHealthBar.Factory healthBarFactory)
+        {
+            _healthBarFactory = healthBarFactory;
+        }
 
-        protected override void Initialize()
+        protected override void InternalPreInitialize()
         {
             _dataHealth = holder.GetData<DeckDataHealth>();
             _limitHealth = _dataHealth.Health;
@@ -36,22 +43,52 @@ namespace Deck.Components
             _healthController.GetModel().RemoveData(this);
         }
 
-        public void ChangeHealth(DeckDataDamage damage, bool canKill = true)
+        public void ReduceHealth(int amount, bool canKill = true)
         {
-            _currentHealth -= damage.GetDamageAmount();
-            OnHealthChanged();
+            _currentHealth -= amount;
+            OnDamageTaken?.Invoke();
             if (_currentHealth <= 0)
             {
                 if (canKill)
                 {
-                    DeckLogger.Component("Health is zero");
+                    DeckLogger.Component("Requesting death on " + holder.GetId());
+                    ReleaseHealthBar();
                     _currentHealth = 0;
                     holder.RequestDeath();
+                    return;
                 }
-                else
-                {
-                    _currentHealth = 1;
-                }
+
+                _currentHealth = 1;
+            }
+
+            if (_currentHealth < _limitHealth)
+            {
+                GetHealthBar();
+                _healthBar.OnDataChanged(_currentHealth, (float)_currentHealth / _limitHealth);
+            }
+            else
+            {
+                ReleaseHealthBar();
+            }
+        }
+
+        private void GetHealthBar()
+        {
+            if (!_hasHealthBar)
+            {
+                _healthBar = _healthBarFactory.Create();
+                _healthBar.SetPositionOffset(Vector3.up * 2f);
+                _healthBar.SetTarget(GetComponentHolder().transform);
+                _hasHealthBar = true;
+            }
+        }
+
+        private void ReleaseHealthBar()
+        {
+            if (_hasHealthBar)
+            {
+                _healthBar.Despawn();
+                _hasHealthBar = false;
             }
         }
 
@@ -74,19 +111,9 @@ namespace Deck.Components
                 _currentHealth = Mathf.Clamp(_currentHealth, 0, _limitHealth);
             }
 
-            OnHealthChanged();
+            ReduceHealth(0);
 
             DeckLogger.Component("Setting health to  " + newValue);
-        }
-
-        public void Register(Action listener)
-        {
-            OnHealthChanged += listener;
-        }
-
-        public void Unregister(Action listener)
-        {
-            OnHealthChanged -= listener;
         }
 
         public override object GetData()
@@ -103,7 +130,7 @@ namespace Deck.Components
             var data = JsonUtility.FromJson<DeckHealthComponentData>(value);
             _currentHealth = data.currentHealth;
             _limitHealth = data.limitHealth;
-            OnHealthChanged();
+            ReduceHealth(0);
         }
 
         [Serializable]

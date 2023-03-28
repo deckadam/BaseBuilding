@@ -1,6 +1,7 @@
-﻿using Cysharp.Threading.Tasks;
-using Deck.Agent;
-using Deck.Services.Implementations.CellSelectionService;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
+using Deck;
+using Deck.Events.CellSelectionService;
 using UnityEngine;
 
 namespace Deck.Components
@@ -12,15 +13,14 @@ namespace Deck.Components
 
         public DeckCommandMove(Vector3 targetPosition, DeckAgent agent)
         {
-            commandType = DeckCommandType.Movement;
             _targetPosition = targetPosition;
             _agent = agent;
         }
 
-        public override UniTask<bool> ProcessCommand()
+        public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            DeckSelectionService.ResetSelectionToPossession();
-            _agent.GetDeckComponent<DeckComponentMovement>().SetDestination(_targetPosition);
+            DeckServiceSelection.ResetSelectionToPossession();
+            _agent.GetDeckComponent<DeckComponentMovement>().SetDestination(_targetPosition, 0f);
             return default;
         }
     }

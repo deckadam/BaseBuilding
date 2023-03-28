@@ -1,5 +1,4 @@
-﻿using Deck.Agent;
-using Deck.Map.Agent.Chest;
+﻿using Deck;
 using Deck.Save.Data;
 using Zenject;
 
@@ -7,12 +6,14 @@ namespace Deck.Save
 {
     public class DeckAgentLoadResolver
     {
-        private DeckAgentCore.Factory _core;
-        private DeckAgentChest.Factory _chest;
+        private DeckAgentCore _core;
+        private DeckAgentChest _chest;
+        private DiContainer _container;
 
         [Inject]
-        private void Inject(DeckAgentCore.Factory agentCoreFactory, DeckAgentChest.Factory agentChestFactory)
+        private void Inject(DiContainer container, DeckAgentCore agentCoreFactory, DeckAgentChest agentChestFactory)
         {
+            _container = container;
             _core = agentCoreFactory;
             _chest = agentChestFactory;
         }
@@ -24,10 +25,10 @@ namespace Deck.Save
                 switch (deckComponentHolderSaveData.id)
                 {
                     case nameof(DeckAgentCore):
-                        _core.Create().LoadData(deckComponentHolderSaveData);
+                        _container.InstantiatePrefab(_core).GetComponent<DeckAgentCore>().LoadData(deckComponentHolderSaveData);
                         break;
                     case nameof(DeckAgentChest):
-                        _chest.Create().LoadData(deckComponentHolderSaveData);
+                        _container.InstantiatePrefab(_chest).GetComponent<DeckAgentChest>().LoadData(deckComponentHolderSaveData);
                         break;
                 }
             }

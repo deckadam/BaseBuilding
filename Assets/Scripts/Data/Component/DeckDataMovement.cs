@@ -3,7 +3,7 @@
 namespace Data.Component
 {
     [CreateAssetMenu(fileName = "Deck Data Movement", menuName = "Deck/Data/Component/Movement")]
-    public class DeckDataMovement : DeckComponentData
+    public class DeckDataMovement : DeckDataComponent
     {
         [SerializeField] private float movementSpeed;
         [SerializeField] private float acceleration;

@@ -1,15 +1,14 @@
-﻿using Deck.GameManager.Constants;
-using Deck.Save;
-using Deck.Services.Implementations;
-using Deck.Utility.Constants.Inventory;
-using Deck.Utility.Constants.SaveListingMenu.Events;
+﻿using Deck.Save;
+using Deck.Events;
 using Deck.Utility.Logger;
+using Deck.UI.Inventory;
+using Deck.UI.SaveListingMenu.Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Deck.Utility.Constants.SaveListingMenu
+namespace Deck.UI.SaveListingMenu
 {
     public class DeckSaveDisplayer : MonoBehaviour, IPoolable<IMemoryPool>, IPointerClickHandler
     {
@@ -17,7 +16,7 @@ namespace Deck.Utility.Constants.SaveListingMenu
 
         [SerializeField] private TextMeshProUGUI displayText;
         [SerializeField] private RectTransform rectTransform;
-        
+
         private DeckSaveSystem.SaveFile _saveFile;
         private IMemoryPool _pool;
 
@@ -33,11 +32,11 @@ namespace Deck.Utility.Constants.SaveListingMenu
 
             if (eventData.clickCount == 2)
             {
-                var newConfirmationPopUp = Deck.GetService<DeckPopUpService>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-                var parent = Deck.GetService<DeckUIService>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+                var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
+                var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
                 newConfirmationPopUp.transform.SetParent(parent, false);
                 newConfirmationPopUp.transform.localPosition = Vector2.zero;
-                newConfirmationPopUp.Initialize(DeckConfirmationDialogueConstants.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
+                newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
             }
         }
 

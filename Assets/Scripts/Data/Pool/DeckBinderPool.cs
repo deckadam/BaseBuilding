@@ -1,7 +1,7 @@
-﻿using Deck.Map.Agent.Chest;
-using Deck.Utility.Constants.Health;
-using Deck.Utility.Constants.Inventory;
-using Deck.Utility.Constants.SaveListingMenu;
+﻿using Deck.UI.Inventory;
+using Deck.UI.Item;
+using Deck.UI.SaveListingMenu;
+using Deck.Utility.Health;
 using UnityEngine;
 using Zenject;
 
@@ -15,6 +15,7 @@ namespace Deck.Data.Pool
         [SerializeField] private DeckSaveDisplayer saveDisplayerPrefab;
         [SerializeField] private DeckInventoryPopUp inventoryPopUpPrefab;
         [SerializeField] private DeckConfirmationPopUp confirmationPopUpPrefab;
+        [SerializeField] private DeckUIItemDisplayer itemDisplayer;
 
         public override void InstallBindings()
         {
@@ -23,6 +24,11 @@ namespace Deck.Data.Pool
             Container.BindFactory<DeckSaveDisplayer, DeckSaveDisplayer.Factory>().FromPoolableMemoryPool<DeckSaveDisplayer, DeckSaveDisplayerPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(saveDisplayerPrefab).UnderTransformGroup("UIPool"));
             Container.BindFactory<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().FromPoolableMemoryPool<DeckInventoryPopUp, DeckInventoryPopUpPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(inventoryPopUpPrefab).UnderTransformGroup("UIPool"));
             Container.BindFactory<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().FromPoolableMemoryPool<DeckConfirmationPopUp, DeckConfirmationPopUpPool>(poolBinder => poolBinder.WithInitialSize(0).FromComponentInNewPrefab(confirmationPopUpPrefab).UnderTransformGroup("UIPool"));
+            Container.BindFactory<DeckUIItemDisplayer, DeckUIItemDisplayer.Factory>().FromPoolableMemoryPool<DeckUIItemDisplayer, DeckUIItemDisplayerPool>(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(itemDisplayer).UnderTransformGroup("UIPool"));
+        }
+
+        private class DeckUIItemDisplayerPool : MonoPoolableMemoryPool<IMemoryPool, DeckUIItemDisplayer>
+        {
         }
 
         private class DeckHealthBarPool : MonoPoolableMemoryPool<IMemoryPool, DeckHealthBar>

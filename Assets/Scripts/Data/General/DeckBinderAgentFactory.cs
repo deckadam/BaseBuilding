@@ -1,5 +1,4 @@
-﻿using Deck.Agent;
-using Deck.Map.Agent.Chest;
+﻿using Deck;
 using UnityEngine;
 using Zenject;
 
@@ -13,8 +12,8 @@ namespace Deck.Data.General
 
         public override void InstallBindings()
         {
-            Container.BindFactory<DeckAgentCore, DeckAgentCore.Factory>().FromComponentInNewPrefab(agentCorePrefab);
-            Container.BindFactory<DeckAgentChest, DeckAgentChest.Factory>().FromComponentInNewPrefab(agentChestPrefab);
+            Container.BindInstance(agentCorePrefab);
+            Container.BindInstance(agentChestPrefab);
         }
     }
 }

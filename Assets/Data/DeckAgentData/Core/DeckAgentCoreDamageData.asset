@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: DeckAgentCoreDamageData
   m_EditorClassIdentifier: 
   damageAmount: 1
+  attackRange: 2
+  attackDuration: 500

@@ -1,6 +1,6 @@
 ﻿using Deck.EventManager;
 
-namespace Deck.Utility.Constants
+namespace Deck.UI
 {
     public class DeckNotificationRequestedEvent : DeckEvent
     {
