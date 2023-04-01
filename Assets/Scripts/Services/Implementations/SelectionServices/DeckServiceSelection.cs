@@ -10,8 +10,8 @@ namespace Deck.Events.CellSelectionService
 {
     public class DeckServiceSelection : DeckServiceBase
     {
-        public static DeckAgentCore currentSelection { get; private set; }
-        public static DeckAgentCore currentPossession { get; private set; }
+        public static DeckAgent currentSelection { get; private set; }
+        public static DeckAgent currentPossession { get; private set; }
 
         private DeckHotKeySelectionHandler _hotKeySelectionHandler;
 
@@ -30,7 +30,7 @@ namespace Deck.Events.CellSelectionService
             DeckEventManager.Unregister<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
         }
 
-        public void OnSelection(DeckAgentCore selection)
+        public void OnSelection(DeckAgent selection)
         {
             if (selection == currentSelection)
             {
@@ -42,7 +42,7 @@ namespace Deck.Events.CellSelectionService
             DeckOnAgentSelectedEvent.Create(currentSelection).Send();
         }
 
-        public void OnPossession(DeckAgentCore possession)
+        public void OnPossession(DeckAgent possession)
         {
             if (possession == null)
             {

@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 576fff234ca54f468104ee6473f5fb4f, type: 3}
-  m_Name: Deck Data Animation Tree Shake
+  m_Script: {fileID: 11500000, guid: bf7288c92a484467807b9196284c080d, type: 3}
+  m_Name: DeckAgentEnemyHealthData
   m_EditorClassIdentifier: 
-  shakeAnimationDuration: 0.4
-  shakeAnimationStrength: 1
-  shakeAnimationVibrato: 13
-  shakeAnimationEase: 1
+  health: 3
+  tags:
+  - Sword

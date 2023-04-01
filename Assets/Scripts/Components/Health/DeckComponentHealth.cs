@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Deck.Data.Component;
 using Deck.MVC;
 using Deck.Utility.Health;
@@ -36,6 +37,11 @@ namespace Deck.Components
 
             _healthController = DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController();
             _healthController.GetModel().AddData(this);
+        }
+
+        public bool CanBeDamagedByAnyOfTags(string[] tags)
+        {
+            return tags.Select(t => _dataHealth.HasTag(t)).Any(result => result);
         }
 
         public override void DeInitialize()

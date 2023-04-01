@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e51709a4420484d9b9d98968c762a21, type: 3}
-  m_Name: Deck Animation Parameters Float
+  m_Script: {fileID: 11500000, guid: 576fff234ca54f468104ee6473f5fb4f, type: 3}
+  m_Name: Deck Data Animation Harvestable Tree
   m_EditorClassIdentifier: 
-  isLocal: 0
-  amount: 0
-  duration: 0
-  ease: 0
+  shakeAnimationDuration: 0.4
+  shakeAnimationStrength: 1
+  shakeAnimationVibrato: 13
+  shakeAnimationEase: 1

@@ -9,10 +9,12 @@ namespace Deck.Components
     {
         private DeckComponentMovement _movementComponent;
         private DeckComponentDamageDealer _damageDealerComponent;
+        private DeckComponentHealth _healthComponent;
         private Animator _animator;
 
         protected override void InternalPostInitialize()
         {
+            Debug.LogError("Post Initialize");
             _movementComponent = holder.GetDeckComponent<DeckComponentMovement>();
             if (_movementComponent == null)
             {
@@ -33,11 +35,26 @@ namespace Deck.Components
             {
                 throw new Exception("Animator couldn't be found");
             }
+
+            _healthComponent = holder.GetDeckComponent<DeckComponentHealth>();
+            if (_healthComponent == null)
+            {
+                throw new Exception("Health component couldn't be found");
+            }
+
+            _healthComponent.OnDamageTaken += OnHealthChange;
+        }
+
+        private void OnHealthChange()
+        {
+            _animator.SetTrigger(DeckConstantsAnimator.GetHit);
         }
 
         public override void DeInitialize()
         {
+            Debug.LogError("DeInitialize");
             _damageDealerComponent.OnDamageDealRequested -= OnAttack;
+            _healthComponent.OnDamageTaken -= OnHealthChange;
         }
 
         private void OnAttack(int duration)

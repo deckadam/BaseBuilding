@@ -16,8 +16,6 @@ namespace Deck.UI.Inventory
 {
     public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        private readonly Vector2 _centeredAnchor = Vector2.one / 2f;
-
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI amount;
         [SerializeField] private RectTransform visualParent;
@@ -57,30 +55,21 @@ namespace Deck.UI.Inventory
 
         private async void FollowCursor(CancellationTokenSource tokenSource)
         {
-            visualParent.anchorMin = Vector2.zero;
-            visualParent.anchorMax = Vector2.zero;
-            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform());
+            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform(), true);
             Deck.GetService<DeckServiceInventory>().OnDragBegin(this);
             image.raycastTarget = false;
+            var offset = new Vector2(Screen.width / 2f, Screen.height / 2f);
             while (!tokenSource.IsCancellationRequested)
             {
-                visualParent.anchoredPosition = Input.mousePosition / 2f;
+                visualParent.anchoredPosition = (Vector2)Input.mousePosition - offset;
                 await UniTask.NextFrame();
             }
 
-            var isPlaced = Deck.GetService<DeckServiceInventory>().TryToPlace();
-
+            Deck.GetService<DeckServiceInventory>().TryToPlace();
 
             image.raycastTarget = true;
-            visualParent.SetParent(transform, false);
-            visualParent.anchorMin = _centeredAnchor;
-            visualParent.anchorMax = _centeredAnchor;
+            visualParent.SetParent(transform, true);
             visualParent.anchoredPosition = Vector2.zero;
-
-            if (isPlaced)
-            {
-                Despawn();
-            }
         }
 
         public DeckInventoryPopUp GetPopUp() => _popup;
@@ -99,7 +88,7 @@ namespace Deck.UI.Inventory
 
             _isClicked = true;
             _source?.Cancel();
-            _source.Dispose();
+            _source?.Dispose();
             _source = new CancellationTokenSource();
             FollowCursor(_source);
         }

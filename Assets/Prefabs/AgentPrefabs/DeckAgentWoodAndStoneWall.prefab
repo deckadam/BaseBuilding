@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1026695855676659597}
   - component: {fileID: 1872965080490674964}
   - component: {fileID: 1872965080490674955}
+  - component: {fileID: 2556329185310377102}
   m_Layer: 0
   m_Name: DeckAgentWoodAndStoneWall
   m_TagString: Untagged
@@ -116,4 +117,21 @@ MonoBehaviour:
   willSave: 1
   collider: {fileID: 1872965080490674964}
   centerPosition: {fileID: 2194557779227110626}
-  healthData: {fileID: 11400000, guid: ba87eba4b2db1164ebefac7fdb7a8010, type: 2}
+  data:
+  - {fileID: 11400000, guid: ba87eba4b2db1164ebefac7fdb7a8010, type: 2}
+--- !u!208 &2556329185310377102
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531067746401826392}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.73300004, y: 2.4870002, z: 0.708}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.025, y: 2.4870002, z: -0.016}
+  m_TimeToStationary: 0.5

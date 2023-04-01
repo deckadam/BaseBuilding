@@ -1,16 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Utility.MonoBehaviours
 {
     public class DeckTransformBinder : MonoBehaviour
     {
-        [SerializeField] private string key;
+        [SerializeField] private string[] keys;
 
-        public bool IsMatching(string key)
+        public bool ContainsKey(string key, out string result)
         {
-            return key == this.key;
+            result = key;
+            return keys.Contains(key);
         }
 
-        public string GetKey() => key;
+        public string[] GetKeys() => keys;
     }
 }

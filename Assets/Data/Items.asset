@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af49624f272d4f11b419ed0f6f212ba0, type: 3}
-  m_Name: Deck item tree
+  m_Name: Items
   m_EditorClassIdentifier: 
-  name: Tree
-  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  name: 
+  icon: {fileID: 21300000, guid: 2a03ffe0f1e9a024f905e6cdec609009, type: 3}
   amount: 1
-  representation: {fileID: 7624238596238122891, guid: 7d7b49242b801ac48a6e2c3f3d51c507, type: 3}
+  representation: {fileID: 0}
+  holdable: 1
+  animationName: Sword
+  tags:
+  - Sword

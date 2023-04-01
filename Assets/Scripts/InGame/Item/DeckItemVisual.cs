@@ -1,5 +1,6 @@
 ﻿using Deck.Components;
 using Deck.Animators;
+using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.Events;
 using Deck.Events.CellSelectionService;
@@ -14,24 +15,33 @@ namespace Deck.Item
     [RequireComponent(typeof(Collider))]
     public class DeckItemVisual : MonoBehaviour
     {
-        [SerializeField] private DeckAnimationParametersAnimationCurve animationParameters;
         [SerializeField] private DeckDataItem bindedItem;
         [SerializeField] private new Rigidbody rigidbody;
         [SerializeField] private new Collider collider;
         [SerializeField] private Vector3 displayOffset;
         [SerializeField] private Vector3 localEquipPosition;
         [SerializeField] private Quaternion localEquipRotation;
-
+        [SerializeField] private bool isOnTheGround;
+        private bool _inPicking;
         private DeckFactoryProviderUI _factoryProvider;
         private DeckUIItemDisplayer _display;
-
+        private DeckBinderGeneral.DeckGeneralData _generalData;
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Quaternion LocalEquipRotation => localEquipRotation;
 
         [Inject]
-        private void Inject(DeckFactoryProviderUI factoryProvider)
+        private void Inject(DeckFactoryProviderUI factoryProvider, DeckBinderGeneral.DeckGeneralData generalDataData)
         {
             _factoryProvider = factoryProvider;
+            _generalData = generalDataData;
+        }
+
+        private void Awake()
+        {
+            if (isOnTheGround)
+            {
+                OnDroppped();
+            }
         }
 
         public void OnDroppped()
@@ -62,6 +72,12 @@ namespace Deck.Item
 
         public void PickUp()
         {
+            if (_inPicking)
+            {
+                return;
+            }
+
+            _inPicking = true;
             var agent = DeckServiceSelection.currentPossession;
             if (agent == null)
             {
@@ -86,22 +102,23 @@ namespace Deck.Item
         public async void OnPickUp(Transform targetPosition)
         {
             rigidbody.isKinematic = true;
-            await DOVirtual.Float(0f, 1f, animationParameters.Duration, val =>
+            await DOVirtual.Float(0f, 1f, _generalData.ItemCollectingFlyAnimation.Duration, val =>
             {
                 var temp = Vector3.Lerp(transform.position, targetPosition.position, val);
-                temp.y = animationParameters.Value.Evaluate(val);
+                temp.y = _generalData.ItemCollectingFlyAnimation.Value.Evaluate(val);
                 transform.position = temp;
-            }).SetEase(animationParameters.Ease).AsyncWaitForCompletion();
-            _display.Despawn();
+            }).SetEase(_generalData.ItemCollectingFlyAnimation.Ease).AsyncWaitForCompletion();
+            _display?.Despawn();
             Destroy(gameObject);
         }
 
         public void OnEquip()
         {
-            _display.Despawn();
+            _display?.Despawn();
             rigidbody.isKinematic = true;
         }
 
         public DeckDataItem GetItem() => Instantiate(bindedItem);
+        public void SetItem(DeckDataItem item) => bindedItem = item;
     }
 }

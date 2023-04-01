@@ -2,6 +2,9 @@
 using Cysharp.Threading.Tasks;
 using Deck;
 using Deck.Data.Damage;
+using Deck.Item;
+using Deck.UI;
+using Deck.Utility.Logger;
 
 namespace Deck.Components
 {
@@ -29,6 +32,25 @@ namespace Deck.Components
 
             if (healthComponent.GetComponentHolder() == holder)
             {
+                return;
+            }
+
+
+            var equipmentManager = holder.GetDeckComponent<DeckComponentEquipmentManager>();
+            if (equipmentManager == null)
+            {
+                return;
+            }
+
+            var equippedItem = equipmentManager.GetEquippedItem();
+            if (equippedItem == null)
+            {
+                return;
+            }
+
+            if (!healthComponent.CanBeDamagedByAnyOfTags(equippedItem.GetItem().Tags))
+            {
+                DeckNotificationRequestedEvent.Create("Can't damage with this item").Send();
                 return;
             }
 

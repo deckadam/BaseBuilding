@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: Deck Data Health Stone
   m_EditorClassIdentifier: 
   health: 10
+  tags:
+  - PickAxe

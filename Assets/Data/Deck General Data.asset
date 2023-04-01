@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentCorePrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   agentChestPrefab: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
+  deckGeneralData:
+    itemCollectingFlyAnimation: {fileID: 11400000, guid: 2863e431ad238c049b1a8489366ae5bf, type: 2}
+    atlasMaterial: {fileID: 2100000, guid: f0cd415dabbeda941a0bfea14dfdb9a9, type: 2}

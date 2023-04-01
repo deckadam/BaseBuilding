@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af49624f272d4f11b419ed0f6f212ba0, type: 3}
-  m_Name: Deck item stone
+  m_Name: DeckItemSword
   m_EditorClassIdentifier: 
-  name: Stone
-  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  name: Sword
+  icon: {fileID: 21300000, guid: 2a03ffe0f1e9a024f905e6cdec609009, type: 3}
   amount: 1
-  representation: {fileID: 4006595031824536313, guid: 15e172e1f124fba4d92024f4f4512869, type: 3}
+  representation: {fileID: 8997340583728514672, guid: 445ab2cbc04764644b9e86debef56a87, type: 3}
+  holdable: 1
+  animationName: HumanoidAttack
+  tags:
+  - Sword

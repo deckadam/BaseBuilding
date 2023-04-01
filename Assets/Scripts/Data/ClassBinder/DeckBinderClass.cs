@@ -3,6 +3,7 @@ using Deck.Components;
 using Deck.Events;
 using Deck.Save;
 using Deck.UI.Health;
+using Deck.UI.InGame.Agent.Enemy;
 using Deck.UI.Inventory;
 using UnityEngine;
 using Zenject;
@@ -19,7 +20,15 @@ namespace Deck.Installers
             Container.Bind<DeckComponent>().To<DeckComponentDamageDealer>().AsTransient().WhenInjectedInto<DeckAgentCore>();
             Container.Bind<DeckComponent>().To<DeckComponentInventory>().AsTransient().WhenInjectedInto<DeckAgentCore>();
             Container.Bind<DeckComponent>().To<DeckComponentAnimatorCore>().AsTransient().WhenInjectedInto<DeckAgentCore>();
-            Container.Bind<DeckComponent>().To<DeckComponentItemHolder>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+            Container.Bind<DeckComponent>().To<DeckComponentEquipmentManager>().AsTransient().WhenInjectedInto<DeckAgentCore>();
+
+            //Enemy agent
+            Container.Bind<DeckComponent>().To<DeckComponentMovement>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
+            Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
+            Container.Bind<DeckComponent>().To<DeckComponentDamageDealer>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
+            Container.Bind<DeckComponent>().To<DeckComponentInventory>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
+            Container.Bind<DeckComponent>().To<DeckComponentAnimatorCore>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
+            Container.Bind<DeckComponent>().To<DeckComponentEquipmentManager>().AsTransient().WhenInjectedInto<DeckAgentEnemy>();
 
             //Chest agent
             Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentChest>();
@@ -30,7 +39,7 @@ namespace Deck.Installers
             //Tree agent
             Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentHarvestable>();
             Container.Bind<DeckComponent>().To<DeckComponentItemDropper>().AsTransient().WhenInjectedInto<DeckAgentHarvestable>();
-            Container.Bind<DeckComponent>().To<DeckComponentAnimatorTree>().AsTransient().WhenInjectedInto<DeckAgentHarvestable>();
+            Container.Bind<DeckComponent>().To<DeckComponentAnimatorHarvestable>().AsTransient().WhenInjectedInto<DeckAgentHarvestable>();
 
             //Wall agent
             Container.Bind<DeckComponent>().To<DeckComponentHealth>().AsTransient().WhenInjectedInto<DeckAgentWall>();

@@ -5,9 +5,9 @@ namespace Deck.Events
 {
     public class DeckOnAgentPossessedEvent : DeckEvent
     {
-        public DeckAgentCore agent { get; private set; }
+        public DeckAgent agent { get; private set; }
 
-        public static DeckOnAgentPossessedEvent Crate(DeckAgentCore agent)
+        public static DeckOnAgentPossessedEvent Crate(DeckAgent agent)
         {
             return new DeckOnAgentPossessedEvent
             {

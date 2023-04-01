@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using Deck;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Utility.Logger;
-using Deck.Events;
 using Deck.UI.Hotkey.Events;
+using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.Events.CellSelectionService
@@ -12,12 +10,11 @@ namespace Deck.Events.CellSelectionService
     public class DeckHotKeySelectionHandler
     {
         private DeckServiceSelection _serviceSelection;
-        private List<DeckAgentCore> _agents;
+        private List<DeckAgent> _agents = new();
 
         public void Initialize()
         {
-            _agents = new List<DeckAgentCore>();
-            _serviceSelection = global::Deck.Deck.GetService<DeckServiceSelection>();
+            _serviceSelection = Deck.GetService<DeckServiceSelection>();
             DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
             DeckEventManager.Register<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
             DeckEventManager.Register<DeckOnCoreAgentDeathEvent>(OnCoreAgentDeath);

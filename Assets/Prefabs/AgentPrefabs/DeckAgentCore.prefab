@@ -53,9 +53,9 @@ MonoBehaviour:
   collider: {fileID: 7533218056992631309}
   centerPosition: {fileID: 2699567841602013353}
   data:
-    dataHealth: {fileID: 11400000, guid: e4aad99ccdd7643468380ea94236d8c9, type: 2}
-    dataDamage: {fileID: 11400000, guid: 404f7f46d4ee33741a5b335c64c23151, type: 2}
-    dataMovement: {fileID: 11400000, guid: 6bcc5a01fe3795e49a09be80b320d068, type: 2}
+  - {fileID: 11400000, guid: 404f7f46d4ee33741a5b335c64c23151, type: 2}
+  - {fileID: 11400000, guid: e4aad99ccdd7643468380ea94236d8c9, type: 2}
+  - {fileID: 11400000, guid: 6bcc5a01fe3795e49a09be80b320d068, type: 2}
 --- !u!136 &7533218056992631309
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -182,7 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef110344eb049ce9e96ea2dfb5ee3a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: TwoHandItem
+  keys:
+  - HumanoidAttack
 --- !u!4 &2699567841602013353 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8021001004253913084, guid: fec1c3eca4b97a7469d8e9d21463e501, type: 3}

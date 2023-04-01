@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Deck.Components
 {
-    public class DeckComponentAnimatorTree : DeckComponent
+    public class DeckComponentAnimatorHarvestable : DeckComponent
     {
         private Transform _cachedHolderTransform;
         private DeckDataAnimationTreeShake _shakeDataAnimation;

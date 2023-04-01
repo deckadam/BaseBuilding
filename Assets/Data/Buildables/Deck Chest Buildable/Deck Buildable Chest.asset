@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   requirements:
   - item: {fileID: 11400000, guid: 0c9e3f0b39c037241bc51670a3359fa6, type: 2}
-    requiredAmount: 13
+    requiredAmount: 1
   agent: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   name: Chest
   silouetteData:

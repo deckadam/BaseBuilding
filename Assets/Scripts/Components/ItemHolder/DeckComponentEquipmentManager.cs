@@ -7,7 +7,7 @@ using Utility.MonoBehaviours;
 
 namespace Deck.Components
 {
-    public class DeckComponentItemHolder : DeckComponent, IDeckItemItemHolder
+    public class DeckComponentEquipmentManager : DeckComponent, IDeckItemItemHolder
     {
         private Dictionary<string, Transform> _bindedTransforms;
         private DeckItemVisual _currentlyEquippedItem;
@@ -22,16 +22,34 @@ namespace Deck.Components
                 DeckLogger.Inform("Item holder doesn't have any transform bindings");
             }
 
+            ProcessBinders(binders);
+        }
+
+        private void ProcessBinders(DeckTransformBinder[] binders)
+        {
             foreach (var binder in binders)
             {
-                if (_bindedTransforms.ContainsKey(binder.GetKey()))
-                {
-                    DeckLogger.Inform("More than one item with same key first one will be accepted");
-                    continue;
-                }
-
-                _bindedTransforms[binder.GetKey()] = binder.transform;
+                ProcessKeys(binder);
             }
+        }
+
+        private void ProcessKeys(DeckTransformBinder binder)
+        {
+            foreach (var temp in binder.GetKeys())
+            {
+                AddEquipmentPosition(temp, binder);
+            }
+        }
+
+        private void AddEquipmentPosition(string temp, DeckTransformBinder binder)
+        {
+            if (!_bindedTransforms.ContainsKey(temp))
+            {
+                _bindedTransforms[temp] = binder.transform;
+                return;
+            }
+
+            DeckLogger.Inform("More than one item with same key first one will be accepted");
         }
 
         public void SetItemToHold(DeckDataItem itemToHold)
@@ -62,8 +80,8 @@ namespace Deck.Components
 
         private void SetAnimation(DeckDataItem itemToHold)
         {
-            holder.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, true);
             _currentlyEquippedItemState = itemToHold.AnimationName;
+            holder.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, true);
         }
 
         private void EquipItem(DeckDataItem itemToHold, Transform target)
@@ -74,5 +92,7 @@ namespace Deck.Components
             _currentlyEquippedItem.transform.localRotation = itemToHold.Representation.LocalEquipRotation;
             _currentlyEquippedItem.OnEquip();
         }
+
+        public DeckItemVisual GetEquippedItem() => _currentlyEquippedItem;
     }
 }

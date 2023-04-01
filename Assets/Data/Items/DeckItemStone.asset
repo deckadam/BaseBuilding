@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af49624f272d4f11b419ed0f6f212ba0, type: 3}
-  m_Name: Deck item axe
+  m_Name: DeckItemStone
   m_EditorClassIdentifier: 
-  name: Axe
-  icon: {fileID: 21300000, guid: ad2d5b01412c1c5419448b71816d9da4, type: 3}
+  name: Stone
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   amount: 1
-  representation: {fileID: 9032209925360883485, guid: 18bf077b66d7d254d8ef277154b2edbe, type: 3}
-  holdable: 1
-  animationName: TwoHandItem
+  representation: {fileID: 4006595031824536313, guid: 15e172e1f124fba4d92024f4f4512869, type: 3}
+  holdable: 0
+  animationName: 
+  tags:
+  - PickAxe

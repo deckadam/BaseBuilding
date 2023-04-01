@@ -18,7 +18,6 @@ namespace Deck.Events
         [Inject]
         public void Initialize()
         {
-            Debug.LogError("Initialized");
             _factories = new Dictionary<Type, object>();
             _factories[typeof(DeckInventoryPopUp)] = inventoryPopUpFactory;
             _factories[typeof(DeckConfirmationPopUp)] = confirmationPopUpFactory;

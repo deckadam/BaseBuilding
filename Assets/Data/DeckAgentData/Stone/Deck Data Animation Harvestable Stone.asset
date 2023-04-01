@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 576fff234ca54f468104ee6473f5fb4f, type: 3}
-  m_Name: Deck Data Animation Tree Shake
+  m_Name: Deck Data Animation Harvestable Stone
   m_EditorClassIdentifier: 
   shakeAnimationDuration: 0.1
   shakeAnimationStrength: 3

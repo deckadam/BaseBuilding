@@ -14,12 +14,9 @@ namespace Deck
     [RequireComponent(typeof(NavMeshAgent))]
     public class DeckAgentCore : DeckAgent
     {
-        [SerializeField] private DeckDataAgentCore data;
-
         [Inject]
         private void Inject(DeckComponent[] injectedComponents)
         {
-            SetComponentDatas(data.GetDataArray());
             SetComponents(injectedComponents);
         }
 
@@ -31,19 +28,15 @@ namespace Deck
             }
         }
 
-        protected override async void InternalRequestDeath()
+        protected override void InternalRequestDeath()
         {
             DeckOnCoreAgentDeathEvent.Create(this).Send();
-            await UniTask.NextFrame();
-            DeInitialize();
-            DeckLogger.Level("Removing player");
             Destroy(gameObject);
         }
 
         private void OnEnable()
         {
-            transform.SetParent(DeckServiceMap.GetMap().transform);
-            transform.localPosition = Vector3.zero;
+            transform.SetParent(DeckServiceMap.GetMap().transform, true);
             DeckLogger.Level("Adding player");
             DeckOnCoreAgentCreatedEvent.Create(this).Send();
         }

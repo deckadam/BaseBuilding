@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Deck.Item;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Deck.Data.Item
         [SerializeField] private DeckItemVisual representation;
         [SerializeField] private bool holdable;
         [SerializeField] private string animationName;
+        [SerializeField] private string[] tags;
 
         public string Name => name;
         public Sprite Icon => icon;
@@ -20,6 +22,22 @@ namespace Deck.Data.Item
         public string AnimationName => animationName;
         public int Amount => amount;
         public bool Holdable => holdable;
+        public string[] Tags => tags;
+        public bool HasTag(string tag) => tags.Contains(tag);
+
+
+        public static DeckDataItem Create(string name, Sprite icon, int amount, DeckItemVisual representation, bool holdable, string animationName, string[] tags)
+        {
+            var newItem = CreateInstance<DeckDataItem>();
+            newItem.name = name;
+            newItem.icon = icon;
+            newItem.amount = amount;
+            newItem.representation = representation;
+            newItem.holdable = holdable;
+            newItem.animationName = animationName;
+            newItem.tags = tags;
+            return newItem;
+        }
 
         public void AddToAmount(int amountToAdd)
         {

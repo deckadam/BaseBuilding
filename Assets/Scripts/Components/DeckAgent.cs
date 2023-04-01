@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Component;
 using Deck.Components;
+using Deck.Events.MapService;
 using Deck.Save.Data;
 using UnityEngine;
 using Utility.Enums;
@@ -17,6 +18,8 @@ namespace Deck
         [SerializeField] private bool willSave;
         [SerializeField] private new Collider collider;
         [SerializeField] protected Transform centerPosition;
+        [SerializeField] private DeckDataComponent[] data;
+
         public event Action<float> OnAgentSizeChanged;
 
         protected DeckComponent[] components { get; private set; }
@@ -37,6 +40,7 @@ namespace Deck
         private void Start()
         {
             Initialize();
+            transform.SetParent(DeckServiceMap.GetMap().transform, true);
         }
 
         private void OnValidate()
@@ -80,6 +84,7 @@ namespace Deck
                 throw new Exception("Size value can not be lower than zero");
             }
 
+            SetComponentDatas(data);
             _commandProcessor = new DeckCommandProcessor();
 
             if (!_hasSetComponents)
@@ -178,7 +183,7 @@ namespace Deck
             return null;
         }
 
-        protected void SetComponentDatas(DeckDataComponent[] data)
+        private void SetComponentDatas(DeckDataComponent[] data)
         {
             _datas = new Dictionary<Type, DeckDataComponent>();
             foreach (var temp in data)
@@ -218,7 +223,11 @@ namespace Deck
         public Transform GetCenter() => centerPosition;
         public float GetSize() => activeSize;
         public DeckAgentShape GetShape() => shape;
-        protected abstract void InternalRequestDeath();
+
+        protected virtual void InternalRequestDeath()
+        {
+            Destroy(gameObject);
+        }
         public bool WillSave() => willSave;
     }
 }

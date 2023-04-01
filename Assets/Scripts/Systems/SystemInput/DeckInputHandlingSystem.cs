@@ -264,7 +264,7 @@ namespace Deck.InputHandling
                 return;
             }
 
-            if (!hit.transform.TryGetComponent<DeckAgentCore>(out var componentHolder))
+            if (!hit.transform.TryGetComponent<DeckAgent>(out var componentHolder))
             {
                 return;
             }
