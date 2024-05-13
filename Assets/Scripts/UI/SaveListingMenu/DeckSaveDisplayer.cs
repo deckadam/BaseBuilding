@@ -1,5 +1,5 @@
 ﻿using Deck.Save;
-using Deck.Events;
+using Deck.Services;
 using Deck.Utility.Logger;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
@@ -12,7 +12,7 @@ namespace Deck.UI.SaveListingMenu
 {
     public class DeckSaveDisplayer : MonoBehaviour, IPoolable<IMemoryPool>, IPointerClickHandler
     {
-        [field: ClearOnReload] public static DeckSaveDisplayer currentlySelectedDsiplayer { get; private set; }
+        [field: ClearOnReload] public static DeckSaveDisplayer CurrentlySelectedDsiplayer { get; private set; }
 
         [SerializeField] private TextMeshProUGUI displayText;
         [SerializeField] private RectTransform rectTransform;
@@ -28,16 +28,15 @@ namespace Deck.UI.SaveListingMenu
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            currentlySelectedDsiplayer = this;
+            CurrentlySelectedDsiplayer = this;
 
-            if (eventData.clickCount == 2)
-            {
-                var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-                var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
-                newConfirmationPopUp.transform.SetParent(parent, false);
-                newConfirmationPopUp.transform.localPosition = Vector2.zero;
-                newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
-            }
+            if (eventData.clickCount != 2) return;
+            
+            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>();
+            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            newConfirmationPopUp.transform.SetParent(parent, false);
+            newConfirmationPopUp.transform.localPosition = Vector2.zero;
+            newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
         }
 
         public void ReturnToPool()

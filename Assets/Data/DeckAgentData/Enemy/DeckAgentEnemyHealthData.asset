@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: DeckAgentEnemyHealthData
   m_EditorClassIdentifier: 
   health: 3
-  tags:
-  - Sword
+  tags: 01000000

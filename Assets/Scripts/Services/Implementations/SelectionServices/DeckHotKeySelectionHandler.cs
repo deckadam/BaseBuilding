@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using Deck.Agent;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.UI.Hotkey.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.Events.CellSelectionService
+namespace Deck.Services.CellSelectionService
 {
     public class DeckHotKeySelectionHandler
     {

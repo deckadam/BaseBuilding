@@ -1,16 +1,19 @@
 ﻿using System;
-using Deck.Components;
-using Deck;
+using Deck.Agent;
+using Deck.UI.Stats;
+using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
-    public abstract class DeckComponent : IDeckComponent
+    public abstract class DeckComponent : MonoBehaviour, IDeckComponent
     {
-        protected DeckAgent holder { get; private set; }
+        public Action<DeckStatGroup> OnStatsChanged;
+        
+        protected DeckAgent agent { get; private set; }
 
         public void PreInitialize(DeckAgent holder)
         {
-            this.holder = holder;
+            agent = holder;
             InternalPreInitialize();
         }
 
@@ -35,11 +38,6 @@ namespace Deck.Components
         {
         }
 
-        public virtual void Tick()
-        {
-        }
-
-
         public virtual void LoadData(string value)
         {
         }
@@ -52,11 +50,16 @@ namespace Deck.Components
         {
         }
 
-        public DeckAgent GetComponentHolder() => holder;
+        public DeckAgent GetComponentHolder() => agent;
 
         public virtual object GetData()
         {
             return null;
+        }
+
+        public virtual DeckStatGroup GetStatGroup()
+        {
+            return new DeckStatGroup();
         }
     }
 

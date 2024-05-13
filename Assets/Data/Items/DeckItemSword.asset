@@ -18,5 +18,4 @@ MonoBehaviour:
   representation: {fileID: 8997340583728514672, guid: 445ab2cbc04764644b9e86debef56a87, type: 3}
   holdable: 1
   animationName: HumanoidAttack
-  tags:
-  - Sword
+  tags: 01000000

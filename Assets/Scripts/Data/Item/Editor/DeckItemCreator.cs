@@ -14,7 +14,7 @@ namespace Deck.Data.Item.Editor
         private bool _holdable;
         private bool _isBoxCollider;
         private string _animationName;
-        private List<string> _tags = new();
+        private List<DeckActionTag> _tags = new();
         private GameObject _itemVisual;
 
         [MenuItem("Deck/Item Creator")]
@@ -42,7 +42,7 @@ namespace Deck.Data.Item.Editor
 
             for (var i = 0; i < _tags.Count; i++)
             {
-                _tags[i] = EditorGUILayout.TextField("Item visual: ", _tags[i]);
+                _tags[i] = (DeckActionTag)EditorGUILayout.EnumFlagsField("Item visual: ", DeckActionTag.Invalid);
             }
 
             if (GUILayout.Button("Add tag"))
@@ -80,14 +80,14 @@ namespace Deck.Data.Item.Editor
             }
 
             var prefab = PrefabUtility.SaveAsPrefabAsset(instance, prefabName).GetComponent<DeckItemVisual>();
-            var newScriptableObject = DeckDataItem.Create(_name, _icon, _amount, prefab, _holdable, _animationName, _tags.ToArray());
-            
+            var newScriptableObject = DeckDataItem.Create(_name, _icon, _amount, prefab, _holdable, _animationName, _tags);
+
             AssetDatabase.CreateAsset(newScriptableObject, assetName);
 
             UpdatePrefabData(prefab, newScriptableObject, prefabName, instance);
 
             DeckLogger.Success(_name + "  item and prefab succesfully created");
-            
+
             UpdateEditor();
         }
 
@@ -161,7 +161,7 @@ namespace Deck.Data.Item.Editor
 
         private void AddTagToEnd()
         {
-            _tags.Add("");
+            _tags.Add(DeckActionTag.Invalid);
         }
 
         private void RemoveTagFromEnd()

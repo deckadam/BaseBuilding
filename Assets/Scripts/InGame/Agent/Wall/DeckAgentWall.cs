@@ -1,14 +1,6 @@
-﻿using Deck.Components;
-using Zenject;
+﻿using Deck.UI;
 
-namespace Deck
+namespace Deck.Agent
 {
-    public class DeckAgentWall : DeckAgent
-    {
-        [Inject]
-        private void Inject(DeckComponent[] injectedComponents)
-        {
-            SetComponents(injectedComponents);
-        }
-    }
+    public class DeckAgentWall : DeckBuilding { }
 }

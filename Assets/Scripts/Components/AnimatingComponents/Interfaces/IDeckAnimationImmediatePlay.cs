@@ -1,4 +1,4 @@
-﻿namespace Deck.Components
+﻿namespace Deck.Commands
 {
     public interface IDeckAnimationImmediatePlay
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -10,7 +9,8 @@ namespace Deck.Data.Item
     [CreateAssetMenu(fileName = "Deck Binder Item", menuName = "Deck/Binder/Item", order = 0)]
     public class DeckBinderItem : ScriptableObjectInstaller
     {
-        [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private List<DeckDataItem> items;
+        [SerializeField] private List<DeckDataItem> items;
+        // [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private List<DeckDataItem> items;
 
         private Dictionary<string, DeckDataItem> _itemsWithNameAccess;
 
@@ -25,7 +25,6 @@ namespace Deck.Data.Item
             {
                 var newItem = Instantiate(item);
                 newItem.ResetAmount();
-                newItem.AddToAmount(item.Amount);
                 return newItem;
             }
 

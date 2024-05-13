@@ -1,4 +1,4 @@
-﻿using Deck.Components;
+﻿using Deck.Commands;
 using Deck.Data.Component;
 using UnityEngine;
 using UnityEngine.Serialization;

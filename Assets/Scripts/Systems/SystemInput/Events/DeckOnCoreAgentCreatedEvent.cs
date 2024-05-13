@@ -1,4 +1,4 @@
-﻿using Deck;
+﻿using Deck.Agent;
 using Deck.EventManager;
 
 namespace Deck.InputHandling.Events
@@ -9,7 +9,7 @@ namespace Deck.InputHandling.Events
 
         public static DeckOnCoreAgentCreatedEvent Create(DeckAgentCore agent)
         {
-            return new() {agent = agent};
+            return new() { agent = agent };
         }
     }
 }

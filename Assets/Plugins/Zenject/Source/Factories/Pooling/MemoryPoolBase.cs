@@ -112,6 +112,7 @@ namespace Zenject
 
         void IMemoryPool.Despawn(object item)
         {
+
             Despawn((TContract)item);
         }
 

@@ -1,42 +1,41 @@
 ﻿using System;
-using Deck.Components;
+using Deck.Agent;
 using Deck.Constants;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckComponentAnimatorCore : DeckComponent, IDeckAnimationImmediatePlay, IDeckAnimationSetBool, IDeckAnimationSetFloat
     {
         private DeckComponentMovement _movementComponent;
-        private DeckComponentDamageDealer _damageDealerComponent;
+        private DeckComponentBasicInteraction _basicInteractionComponent;
         private DeckComponentHealth _healthComponent;
         private Animator _animator;
 
         protected override void InternalPostInitialize()
         {
-            Debug.LogError("Post Initialize");
-            _movementComponent = holder.GetDeckComponent<DeckComponentMovement>();
+            _movementComponent = agent.GetDeckComponent<DeckComponentMovement>();
             if (_movementComponent == null)
             {
                 throw new Exception("Movement component couldn't be found");
             }
 
-            _damageDealerComponent = holder.GetDeckComponent<DeckComponentDamageDealer>();
-            if (_damageDealerComponent == null)
+            _basicInteractionComponent = agent.GetDeckComponent<DeckComponentBasicInteraction>();
+            if (_basicInteractionComponent == null)
             {
                 throw new Exception("Damage dealer component couldn't be found");
             }
 
-            _damageDealerComponent.OnDamageDealRequested += OnAttack;
+            _basicInteractionComponent.OnDamageDealRequested += OnAttack;
 
-            _animator = holder.GetComponentInChildren<Animator>();
+            _animator = agent.GetComponentInChildren<Animator>();
 
             if (_animator == null)
             {
                 throw new Exception("Animator couldn't be found");
             }
 
-            _healthComponent = holder.GetDeckComponent<DeckComponentHealth>();
+            _healthComponent = agent.GetDeckComponent<DeckComponentHealth>();
             if (_healthComponent == null)
             {
                 throw new Exception("Health component couldn't be found");
@@ -45,16 +44,15 @@ namespace Deck.Components
             _healthComponent.OnDamageTaken += OnHealthChange;
         }
 
-        private void OnHealthChange()
-        {
-            _animator.SetTrigger(DeckConstantsAnimator.GetHit);
-        }
-
         public override void DeInitialize()
         {
-            Debug.LogError("DeInitialize");
-            _damageDealerComponent.OnDamageDealRequested -= OnAttack;
+            _basicInteractionComponent.OnDamageDealRequested -= OnAttack;
             _healthComponent.OnDamageTaken -= OnHealthChange;
+        }
+
+        private void OnHealthChange(DeckAgent damageDealer)
+        {
+            _animator.SetTrigger(DeckConstantsAnimator.GetHit);
         }
 
         private void OnAttack(int duration)
@@ -63,7 +61,7 @@ namespace Deck.Components
             _animator.SetTrigger(DeckConstantsAnimator.HumanoidAttack);
         }
 
-        public override void Tick()
+        private void Update()
         {
             _animator.SetFloat(DeckConstantsAnimator.MovementSpeed, _movementComponent.GetSpeed());
         }

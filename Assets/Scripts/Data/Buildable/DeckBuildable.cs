@@ -1,20 +1,27 @@
 ﻿using System;
 using System.Linq;
-using Deck;
+using Deck.Agent;
 using Deck.Data.Item;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Deck.Data.Buildable
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [FormerlySerializedAs("items"), SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private DeckItemRequirement[] requirements;
+        [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private DeckItemRequirement[] requirements;
         [SerializeField] private DeckAgent agent;
         [SerializeField] private new string name;
-        [SerializeField] private SilouetteData[] silouetteData;
+        [SerializeField] private SilouetteData[] silouette;
+        [SerializeField] private Vector2Int[] indices;
+
+        public DeckItemRequirement[] Requeriements => requirements;
+        public SilouetteData[] Silouette => silouette;
+        public Vector2Int[] Indices => indices;
+        public DeckAgent Agent => agent;
+        public string Name => name;
+
 
         private bool CheckUniqueness()
         {
@@ -28,22 +35,26 @@ namespace Deck.Data.Buildable
         }
 
         [Button]
-        private void CollectSilouetteData(DeckAgent agentToCollect)
+        private void CollectSilouetteData()
         {
-            if (agentToCollect.transform.position != Vector3.zero)
+            if (agent == null)
+            {
+                throw new Exception("Agent not set");
+            }
+
+            if (agent.transform.position != Vector3.zero)
             {
                 throw new Exception("Agent is not centered");
             }
 
-            var filters = agentToCollect.GetComponentsInChildren<MeshFilter>();
-            silouetteData = new SilouetteData[filters.Length];
+            var filters = agent.GetComponentsInChildren<MeshFilter>();
+            silouette = new SilouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];
-                silouetteData[i] = new SilouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
+                silouette[i] = new SilouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
             }
         }
-
 
         [Serializable]
         public class SilouetteData
@@ -63,10 +74,5 @@ namespace Deck.Data.Buildable
             public Vector3 GetPosition() => position;
             public Vector3 GetRotation() => rotation;
         }
-
-        public DeckItemRequirement[] GetMaterials() => requirements;
-        public DeckAgent GetAgent() => agent;
-        public string GetName() => name;
-        public SilouetteData[] GetSilouette() => silouetteData;
     }
 }

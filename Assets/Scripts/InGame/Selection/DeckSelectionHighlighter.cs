@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck;
+using Deck.Agent;
 using Deck.EventManager;
-using Deck.Events;
+using Deck.Services;
 using UnityEngine;
 
 namespace Deck.Selection

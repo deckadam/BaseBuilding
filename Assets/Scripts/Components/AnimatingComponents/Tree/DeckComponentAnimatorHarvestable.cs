@@ -1,34 +1,33 @@
 ﻿using Data.Component.Tree;
-using Deck.Components;
+using Deck.Agent;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckComponentAnimatorHarvestable : DeckComponent
     {
+        [SerializeField] private DeckDataAnimationTreeShake shakeDataAnimation;
         private Transform _cachedHolderTransform;
-        private DeckDataAnimationTreeShake _shakeDataAnimation;
         private Tween _activeTween;
 
         protected override void InternalPostInitialize()
         {
-            _cachedHolderTransform = holder.transform;
-            _shakeDataAnimation = holder.GetData<DeckDataAnimationTreeShake>();
-            holder.GetDeckComponent<DeckComponentHealth>().OnDamageTaken += OnOnDamageTaken;
+            _cachedHolderTransform = agent.transform;
+            agent.GetDeckComponent<DeckComponentHealth>().OnDamageTaken += OnOnDamageTaken;
         }
 
         public override void DeInitialize()
         {
             _activeTween?.Kill();
-            holder.GetDeckComponent<DeckComponentHealth>().OnDamageTaken -= OnOnDamageTaken;
+            agent.GetDeckComponent<DeckComponentHealth>().OnDamageTaken -= OnOnDamageTaken;
         }
 
 
-        private void OnOnDamageTaken()
+        private void OnOnDamageTaken(DeckAgent damageDealer)
         {
             _activeTween?.Kill();
-            _activeTween = _cachedHolderTransform.DOShakeRotation(_shakeDataAnimation.GetShakeAnimationDuration(), _shakeDataAnimation.GetShakeAnimationStrength(), _shakeDataAnimation.GetShakeAnimationVibrato()).SetEase(_shakeDataAnimation.GetShakeAnimationEase());
+            _activeTween = _cachedHolderTransform.DOShakeRotation(shakeDataAnimation.GetShakeAnimationDuration(), shakeDataAnimation.GetShakeAnimationStrength(), shakeDataAnimation.GetShakeAnimationVibrato()).SetEase(shakeDataAnimation.GetShakeAnimationEase());
         }
     }
 }

@@ -18,5 +18,4 @@ MonoBehaviour:
   representation: {fileID: 7624238596238122891, guid: 7d7b49242b801ac48a6e2c3f3d51c507, type: 3}
   holdable: 0
   animationName: 
-  tags:
-  - Axe
+  tags: 

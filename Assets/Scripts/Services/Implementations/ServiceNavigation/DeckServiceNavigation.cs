@@ -1,17 +1,17 @@
 ﻿using Deck.Data.Map;
 using Deck.Services;
-using Deck.Events.MapService;
+using Deck.Services.MapService;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Deck.Events.Navigation
+namespace Deck.Services.Navigation
 {
     public class DeckServiceNavigation : DeckServiceBase
     {
         public void GenerateNavigation(DeckBinderMap binderMap)
         {
-            var map = DeckServiceMap.GetMap();
+            var map = DeckServiceScene.GetMap();
 
             DeckLogger.Navigation("Starting to generate navigation", map.gameObject);
 

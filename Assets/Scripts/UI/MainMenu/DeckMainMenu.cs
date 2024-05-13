@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.EventManager;
 using Deck.Save;
-using Deck.Events;
+using Deck.Services;
 using Deck.UI.SaveListingMenu;
 using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
@@ -32,7 +32,7 @@ namespace Deck.UI
         private void OnLoadRequested(OnLoadRequestedEvent obj)
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
-            global::Deck.Deck.GetService<DeckGameManager>().LoadGame();
+            Deck.GetService<DeckGameManager>().LoadGame();
             Disappear();
         }
 
@@ -47,7 +47,7 @@ namespace Deck.UI
         {
             DeckLogger.Inform("New game starting");
 
-            global::Deck.Deck.GetService<DeckGameManager>().CreateNewGame();
+            Deck.GetService<DeckGameManager>().CreateNewGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -58,7 +58,7 @@ namespace Deck.UI
         public async void OnLastSaveLoad()
         {
             DeckSaveSystem.LoadLastSaveData();
-            global::Deck.Deck.GetService<DeckGameManager>().LoadGame();
+            Deck.GetService<DeckGameManager>().LoadGame();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -68,7 +68,7 @@ namespace Deck.UI
 
         public void OnLoadGame()
         {
-            global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().Appear();
+            Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().Appear();
         }
     }
 }

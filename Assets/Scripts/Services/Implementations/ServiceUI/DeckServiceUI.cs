@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Deck.Services;
 using Deck.UI;
 using Deck.Utility.Class;
 using Deck.Utility.Logger;
+using UnityEngine;
 
-namespace Deck.Events
+namespace Deck.Services
 {
     public class DeckServiceUI : DeckServiceBase
     {
@@ -46,6 +46,7 @@ namespace Deck.Events
             var temp = _uiImplementations[typeOfT];
             if (temp._isAppeared || temp.isAppearing)
             {
+                Debug.LogError("Huh");
                 return;
             }
 

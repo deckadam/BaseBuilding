@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck;
-using Deck.Events.CellSelectionService;
+using Deck.Agent;
+using Deck.Services.CellSelectionService;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommandMove : DeckCommand
     {
@@ -20,7 +20,8 @@ namespace Deck.Components
         public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
             DeckServiceSelection.ResetSelectionToPossession();
-            _agent.GetDeckComponent<DeckComponentMovement>().SetDestination(_targetPosition, 0f);
+            var componentMovement = _agent.GetDeckComponent<DeckComponentMovement>();
+            componentMovement.SetDestination(_targetPosition);
             return default;
         }
     }

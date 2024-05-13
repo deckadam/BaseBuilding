@@ -4,7 +4,6 @@ using System.Linq;
 using Deck.Services;
 using Deck.Utility.Class;
 using Deck.Utility.Logger;
-using Sirenix.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -36,7 +35,10 @@ namespace Deck
             var maxWarmUpIndex = _services.Max(item => item.Value.GetWarmUpIndex());
             for (var i = maxWarmUpIndex; i >= 0; i--)
             {
-                _services.ForEach(item => item.Value.ControlledWarmUp(i));
+                foreach (var deckServiceBase in _services)
+                {
+                    deckServiceBase.Value.ControlledWarmUp(i);
+                }
             }
 
             foreach (var service in _services)

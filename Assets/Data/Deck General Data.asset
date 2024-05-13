@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d0fd57e920407484de03a9b44a8502, type: 3}
   m_Name: Deck General Data
   m_EditorClassIdentifier: 
+  itemVisualProviders:
+  - {fileID: 11400000, guid: 3ca7721443fcec543a468f3e322649de, type: 2}
+  - {fileID: 11400000, guid: b1492621705f01a4f96fd10896fc16f6, type: 2}
   agentCorePrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   agentChestPrefab: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   deckGeneralData:

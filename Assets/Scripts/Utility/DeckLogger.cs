@@ -38,6 +38,11 @@ namespace Deck.Utility.Logger
         {
             Debug.Log("#Inform#" + log, obj);
         }
+        
+        public static void Warning(string log, GameObject obj = null)
+        {
+            Debug.Log("#Warning#" + log, obj);
+        }
 
         public static void Success(string log, GameObject obj = null)
         {
@@ -49,6 +54,12 @@ namespace Deck.Utility.Logger
             Debug.Log("#Component#" + log, obj);
         }
 
+        public static void Command(string log, GameObject obj = null)
+        {
+            Debug.Log("#Command#" + log, obj);
+        }
+
+        
         public static void Save(string log, GameObject obj = null)
         {
             Debug.Log("#Save#" + log, obj);

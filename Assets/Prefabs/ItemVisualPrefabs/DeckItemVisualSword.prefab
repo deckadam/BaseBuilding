@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6921050609197363372}
   - component: {fileID: 5564078186356182561}
   - component: {fileID: 8997340583728514672}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: DeckItemVisualSword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.35192686, y: 1.187432, z: 0.09194279}
-  m_Center: {x: 0, y: 0.15918717, z: 0.000000024214387}
+  m_Size: {x: 0.51304895, y: 1.5403662, z: 0.09194279}
+  m_Center: {x: -0.0038362443, y: 0.5313026, z: 0.000000022351742}
 --- !u!54 &5564078186356182561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,10 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bindedItem: {fileID: 11400000, guid: c957e634b361b4947bd1fa0183262775, type: 2}
-  rigidbody: {fileID: 5564078186356182561}
-  collider: {fileID: 6921050609197363372}
-  displayOffset: {x: 0, y: 0, z: 0}
+  localEquipRotation: {x: 0, y: 0, z: -0.70710677, w: 0.70710677}
   localEquipPosition: {x: 0, y: 0, z: 0}
-  localEquipRotation: {x: 0, y: 0, z: 0, w: 0}
+  bindedItem: {fileID: 11400000, guid: c957e634b361b4947bd1fa0183262775, type: 2}
+  displayOffset: {x: 0, y: 0, z: 0}
+  rigidbody: {fileID: 5564078186356182561}
   isOnTheGround: 0
+  collider: {fileID: 6921050609197363372}
+  isStatic: 0

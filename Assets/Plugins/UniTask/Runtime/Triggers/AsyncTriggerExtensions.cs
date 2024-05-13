@@ -1,8 +1,8 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 using System.Threading;
-using UnityEngine;
 using Cysharp.Threading.Tasks.Triggers;
+using UnityEngine;
 
 namespace Cysharp.Threading.Tasks
 {
@@ -18,6 +18,12 @@ namespace Cysharp.Threading.Tasks
         public static CancellationToken GetCancellationTokenOnDestroy(this Component component)
         {
             return component.GetAsyncDestroyTrigger().CancellationToken;
+        }
+
+        /// <summary>This CancellationToken is canceled when the MonoBehaviour will be destroyed.</summary>
+        public static CancellationTokenSource GetCancellationSourceTokenOnDestroy(this Component component)
+        {
+            return component.GetAsyncDestroyTrigger().CancellationTokenSource;
         }
     }
 }
@@ -82,4 +88,3 @@ namespace Cysharp.Threading.Tasks.Triggers
         }
     }
 }
-

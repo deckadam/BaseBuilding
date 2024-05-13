@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Data.Component;
 using Deck.Data.Item;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -51,7 +50,9 @@ namespace Deck.Data.ItemDrop
         [Serializable]
         public class ItemDrop
         {
-            [SerializeField, OnValueChanged(nameof(AdjustChances))] private ChanceSet[] chances;
+            [SerializeField,
+             // OnValueChanged(nameof(AdjustChances))
+            ] private ChanceSet[] chances;
             [SerializeField] private DeckDataItem itemToDrop;
 
             public void AdjustChances()

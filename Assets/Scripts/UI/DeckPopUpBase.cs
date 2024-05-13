@@ -1,8 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using Deck.Services;
+using Deck.UI.GamePlay;
+using Deck.Utility.Logger;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using Deck.Utility.Poolable;
 
 namespace Deck.UI
 {
-    public class DeckPopUpBase : MonoBehaviour
+    [RequireComponent(typeof(EventTrigger))]
+    public abstract class DeckPopUpBase : DeckPoolable
     {
         [SerializeField] protected RectTransform rect;
 
@@ -14,13 +21,26 @@ namespace Deck.UI
             rect = GetComponent<RectTransform>();
         }
 
-        public void OnPointerClick()
+        private void Awake()
+        {
+            var eventTrigger = GetComponent<EventTrigger>();
+
+            var onPointerClick = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+            onPointerClick.callback.AddListener(data => OnPointerDown(data as PointerEventData));
+            var onPointerDrag = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
+            onPointerDrag.callback.AddListener(data => OnPointerDrag(data as PointerEventData));
+
+            eventTrigger.triggers.Add(onPointerClick);
+            eventTrigger.triggers.Add(onPointerDrag);
+        }
+
+        private void OnPointerDown(PointerEventData data)
         {
             _clickPosition = Input.mousePosition;
             _startPosition = rect.anchoredPosition;
         }
 
-        public void OnPointerDrag()
+        private void OnPointerDrag(PointerEventData data)
         {
             if (!CanDrag)
             {
@@ -29,6 +49,20 @@ namespace Deck.UI
 
             var delta = (Vector2)Input.mousePosition - _clickPosition;
             rect.anchoredPosition = delta + _startPosition;
+        }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+            var gamePlayUIRect = Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform();
+            rect.SetParent(gamePlayUIRect, false);
+            rect.anchoredPosition = Vector2.zero;
+        }
+
+
+        public void OnCloseRequested()
+        {
+            Despawn();
         }
 
         public virtual bool CanDrag => true;

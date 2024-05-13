@@ -1,14 +1,15 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
+using Deck.Commands;
 using Deck.Data.Item;
-using Deck.Events;
-using Deck.Events.CellSelectionService;
+using Deck.Services;
+using Deck.Services.CellSelectionService;
 using Deck.UI.GamePlay;
-using Services.Implementations.Inventory;
+using Deck.ItemVisualProviders.Implementations.Inventory;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -17,7 +18,7 @@ namespace Deck.UI.Inventory
     public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image image;
-        [SerializeField] private TextMeshProUGUI amount;
+        [FormerlySerializedAs("amount")] [SerializeField] private TextMeshProUGUI amountText;
         [SerializeField] private RectTransform visualParent;
 
         private IMemoryPool _pool;
@@ -26,12 +27,14 @@ namespace Deck.UI.Inventory
         private DeckDataItem _item;
         private bool _isClicked;
         private bool _isHovering;
+        private int _amount;
 
-        public void Initialize(DeckDataItem dataItem, DeckInventoryPopUp popup)
+        public void Initialize(DeckDataItem dataItem,int amount, DeckInventoryPopUp popup)
         {
             _item = dataItem;
             image.sprite = _item.Icon;
-            amount.text = _item.Amount.ToString();
+            _amount = amount;
+            amountText.text = amount.ToString();
             _popup = popup;
         }
 
@@ -74,7 +77,8 @@ namespace Deck.UI.Inventory
 
         public DeckInventoryPopUp GetPopUp() => _popup;
         public DeckDataItem GetItem() => _item;
-
+        public int GetAmount() => _amount;
+        
         public class Factory : PlaceholderFactory<DeckInventoryDisplayerCell>
         {
         }

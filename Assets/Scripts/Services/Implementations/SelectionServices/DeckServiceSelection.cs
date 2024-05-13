@@ -1,12 +1,11 @@
-﻿using Deck;
-using Deck.Components;
+﻿using Deck.Agent;
+using Deck.Commands;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Services;
-using Deck.Events;
 using Deck.Utility.Logger;
 
-namespace Deck.Events.CellSelectionService
+namespace Deck.Services.CellSelectionService
 {
     public class DeckServiceSelection : DeckServiceBase
     {

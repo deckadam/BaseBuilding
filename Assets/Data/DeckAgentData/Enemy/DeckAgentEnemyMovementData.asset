@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172f0a94972c466fb6f1d86db5d70491, type: 3}
   m_Name: DeckAgentEnemyMovementData
   m_EditorClassIdentifier: 
-  movementSpeed: 13
+  movementSpeed: 10
   acceleration: 100
   angularSpeed: 600

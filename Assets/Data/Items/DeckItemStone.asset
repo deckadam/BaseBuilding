@@ -18,5 +18,4 @@ MonoBehaviour:
   representation: {fileID: 4006595031824536313, guid: 15e172e1f124fba4d92024f4f4512869, type: 3}
   holdable: 0
   animationName: 
-  tags:
-  - PickAxe
+  tags: 

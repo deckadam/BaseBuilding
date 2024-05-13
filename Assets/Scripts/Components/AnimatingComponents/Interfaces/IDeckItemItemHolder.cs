@@ -1,6 +1,6 @@
 ﻿using Deck.Data.Item;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public interface IDeckItemItemHolder
     {

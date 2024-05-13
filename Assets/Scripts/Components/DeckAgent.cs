@@ -1,57 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Data.Component;
-using Deck.Components;
-using Deck.Events.MapService;
+using Deck.Commands;
+using Deck.InputHandling;
+using Deck.Save;
 using Deck.Save.Data;
+using Deck.Services.MapService;
+using Deck.UI.InGame;
+using Deck.UI.Stats;
+using Services.AgentFinder;
+using Sirenix.OdinInspector;
 using UnityEngine;
-using Utility.Enums;
 
-namespace Deck
+namespace Deck.Agent
 {
-    [RequireComponent(typeof(Collider))]
     public abstract class DeckAgent : MonoBehaviour
     {
-        [SerializeField] private float activeSize = -1f;
-        [SerializeField] private DeckAgentShape shape;
-        [SerializeField] private bool willSave;
-        [SerializeField] private new Collider collider;
-        [SerializeField] protected Transform centerPosition;
-        [SerializeField] private DeckDataComponent[] data;
-
         public event Action<float> OnAgentSizeChanged;
+        public event Action<DeckAgent> OnAgentDeath;
+        public event Action OnItemVisualChanged;
 
-        protected DeckComponent[] components { get; private set; }
-        protected string id;
+        [ReadOnly, SerializeField] private string prefabId;
 
-        private Dictionary<Type, DeckDataComponent> _datas;
-        private bool _hasSetComponents;
-        private DeckCommandProcessor _commandProcessor;
+        [SerializeField] protected Transform centerPosition;
+        [SerializeField] private DeckComponent[] components;
+        [SerializeField] private float activeSize = -1f;
+        [SerializeField] private new Collider collider;
+        [SerializeField] private bool willSave = true;
+        [SerializeField] private DeckId uniqueId;
+
+        [HideInInspector] public Transform selfTransform;
+
+        private DeckComponentCommandProcessor _componentCommandProcessor;
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
+        private bool _hasSetComponents;
 
-        public void StartWithClearData()
+        private void Awake()
         {
             Initialize();
-            id = GetType().ToString().Split('.')[^1];
-        }
-
-        private void Start()
-        {
-            Initialize();
-            transform.SetParent(DeckServiceMap.GetMap().transform, true);
+            uniqueId ??= new DeckId();
         }
 
         private void OnValidate()
         {
+            components = GetComponents<DeckComponent>();
             collider = GetComponent<Collider>();
+
+            if (string.IsNullOrEmpty(prefabId))
+            {
+                prefabId = Guid.NewGuid().ToString();
+            }
         }
 
-        protected void SetComponents(params DeckComponent[] components)
+        private void OnDestroy()
         {
-            _hasSetComponents = true;
-            this.components = components;
+            DeInitialize();
+        }
+
+        public bool TryGetDeckComponent<T>(out T value) where T : class
+        {
+            for (var i = 0; i < components.Length; i++)
+            {
+                if (components[i] is T component)
+                {
+                    value = component;
+                    return true;
+                }
+            }
+
+            value = null;
+            return false;
         }
 
         public T GetDeckComponent<T>() where T : class
@@ -67,12 +85,30 @@ namespace Deck
             return null;
         }
 
-        public T[] GetDeckComponents<T>() where T : DeckComponent
+        private void SetComponents()
         {
-            return components as T[];
+            if (_hasSetComponents)
+            {
+                return;
+            }
+
+            _hasSetComponents = true;
+            var components = GetComponents<DeckComponent>();
+            this.components = components;
         }
 
-        protected void Initialize()
+        public void Initialize(string guid)
+        {
+            if (_hasBeenInitialized)
+            {
+                return;
+            }
+
+            uniqueId = new DeckId(guid);
+            Initialize(false);
+        }
+
+        public void Initialize(bool createNewGuid = true)
         {
             if (_hasBeenInitialized)
             {
@@ -84,8 +120,18 @@ namespace Deck
                 throw new Exception("Size value can not be lower than zero");
             }
 
-            SetComponentDatas(data);
-            _commandProcessor = new DeckCommandProcessor();
+            if (createNewGuid)
+            {
+                uniqueId = new DeckId();
+            }
+
+            selfTransform = transform;
+            selfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
+
+
+            SetComponents();
+
+            _componentCommandProcessor = GetDeckComponent<DeckComponentCommandProcessor>();
 
             if (!_hasSetComponents)
             {
@@ -103,6 +149,10 @@ namespace Deck
             {
                 deckComponent.PostInitialize();
             }
+
+            AfterInitialize();
+
+            Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
         }
 
         protected void DeInitialize()
@@ -124,15 +174,10 @@ namespace Deck
                 deckComponent.DeInitialize();
             }
 
-            if (_commandProcessor != null)
+            if (_componentCommandProcessor != null)
             {
-                _commandProcessor.StopExecutions();
+                _componentCommandProcessor.StopExecutions();
             }
-        }
-
-        private void OnDestroy()
-        {
-            DeInitialize();
         }
 
         public List<DeckComponentSaveData> GetSaveData()
@@ -146,11 +191,11 @@ namespace Deck
                     continue;
                 }
 
-                var serializedValue = JsonUtility.ToJson(temp);
+                var serializedValue = DeckSaveUtility.GetSerializedData(temp);
                 result.Add(new DeckComponentSaveData
                 {
                     id = deckComponent.GetType().ToString(),
-                    data = serializedValue
+                    data = serializedValue,
                 });
             }
 
@@ -160,7 +205,6 @@ namespace Deck
         public void LoadData(DeckComponentHolderSaveData data)
         {
             Initialize();
-            id = data.id;
             foreach (var saveData in data.componentDatas)
             {
                 foreach (var component in components)
@@ -171,35 +215,19 @@ namespace Deck
                     }
                 }
             }
-        }
 
-        public T GetData<T>() where T : DeckDataComponent
-        {
-            if (_datas.TryGetValue(typeof(T), out var result))
-            {
-                return (T)result;
-            }
-
-            return null;
-        }
-
-        private void SetComponentDatas(DeckDataComponent[] data)
-        {
-            _datas = new Dictionary<Type, DeckDataComponent>();
-            foreach (var temp in data)
-            {
-                _datas[temp.GetType()] = Instantiate(temp);
-            }
-        }
-
-        public string GetId()
-        {
-            return id;
+            uniqueId = new DeckId(data.agentGuid);
+            AfterLoad();
         }
 
         public void AddCommand(DeckCommand command)
         {
-            _commandProcessor.AddCommand(command);
+            _componentCommandProcessor.AddCommand(command, DeckInputHandlingSystem.IsInterruptingCommandModeActive);
+        }
+
+        public void EnqueCommand(DeckCommand command)
+        {
+            _componentCommandProcessor.EnqueCommand(command);
         }
 
         protected void SetSize(float newSize)
@@ -210,7 +238,10 @@ namespace Deck
 
         public void RequestDeath()
         {
-            collider.enabled = false;
+            if (collider != null)
+            {
+                collider.enabled = false;
+            }
 
             foreach (var deckComponent in components)
             {
@@ -218,16 +249,53 @@ namespace Deck
             }
 
             InternalRequestDeath();
-        }
+            OnAgentDeath?.Invoke(this);
 
-        public Transform GetCenter() => centerPosition;
-        public float GetSize() => activeSize;
-        public DeckAgentShape GetShape() => shape;
+            Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
+        }
 
         protected virtual void InternalRequestDeath()
         {
             Destroy(gameObject);
         }
+
+        protected void RaiseItemVisualChanged()
+        {
+            OnItemVisualChanged?.Invoke();
+        }
+
+        public DeckComponent[] GetDeckComponents() => components;
+        public Transform GetCenter() => centerPosition;
+        public float GetSize() => activeSize;
         public bool WillSave() => willSave;
+        public string GetPrefabId() => prefabId;
+
+        protected virtual void AfterInitialize()
+        {
+        }
+
+        protected virtual void AfterLoad()
+        {
+        }
+
+        public DeckStatGroup[] GetStats()
+        {
+            var compCount = components.Length;
+            var stats = new DeckStatGroup[compCount];
+
+            for (var i = 0; i < compCount; i++)
+            {
+                var comp = components[i];
+                var statGroup = comp.GetStatGroup();
+                stats[i] = statGroup;
+            }
+
+            return stats;
+        }
+
+        public DeckId GetUniqueId()
+        {
+            return uniqueId;
+        }
     }
 }

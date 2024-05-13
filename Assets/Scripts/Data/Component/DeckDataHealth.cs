@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Data.Component;
 using UnityEngine;
 
@@ -8,9 +8,9 @@ namespace Deck.Data.Component
     public class DeckDataHealth : DeckDataComponent
     {
         [SerializeField] private int health;
-        [SerializeField] private string[] tags;
+        [SerializeField] private List<DeckActionTag> tags;
         public int Health => health;
-        public string[] GetTags() => tags;
-        public bool HasTag(string tag) => tags.Contains(tag);
+        public List<DeckActionTag> GetTags() => tags;
+        public bool HasTag(DeckActionTag tag) => this.tags.Contains(tag);
     }
 }

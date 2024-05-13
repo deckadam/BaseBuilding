@@ -3,9 +3,9 @@ using Deck.Data.Item;
 using Deck.Item;
 using Deck.Utility.Logger;
 using UnityEngine;
-using Utility.MonoBehaviours;
+using Deck.Utility.MonoBehaviours;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckComponentEquipmentManager : DeckComponent, IDeckItemItemHolder
     {
@@ -16,7 +16,7 @@ namespace Deck.Components
         protected override void InternalPostInitialize()
         {
             _bindedTransforms = new Dictionary<string, Transform>();
-            var binders = holder.GetComponentsInChildren<DeckTransformBinder>();
+            var binders = agent.GetComponentsInChildren<DeckTransformBinder>();
             if (binders.Length == 0)
             {
                 DeckLogger.Inform("Item holder doesn't have any transform bindings");
@@ -54,10 +54,10 @@ namespace Deck.Components
 
         public void SetItemToHold(DeckDataItem itemToHold)
         {
-            if (_currentlyEquippedItem != null)
+            if (_currentlyEquippedItem != null && _currentlyEquippedItem != itemToHold.Representation)
             {
-                Object.Destroy(_currentlyEquippedItem.gameObject);
-                holder.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, false);
+                Destroy(_currentlyEquippedItem.gameObject);
+                agent.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, false);
             }
 
             if (!itemToHold.Holdable)
@@ -81,12 +81,11 @@ namespace Deck.Components
         private void SetAnimation(DeckDataItem itemToHold)
         {
             _currentlyEquippedItemState = itemToHold.AnimationName;
-            holder.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, true);
         }
 
         private void EquipItem(DeckDataItem itemToHold, Transform target)
         {
-            _currentlyEquippedItem = Object.Instantiate(itemToHold.Representation);
+            _currentlyEquippedItem = Instantiate(itemToHold.Representation);
             _currentlyEquippedItem.transform.SetParent(target, true);
             _currentlyEquippedItem.transform.localPosition = itemToHold.Representation.LocalEquipPosition;
             _currentlyEquippedItem.transform.localRotation = itemToHold.Representation.LocalEquipRotation;

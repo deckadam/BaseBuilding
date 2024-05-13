@@ -1,27 +1,15 @@
-﻿using Deck.Components;
-using Zenject;
+﻿using Deck.UI.InGame.AI;
 
-namespace Deck.UI.InGame.Agent.Enemy
+namespace Deck.Agent.Enemy
 {
     public class DeckAgentEnemy : DeckAgent
     {
-        [Inject]
-        private void Inject(DeckComponent[] injectedComponents)
+        protected override void AfterInitialize()
         {
-            SetComponents(injectedComponents);
-        }
-
-        private void Update()
-        {
-            foreach (var deckComponent in components)
+            if (TryGetComponent(out DeckAI ai))
             {
-                deckComponent.Tick();
+                ai.StartAi();
             }
-        }
-
-        protected override void InternalRequestDeath()
-        {
-            Destroy(gameObject);
         }
     }
 }

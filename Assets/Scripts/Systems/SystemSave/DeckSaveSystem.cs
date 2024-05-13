@@ -165,7 +165,7 @@ namespace Deck.Save
                 return default;
             }
 
-            return (T) _activeSaveData[key];
+            return (T)_activeSaveData[key];
         }
 
         private static string ConvertToFilePath(string name)
@@ -177,7 +177,6 @@ namespace Deck.Save
         {
             return DateTime.Now.ToString(FILE_FORMAT);
         }
-
 
         #region Test
 
@@ -208,9 +207,7 @@ namespace Deck.Save
         #endregion
 
         [Serializable]
-        public class SaveData : Dictionary<string, object>
-        {
-        }
+        public class SaveData : Dictionary<string, object> { }
 
         public class SaveFile
         {

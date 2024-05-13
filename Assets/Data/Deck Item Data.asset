@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: Deck Item Data
   m_EditorClassIdentifier: 
   items:
+  - {fileID: 11400000, guid: 160385df874f77249abbc4d6fdb00ef7, type: 2}
+  - {fileID: 11400000, guid: 1bef0a7dcb4fa8e4b85039ed8fcfb8df, type: 2}
+  - {fileID: 11400000, guid: 0bf4950e44d827741900c68961a63d10, type: 2}
+  - {fileID: 11400000, guid: c957e634b361b4947bd1fa0183262775, type: 2}
   - {fileID: 11400000, guid: 0c9e3f0b39c037241bc51670a3359fa6, type: 2}

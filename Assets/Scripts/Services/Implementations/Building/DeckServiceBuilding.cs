@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck;
+using Deck.Agent;
+using Deck.Commands;
 using Deck.Data.Buildable;
 using Deck.Data.General;
-using Unity.VisualScripting;
+using Deck.Services.CellSelectionService;
+using Deck.Services.MapService;
+using Deck.UI;
+using Deck.Utility.Logger;
 using UnityEngine;
-using Utility.Enums;
+using Deck.Utility;
 using Zenject;
 
 namespace Deck.Services.Building
 {
     public class DeckServiceBuilding : DeckServiceBase
     {
+#if UNITY_EDITOR
+        public bool showGizmos = true;
+#endif
+        private Dictionary<Vector2Int, DeckAgent> _grid = new();
+        private Dictionary<string, DeckBuildable> _buildableDictionary;
+        private List<MeshRenderer> _renderers = new();
+        private List<MeshFilter> _filters = new();
+        private DeckDataBuilding _buildingData;
+        private DeckBuildable _activeBuildable;
+        private GameObject _silouetteMaster;
         private DeckBuildable[] _buildables;
         private DiContainer _container;
-        private DeckDataBuilding _buildingData;
-        private Dictionary<string, DeckBuildable> _buildableDictionary;
-
-        private GameObject _silouetteMaster;
-        private List<MeshRenderer> _renderer = new();
-        private List<MeshFilter> _filter = new();
-        private DeckBuildable _activeBuildable;
-
-        //1- Ground
-        //2- Camera confiner
-        //3- Possible collision
-        private Collider[] _colliders = new Collider[3];
 
         [Inject]
         private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData, DiContainer container)
@@ -41,30 +43,38 @@ namespace Deck.Services.Building
             _buildableDictionary = new Dictionary<string, DeckBuildable>();
             foreach (var deckBuildable in _buildables)
             {
-                _buildableDictionary[deckBuildable.GetName()] = deckBuildable;
+                _buildableDictionary[deckBuildable.Name] = deckBuildable;
             }
         }
 
-        public T Build<T>(DeckBuildable buildable) where T : DeckAgent
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
         {
-            return _container.InstantiatePrefab(buildable.GetAgent().gameObject).GetComponent<T>();
-        }
-
-        public DeckBuildable GetBuildable(string name)
-        {
-            if (_buildableDictionary.TryGetValue(name, out var match))
+            if (!showGizmos)
             {
-                return match;
+                return;
             }
 
-            throw new Exception("Buildable not found");
+            foreach (var kvp in _grid)
+            {
+                Gizmos.color = kvp.Value == null ? Color.red : Color.green;
+                Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
+            }
         }
+#endif
 
-
-        public void StartSilouette(DeckBuildable buildable)
+        public void StartSilouette(string id)
         {
+            var buildable = GetBuildable(id);
+            if (buildable == null)
+            {
+                DeckLogger.Warning($"Buildable not found {id}");
+                return;
+            }
+
             _activeBuildable = buildable;
-            var silouetteData = _activeBuildable.GetSilouette();
+
+            var silouetteData = _activeBuildable.Silouette;
             for (var i = 0; i < silouetteData.Length; i++)
             {
                 var data = silouetteData[i];
@@ -72,62 +82,125 @@ namespace Deck.Services.Building
                 var newFilter = newObject.AddComponent<MeshFilter>();
                 newFilter.mesh = data.GetMesh();
                 var newRenderer = newObject.AddComponent<MeshRenderer>();
-                newRenderer.material = _buildingData.GetAvailableMaterial();
+                newRenderer.sharedMaterial = _buildingData.GetAvailableMaterial();
 
                 newObject.transform.SetParent(_silouetteMaster.transform);
                 newObject.transform.localPosition = data.GetPosition();
                 newObject.transform.eulerAngles = data.GetRotation();
 
-                _filter.Add(newFilter);
-                _renderer.Add(newRenderer);
+                _filters.Add(newFilter);
+                _renderers.Add(newRenderer);
             }
         }
 
         public void UpdateSilouette(Vector3 worldPosition)
         {
-            var isPlacable = CheckIfAgentBuildableInArea(_activeBuildable, worldPosition);
-            var material = isPlacable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-            foreach (var meshRenderer in _renderer)
+            if (_activeBuildable == null)
             {
-                meshRenderer.material = material;
+                return;
             }
 
-            _silouetteMaster.transform.position = worldPosition;
+            var cellIndex = worldPosition.ToVector2Int();
+            var isPlacable = CheckIfAgentBuildableInArea(_activeBuildable, cellIndex);
+            var material = isPlacable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+            foreach (var meshRenderer in _renderers)
+            {
+                meshRenderer.sharedMaterial = material;
+            }
+
+            _silouetteMaster.transform.position = cellIndex.ToVector3();
         }
 
-        public void StopSilouette()
+        public void Build(Vector3 position)
         {
-            foreach (var meshFilter in _filter)
+            if (_activeBuildable == null)
+            {
+                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
+                return;
+            }
+
+            var cellPosition = position.ToVector3Int();
+            StopSilouette();
+            if (!CheckIfAgentBuildableInArea(_activeBuildable, position.ToVector2Int()))
+            {
+                DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
+                return;
+            }
+
+            var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(_activeBuildable.Requeriements);
+            if (!hasItems)
+            {
+                DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
+                return;
+            }
+
+            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent.gameObject).GetComponent<DeckBuilding>();
+            newBuilding.transform.parent.SetParent(DeckServiceScene.GetMap().transform);
+            newBuilding.transform.position = cellPosition;
+            newBuilding.Initialize();
+            newBuilding.InitializeBuilding();
+            SetCellOccupied(cellPosition, _activeBuildable.Indices, newBuilding);
+        }
+
+        private void StopSilouette()
+        {
+            foreach (var meshFilter in _filters)
             {
                 Destroy(meshFilter.gameObject);
             }
 
-            _filter.Clear();
-            _renderer.Clear();
+            _filters.Clear();
+            _renderers.Clear();
         }
 
-        public bool CheckIfAgentBuildableInArea(DeckBuildable buildable, Vector3 worldPosition)
+        public void OnBuildingDestroyed(DeckBuilding buildable)
         {
-            if (buildable.GetAgent().GetShape() == DeckAgentShape.Box)
+            var cellIndex = buildable.transform.position.ToVector2Int();
+            foreach (var index in buildable.BuildingData.Indices)
             {
-                return CheckBoxAgent(buildable.GetAgent().GetSize(), worldPosition);
-            }
-            else
-            {
-                return CheckCapsuleAgent(buildable.GetAgent().GetSize(), worldPosition);
+                var temp = cellIndex + index;
+                _grid[temp] = null;
             }
         }
 
-        private bool CheckCapsuleAgent(float size, Vector3 worldPosition)
+        public void SetCellOccupied(Vector3 cellPosition, IEnumerable<Vector2Int> indices, DeckAgent newAgent)
         {
-            var result = Physics.OverlapSphereNonAlloc(worldPosition, size, _colliders);
-            return result == 2;
+            var cellIndex = cellPosition.ToVector2Int();
+
+            foreach (var index in indices)
+            {
+                var temp = cellIndex + index;
+                _grid[temp] = newAgent;
+            }
         }
 
-        private bool CheckBoxAgent(float size, Vector3 worldPosition)
+        private bool CheckIfAgentBuildableInArea(DeckBuildable buildable, Vector2Int cellIndex)
         {
-            var result = Physics.OverlapBoxNonAlloc(worldPosition, Vector3.one * size, _colliders);
-            return result == 2;
+            foreach (var index in buildable.Indices)
+            {
+                var temp = cellIndex + index;
+                if (!_grid.ContainsKey(temp))
+                {
+                    continue;
+                }
+
+                if (_grid[temp] != null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private DeckBuildable GetBuildable(string name)
+        {
+            if (_buildableDictionary.TryGetValue(name, out var match))
+            {
+                return match;
+            }
+
+            return null;
         }
     }
 }

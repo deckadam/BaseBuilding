@@ -1,19 +1,18 @@
-﻿using Deck.Components;
-using Deck.Events;
-using Deck.Events.CameraService;
-using Deck.Events.CellSelectionService;
-using Deck.Events.MapService;
+﻿using Deck.Agent;
+using Deck.Commands;
 using Deck.Data.Damage;
 using Deck.Data.Item;
 using Deck.InputHandling.Events;
-using Deck.Item;
 using Deck.Save;
+using Deck.Services;
 using Deck.Services.Building;
+using Deck.Services.CameraService;
+using Deck.Services.CellSelectionService;
 using Deck.UI;
-using Deck.UI.GamePlay;
 using Deck.UI.Inventory;
-using Deck.Utility.Class;
+using Deck.UI.Stats;
 using Deck.Utility.Logger;
+using Deck.Utility.MonoBehaviours;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -23,6 +22,7 @@ namespace Deck.InputHandling
     public class DeckInputHandlingSystem : MonoBehaviour
     {
         [SerializeField] private DeckDataDamage testDataDamage;
+        public static bool IsInterruptingCommandModeActive;
         private float _lastPressTime;
         private DeckBinderItem _binderItem;
         private DeckServiceSelection _serviceSelection;
@@ -54,111 +54,48 @@ namespace Deck.InputHandling
             CheckForEscapeMenu();
             SaveCheck();
             CheckForBuilding();
-            CheckForClickable();
+            CheckForCommandStackStatus();
+            CheckForStatsPopUp();
         }
 
-        private void CheckForClickable()
+        private void CheckForStatsPopUp()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetKeyDown(KeyCode.C))
             {
-                var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out var hit, 250f))
-                {
-                    if (hit.transform.TryGetComponent<DeckItemVisual>(out var result))
-                    {
-                        result.PickUp();
-                    }
-                }
+                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp, DeckStatsPopUp.Factory>();
+                newPopUp.Show();
+                newPopUp.ShowStats(DeckServiceSelection.currentSelection);
             }
+        }
+
+        private void CheckForCommandStackStatus()
+        {
+            IsInterruptingCommandModeActive = !Input.GetKey(KeyCode.LeftShift);
         }
 
         private void CheckForBuilding()
         {
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                var buildService = Deck.GetService<DeckServiceBuilding>();
-                var buildData = buildService.GetBuildable("Chest");
-                buildService.StartSilouette(buildData);
-            }
-
-            if (Input.GetKey(KeyCode.B))
-            {
-                Deck.GetService<DeckServiceBuilding>().UpdateSilouette(GetCellPosition(GetWorldPosition()));
-            }
-
-            if (Input.GetKeyUp(KeyCode.B))
-            {
-                var buildService = Deck.GetService<DeckServiceBuilding>();
-                var buildData = buildService.GetBuildable("Chest");
-                var cellPosition = GetCellPosition(GetWorldPosition());
-
-                buildService.StopSilouette();
-                if (!buildService.CheckIfAgentBuildableInArea(buildData, cellPosition))
-                {
-                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
-                    return;
-                }
-
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(buildData.GetMaterials());
-                if (!hasItems)
-                {
-                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
-                }
-
-                var newChest = buildService.Build<DeckAgentChest>(buildData);
-                newChest.transform.position = cellPosition;
-                newChest.StartWithClearData();
-            }
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                var buildService = Deck.GetService<DeckServiceBuilding>();
-                var buildData = buildService.GetBuildable("WoodAndStoneWall");
-                buildService.StartSilouette(buildData);
-            }
-
-            if (Input.GetKey(KeyCode.C))
-            {
-                Deck.GetService<DeckServiceBuilding>().UpdateSilouette(GetCellPosition(GetWorldPosition()));
-            }
-
-            if (Input.GetKeyUp(KeyCode.C))
-            {
-                var buildService = Deck.GetService<DeckServiceBuilding>();
-                var buildData = buildService.GetBuildable("WoodAndStoneWall");
-                var cellPosition = GetCellPosition(GetWorldPosition());
-
-                buildService.StopSilouette();
-                if (!buildService.CheckIfAgentBuildableInArea(buildData, cellPosition))
-                {
-                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
-                    return;
-                }
-
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(buildData.GetMaterials());
-                if (!hasItems)
-                {
-                    DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
-                }
-
-                var newChest = buildService.Build<DeckAgent>(buildData);
-                newChest.transform.parent = DeckServiceMap.GetMap().transform;
-                newChest.transform.position = cellPosition;
-                newChest.StartWithClearData();
-            }
+            CheckForBuilding2(KeyCode.V, "WoodAndStoneWall");
+            CheckForBuilding2(KeyCode.B, "Chest");
         }
 
-        private Vector3 GetCellPosition(Vector3 worldPosition)
+        private void CheckForBuilding2(KeyCode keyCode, string id)
         {
-            var x = Mathf.RoundToInt(worldPosition.x);
-            var y = Mathf.RoundToInt(worldPosition.y);
-            var z = Mathf.RoundToInt(worldPosition.z);
+            if (Input.GetKeyDown(keyCode))
+            {
+                Deck.GetService<DeckServiceBuilding>().StartSilouette(id);
+            }
 
-            return new Vector3(x, y, z);
+            if (Input.GetKey(keyCode))
+            {
+                Deck.GetService<DeckServiceBuilding>().UpdateSilouette(GetWorldPosition());
+            }
+
+            if (Input.GetKeyUp(keyCode))
+            {
+                Deck.GetService<DeckServiceBuilding>().Build(GetWorldPosition());
+            }
         }
-
 
         private Vector3 GetWorldPosition()
         {
@@ -178,7 +115,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                Deck.GetService<DeckGameManager>().Test_FillSaveFile();
+                Deck.GetService<DeckGameManager>().GatherSaveData();
                 DeckSaveSystem.Save();
             }
         }
@@ -201,10 +138,13 @@ namespace Deck.InputHandling
                 return;
             }
 
-            if (hit.transform.TryGetComponent<DeckAgent>(out var result))
+            if (hit.transform.TryGetComponentInParent<DeckAgent>(out var result))
             {
-                var damageDealer = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentDamageDealer>();
-                damageDealer?.DealDamage(result);
+                var damageDealer = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentBasicInteraction>();
+                if (damageDealer)
+                {
+                    damageDealer.DealDamage(result);
+                }
             }
         }
 
@@ -212,7 +152,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Deck.GetService<DeckServiceUI>().ShowWindow<DeckGamePlayUI>();
+                Deck.GetService<DeckServicePopUp>().CloseLastPopUp();
             }
         }
 
@@ -220,12 +160,14 @@ namespace Deck.InputHandling
         {
             if (DeckServiceSelection.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
-                var newPopUp = Deck.GetService<DeckServicePopUp>().GetPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>().Create();
+                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>();
                 var inventoryComponent = DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>();
-                if (inventoryComponent != null)
+                if (inventoryComponent == null)
                 {
+                    return;
                 }
 
+                newPopUp.Show();
                 newPopUp.SetTarget(inventoryComponent);
             }
         }
@@ -235,10 +177,12 @@ namespace Deck.InputHandling
             if (Input.GetKeyDown(KeyCode.T))
             {
                 if (DeckServiceSelection.currentSelection == null) return;
-                var randomItem = _binderItem.GetItems().GetRandom();
-                var itemInstance = Instantiate(randomItem);
-                DeckServiceSelection.currentSelection.AddCommand(new DeckCommandAddItem(itemInstance, DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>()));
-                DeckLogger.Inform(randomItem.name + " add to inventory of last selected agent");
+                var items = _binderItem.GetItems();
+                foreach (var deckDataItem in items)
+                {
+                    DeckServiceSelection.currentSelection.EnqueCommand(new DeckCommandAddItem(deckDataItem, 100, DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>()));
+                    DeckLogger.Inform(deckDataItem.name + " add to inventory of last selected agent");
+                }
             }
         }
 
@@ -247,7 +191,7 @@ namespace Deck.InputHandling
             if (Input.GetKeyDown(KeyCode.U))
             {
                 var newAgent = _container.InstantiatePrefab(_coreAgentPrefab);
-                newAgent.GetComponent<DeckAgent>().StartWithClearData();
+                newAgent.GetComponent<DeckAgent>().Initialize();
             }
         }
 
@@ -264,7 +208,8 @@ namespace Deck.InputHandling
                 return;
             }
 
-            if (!hit.transform.TryGetComponent<DeckAgent>(out var componentHolder))
+            var componentHolder = hit.transform.GetComponentInParent<DeckAgent>();
+            if (componentHolder == null)
             {
                 return;
             }
@@ -287,7 +232,7 @@ namespace Deck.InputHandling
 
         private void CheckForNavMeshHit()
         {
-            if (!Input.GetMouseButton(1))
+            if (!Input.GetMouseButtonDown(1))
             {
                 return;
             }
@@ -300,9 +245,13 @@ namespace Deck.InputHandling
             var screenPosition = Input.mousePosition;
             var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(screenPosition);
             var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
-            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1)) return;
+            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 100, 1))
+            {
+                Debug.LogError("No ground hit");
+                return;
+            }
 
-            new DeckCommandMove(navMeshHit.position, DeckServiceSelection.currentPossession).ProcessCommand(default);
+            DeckServiceSelection.currentPossession.AddCommand(new DeckCommandMove(navMeshHit.position, DeckServiceSelection.currentPossession));
         }
 
         private void RaycastToGround()
@@ -310,6 +259,7 @@ namespace Deck.InputHandling
             var screenPosition = Input.mousePosition;
             var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(screenPosition);
             if (!Physics.Raycast(ray, out var hit, 100f, 1 << 6)) return;
+
             var pos = hit.textureCoord;
             DeckOnGroundPositionChangeEvent.Create(pos).Send();
         }

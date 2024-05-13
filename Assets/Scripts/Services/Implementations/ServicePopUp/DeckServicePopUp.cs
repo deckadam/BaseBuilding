@@ -1,10 +1,12 @@
-﻿using Deck.Services;
+﻿using System.Collections.Generic;
+using Deck.UI;
 using Zenject;
 
-namespace Deck.Events
+namespace Deck.Services
 {
     public class DeckServicePopUp : DeckServiceBase
     {
+        private Stack<DeckPopUpBase> _popUpStack = new();
         private DeckFactoryProviderUI _factoryProvider;
 
         [Inject]
@@ -13,9 +15,23 @@ namespace Deck.Events
             _factoryProvider = factoryProvider;
         }
 
-        public J GetPopUp<T, J>()
+        public T OpenPopUp<T, J>() where T : DeckPopUpBase where J : PlaceholderFactory<T>
         {
-            return _factoryProvider.GetFactory<T, J>();
+            var result = _factoryProvider.GetFactory<T, J>().Create();
+            _popUpStack.Push(result);
+            return result;
+        }
+
+        public void CloseLastPopUp()
+        {
+            if (_popUpStack.Count != 0)
+            {
+                var lastPopUp = _popUpStack.Pop();
+                lastPopUp.OnCloseRequested();
+                return;
+            }
+
+            Deck.GetService<DeckServiceUI>().GetUI<DeckMainMenu>().SwapAppearanceStatus();
         }
     }
 }

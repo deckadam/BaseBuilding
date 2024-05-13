@@ -1,26 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.Agent;
 using Deck.Data.Component;
 using Deck.MVC;
+using Deck.Save;
+using Deck.UI.Stats;
 using Deck.Utility.Health;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     [Serializable]
     public class DeckComponentHealth : DeckComponent
     {
+        private const string HEALTH_STAT_DESCRIPTION = "Current health of the agent";
+        private const string HEALTH_STAT_NAME = "Health";
+
+        [SerializeField] private DeckDataHealth dataHealth;
+
         private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
         private DeckHealthBar.Factory _healthBarFactory;
-        private DeckDataHealth _dataHealth;
         private DeckHealthBar _healthBar;
         private bool _hasHealthBar;
         private int _currentHealth;
         private int _limitHealth;
-        public event Action OnDamageTaken;
+        public bool IsDead => _currentHealth <= 0;
+
+        public event Action<DeckAgent> OnDamageTaken;
 
         [Inject]
         private void Inject(DeckHealthBar.Factory healthBarFactory)
@@ -30,18 +39,16 @@ namespace Deck.Components
 
         protected override void InternalPreInitialize()
         {
-            _dataHealth = holder.GetData<DeckDataHealth>();
-            _limitHealth = _dataHealth.Health;
-
-            _currentHealth = _dataHealth.Health;
+            _limitHealth = dataHealth.Health;
+            _currentHealth = dataHealth.Health;
 
             _healthController = DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController();
             _healthController.GetModel().AddData(this);
         }
 
-        public bool CanBeDamagedByAnyOfTags(string[] tags)
+        public bool CanBeDamagedByAnyOfTags(List<DeckActionTag> tags)
         {
-            return tags.Select(t => _dataHealth.HasTag(t)).Any(result => result);
+            return tags.Select(t => dataHealth.HasTag(t)).Any(result => result);
         }
 
         public override void DeInitialize()
@@ -49,18 +56,20 @@ namespace Deck.Components
             _healthController.GetModel().RemoveData(this);
         }
 
-        public void ReduceHealth(int amount, bool canKill = true)
+        public void ReduceHealth(DeckAgent damageDealer, int amount, bool canKill = true)
         {
             _currentHealth -= amount;
-            OnDamageTaken?.Invoke();
+            OnDamageTaken?.Invoke(damageDealer);
+            OnStatsChanged?.Invoke(GetStatGroup());
+
             if (_currentHealth <= 0)
             {
                 if (canKill)
                 {
-                    DeckLogger.Component("Requesting death on " + holder.GetId());
+                    DeckLogger.Component("Requesting death on " + agent.GetUniqueId().ID);
                     ReleaseHealthBar();
                     _currentHealth = 0;
-                    holder.RequestDeath();
+                    agent.RequestDeath();
                     return;
                 }
 
@@ -80,13 +89,12 @@ namespace Deck.Components
 
         private void GetHealthBar()
         {
-            if (!_hasHealthBar)
-            {
-                _healthBar = _healthBarFactory.Create();
-                _healthBar.SetPositionOffset(Vector3.up * 2f);
-                _healthBar.SetTarget(GetComponentHolder().transform);
-                _hasHealthBar = true;
-            }
+            if (_hasHealthBar) return;
+            
+            _healthBar = _healthBarFactory.Create();
+            _healthBar.SetPositionOffset(Vector3.up * 2f);
+            _healthBar.SetTarget(GetComponentHolder().transform);
+            _hasHealthBar = true;
         }
 
         private void ReleaseHealthBar()
@@ -110,6 +118,11 @@ namespace Deck.Components
 
         public void SetHealth(int newValue, bool limit = true)
         {
+            if (newValue == _currentHealth)
+            {
+                return;
+            }
+
             _currentHealth = newValue;
 
             if (limit)
@@ -117,7 +130,9 @@ namespace Deck.Components
                 _currentHealth = Mathf.Clamp(_currentHealth, 0, _limitHealth);
             }
 
-            ReduceHealth(0);
+            ReduceHealth(null, 0);
+
+            OnStatsChanged(GetStatGroup());
 
             DeckLogger.Component("Setting health to  " + newValue);
         }
@@ -133,10 +148,23 @@ namespace Deck.Components
 
         public override void LoadData(string value)
         {
-            var data = JsonUtility.FromJson<DeckHealthComponentData>(value);
+            var data = DeckSaveUtility.GetDeserializedData<DeckHealthComponentData>(value);
             _currentHealth = data.currentHealth;
             _limitHealth = data.limitHealth;
-            ReduceHealth(0);
+            ReduceHealth(null, 0);
+        }
+
+        public List<DeckActionTag> GetDamagingTags()
+        {
+            return dataHealth.GetTags();
+        }
+
+        public override DeckStatGroup GetStatGroup()
+        {
+            return new DeckStatGroup(new[]
+            {
+                new DeckStat(HEALTH_STAT_NAME, _currentHealth + " - " + _limitHealth, HEALTH_STAT_DESCRIPTION)
+            }, this);
         }
 
         [Serializable]

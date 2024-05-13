@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
-using Deck.Components;
+using Deck.Commands;
 using Deck.Data.Item;
-using Deck.Events;
+using Deck.Services;
 using Deck.UI.GamePlay;
-using Services.Implementations.Inventory;
+using Deck.ItemVisualProviders.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Deck.UI.Inventory
 {
-    public class DeckInventoryPopUp : DeckPopUpBase, IPoolable<IMemoryPool>, IPointerEnterHandler, IPointerExitHandler
+    public class DeckInventoryPopUp : DeckPopUpBase, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private RectTransform cellParent;
 
@@ -18,7 +18,6 @@ namespace Deck.UI.Inventory
         private DeckServiceInventory _serviceInventory;
         private List<DeckInventoryDisplayerCell> _cells = new();
         private DeckComponentInventory _componentInventory;
-        private IMemoryPool _pool;
 
         [Inject]
         private void Inject(DeckInventoryDisplayerCell.Factory factory)
@@ -32,14 +31,10 @@ namespace Deck.UI.Inventory
             _componentInventory.AddListener(CreateNewCells);
             _componentInventory.OnInventoryViewStatusChanged(true);
 
-            var gamePlayUIRect = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform();
-            rect.SetParent(gamePlayUIRect, false);
-            rect.anchoredPosition = Vector2.zero;
-
             CreateNewCells(componentInventory.GetItems());
         }
 
-        private void CreateNewCells(IEnumerable<DeckDataItem> items)
+        private void CreateNewCells(Dictionary<DeckDataItem, int> items)
         {
             ClearCurrentCells();
 
@@ -52,7 +47,8 @@ namespace Deck.UI.Inventory
             {
                 var newCell = _inventoryCellFactory.Create();
                 newCell.transform.SetParent(cellParent, false);
-                newCell.Initialize(deckItem, this);
+                newCell.Initialize(deckItem.Key, deckItem.Value, this);
+                newCell.gameObject.SetActive(true);
                 _cells.Add(newCell);
             }
         }
@@ -67,31 +63,21 @@ namespace Deck.UI.Inventory
             _cells.Clear();
         }
 
-        public void OnCloseRequested()
+        protected override void Despawned()
         {
-            _pool?.Despawn(this);
-        }
-
-        public void OnDespawned()
-        {
-            _pool = null;
             ClearCurrentCells();
             _componentInventory.RemoveListener(CreateNewCells);
             _componentInventory.OnInventoryViewStatusChanged(false);
             _componentInventory = null;
         }
 
-        public void OnSpawned(IMemoryPool p1)
+        protected override void Spawned()
         {
-            _pool = p1;
-            _serviceInventory = global::Deck.Deck.GetService<DeckServiceInventory>();
+            _serviceInventory = Deck.GetService<DeckServiceInventory>();
         }
 
         public DeckComponentInventory GetBindedInventory() => _componentInventory;
 
-        public class Factory : PlaceholderFactory<DeckInventoryPopUp>
-        {
-        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
@@ -101,6 +87,10 @@ namespace Deck.UI.Inventory
         public void OnPointerExit(PointerEventData eventData)
         {
             _serviceInventory.OnInventoryHoverEnd(this);
+        }
+
+        public class Factory : PlaceholderFactory<DeckInventoryPopUp>
+        {
         }
     }
 }

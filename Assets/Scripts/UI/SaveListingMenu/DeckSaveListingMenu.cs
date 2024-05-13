@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Deck.Save;
-using Deck.Events;
+using Deck.Services;
 using Deck.Utility.Logger;
 using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
@@ -62,28 +62,28 @@ namespace Deck.UI.SaveListingMenu
 
         public void OnLoadButtonClicked()
         {
-            if (DeckSaveDisplayer.currentlySelectedDsiplayer == null)
+            if (DeckSaveDisplayer.CurrentlySelectedDsiplayer == null)
             {
                 return;
             }
 
-            OnLoadRequestedEvent.Create(DeckSaveDisplayer.currentlySelectedDsiplayer.GetSaveFile()).Send();
+            OnLoadRequestedEvent.Create(DeckSaveDisplayer.CurrentlySelectedDsiplayer.GetSaveFile()).Send();
         }
 
         public void OnDeleteButtonClicked()
         {
-            if (DeckSaveDisplayer.currentlySelectedDsiplayer == null)
+            if (DeckSaveDisplayer.CurrentlySelectedDsiplayer == null)
             {
                 return;
             }
 
-            var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().GetPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().Create();
-            var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>();
+            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.deleteSaveFileDialogue, () =>
             {
-                DeckSaveSystem.DeleteSaveFile(DeckSaveDisplayer.currentlySelectedDsiplayer.GetSaveFile());
+                DeckSaveSystem.DeleteSaveFile(DeckSaveDisplayer.CurrentlySelectedDsiplayer.GetSaveFile());
                 InitializeSaveDisplayers();
             }, null);
         }

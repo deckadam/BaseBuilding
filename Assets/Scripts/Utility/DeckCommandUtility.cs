@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
+using Deck.Commands;
 using UnityEngine;
 
-namespace Utility
+namespace Deck.Utility
 {
     public static class DeckCommandUtility
     {
         public static async UniTask<bool> AwaitTillDestinationIsReached(DeckComponentMovement traverser, Transform to, float desiredDistance, CancellationToken token)
         {
-            var result = await UniTask.WaitWhile(() => traverser.SetDestination(to.position, desiredDistance), cancellationToken: token).SuppressCancellationThrow();
-            return !result;
+            var isCanceled = await UniTask.WaitWhile(() => traverser.SetDestination(to.position, desiredDistance), cancellationToken: token).SuppressCancellationThrow();
+            return isCanceled;
         }
     }
 }

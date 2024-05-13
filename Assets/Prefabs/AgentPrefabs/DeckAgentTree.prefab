@@ -12,6 +12,10 @@ GameObject:
   - component: {fileID: 5991958910954823637}
   - component: {fileID: 6915836047347109550}
   - component: {fileID: 2433219986428484943}
+  - component: {fileID: -5855294211526507613}
+  - component: {fileID: -8795112117845359009}
+  - component: {fileID: -8988387634123100506}
+  - component: {fileID: 6735615951930478850}
   m_Layer: 6
   m_Name: DeckAgentTree
   m_TagString: Untagged
@@ -48,14 +52,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeSize: 1
-  shape: 1
-  willSave: 0
+  willSave: 1
   collider: {fileID: 6915836047347109550}
   centerPosition: {fileID: 0}
-  data:
-  - {fileID: 11400000, guid: e3ed2c83481131647b52c26fee32ea27, type: 2}
-  - {fileID: 11400000, guid: 2302b344272a4ec43ae87a76ad0da5b4, type: 2}
-  - {fileID: 11400000, guid: fa538bc23c3036e4a8cfb8413e3519bf, type: 2}
+  components:
+  - {fileID: -5855294211526507613}
+  - {fileID: -8795112117845359009}
+  - {fileID: -8988387634123100506}
+  - {fileID: 6735615951930478850}
 --- !u!136 &6915836047347109550
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -82,10 +86,62 @@ NavMeshObstacle:
   m_Shape: 0
   m_Extents: {x: 0.5, y: 3.025, z: 0.5}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 2.9, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &-5855294211526507613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837438376991462495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2bcd4c370245a0b46c56fa52beff69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataHealth: {fileID: 11400000, guid: 2302b344272a4ec43ae87a76ad0da5b4, type: 2}
+--- !u!114 &-8795112117845359009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837438376991462495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac4eca64b9cb473d8f93ed6fd5452a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropData: {fileID: 11400000, guid: fa538bc23c3036e4a8cfb8413e3519bf, type: 2}
+--- !u!114 &-8988387634123100506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837438376991462495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec366a2e1df4491b14b9826fd451abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDataAnimation: {fileID: 11400000, guid: e3ed2c83481131647b52c26fee32ea27, type: 2}
+--- !u!114 &6735615951930478850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837438376991462495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e289d3f972304deba42e27dcb1808226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementData: {fileID: 0}
 --- !u!1001 &3390671979138672512
 PrefabInstance:
   m_ObjectHideFlags: 0

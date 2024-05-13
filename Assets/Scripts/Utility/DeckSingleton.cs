@@ -4,31 +4,31 @@ namespace Deck.Utility
 {
     public class DeckSingleton<T> : MonoBehaviour where T : DeckSingleton<T>
     {
-        private static volatile T instance;
+        private static volatile T Instance;
 
-        private bool isInitialized;
+        private bool _isInitialized;
 
         public static T ins
         {
             get
             {
-                if (instance != null) return instance;
-                instance = FindObjectOfType(typeof(T)) as T;
+                if (Instance != null) return Instance;
+                Instance = FindObjectOfType(typeof(T)) as T;
 
-                if (instance == null)
+                if (Instance == null)
                 {
                     Debug.LogWarning(typeof(T).Name + " not found in hierarchy creating an instance");
-                    instance = new GameObject().AddComponent<T>();
+                    Instance = new GameObject().AddComponent<T>();
                 }
 
-                if (instance != null && !instance.isInitialized) ins.Initialize();
-                return instance;
+                if (Instance != null && !Instance._isInitialized) ins.Initialize();
+                return Instance;
             }
         }
 
         protected virtual void Initialize()
         {
-            isInitialized = true;
+            _isInitialized = true;
         }
     }
 }

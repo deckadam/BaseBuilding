@@ -1,8 +1,8 @@
-﻿using Deck.Components;
+﻿using Deck.Commands;
 using Deck.Services;
 using Deck.UI.Inventory;
 
-namespace Services.Implementations.Inventory
+namespace Deck.ItemVisualProviders.Implementations.Inventory
 {
     public class DeckServiceInventory : DeckServiceBase
     {
@@ -39,11 +39,12 @@ namespace Services.Implementations.Inventory
                 return false;
             }
 
+            var amount = _cell.GetAmount();
             var item = _cell.GetItem();
             var inventory = _cell.GetPopUp().GetBindedInventory();
             var agent = inventory.GetComponentHolder();
 
-            agent.AddCommand(new DeckCommandTransferItem(item, inventory, _hovered.GetBindedInventory()));
+            agent.AddCommand(new DeckCommandTransferItem(item,amount, inventory, _hovered.GetBindedInventory()));
 
             return true;
         }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 168027555932234559}
   - component: {fileID: 8998709216131193220}
   - component: {fileID: 9032209925360883485}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: DeckItemVisualAxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.36610642, y: 1.0056653, z: 0.0904027}
-  m_Center: {x: 0.043955013, y: 0.052832663, z: 0}
+  m_Size: {x: 0.5200624, y: 1.388118, z: 0.0904027}
+  m_Center: {x: -0.06509712, y: 0.26772952, z: 0}
 --- !u!54 &8998709216131193220
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,10 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationParameters: {fileID: 11400000, guid: 2863e431ad238c049b1a8489366ae5bf, type: 2}
-  bindedItem: {fileID: 11400000, guid: 160385df874f77249abbc4d6fdb00ef7, type: 2}
-  rigidbody: {fileID: 8998709216131193220}
-  collider: {fileID: 168027555932234559}
-  displayOffset: {x: 0, y: 0, z: 0}
-  localEquipPosition: {x: 1.21, y: -0.16, z: 0.3}
   localEquipRotation: {x: 0.7241132, y: 0.67808366, z: 0.061311282, w: 0.1100159}
+  localEquipPosition: {x: 1.21, y: -0.16, z: 0.3}
+  bindedItem: {fileID: 11400000, guid: 160385df874f77249abbc4d6fdb00ef7, type: 2}
+  displayOffset: {x: 0, y: 0, z: 0}
+  rigidbody: {fileID: 8998709216131193220}
+  isOnTheGround: 0
+  collider: {fileID: 168027555932234559}
+  isStatic: 0

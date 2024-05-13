@@ -1,7 +1,7 @@
-﻿using Deck;
+﻿using Deck.Agent;
 using Deck.EventManager;
 
-namespace Deck.Events
+namespace Deck.Services
 {
     public class DeckOnSelectionReleasedEvent : DeckEvent
     {

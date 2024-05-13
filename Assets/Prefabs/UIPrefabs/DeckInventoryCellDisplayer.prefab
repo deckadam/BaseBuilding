@@ -151,7 +151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1164016999914887787
 RectTransform:
   m_ObjectHideFlags: 0
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 1164017000303371158}
-  amount: {fileID: 1164016999907856423}
+  amountText: {fileID: 1164016999907856423}
   visualParent: {fileID: 1882841644013146332}
 --- !u!1 &1164017000303371156
 GameObject:

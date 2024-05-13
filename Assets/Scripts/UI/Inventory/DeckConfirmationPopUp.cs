@@ -6,10 +6,9 @@ using Zenject;
 
 namespace Deck.UI.Inventory
 {
-    public class DeckConfirmationPopUp : DeckPopUpBase, IPoolable<IMemoryPool>
+    public class DeckConfirmationPopUp : DeckPopUpBase
     {
         [SerializeField] private TextMeshProUGUI display;
-        private IMemoryPool _pool;
         private Action _onAccept;
         private Action _onDecline;
 
@@ -24,29 +23,18 @@ namespace Deck.UI.Inventory
         {
             DeckLogger.UI("Confirmation dialogue accepted");
             _onAccept?.Invoke();
-            _pool.Despawn(this);
+            OnCloseRequested();
         }
 
         public void OnDeclineClicked()
         {
             DeckLogger.UI("Confirmation dialogue canceled");
             _onDecline?.Invoke();
-            _pool.Despawn(this);
+            OnCloseRequested();
         }
 
-        public void OnDespawned()
-        {
-        }
+        public override bool CanDrag => false;
 
-        public void OnSpawned(IMemoryPool p1)
-        {
-            _pool = p1;
-        }
-
-        public class Factory : PlaceholderFactory<DeckConfirmationPopUp>
-        {
-        }
-
-        public override bool CanDrag { get; } = false;
+        public class Factory : PlaceholderFactory<DeckConfirmationPopUp> { }
     }
 }

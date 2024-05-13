@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Data.UI;
 using DG.Tweening;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +16,8 @@ namespace Deck.UI
         [SerializeField] protected bool isAppearedOnStartUp;
         [SerializeField] protected RectTransform rectTransform;
 
-        [ShowInInspector, ReadOnly] internal bool _isAppeared;
+        // [ShowInInspector, ReadOnly] internal bool _isAppeared;
+        [SerializeField] internal bool _isAppeared;
         internal bool isAppearing;
         internal bool isDisappearing;
 

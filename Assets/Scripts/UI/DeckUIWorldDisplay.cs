@@ -1,9 +1,12 @@
-﻿using Deck.Events.CameraService;
+﻿using Deck.Services;
+using Deck.Services.CameraService;
+using Deck.UI.Health;
 using UnityEngine;
+using Deck.Utility.Poolable;
 
 namespace Deck.UI
 {
-    public class DeckUIWorldDisplay : MonoBehaviour
+    public class DeckUIWorldDisplay : DeckPoolable
     {
         protected Camera mainCamera;
         protected Transform target;
@@ -31,9 +34,22 @@ namespace Deck.UI
             positionOffset = offset;
         }
 
+        protected override void Despawned()
+        {
+            Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
+        }
 
+        protected override void Spawned()
+        {
+            Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
+        }
+        
         private void LateUpdate()
         {
+            if (target == null || !target.gameObject || mainCamera == null || !mainCamera.gameObject)
+            {
+                Destroy(gameObject);
+            }
             rect.position = mainCamera.WorldToScreenPoint(target.transform.position + positionOffset);
         }
     }

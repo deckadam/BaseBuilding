@@ -18,5 +18,4 @@ MonoBehaviour:
   representation: {fileID: 2583041291122265383, guid: 5363a9918ffaa1a43add940170ac2269, type: 3}
   holdable: 1
   animationName: HumanoidAttack
-  tags:
-  - PickAxe
+  tags: 03000000

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1751276624722866238}
   - component: {fileID: 6275326779698183079}
   - component: {fileID: 4006595031824536313}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: DeckItemVisualStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,8 +26,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3983121532114033337}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.4425773, y: -0.7085647, z: 0.3770664, w: 0.39985293}
+  m_LocalPosition: {x: 5.01, y: 0, z: -5.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -57,8 +57,8 @@ Rigidbody:
   m_GameObject: {fileID: 3983121532114033337}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 1
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -76,11 +76,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationParameters: {fileID: 11400000, guid: 2863e431ad238c049b1a8489366ae5bf, type: 2}
+  localEquipRotation: {x: 0, y: 0, z: 0, w: 0}
+  localEquipPosition: {x: 0, y: 0, z: 0}
   bindedItem: {fileID: 11400000, guid: 0bf4950e44d827741900c68961a63d10, type: 2}
-  rigidbody: {fileID: 6275326779698183079}
-  collider: {fileID: 1751276624722866238}
   displayOffset: {x: 0, y: 0, z: 0}
+  rigidbody: {fileID: 6275326779698183079}
+  isOnTheGround: 1
+  collider: {fileID: 1751276624722866238}
+  isStatic: 0
 --- !u!1001 &1832273553868253613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -135,6 +138,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 2c5247d93b5b3dc40a647ff25033b1de, type: 3}
       propertyPath: m_Name
       value: StonePiece_001
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2c5247d93b5b3dc40a647ff25033b1de, type: 3}
+      propertyPath: m_Layer
+      value: 31
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c5247d93b5b3dc40a647ff25033b1de, type: 3}

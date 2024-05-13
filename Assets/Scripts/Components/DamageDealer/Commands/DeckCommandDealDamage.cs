@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Utility;
+using UnityEngine;
+using Deck.Utility;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommandDealDamage : DeckCommand
     {
         private bool _canKill;
-        private DeckComponentDamageDealer _from;
+        private DeckComponentBasicInteraction _from;
         private DeckComponentHealth _to;
         private int _damage;
-        private float _range;
+        private float _baseAttackRange;
         private Action _onAttackStart;
         private bool _continous;
 
-        public DeckCommandDealDamage(int damage, float range, DeckComponentDamageDealer from, DeckComponentHealth to, Action onAttackStart = null, bool canKill = true, bool continuous = true)
+        public DeckCommandDealDamage(int damage, float baseAttackRange, DeckComponentBasicInteraction from, DeckComponentHealth to, Action onAttackStart = null, bool canKill = true, bool continuous = true)
         {
             _damage = damage;
-            _range = range;
+            _baseAttackRange = baseAttackRange;
             _canKill = canKill;
             _to = to;
             _onAttackStart = onAttackStart;
@@ -35,43 +35,53 @@ namespace Deck.Components
                 return false;
             }
 
-            var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(token, _to.GetComponentHolder().GetCancellationTokenOnDestroy()).Token;
-
             if (!_continous)
             {
-                return await ExecuteDamageDealing(linkedToken, movementComponent);
+                return await ExecuteDamageDealing(token, movementComponent);
             }
 
-            while (!linkedToken.IsCancellationRequested)
+            while (!token.IsCancellationRequested)
             {
-                var result = await ExecuteDamageDealing(linkedToken, movementComponent);
+                var result = await ExecuteDamageDealing(token, movementComponent);
                 if (!result)
                 {
                     return false;
                 }
 
-                await UniTask.WaitWhile(() => !_from.CanAttack(), PlayerLoopTiming.Update, linkedToken);
+                var isCanceled = await UniTask.WaitWhile(() => !_from.CanAttack(), cancellationToken: token).SuppressCancellationThrow();
+                if (isCanceled)
+                {
+                    return false;
+                }
             }
 
             return true;
         }
 
-        private async Task<bool> ExecuteDamageDealing(CancellationToken token, DeckComponentMovement movementComponent)
+        private async UniTask<bool> ExecuteDamageDealing(CancellationToken token, DeckComponentMovement movementComponent)
         {
-            var result = await DeckCommandUtility.AwaitTillDestinationIsReached(movementComponent, _to.GetComponentHolder().transform, _range, token);
-            if (!result)
+            if (_to.IsDead)
+            {
+                return false;
+            }
+
+            var range = _to.GetComponentHolder().GetSize() + _baseAttackRange;
+
+            var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(movementComponent, _to.GetComponentHolder().transform, range, token);
+            if (isCanceled)
+            {
+                return false;
+            }
+
+            if (_to.IsDead)
             {
                 return false;
             }
 
             _onAttackStart?.Invoke();
             _from.OnAttack();
-            _to.ReduceHealth(_damage, _canKill);
-            return true;
-        }
 
-        public override bool InterrupintgCommand()
-        {
+            _to.ReduceHealth(_from.GetComponentHolder(), _damage, _canKill);
             return true;
         }
     }

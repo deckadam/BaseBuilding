@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2583041291122265377}
   - component: {fileID: 2583041291122265376}
   - component: {fileID: 2583041291122265383}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: DeckItemVisualPickaxe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.610765, y: 0.78670007, z: 0.08371866}
-  m_Center: {x: 0, y: 0.042386413, z: 0}
+  m_Size: {x: 0.88, y: 1.4386523, z: 0.08371866}
+  m_Center: {x: 0, y: 0.14650145, z: 0}
 --- !u!54 &2583041291122265376
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,10 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationParameters: {fileID: 11400000, guid: 2863e431ad238c049b1a8489366ae5bf, type: 2}
+  localEquipRotation: {x: 0, y: 0, z: -0.70710677, w: 0.70710677}
+  localEquipPosition: {x: 0, y: 0, z: 0}
   bindedItem: {fileID: 11400000, guid: 1bef0a7dcb4fa8e4b85039ed8fcfb8df, type: 2}
-  rigidbody: {fileID: 2583041291122265376}
-  collider: {fileID: 2583041291122265377}
   displayOffset: {x: 0, y: 2, z: 0}
-  localEquipPosition: {x: 1.22, y: 0.05, z: 0.21}
-  localEquipRotation: {x: 0.13359085, y: 0.007417202, z: -0.6942433, w: 0.7071949}
+  rigidbody: {fileID: 2583041291122265376}
+  isOnTheGround: 0
+  collider: {fileID: 2583041291122265377}
+  isStatic: 0

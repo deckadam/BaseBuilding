@@ -14,6 +14,10 @@ GameObject:
   - component: {fileID: 1861109189651786788}
   - component: {fileID: 1359178046461186371}
   - component: {fileID: 3168459617090073335}
+  - component: {fileID: -9205510707142471025}
+  - component: {fileID: -8625835227889099092}
+  - component: {fileID: -5299383424114246865}
+  - component: {fileID: 7957999085561545854}
   m_Layer: 0
   m_Name: DeckAgentStone
   m_TagString: Untagged
@@ -112,15 +116,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b438959fceb47e2ba0c4da26cee37f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSize: 0.957937
-  shape: 1
-  willSave: 0
-  collider: {fileID: 1861109189651786788}
   centerPosition: {fileID: 2522352052710315392}
-  data:
-  - {fileID: 11400000, guid: b8837843de9059a4384218f77c7d4552, type: 2}
-  - {fileID: 11400000, guid: 387ac2e90974df649b8fc4d8accfc881, type: 2}
-  - {fileID: 11400000, guid: 263f9b098abd5f441a391e1e98485e2f, type: 2}
+  components:
+  - {fileID: -9205510707142471025}
+  - {fileID: -8625835227889099092}
+  - {fileID: -5299383424114246865}
+  - {fileID: 7957999085561545854}
+  activeSize: 0.957937
+  collider: {fileID: 1861109189651786788}
+  willSave: 1
+  selfTransform: {fileID: 0}
 --- !u!208 &3168459617090073335
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -133,7 +138,59 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 0.87500006, y: 0.813, z: 0.95800006}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0.1, y: 0.813, z: -0.20600002}
   m_TimeToStationary: 0.5
+--- !u!114 &-9205510707142471025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903380847232470842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2bcd4c370245a0b46c56fa52beff69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataHealth: {fileID: 11400000, guid: 387ac2e90974df649b8fc4d8accfc881, type: 2}
+--- !u!114 &-8625835227889099092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903380847232470842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac4eca64b9cb473d8f93ed6fd5452a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropData: {fileID: 11400000, guid: 263f9b098abd5f441a391e1e98485e2f, type: 2}
+--- !u!114 &-5299383424114246865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903380847232470842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec366a2e1df4491b14b9826fd451abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shakeDataAnimation: {fileID: 11400000, guid: b8837843de9059a4384218f77c7d4552, type: 2}
+--- !u!114 &7957999085561545854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2903380847232470842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e289d3f972304deba42e27dcb1808226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementData: {fileID: 0}

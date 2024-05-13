@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using Deck.Item;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ namespace Deck.Data.Item
         [SerializeField] private DeckItemVisual representation;
         [SerializeField] private bool holdable;
         [SerializeField] private string animationName;
-        [SerializeField] private string[] tags;
+        [SerializeField] private List<DeckActionTag> tags;
 
         public string Name => name;
         public Sprite Icon => icon;
@@ -22,11 +22,34 @@ namespace Deck.Data.Item
         public string AnimationName => animationName;
         public int Amount => amount;
         public bool Holdable => holdable;
-        public string[] Tags => tags;
-        public bool HasTag(string tag) => tags.Contains(tag);
+        public List<DeckActionTag> Tags => tags;
+        public bool HasTag(DeckActionTag tag) => tags.Contains(tag);
 
+        public bool HasTag(DeckActionTag[] tag)
+        {
+            foreach (var t in tag)
+            {
+                if (tags.Contains(t))
+                {
+                    return true;
+                }
+            }
 
-        public static DeckDataItem Create(string name, Sprite icon, int amount, DeckItemVisual representation, bool holdable, string animationName, string[] tags)
+            return false;
+        }
+        public bool HasTag(List<DeckActionTag> tag)
+        {
+            foreach (var t in tag)
+            {
+                if (tags.Contains(t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public static DeckDataItem Create(string name, Sprite icon, int amount, DeckItemVisual representation, bool holdable, string animationName, List<DeckActionTag> tags)
         {
             var newItem = CreateInstance<DeckDataItem>();
             newItem.name = name;
@@ -57,6 +80,16 @@ namespace Deck.Data.Item
             }
 
             amount -= amountToRemove;
+        }
+
+        public void SetToAmount(int amountToSet)
+        {
+            if (amountToSet < 0)
+            {
+                throw new Exception("Please only enter positive values");
+            }
+
+            amount = amountToSet;
         }
 
         public void ResetAmount()

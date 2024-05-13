@@ -16,6 +16,7 @@ namespace Deck.CameraController
             _confiner = GetComponent<CinemachineConfiner>();
             _vCam = GetComponent<CinemachineVirtualCamera>();
             _confiner.m_BoundingVolume = GameObject.Find("Camera confiner").GetComponent<Collider>();
+            _confiner.m_BoundingVolume.isTrigger = true;
         }
 
         [Inject]

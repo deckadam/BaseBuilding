@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-namespace Utility.MonoBehaviours
+namespace Deck.Utility.MonoBehaviours
 {
     public class DeckTransformBinder : MonoBehaviour
     {

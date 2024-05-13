@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Components;
+using Deck.Commands;
 
 namespace Deck.Save.Data
 {
@@ -12,7 +12,8 @@ namespace Deck.Save.Data
 
     public class DeckComponentHolderSaveData
     {
-        public string id;
+        public string prefabId;
+        public string agentGuid;
         public List<DeckComponentSaveData> componentDatas;
     }
 }
