@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6137534707110950705}
   - component: {fileID: 8384035529799849550}
   m_Layer: 0
-  m_Name: WoodAndStoneWallMainConnector
+  m_Name: DeckItemVisualWoodAndStoneWallMainConnector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStatic: 1
   localEquipRotation: {x: 0, y: 0, z: 0, w: 0}
   localEquipPosition: {x: 0, y: 0, z: 0}
   bindedItem: {fileID: 0}
@@ -83,9 +84,12 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   isOnTheGround: 0
   collider: {fileID: 389420019188951929}
-  deckId:
-    id: 1912809960
-  isStatic: 1
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 71106282
+    IdString: 
 --- !u!1001 &2446357070081043093
 PrefabInstance:
   m_ObjectHideFlags: 0

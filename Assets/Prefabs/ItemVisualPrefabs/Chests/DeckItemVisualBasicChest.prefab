@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7699648442756046541}
   - component: {fileID: 1168823323879331160}
   m_Layer: 0
-  m_Name: BasicChest
+  m_Name: DeckItemVisualBasicChest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -129,6 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStatic: 1
   localEquipRotation: {x: 0, y: 0, z: 0, w: 0}
   localEquipPosition: {x: 0, y: 0, z: 0}
   bindedItem: {fileID: 0}
@@ -136,9 +137,10 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   isOnTheGround: 0
   collider: {fileID: 8924736446133557145}
-  deckId:
-    id: 148056467
-  isStatic: 1
+  uniqueId:
+    IdString: 
+  prefabId:
+    IdString: 
 --- !u!114 &1168823323879331160
 MonoBehaviour:
   m_ObjectHideFlags: 0

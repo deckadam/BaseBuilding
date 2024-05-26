@@ -51,15 +51,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b438959fceb47e2ba0c4da26cee37f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activeSize: 1
-  willSave: 1
-  collider: {fileID: 6915836047347109550}
   centerPosition: {fileID: 0}
   components:
   - {fileID: -5855294211526507613}
   - {fileID: -8795112117845359009}
   - {fileID: -8988387634123100506}
   - {fileID: 6735615951930478850}
+  activeSize: 1
+  collider: {fileID: 6915836047347109550}
+  willSave: 1
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 52445296
+    IdString: 
+  selfTransform: {fileID: 0}
 --- !u!136 &6915836047347109550
 CapsuleCollider:
   m_ObjectHideFlags: 0

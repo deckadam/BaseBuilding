@@ -14,11 +14,11 @@ namespace Deck.ItemVisualProviders
         [SerializeField] private WallItemVisualParts[] wallItemVisualParts;
         [SerializeField] private int wallSizeMultiplier = 3;
         private Dictionary<(Vector2Int, Vector2Int), DeckItemVisual> _activeConnectorVisuals;
-        private Dictionary<Guid, Dictionary<Vector2Int, bool>> _activeItemVisuals;
+        private Dictionary<int, Dictionary<Vector2Int, bool>> _activeItemVisuals;
 
         protected override void OnInitialize()
         {
-            _activeItemVisuals = new Dictionary<Guid, Dictionary<Vector2Int, bool>>();
+            _activeItemVisuals = new Dictionary<int, Dictionary<Vector2Int, bool>>();
             _activeConnectorVisuals = new Dictionary<(Vector2Int, Vector2Int), DeckItemVisual>();
             foreach (var wallItemVisualPart in wallItemVisualParts)
             {
@@ -55,7 +55,7 @@ namespace Deck.ItemVisualProviders
             WallItemVisualParts? part = null;
             foreach (var t in wallItemVisualParts)
             {
-                if (t.wallMainPart.UniqueId.ID != itemVisual.UniqueId.ID) 
+                if (t.wallMainPart.UniqueId.ID != itemVisual.UniqueId.ID)
                     continue;
                 part = t;
                 break;

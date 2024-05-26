@@ -12,8 +12,8 @@ namespace Deck.Save.Data
 
     public class DeckComponentHolderSaveData
     {
-        public string prefabId;
-        public string agentGuid;
+        public int prefabId;
+        public int agentGuid;
         public List<DeckComponentSaveData> componentDatas;
     }
 }

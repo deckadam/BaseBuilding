@@ -9,8 +9,7 @@ using Deck.UI.InGame;
 using Deck.UI.Item;
 using Deck.Utility.Logger;
 using DG.Tweening;
-using Services.AgentFinder;
-using Sirenix.OdinInspector;
+using Unity.Collections;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -20,8 +19,7 @@ namespace Deck.Item
     [RequireComponent(typeof(Collider))]
     public class DeckItemVisual : MonoBehaviour
     {
-        [Unity.Collections.ReadOnly, SerializeField]
-        private bool isStatic;
+        [ReadOnly, SerializeField] private bool isStatic;
 
         [SerializeField] private Quaternion localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
@@ -31,7 +29,7 @@ namespace Deck.Item
         [SerializeField] private bool isOnTheGround;
         [SerializeField] private new Collider collider;
         [SerializeField] private DeckId uniqueId;
-        [ReadOnly, SerializeField] private string prefabId;
+        [SerializeField] private DeckId prefabId;
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Quaternion LocalEquipRotation => localEquipRotation;
 
@@ -42,20 +40,20 @@ namespace Deck.Item
         public void SetItem(DeckDataItem item) => bindedItem = item;
         public DeckDataItem GetBindedItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
-        private DeckId _prefabId;
+
         public bool IsStatic => isStatic;
 
         public DeckId PrefabId
         {
             get
             {
-                if (_prefabId != null)
+                if (prefabId.IsValid)
                 {
-                    return _prefabId;
+                    return prefabId;
                 }
 
-                _prefabId = new DeckId(prefabId);
-                return _prefabId;
+                Debug.LogError(name +"   " + prefabId.ID);
+                throw new Exception("No valid prefab id");
             }
         }
 
@@ -69,11 +67,6 @@ namespace Deck.Item
         public void SetNewUniqueId()
         {
             uniqueId = DeckId.CreateNew();
-        }
-
-        public void SetId(Guid id)
-        {
-            uniqueId = new DeckId(id);
         }
 
         private void Awake()
@@ -93,9 +86,9 @@ namespace Deck.Item
 
             UniqueId.ResetId();
 
-            if (string.IsNullOrEmpty(prefabId))
+            if (!prefabId.IsValid)
             {
-                prefabId = Guid.NewGuid().ToString();
+                prefabId = new DeckId();
             }
         }
 

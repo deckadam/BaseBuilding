@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb88ab87e7d4995a18e3afa6aa1584a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStatic: 0
   localEquipRotation: {x: 0.7241132, y: 0.67808366, z: 0.061311282, w: 0.1100159}
   localEquipPosition: {x: 1.21, y: -0.16, z: 0.3}
   bindedItem: {fileID: 11400000, guid: 160385df874f77249abbc4d6fdb00ef7, type: 2}
@@ -134,4 +135,9 @@ MonoBehaviour:
   rigidbody: {fileID: 8998709216131193220}
   isOnTheGround: 0
   collider: {fileID: 168027555932234559}
-  isStatic: 0
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 95024910
+    IdString: 

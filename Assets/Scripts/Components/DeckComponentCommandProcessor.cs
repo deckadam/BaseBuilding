@@ -120,12 +120,12 @@ namespace Deck.Commands
             var data = DeckSaveUtility.GetDeserializedData<SaveData>(value);
             for (var index = 0; index < data.commandDatas.Length; index++)
             {
-                var command = (DeckCommand)Activator.CreateInstance(Type.GetType(data.commandTypes[index]));
+                //Rider beni bi sal be
+                var command = (DeckCommand)Activator.CreateInstance(Type.GetType(data.commandTypes[index]) ?? throw new InvalidOperationException());
                 command.LoadSaveData(data.commandDatas[index]);
                 _waitingCommands.Enqueue(command);
             }
         }
-
 
         [Serializable]
         private struct SaveData

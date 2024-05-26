@@ -79,6 +79,12 @@ MonoBehaviour:
   activeSize: 1.4
   collider: {fileID: 0}
   willSave: 1
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 40930740
+    IdString: 
   selfTransform: {fileID: 0}
   buildingData: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
   itemVisualPrefab: {fileID: 8384035529799849550, guid: 8fa0ba3ca0dbfe74ba4a5eb47f1b96d7, type: 3}

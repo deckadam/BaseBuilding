@@ -66,6 +66,12 @@ MonoBehaviour:
   activeSize: 1
   collider: {fileID: 7533218056992631309}
   willSave: 1
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 50980616
+    IdString: 
   selfTransform: {fileID: 0}
 --- !u!136 &7533218056992631309
 CapsuleCollider:

@@ -14,7 +14,7 @@ namespace Deck.ItemVisualProviders
     {
         [SerializeField] private DeckItemVisual[] itemVisualSets;
 
-        private Dictionary<Guid, List<DeckItemVisual>> activeItemVisuals;
+        private Dictionary<int, List<DeckItemVisual>> activeItemVisuals;
 
         private DiContainer _container;
 
@@ -23,7 +23,7 @@ namespace Deck.ItemVisualProviders
         public void Initialize(DiContainer container)
         {
             _container = container;
-            activeItemVisuals = new Dictionary<Guid, List<DeckItemVisual>>();
+            activeItemVisuals = new Dictionary<int, List<DeckItemVisual>>();
             _poolParent = new GameObject().transform;
             _poolParent.name = name + "Pool";
             foreach (var visualSet in itemVisualSets)
@@ -39,7 +39,7 @@ namespace Deck.ItemVisualProviders
             itemVisual = null;
             foreach (var visualSet in itemVisualSets)
             {
-                if (visualSet.PrefabId == id)
+                if (Equals(visualSet.PrefabId, id))
                 {
                     if (!TryGetItemVisual(visualSet, out itemVisual))
                         continue;
@@ -59,7 +59,7 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var visualSet in itemVisualSets)
             {
-                if (visualSet.PrefabId == itemVisual.PrefabId)
+                if (visualSet.PrefabId.Equals(itemVisual.PrefabId))
                 {
                     activeItemVisuals[visualSet.PrefabId.ID].Add(itemVisual);
                     itemVisual.gameObject.SetActive(false);

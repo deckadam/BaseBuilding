@@ -5,6 +5,7 @@ using Deck.Item;
 using Deck.Save;
 using Deck.Utility;
 using Services.AgentFinder;
+using UnityEngine.Serialization;
 
 namespace Deck.Commands
 {
@@ -44,7 +45,7 @@ namespace Deck.Commands
         {
             var data = DeckSaveUtility.GetDeserializedData<SaveData>(saveData);
             var agent = Deck.GetService<DeckServiceFinder>().GetAgent(data.targetAgentId);
-            _itemVisual = Deck.GetService<DeckServiceFinder>().GetItemVisual(data.itemId);
+            _itemVisual = Deck.GetService<DeckServiceFinder>().GetItemVisual(data.prefabId);
             _inventory = agent.GetDeckComponent<DeckComponentInventory>();
             _movement = agent.GetDeckComponent<DeckComponentMovement>();
         }
@@ -52,13 +53,13 @@ namespace Deck.Commands
         [Serializable]
         private struct SaveData
         {
-            public string targetAgentId;
-            public string itemId;
+            public int targetAgentId;
+            public int prefabId;
 
             public SaveData(DeckComponentInventory target, DeckItemVisual itemVisual)
             {
-                targetAgentId = target.GetComponentHolder().GetUniqueId().ID.ToString();
-                itemId = itemVisual.UniqueId.ToString();
+                targetAgentId = target.GetComponentHolder().GetUniqueId().ID;
+                prefabId = itemVisual.UniqueId.ID;
             }
         }
     }

@@ -58,9 +58,9 @@ namespace Deck.UI
 
                 newCoreAgentData.datas.Add(new DeckComponentHolderSaveData
                 {
-                    agentGuid = agent.GetUniqueId().ID.ToString(),
+                    agentGuid = agent.GetUniqueId().ID,
                     componentDatas = agent.GetSaveData(),
-                    prefabId = agent.GetPrefabId()
+                    prefabId = agent.PrefabId.ID
                 });
             }
 

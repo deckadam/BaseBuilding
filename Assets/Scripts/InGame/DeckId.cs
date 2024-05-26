@@ -1,48 +1,58 @@
 using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Deck.UI.InGame
 {
     [Serializable]
-    public class DeckId
+    public struct DeckId
     {
-        [ReadOnly] private Guid _id;
-
-
 #if UNITY_EDITOR
         [ShowInInspector] public string StringId => _id.ToString();
 #endif
-        public Guid ID => _id;
 
-        public DeckId()
+        [SerializeField, HideInInspector] private int _id;
+
+        public string IdString;
+        public bool IsValid => _id != 0;
+        public int ID => _id;
+
+
+        public DeckId(bool justShupUp = false)
         {
-            _id = Guid.NewGuid();
+            _id = Random.Range(10000000, 99999999);
+            Debug.LogError("Initialize called " + _id);
+            IdString = _id.ToString();
         }
 
-        public DeckId(Guid id)
+        public DeckId(int id)
         {
+            Debug.LogError("Initialize called " + id);
             _id = id;
-        }
-
-        public DeckId(string id)
-        {
-            Debug.LogError(id);
-            _id = Guid.Parse(id);
+            IdString = _id.ToString();
         }
 
         public static DeckId CreateNew()
         {
-            return new DeckId(Guid.NewGuid());
+            return new DeckId();
         }
 
         [Button]
         public void ResetId(bool force = false)
         {
-            if (_id == Guid.Empty || force)
+            if (_id == 0 || force)
             {
-                _id = Guid.NewGuid();
+                _id = Random.Range(10000000, 99999999);
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not DeckId deckId)
+                return false;
+
+            return deckId._id == _id;
         }
     }
 }

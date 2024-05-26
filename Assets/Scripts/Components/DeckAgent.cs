@@ -8,8 +8,8 @@ using Deck.Services.MapService;
 using Deck.UI.InGame;
 using Deck.UI.Stats;
 using Services.AgentFinder;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Deck.Agent
 {
@@ -19,14 +19,13 @@ namespace Deck.Agent
         public event Action<DeckAgent> OnAgentDeath;
         public event Action OnItemVisualChanged;
 
-        [ReadOnly, SerializeField] private string prefabId;
-
         [SerializeField] protected Transform centerPosition;
         [SerializeField] private DeckComponent[] components;
         [SerializeField] private float activeSize = -1f;
         [SerializeField] private new Collider collider;
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
+        [SerializeField] private DeckId prefabId;
 
         [HideInInspector] public Transform selfTransform;
 
@@ -35,10 +34,26 @@ namespace Deck.Agent
         private bool _hasBeenInitialized;
         private bool _hasSetComponents;
 
+        public DeckId PrefabId
+        {
+            get
+            {
+                if (prefabId.IsValid)
+                {
+                    return prefabId;
+                }
+
+                throw new Exception("No valid prefab id");
+            }
+        }
+
         private void Awake()
         {
             Initialize();
-            uniqueId ??= new DeckId();
+            if (!uniqueId.IsValid)
+            {
+                uniqueId = new DeckId();
+            }
         }
 
         private void OnValidate()
@@ -46,9 +61,9 @@ namespace Deck.Agent
             components = GetComponents<DeckComponent>();
             collider = GetComponent<Collider>();
 
-            if (string.IsNullOrEmpty(prefabId))
+            if (!prefabId.IsValid)
             {
-                prefabId = Guid.NewGuid().ToString();
+                prefabId = new DeckId();
             }
         }
 
@@ -97,7 +112,7 @@ namespace Deck.Agent
             this.components = components;
         }
 
-        public void Initialize(string guid)
+        public void Initialize(int guid)
         {
             if (_hasBeenInitialized)
             {
@@ -268,7 +283,7 @@ namespace Deck.Agent
         public Transform GetCenter() => centerPosition;
         public float GetSize() => activeSize;
         public bool WillSave() => willSave;
-        public string GetPrefabId() => prefabId;
+        public string GetPrefabId() => prefabId.ID.ToString();
 
         protected virtual void AfterInitialize()
         {

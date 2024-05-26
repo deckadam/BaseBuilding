@@ -125,6 +125,12 @@ MonoBehaviour:
   activeSize: 0.957937
   collider: {fileID: 1861109189651786788}
   willSave: 1
+  uniqueId:
+    _id: 0
+    IdString: 
+  prefabId:
+    _id: 95604382
+    IdString: 
   selfTransform: {fileID: 0}
 --- !u!208 &3168459617090073335
 NavMeshObstacle:
