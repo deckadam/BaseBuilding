@@ -1,3 +1,4 @@
+using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
 
@@ -7,7 +8,7 @@ namespace Deck.Utility.Poolable
     {
         private IMemoryPool _pool;
         private Transform _parent;
-
+        private bool _isSpawned;
         protected virtual void Spawned()
         {
         }
@@ -18,8 +19,15 @@ namespace Deck.Utility.Poolable
 
         public void Despawn()
         {
+            if (!_isSpawned)
+            {
+                DeckLogger.Warning("Trying to despawn already despawned object");
+                return;
+            }
+            
             gameObject.SetActive(false);
             _pool.Despawn(this);
+            _isSpawned = false;
         }
 
         public void OnDespawned()
@@ -30,10 +38,17 @@ namespace Deck.Utility.Poolable
 
         public void OnSpawned(IMemoryPool p1)
         {
+            if (_isSpawned)
+            {
+                DeckLogger.Warning("Trying to spawn already spawned object");
+                return;
+            }
+            
             _pool = p1;
             _parent = transform.parent;
             gameObject.SetActive(true);
             Spawned();
+            _isSpawned = true;
         }
     }
 }

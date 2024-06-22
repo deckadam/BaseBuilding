@@ -5,7 +5,6 @@ using Deck.Item;
 using Deck.Save;
 using Deck.Utility;
 using Services.AgentFinder;
-using UnityEngine.Serialization;
 
 namespace Deck.Commands
 {
@@ -30,7 +29,7 @@ namespace Deck.Commands
                 return false;
             }
 
-            _itemVisual.OnPickUp(_movement.GetComponentHolder().GetCenter());
+            _itemVisual.OnPickUp(_movement.GetAgent().GetCenter());
             _inventory.AddItem(_itemVisual.GetBindedItem());
             return true;
         }
@@ -58,7 +57,7 @@ namespace Deck.Commands
 
             public SaveData(DeckComponentInventory target, DeckItemVisual itemVisual)
             {
-                targetAgentId = target.GetComponentHolder().GetUniqueId().ID;
+                targetAgentId = target.GetAgent().GetUniqueId().ID;
                 prefabId = itemVisual.UniqueId.ID;
             }
         }

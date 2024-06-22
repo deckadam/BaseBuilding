@@ -21,7 +21,7 @@ namespace Deck.UI
 
         public void InitializeBuilding()
         {
-            _itemVisualInstance = Deck.GetService<DeckServiceItemVisual>().RentItemVisual(itemVisualPrefab.UniqueId);
+            _itemVisualInstance = Deck.GetService<DeckServiceItemVisual>().RentItemVisual(itemVisualPrefab.PrefabId);
 
             var itemTransform = _itemVisualInstance.transform;
             itemTransform.SetParent(selfTransform);

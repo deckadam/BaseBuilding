@@ -140,7 +140,7 @@ namespace Deck.InputHandling
 
             if (hit.transform.TryGetComponentInParent<DeckAgent>(out var result))
             {
-                var damageDealer = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentBasicInteraction>();
+                var damageDealer = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentCommandCreator>();
                 if (damageDealer)
                 {
                     damageDealer.DealDamage(result);

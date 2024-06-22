@@ -11,17 +11,10 @@ namespace Deck.Commands
 {
     public class DeckComponentCommandProcessor : DeckComponent
     {
-        private Queue<DeckCommand> _waitingCommands;
+        private Queue<DeckCommand> _waitingCommands = new();
         private CancellationTokenSource _selfExecutionToken;
         private CancellationTokenSource _taskExecutionTokenSource;
         private DeckCommand _activeCommand;
-
-        public DeckComponentCommandProcessor()
-        {
-            _waitingCommands = new Queue<DeckCommand>();
-            _selfExecutionToken = new CancellationTokenSource();
-            ProcessCommands(_selfExecutionToken.Token);
-        }
 
         public void StopExecutions()
         {
@@ -29,10 +22,11 @@ namespace Deck.Commands
             _selfExecutionToken.Dispose();
         }
 
-        private async void ProcessCommands(CancellationToken token)
+        public async void StartProcessCommands()
         {
+            _selfExecutionToken = new CancellationTokenSource();
             _taskExecutionTokenSource = new CancellationTokenSource();
-            while (!token.IsCancellationRequested)
+            while (!_selfExecutionToken.IsCancellationRequested)
             {
                 if (_waitingCommands.Count > 0)
                 {
@@ -80,8 +74,6 @@ namespace Deck.Commands
             var hasActiveCommand = _activeCommand != null;
             var commandCount = hasActiveCommand ? _waitingCommands.Count + 1 : _waitingCommands.Count;
 
-            Debug.LogError(commandCount);
-
             var commandDatas = new string[commandCount];
             var commandTypes = new string[commandCount];
 
@@ -104,8 +96,6 @@ namespace Deck.Commands
 
             var data = new SaveData(commandDatas, commandTypes);
 
-            Debug.LogError(commandTypes.Length);
-
             return data;
         }
 
@@ -118,6 +108,7 @@ namespace Deck.Commands
         {
             await UniTask.NextFrame();
             var data = DeckSaveUtility.GetDeserializedData<SaveData>(value);
+
             for (var index = 0; index < data.commandDatas.Length; index++)
             {
                 //Rider beni bi sal be

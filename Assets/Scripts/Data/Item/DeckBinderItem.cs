@@ -19,16 +19,16 @@ namespace Deck.Data.Item
             return items.Count != items.Distinct().Count();
         }
 
-        public DeckDataItem GetItemWithName(string name)
+        public DeckDataItem GetItemWithName(string itemName)
         {
-            if (_itemsWithNameAccess.TryGetValue(name, out var item))
+            if (_itemsWithNameAccess.TryGetValue(itemName, out var item))
             {
                 var newItem = Instantiate(item);
                 newItem.ResetAmount();
                 return newItem;
             }
 
-            throw new Exception("Item with name not found  " + name);
+            throw new Exception("Item with name not found  " + itemName);
         }
 
         public List<DeckDataItem> GetItems()

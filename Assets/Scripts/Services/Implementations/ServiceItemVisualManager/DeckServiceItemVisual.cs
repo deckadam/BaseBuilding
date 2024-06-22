@@ -2,6 +2,7 @@ using Deck.Item;
 using Deck.Services;
 using Deck.UI.InGame;
 using Deck.Utility.Logger;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.ItemVisualProviders
@@ -19,7 +20,7 @@ namespace Deck.ItemVisualProviders
             
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                deckItemVisualProvider.Initialize(_container);
+                deckItemVisualProvider.Initialize();
             }
         }
 
@@ -47,7 +48,7 @@ namespace Deck.ItemVisualProviders
                 }
             }
 
-            DeckLogger.Error("No item visual found for id " + itemVisual.PrefabId.ID);
+            DeckLogger.Error("No item visual found for id " + itemVisual.PrefabId);
         }
     }
 }

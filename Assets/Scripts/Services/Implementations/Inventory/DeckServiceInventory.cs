@@ -42,7 +42,7 @@ namespace Deck.ItemVisualProviders.Implementations.Inventory
             var amount = _cell.GetAmount();
             var item = _cell.GetItem();
             var inventory = _cell.GetPopUp().GetBindedInventory();
-            var agent = inventory.GetComponentHolder();
+            var agent = inventory.GetAgent();
 
             agent.AddCommand(new DeckCommandTransferItem(item,amount, inventory, _hovered.GetBindedInventory()));
 

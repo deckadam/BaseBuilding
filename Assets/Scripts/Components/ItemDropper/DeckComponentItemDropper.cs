@@ -1,10 +1,7 @@
-﻿using System;
-using Deck.Item;
-using Deck.Data.ItemDrop;
-using Deck.Utility.Logger;
+﻿using Deck.Data.ItemDrop;
 using Deck.ItemVisualProviders;
+using Deck.Utility.Logger;
 using UnityEngine;
-using Zenject;
 using Random = UnityEngine.Random;
 
 namespace Deck.Commands

@@ -8,8 +8,8 @@ namespace Deck.UI
 {
     public class DeckUIWorldDisplay : DeckPoolable
     {
+        [SerializeField] protected Transform target;
         protected Camera mainCamera;
-        protected Transform target;
         protected RectTransform rect;
         protected Vector3 positionOffset;
 
@@ -43,13 +43,14 @@ namespace Deck.UI
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
         }
-        
+
         private void LateUpdate()
         {
             if (target == null || !target.gameObject || mainCamera == null || !mainCamera.gameObject)
             {
-                Destroy(gameObject);
+                Despawn();
             }
+
             rect.position = mainCamera.WorldToScreenPoint(target.transform.position + positionOffset);
         }
     }

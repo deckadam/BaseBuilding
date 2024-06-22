@@ -28,7 +28,7 @@ namespace Deck.UI.Stats
 
             foreach (var stat in stats)
             {
-                if (stat.Stats == null || stat.Stats.Length == 0)
+                if (!stat.IsValid || stat.Stats == null || stat.Stats.Length == 0)
                 {
                     continue;
                 }

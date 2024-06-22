@@ -92,7 +92,6 @@ namespace Deck.Commands
             {
                 items.Add(data,0);
             }
-            
             items[data] += amount;
             _listeners?.Invoke(items);
         }

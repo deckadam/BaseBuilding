@@ -22,6 +22,10 @@ namespace Deck.Data.General
             Container.BindInstance(agentChestPrefab);
             Container.BindInstance(deckGeneralData);
             Container.BindInstance(itemVisualProviders);
+            foreach (var deckItemVisualProviderBasic in itemVisualProviders)
+            {
+                Container.QueueForInject(deckItemVisualProviderBasic);
+            }
         }
 
         [Serializable]

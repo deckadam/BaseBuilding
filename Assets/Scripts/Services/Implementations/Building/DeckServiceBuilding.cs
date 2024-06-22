@@ -134,8 +134,8 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent.gameObject).GetComponent<DeckBuilding>();
-            newBuilding.transform.parent.SetParent(DeckServiceScene.GetMap().transform);
+            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
+            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellPosition;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();

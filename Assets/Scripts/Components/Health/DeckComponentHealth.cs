@@ -8,6 +8,7 @@ using Deck.Save;
 using Deck.UI.Stats;
 using Deck.Utility.Health;
 using Deck.Utility.Logger;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -21,11 +22,12 @@ namespace Deck.Commands
 
         [SerializeField] private DeckDataHealth dataHealth;
 
+        [ReadOnly, SerializeField] private int _currentHealth;
+
         private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
         private DeckHealthBar.Factory _healthBarFactory;
         private DeckHealthBar _healthBar;
         private bool _hasHealthBar;
-        private int _currentHealth;
         private int _limitHealth;
         public bool IsDead => _currentHealth <= 0;
 
@@ -90,10 +92,10 @@ namespace Deck.Commands
         private void GetHealthBar()
         {
             if (_hasHealthBar) return;
-            
+
             _healthBar = _healthBarFactory.Create();
             _healthBar.SetPositionOffset(Vector3.up * 2f);
-            _healthBar.SetTarget(GetComponentHolder().transform);
+            _healthBar.SetTarget(GetAgent().transform);
             _hasHealthBar = true;
         }
 

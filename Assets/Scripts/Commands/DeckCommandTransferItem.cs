@@ -26,14 +26,14 @@ namespace Deck.Commands
         public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
             DeckServiceSelection.ResetSelectionToPossession();
-            var movement = _from.GetComponentHolder().GetDeckComponent<DeckComponentMovement>();
+            var movement = _from.GetAgent().GetDeckComponent<DeckComponentMovement>();
 
             if (movement == null)
             {
                 return default;
             }
 
-            var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(movement, _to.GetComponentHolder().transform, DeckConstantsPrimitive.ITEM_TRANSFER_RANGE, token);
+            var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(movement, _to.GetAgent().transform, DeckConstantsPrimitive.ITEM_TRANSFER_RANGE, token);
             if (isCanceled)
             {
                 return false;

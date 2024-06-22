@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Deck.Agent;
 using Deck.Item;
+using Deck.UI.InGame;
 using UnityEngine;
 using Zenject;
 
@@ -22,9 +22,10 @@ namespace Deck.Save.Data
         private void Inject(DiContainer container)
         {
             _container = container;
+            Initialize();
         }
 
-        public void Initialize()
+        private void Initialize()
         {
             if (_initialized)
             {
@@ -46,21 +47,44 @@ namespace Deck.Save.Data
 
         public DeckAgent GetAgentById(int id)
         {
-            Initialize();
             return _agentDictionary[id];
         }
 
-        public DeckAgent CreateNewAgentInstance(int prefabId, int agentGuid)
+        public DeckItemVisual GetItemVisualById(int id)
+        {
+            return _itemVisualDictionary[id];
+        }
+
+        public DeckAgent CreateNewAgentInstance(int prefabId, int agentGuid = 0)
         {
             var agentPrefab = GetAgentById(prefabId);
             var agentInstance = _container.InstantiatePrefab(agentPrefab).GetComponent<DeckAgent>();
-            agentInstance.Initialize(agentGuid);
+            if (agentGuid == 0)
+            {
+                agentInstance.Initialize();
+            }
+            else
+            {
+                agentInstance.Initialize(agentGuid);
+            }
+
             return agentInstance;
         }
 
-        public DeckItemVisual GetItemVisualById(Guid id)
+        public DeckItemVisual CreateNewItemVisualInstance(int prefabId, int itemGuid = 0)
         {
-            return null;
+            var itemVisualPrefab = GetItemVisualById(prefabId);
+            var itemVisualInstance = _container.InstantiatePrefab(itemVisualPrefab).GetComponent<DeckItemVisual>();
+            if (itemGuid == 0)
+            {
+                itemVisualInstance.SetNewUniqueId();
+            }
+            else
+            {
+                itemVisualInstance.SetUniqueId(new DeckId(itemGuid));
+            }
+
+            return itemVisualInstance;
         }
     }
 }

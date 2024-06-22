@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Deck.Agent;
 using Deck.Item;
 using Deck.Services;
+using UnityEngine;
 
 namespace Services.AgentFinder
 {
@@ -24,6 +25,11 @@ namespace Services.AgentFinder
         {
             return _itemVisuals[uniqueId];
         }
+        
+        public IEnumerable<DeckItemVisual> GetItemVisuals()
+        {
+            return _itemVisuals.Values;
+        }
 
         public void RegisterAgent(DeckAgent agent)
         {
@@ -38,6 +44,11 @@ namespace Services.AgentFinder
         public DeckAgent GetAgent(int uniqueId)
         {
             return _agents[uniqueId];
+        }
+        
+        public IEnumerable<DeckAgent> GetAgents()
+        {
+            return _agents.Values;
         }
     }
 }

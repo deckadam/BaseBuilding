@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Deck.Commands;
 using Deck.InputHandling;
 using Deck.Save;
@@ -9,7 +10,6 @@ using Deck.UI.InGame;
 using Deck.UI.Stats;
 using Services.AgentFinder;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Deck.Agent
 {
@@ -29,7 +29,6 @@ namespace Deck.Agent
 
         [HideInInspector] public Transform selfTransform;
 
-        private DeckComponentCommandProcessor _componentCommandProcessor;
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
         private bool _hasSetComponents;
@@ -47,15 +46,6 @@ namespace Deck.Agent
             }
         }
 
-        private void Awake()
-        {
-            Initialize();
-            if (!uniqueId.IsValid)
-            {
-                uniqueId = new DeckId();
-            }
-        }
-
         private void OnValidate()
         {
             components = GetComponents<DeckComponent>();
@@ -63,13 +53,19 @@ namespace Deck.Agent
 
             if (!prefabId.IsValid)
             {
-                prefabId = new DeckId();
+                prefabId = DeckId.CreateNew();
             }
         }
 
         private void OnDestroy()
         {
             DeInitialize();
+        }
+
+        private async void Start()
+        {
+            await UniTask.NextFrame();
+            Initialize();
         }
 
         public bool TryGetDeckComponent<T>(out T value) where T : class
@@ -137,16 +133,13 @@ namespace Deck.Agent
 
             if (createNewGuid)
             {
-                uniqueId = new DeckId();
+                uniqueId = DeckId.CreateNew();
             }
 
             selfTransform = transform;
             selfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
 
-
             SetComponents();
-
-            _componentCommandProcessor = GetDeckComponent<DeckComponentCommandProcessor>();
 
             if (!_hasSetComponents)
             {
@@ -166,6 +159,11 @@ namespace Deck.Agent
             }
 
             AfterInitialize();
+
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
+            {
+                commandProcessor.StartProcessCommands();
+            }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
         }
@@ -189,9 +187,9 @@ namespace Deck.Agent
                 deckComponent.DeInitialize();
             }
 
-            if (_componentCommandProcessor != null)
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
-                _componentCommandProcessor.StopExecutions();
+                commandProcessor.StopExecutions();
             }
         }
 
@@ -231,18 +229,24 @@ namespace Deck.Agent
                 }
             }
 
-            uniqueId = new DeckId(data.agentGuid);
+            uniqueId = new DeckId(data.uniqueId);
             AfterLoad();
         }
 
         public void AddCommand(DeckCommand command)
         {
-            _componentCommandProcessor.AddCommand(command, DeckInputHandlingSystem.IsInterruptingCommandModeActive);
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
+            {
+                commandProcessor.AddCommand(command, DeckInputHandlingSystem.IsInterruptingCommandModeActive);
+            }
         }
 
         public void EnqueCommand(DeckCommand command)
         {
-            _componentCommandProcessor.EnqueCommand(command);
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
+            {
+                commandProcessor.EnqueCommand(command);
+            }
         }
 
         protected void SetSize(float newSize)
@@ -279,20 +283,6 @@ namespace Deck.Agent
             OnItemVisualChanged?.Invoke();
         }
 
-        public DeckComponent[] GetDeckComponents() => components;
-        public Transform GetCenter() => centerPosition;
-        public float GetSize() => activeSize;
-        public bool WillSave() => willSave;
-        public string GetPrefabId() => prefabId.ID.ToString();
-
-        protected virtual void AfterInitialize()
-        {
-        }
-
-        protected virtual void AfterLoad()
-        {
-        }
-
         public DeckStatGroup[] GetStats()
         {
             var compCount = components.Length;
@@ -308,9 +298,19 @@ namespace Deck.Agent
             return stats;
         }
 
-        public DeckId GetUniqueId()
+        public DeckId GetUniqueId() => uniqueId;
+        public DeckComponent[] GetDeckComponents() => components;
+        public Transform GetCenter() => centerPosition;
+        public float GetSize() => activeSize;
+        public bool WillSave() => willSave;
+        public string GetPrefabId() => prefabId.ID.ToString();
+
+        protected virtual void AfterInitialize()
         {
-            return uniqueId;
+        }
+
+        protected virtual void AfterLoad()
+        {
         }
     }
 }

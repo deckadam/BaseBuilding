@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isStatic: 0
-  localEquipRotation: {x: 0, y: 0, z: -0.70710677, w: 0.70710677}
+  localEquipRotation: {x: 17.367, y: -17.911, z: -78.569}
   localEquipPosition: {x: 0, y: 0, z: 0}
   bindedItem: {fileID: 11400000, guid: 1bef0a7dcb4fa8e4b85039ed8fcfb8df, type: 2}
   displayOffset: {x: 0, y: 2, z: 0}

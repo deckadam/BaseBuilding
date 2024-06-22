@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Deck.Commands
 {
     [Serializable]
-    public class DeckComponentBasicInteraction : DeckComponent
+    public class DeckComponentCommandCreator : DeckComponent
     {
         [SerializeField] private DeckDataDamage dataDamage;
         public Action<int> OnDamageDealRequested;
@@ -28,7 +28,7 @@ namespace Deck.Commands
                 return;
             }
 
-            if (healthComponent.GetComponentHolder() == agent)
+            if (healthComponent.GetAgent() == agent)
             {
                 return;
             }
@@ -55,8 +55,12 @@ namespace Deck.Commands
                 dataDamage.GetAttackRange(),
                 this,
                 healthComponent,
-                () => OnDamageDealRequested?.Invoke(dataDamage.GetAttackDuration()),
                 continuous: true));
+        }
+
+        public void OnAttackStart()
+        {
+            OnDamageDealRequested?.Invoke(dataDamage.GetAttackDuration());
         }
 
         public bool CanAttack() => _canAttack;

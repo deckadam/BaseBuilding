@@ -8,7 +8,7 @@ namespace Deck.Commands
     public class DeckComponentAnimatorCore : DeckComponent, IDeckAnimationImmediatePlay, IDeckAnimationSetBool, IDeckAnimationSetFloat
     {
         private DeckComponentMovement _movementComponent;
-        private DeckComponentBasicInteraction _basicInteractionComponent;
+        private DeckComponentCommandCreator _commandCreatorComponent;
         private DeckComponentHealth _healthComponent;
         private Animator _animator;
 
@@ -20,13 +20,13 @@ namespace Deck.Commands
                 throw new Exception("Movement component couldn't be found");
             }
 
-            _basicInteractionComponent = agent.GetDeckComponent<DeckComponentBasicInteraction>();
-            if (_basicInteractionComponent == null)
+            _commandCreatorComponent = agent.GetDeckComponent<DeckComponentCommandCreator>();
+            if (_commandCreatorComponent == null)
             {
                 throw new Exception("Damage dealer component couldn't be found");
             }
 
-            _basicInteractionComponent.OnDamageDealRequested += OnAttack;
+            _commandCreatorComponent.OnDamageDealRequested += OnAttack;
 
             _animator = agent.GetComponentInChildren<Animator>();
 
@@ -46,7 +46,7 @@ namespace Deck.Commands
 
         public override void DeInitialize()
         {
-            _basicInteractionComponent.OnDamageDealRequested -= OnAttack;
+            _commandCreatorComponent.OnDamageDealRequested -= OnAttack;
             _healthComponent.OnDamageTaken -= OnHealthChange;
         }
 

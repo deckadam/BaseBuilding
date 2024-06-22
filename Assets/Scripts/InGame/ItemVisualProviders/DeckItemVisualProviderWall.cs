@@ -22,7 +22,7 @@ namespace Deck.ItemVisualProviders
             _activeConnectorVisuals = new Dictionary<(Vector2Int, Vector2Int), DeckItemVisual>();
             foreach (var wallItemVisualPart in wallItemVisualParts)
             {
-                _activeItemVisuals.Add(wallItemVisualPart.wallMainPart.UniqueId.ID, new Dictionary<Vector2Int, bool>());
+                _activeItemVisuals.Add(wallItemVisualPart.wallMainPart.PrefabId.ID, new Dictionary<Vector2Int, bool>());
             }
         }
 
@@ -31,10 +31,9 @@ namespace Deck.ItemVisualProviders
             WallItemVisualParts? part = null;
             foreach (var t in wallItemVisualParts)
             {
-                if (t.wallMainPart.UniqueId.ID != itemVisual.UniqueId.ID)
+                if (t.wallMainPart.PrefabId.ID != itemVisual.PrefabId.ID)
                     continue;
 
-                // Debug.LogError(t.wallMainPart.UniqueId.ID + "    " + itemVisual.UniqueId.ID);
                 part = t;
                 break;
             }
@@ -45,7 +44,7 @@ namespace Deck.ItemVisualProviders
             await UniTask.NextFrame();
 
             var pos = itemVisual.transform.position.ToVector2Int();
-            var checkSet = _activeItemVisuals[itemVisual.UniqueId.ID];
+            var checkSet = _activeItemVisuals[itemVisual.PrefabId.ID];
             checkSet[pos] = true;
             PlaceConnectors(part.Value, checkSet, pos);
         }
@@ -55,7 +54,7 @@ namespace Deck.ItemVisualProviders
             WallItemVisualParts? part = null;
             foreach (var t in wallItemVisualParts)
             {
-                if (t.wallMainPart.UniqueId.ID != itemVisual.UniqueId.ID)
+                if (t.wallMainPart.PrefabId.ID != itemVisual.PrefabId.ID)
                     continue;
                 part = t;
                 break;
@@ -65,7 +64,7 @@ namespace Deck.ItemVisualProviders
                 return;
 
             var pos = itemVisual.transform.position.ToVector2Int();
-            var checkSet = _activeItemVisuals[itemVisual.UniqueId.ID];
+            var checkSet = _activeItemVisuals[itemVisual.PrefabId.ID];
             checkSet[pos] = false;
             RemoveConnectors(pos);
         }
@@ -79,6 +78,14 @@ namespace Deck.ItemVisualProviders
                     PlaceConnector(part, targetPos, neighbourPos);
                 }
             }
+        }
+
+        private void PlaceConnector(WallItemVisualParts part, Vector2Int targetPos, Vector2Int neighbourPos)
+        {
+            RentIfHasItemVisual(part.wallConnectorPart.PrefabId, out var itemVisual);
+            itemVisual.transform.position = DeckVectorUtility.GetPlaneMiddlePosition(targetPos, neighbourPos);
+            itemVisual.transform.rotation = DeckVectorUtility.GetPlaneRotation(targetPos, neighbourPos);
+            _activeConnectorVisuals.Add((targetPos, neighbourPos), itemVisual);
         }
 
         private void RemoveConnectors(Vector2Int targetPos)
@@ -96,14 +103,6 @@ namespace Deck.ItemVisualProviders
                     _activeConnectorVisuals.Remove((neighbourPos, targetPos));
                 }
             }
-        }
-
-        private void PlaceConnector(WallItemVisualParts part, Vector2Int targetPos, Vector2Int neighbourPos)
-        {
-            RentIfHasItemVisual(part.wallConnectorPart.UniqueId, out var itemVisual);
-            itemVisual.transform.position = DeckVectorUtility.GetPlaneMiddlePosition(targetPos, neighbourPos);
-            itemVisual.transform.rotation = DeckVectorUtility.GetPlaneRotation(targetPos, neighbourPos);
-            _activeConnectorVisuals.Add((targetPos, neighbourPos), itemVisual);
         }
 
         [Serializable]

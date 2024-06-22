@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Data.Common;
 using Deck.Commands;
 using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
+using Deck.Save.Data;
 using Deck.Services;
 using Deck.Services.CellSelectionService;
 using Deck.UI.InGame;
 using Deck.UI.Item;
 using Deck.Utility.Logger;
 using DG.Tweening;
+using Services.AgentFinder;
 using Unity.Collections;
 using UnityEngine;
 using Zenject;
@@ -21,7 +24,7 @@ namespace Deck.Item
     {
         [ReadOnly, SerializeField] private bool isStatic;
 
-        [SerializeField] private Quaternion localEquipRotation;
+        [SerializeField] private Vector3 localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
         [SerializeField] private DeckDataItem bindedItem;
         [SerializeField] private Vector3 displayOffset;
@@ -31,16 +34,16 @@ namespace Deck.Item
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
         public Vector3 LocalEquipPosition => localEquipPosition;
-        public Quaternion LocalEquipRotation => localEquipRotation;
+        public Vector3 LocalEquipRotation => localEquipRotation;
 
         private DeckBinderGeneral.DeckGeneralData _generalData;
         private DeckFactoryProviderUI _factoryProvider;
         private DeckUIItemDisplayer _display;
-
+        private bool _hasDropped;
+        private bool _hasInitialized;
         public void SetItem(DeckDataItem item) => bindedItem = item;
         public DeckDataItem GetBindedItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
-
         public bool IsStatic => isStatic;
 
         public DeckId PrefabId
@@ -52,7 +55,7 @@ namespace Deck.Item
                     return prefabId;
                 }
 
-                Debug.LogError(name +"   " + prefabId.ID);
+                Debug.LogError(name + "   " + prefabId.ID);
                 throw new Exception("No valid prefab id");
             }
         }
@@ -69,10 +72,33 @@ namespace Deck.Item
             uniqueId = DeckId.CreateNew();
         }
 
-        private void Awake()
+        public void SetUniqueId(DeckId id)
         {
+            uniqueId = id;
+        }
+
+        private void Start()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            if (_hasInitialized)
+            {
+                return;
+            }
+
+            _hasInitialized = true;
             if (isOnTheGround)
             {
+                if (!uniqueId.IsValid)
+                {
+                    uniqueId = DeckId.CreateNew();
+                }
+
+                Deck.GetService<DeckServiceFinder>().RegisterItemVisual(this);
+
                 OnDroppped();
             }
         }
@@ -88,7 +114,7 @@ namespace Deck.Item
 
             if (!prefabId.IsValid)
             {
-                prefabId = new DeckId();
+                prefabId = DeckId.CreateNew();
             }
         }
 
@@ -120,6 +146,7 @@ namespace Deck.Item
             }
 
             Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(this);
+            _hasDropped = false;
         }
 
         public void OnDroppped()
@@ -130,12 +157,19 @@ namespace Deck.Item
                 return;
             }
 
-            isOnTheGround = true;
-            collider.enabled = true;
+            if (_hasDropped)
+            {
+                return;
+            }
+
             _display = _factoryProvider.GetFactory<DeckUIItemDisplayer, DeckUIItemDisplayer.Factory>().Create();
             _display.SetTarget(transform);
             _display.SetData(bindedItem, CreatePickUpCommand);
             _display.SetPositionOffset(displayOffset);
+
+            _hasDropped = true;
+            isOnTheGround = true;
+            collider.enabled = true;
         }
 
         private void CreatePickUpCommand()
@@ -194,6 +228,22 @@ namespace Deck.Item
 
             rigidbody.isKinematic = false;
             rigidbody.AddForce(force, ForceMode.Impulse);
+        }
+
+        public object GetAdditionalData()
+        {
+            return null;
+        }
+
+        public bool IsOnTheGround => isOnTheGround;
+
+        public void LoadData(DeckItemVisualSaveData data)
+        {
+            transform.position = data.position;
+            transform.rotation = Quaternion.Euler(data.rotation);
+            prefabId = new DeckId(data.prefabId);
+            uniqueId = new DeckId(data.uniqueId);
+            isOnTheGround = data.isOnTheGround;
         }
     }
 }

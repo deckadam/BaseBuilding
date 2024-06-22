@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a75348bada894509aa96308e2d1b1a36, type: 3}
-  m_Name: Deck Resolver Data
+  m_Name: Deck Instance Creator
   m_EditorClassIdentifier: 
   agents:
   - {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
@@ -19,3 +19,12 @@ MonoBehaviour:
   - {fileID: 1359178046461186371, guid: 313639148c2ab8b4aab4af82275ad642, type: 3}
   - {fileID: 5991958910954823637, guid: 462029cb74c8dbe44838ccb8714043c8, type: 3}
   - {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
+  itemVisuals:
+  - {fileID: 9032209925360883485, guid: 18bf077b66d7d254d8ef277154b2edbe, type: 3}
+  - {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
+  - {fileID: 2583041291122265383, guid: 5363a9918ffaa1a43add940170ac2269, type: 3}
+  - {fileID: 4006595031824536313, guid: 15e172e1f124fba4d92024f4f4512869, type: 3}
+  - {fileID: 8997340583728514672, guid: 445ab2cbc04764644b9e86debef56a87, type: 3}
+  - {fileID: 7624238596238122891, guid: 7d7b49242b801ac48a6e2c3f3d51c507, type: 3}
+  - {fileID: 8384035529799849550, guid: 1010f4c95b7a2124093f23dd84e099c9, type: 3}
+  - {fileID: 8384035529799849550, guid: 8fa0ba3ca0dbfe74ba4a5eb47f1b96d7, type: 3}

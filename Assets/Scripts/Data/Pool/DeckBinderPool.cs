@@ -14,7 +14,7 @@ namespace Deck.Data.Pool
     public class DeckBinderPool : ScriptableObjectInstaller
     {
         [SerializeField] private DeckHealthBar healthBarPrefab;
-        [FormerlySerializedAs("resolverData")] [SerializeField] private DeckInstanceCreator instanceCreator;
+        [SerializeField] private DeckInstanceCreator instanceCreator;
         [SerializeField] private DeckInventoryDisplayerCell inventoryDisplayerCellPrefab;
         [SerializeField] private DeckSaveDisplayer saveDisplayerPrefab;
         [SerializeField] private DeckInventoryPopUp inventoryPopUpPrefab;
@@ -39,7 +39,8 @@ namespace Deck.Data.Pool
             Container.BindFactory<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>().FromPoolableMemoryPool(poolBinder => poolBinder.WithInitialSize(0).FromComponentInNewPrefab(confirmationPopUpPrefab).UnderTransformGroup("UIPool"));
             Container.BindFactory<DeckUIItemDisplayer, DeckUIItemDisplayer.Factory>().FromPoolableMemoryPool(poolBinder => poolBinder.WithInitialSize(5).FromComponentInNewPrefab(itemDisplayer).UnderTransformGroup("UIPool"));
             
-            Container.BindInstance(instanceCreator);
+            Container.BindInstance(instanceCreator).AsSingle().NonLazy();
+            Container.QueueForInject(instanceCreator);
         }
     }
 }

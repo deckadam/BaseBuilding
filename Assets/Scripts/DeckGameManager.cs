@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Deck.Agent;
 using Deck.Commands;
 using Deck.Data.Item;
@@ -7,6 +8,7 @@ using Deck.MVC;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services;
+using Services.AgentFinder;
 using UnityEngine;
 using Zenject;
 
@@ -22,11 +24,11 @@ namespace Deck.UI
         }
 
         private DiContainer _container;
-        private DeckAgentLoadResolver _loadResolver;
+        private DeckLoadResolver _loadResolver;
         private DeckAgentCore _coreAgentPrefab;
 
         [Inject]
-        private void Inject(DiContainer container, DeckAgentLoadResolver loadResolver, DeckAgentCore agentCorePrefab)
+        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentCore agentCorePrefab)
         {
             _container = container;
             _loadResolver = loadResolver;
@@ -42,29 +44,47 @@ namespace Deck.UI
         public async void LoadGame()
         {
             await Deck.GetService<DeckServiceScene>().LoadMap(true);
-            var playerData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
-            _loadResolver.ResolveAndLoad(playerData);
+            var agentDatas = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
+            var itemVisualDatas = DeckSaveSystem.GetData<DeckItemVisualSaveDatas>(nameof(DeckItemVisualSaveDatas));
+            _loadResolver.ResolveAndLoad(agentDatas, itemVisualDatas);
         }
 
         public void GatherSaveData()
         {
-            var newCoreAgentData = new DeckComponentHolderSaveDatas();
-            foreach (var agent in FindObjectsOfType<DeckAgent>())
+            var agents = Deck.GetService<DeckServiceFinder>().GetAgents();
+            var agentDatas = new DeckComponentHolderSaveDatas();
+            foreach (var agent in agents)
             {
                 if (!agent.WillSave())
                 {
                     continue;
                 }
 
-                newCoreAgentData.datas.Add(new DeckComponentHolderSaveData
+                agentDatas.datas.Add(new DeckComponentHolderSaveData
                 {
-                    agentGuid = agent.GetUniqueId().ID,
+                    uniqueId = agent.GetUniqueId().ID,
                     componentDatas = agent.GetSaveData(),
                     prefabId = agent.PrefabId.ID
                 });
             }
 
-            DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), newCoreAgentData);
+            var itemVisuals = Deck.GetService<DeckServiceFinder>().GetItemVisuals();
+            var itemVisualDatas = new DeckItemVisualSaveDatas();
+            foreach (var itemVisual in itemVisuals)
+            {
+                itemVisualDatas.datas.Add(new DeckItemVisualSaveData()
+                {
+                    prefabId = itemVisual.PrefabId.ID,
+                    uniqueId = itemVisual.UniqueId.ID,
+                    position = itemVisual.transform.position,
+                    rotation = itemVisual.transform.rotation.eulerAngles,
+                    isOnTheGround = itemVisual.IsOnTheGround,
+                    additionalData = itemVisual.GetAdditionalData()
+                });
+            }
+
+            DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), agentDatas);
+            DeckSaveSystem.SetData(nameof(DeckItemVisualSaveDatas), itemVisualDatas);
         }
     }
 }

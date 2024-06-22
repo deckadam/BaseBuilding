@@ -138,8 +138,10 @@ MonoBehaviour:
   isOnTheGround: 0
   collider: {fileID: 8924736446133557145}
   uniqueId:
+    _id: 0
     IdString: 
   prefabId:
+    _id: 47498356
     IdString: 
 --- !u!114 &1168823323879331160
 MonoBehaviour:

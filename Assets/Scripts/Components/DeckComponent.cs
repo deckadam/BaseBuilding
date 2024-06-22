@@ -8,7 +8,7 @@ namespace Deck.Commands
     public abstract class DeckComponent : MonoBehaviour, IDeckComponent
     {
         public Action<DeckStatGroup> OnStatsChanged;
-        
+
         protected DeckAgent agent { get; private set; }
 
         public void PreInitialize(DeckAgent holder)
@@ -38,10 +38,6 @@ namespace Deck.Commands
         {
         }
 
-        public virtual void LoadData(string value)
-        {
-        }
-
         public virtual void Release()
         {
         }
@@ -50,16 +46,20 @@ namespace Deck.Commands
         {
         }
 
-        public DeckAgent GetComponentHolder() => agent;
+        public DeckAgent GetAgent() => agent;
 
         public virtual object GetData()
         {
             return null;
         }
 
+        public virtual void LoadData(string value)
+        {
+        }
+
         public virtual DeckStatGroup GetStatGroup()
         {
-            return new DeckStatGroup();
+            return default;
         }
     }
 

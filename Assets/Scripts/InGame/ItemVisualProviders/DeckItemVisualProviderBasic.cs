@@ -1,34 +1,38 @@
-using System;
 using System.Collections.Generic;
 using Deck.Item;
+using Deck.Save.Data;
 using Deck.UI.InGame;
 using Services.AgentFinder;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
-using Object = UnityEngine.Object;
 
 namespace Deck.ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBasic", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBasic")]
     public class DeckItemVisualProviderBasic : ScriptableObject
     {
-        [SerializeField] private DeckItemVisual[] itemVisualSets;
+        [SerializeField, InlineEditor] private DeckItemVisual[] itemVisualSets;
 
-        private Dictionary<int, List<DeckItemVisual>> activeItemVisuals;
-
-        private DiContainer _container;
+        private Dictionary<int, Stack<DeckItemVisual>> activeItemVisuals;
 
         private Transform _poolParent;
+        private DeckInstanceCreator _instanceCreator;
 
-        public void Initialize(DiContainer container)
+        [Inject]
+        private void Inject(DeckInstanceCreator instanceCreator)
         {
-            _container = container;
-            activeItemVisuals = new Dictionary<int, List<DeckItemVisual>>();
+            _instanceCreator = instanceCreator;
+        }
+
+        public void Initialize()
+        {
+            activeItemVisuals = new Dictionary<int, Stack<DeckItemVisual>>();
             _poolParent = new GameObject().transform;
             _poolParent.name = name + "Pool";
             foreach (var visualSet in itemVisualSets)
             {
-                activeItemVisuals.Add(visualSet.PrefabId.ID, new List<DeckItemVisual>());
+                activeItemVisuals.Add(visualSet.PrefabId.ID, new Stack<DeckItemVisual>());
             }
 
             OnInitialize();
@@ -57,16 +61,14 @@ namespace Deck.ItemVisualProviders
 
         public bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
         {
-            foreach (var visualSet in itemVisualSets)
+            if (activeItemVisuals.TryGetValue(itemVisual.PrefabId.ID, out var list))
             {
-                if (visualSet.PrefabId.Equals(itemVisual.PrefabId))
-                {
-                    activeItemVisuals[visualSet.PrefabId.ID].Add(itemVisual);
-                    itemVisual.gameObject.SetActive(false);
-                    Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
-                    OnDespawned(itemVisual);
-                    return true;
-                }
+                list.Push(itemVisual);
+                itemVisual.gameObject.SetActive(false);
+                Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+                OnDespawned(itemVisual);
+
+                return true;
             }
 
             return false;
@@ -74,17 +76,15 @@ namespace Deck.ItemVisualProviders
 
         private bool TryGetItemVisual(DeckItemVisual visual, out DeckItemVisual result)
         {
-            if (activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var itemVisuals))
+            if (activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var list))
             {
-                if (itemVisuals.Count > 0)
+                if (list.Count > 0)
                 {
-                    result = itemVisuals[^1];
-                    itemVisuals.RemoveAt(itemVisuals.Count - 1);
-
+                    result = list.Pop();
                     return true;
                 }
 
-                result = CreateItemVisual(visual);
+                result = CreateItemVisual(visual.PrefabId.ID);
                 return true;
             }
 
@@ -92,9 +92,9 @@ namespace Deck.ItemVisualProviders
             return false;
         }
 
-        private DeckItemVisual CreateItemVisual(Object visual)
+        private DeckItemVisual CreateItemVisual(int id)
         {
-            var newObject = _container.InstantiatePrefab(visual);
+            var newObject = _instanceCreator.CreateNewItemVisualInstance(id);
             newObject.transform.SetParent(_poolParent);
             var temp = newObject.GetComponent<DeckItemVisual>();
             temp.SetNewUniqueId();

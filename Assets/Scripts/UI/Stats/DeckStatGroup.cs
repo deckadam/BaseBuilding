@@ -4,6 +4,7 @@ namespace Deck.UI.Stats
 {
     public struct DeckStatGroup
     {
+        public bool IsValid;
         public DeckComponent Component;
         public DeckStat[] Stats;
         
@@ -11,6 +12,7 @@ namespace Deck.UI.Stats
         {
             Stats = stats;
             Component = component;
+            IsValid = true;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Commands;
+using UnityEngine.Serialization;
 
 namespace Deck.Save.Data
 {
@@ -10,10 +11,11 @@ namespace Deck.Save.Data
         public List<DeckComponentHolderSaveData> datas = new();
     }
 
+    [Serializable]
     public class DeckComponentHolderSaveData
     {
         public int prefabId;
-        public int agentGuid;
+        [FormerlySerializedAs("agentGuid")] public int uniqueId;
         public List<DeckComponentSaveData> componentDatas;
     }
 }

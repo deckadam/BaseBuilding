@@ -10,7 +10,7 @@ namespace Deck.Installers
         {
             //Class references
             Container.Bind<DeckFactoryProviderUI>().AsSingle();
-            Container.Bind<DeckAgentLoadResolver>().AsSingle();
+            Container.Bind<DeckLoadResolver>().AsSingle();
         }
     }
 }
