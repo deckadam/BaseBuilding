@@ -25,5 +25,16 @@ namespace Deck.Utility.Iterators
                 new Vector2Int(position.x, position.y - multiplier)
             };
         }
+
+        public static Vector2Int[] GetNeighbours(this Vector2Int position)
+        {
+            return GetNeighbourIterator(position);
+        }
+        
+        
+        public static Vector2Int[] GetNeighbours(this Vector2Int position, int multiplier)
+        {
+            return GetNeighbourIterator(position, multiplier);
+        }
     }
 }

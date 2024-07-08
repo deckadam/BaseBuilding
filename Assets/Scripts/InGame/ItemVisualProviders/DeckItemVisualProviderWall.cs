@@ -28,6 +28,7 @@ namespace Deck.ItemVisualProviders
 
         protected override async void OnSpawned(DeckItemVisual itemVisual)
         {
+            Debug.LogError("On spawned");
             WallItemVisualParts? part = null;
             foreach (var t in wallItemVisualParts)
             {
@@ -82,7 +83,7 @@ namespace Deck.ItemVisualProviders
 
         private void PlaceConnector(WallItemVisualParts part, Vector2Int targetPos, Vector2Int neighbourPos)
         {
-            RentIfHasItemVisual(part.wallConnectorPart.PrefabId, out var itemVisual);
+            RequestItemVisual(part.wallConnectorPart.PrefabId, targetPos, out var itemVisual);
             itemVisual.transform.position = DeckVectorUtility.GetPlaneMiddlePosition(targetPos, neighbourPos);
             itemVisual.transform.rotation = DeckVectorUtility.GetPlaneRotation(targetPos, neighbourPos);
             _activeConnectorVisuals.Add((targetPos, neighbourPos), itemVisual);

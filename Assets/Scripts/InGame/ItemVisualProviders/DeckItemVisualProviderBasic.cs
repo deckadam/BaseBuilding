@@ -38,7 +38,17 @@ namespace Deck.ItemVisualProviders
             OnInitialize();
         }
 
-        public bool RentIfHasItemVisual(DeckId id, out DeckItemVisual itemVisual)
+        public virtual bool RequestItemVisual(DeckId id, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool alert = true)
+        {
+            return RentIfHasItemVisual(id, out itemVisual, alert);
+        }
+
+        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
+        {
+            return ReturnItemVisual(itemVisual);
+        }
+
+        protected bool RentIfHasItemVisual(DeckId id, out DeckItemVisual itemVisual, bool alert = true)
         {
             itemVisual = null;
             foreach (var visualSet in itemVisualSets)
@@ -50,7 +60,11 @@ namespace Deck.ItemVisualProviders
 
                     itemVisual.gameObject.SetActive(true);
                     Deck.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisual);
-                    OnSpawned(itemVisual);
+                    if (alert)
+                    {
+                        OnSpawned(itemVisual);
+                    }
+
                     return true;
                 }
             }
@@ -59,7 +73,7 @@ namespace Deck.ItemVisualProviders
             return false;
         }
 
-        public bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
+        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
         {
             if (activeItemVisuals.TryGetValue(itemVisual.PrefabId.ID, out var list))
             {
@@ -74,7 +88,7 @@ namespace Deck.ItemVisualProviders
             return false;
         }
 
-        private bool TryGetItemVisual(DeckItemVisual visual, out DeckItemVisual result)
+        protected virtual bool TryGetItemVisual(DeckItemVisual visual, out DeckItemVisual result)
         {
             if (activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var list))
             {

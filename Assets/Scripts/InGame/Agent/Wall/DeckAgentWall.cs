@@ -2,5 +2,7 @@
 
 namespace Deck.Agent
 {
-    public class DeckAgentWall : DeckBuilding { }
+    public class DeckAgentWall : DeckBuilding
+    {
+    }
 }

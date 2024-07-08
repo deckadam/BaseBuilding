@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6978723622339963111}
   - component: {fileID: 6079846305064869096}
   m_Layer: 0
-  m_Name: DeckAgentWoodAndStoneWall
+  m_Name: DeckAgentWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,6 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataHealth: {fileID: 11400000, guid: ba87eba4b2db1164ebefac7fdb7a8010, type: 2}
+  _currentHealth: 0
 --- !u!114 &6079846305064869096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,4 +88,4 @@ MonoBehaviour:
     IdString: 
   selfTransform: {fileID: 0}
   buildingData: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
-  itemVisualPrefab: {fileID: 8384035529799849550, guid: 8fa0ba3ca0dbfe74ba4a5eb47f1b96d7, type: 3}
+  itemVisualPrefab: {fileID: 6395205563783229675, guid: cd877f7acc901234b89a5ab3b3b46f50, type: 3}

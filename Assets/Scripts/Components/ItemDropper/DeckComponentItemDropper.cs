@@ -32,7 +32,7 @@ namespace Deck.Commands
             var item = drop.itemDrop.GetItem();
             for (var i = 0; i < drop.amount; i++)
             {
-                var createdItem = Deck.GetService<DeckServiceItemVisual>().RentItemVisual(item.Representation.PrefabId);
+                var createdItem = Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId);
                 createdItem.transform.position = agent.transform.position;
                 createdItem.transform.rotation = Random.rotation;
                 createdItem.OnDroppped();

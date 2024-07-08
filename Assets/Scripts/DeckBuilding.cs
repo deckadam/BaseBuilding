@@ -3,6 +3,7 @@ using Deck.Data.Buildable;
 using Deck.Item;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
+using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.UI
@@ -21,14 +22,8 @@ namespace Deck.UI
 
         public void InitializeBuilding()
         {
-            _itemVisualInstance = Deck.GetService<DeckServiceItemVisual>().RentItemVisual(itemVisualPrefab.PrefabId);
-
-            var itemTransform = _itemVisualInstance.transform;
-            itemTransform.SetParent(selfTransform);
-            itemTransform.position = selfTransform.position;
-            itemTransform.rotation = selfTransform.rotation;
+            _itemVisualInstance = Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId,selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
-
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
         }
 

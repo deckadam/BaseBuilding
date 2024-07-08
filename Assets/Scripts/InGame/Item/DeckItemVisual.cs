@@ -19,7 +19,6 @@ using Random = UnityEngine.Random;
 
 namespace Deck.Item
 {
-    [RequireComponent(typeof(Collider))]
     public class DeckItemVisual : MonoBehaviour
     {
         [ReadOnly, SerializeField] private bool isStatic;
@@ -108,7 +107,7 @@ namespace Deck.Item
             rigidbody = GetComponent<Rigidbody>();
             isStatic = rigidbody == null;
 
-            collider = GetComponent<Collider>();
+            collider = GetComponentInChildren<Collider>();
 
             UniqueId.ResetId();
 

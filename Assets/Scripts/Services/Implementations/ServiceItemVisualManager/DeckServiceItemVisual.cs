@@ -17,18 +17,18 @@ namespace Deck.ItemVisualProviders
         {
             _itemVisualProviders = itemVisualProviders;
             _container = container;
-            
+
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
                 deckItemVisualProvider.Initialize();
             }
         }
 
-        public DeckItemVisual RentItemVisual(DeckId deckId)
+        public DeckItemVisual RequestItemVisual(DeckId deckId, Vector2Int cellIndex = default)
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RentIfHasItemVisual(deckId, out var itemVisual))
+                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out var itemVisual))
                 {
                     return itemVisual;
                 }
@@ -42,7 +42,7 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.ReturnIfHasItemVisual(itemVisual))
+                if (deckItemVisualProvider.ReturnItemVisual(itemVisual))
                 {
                     return;
                 }
