@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5299075911979825411}
-  - component: {fileID: 8770374599845433748}
   - component: {fileID: 6395205563783229675}
   m_Layer: 0
   m_Name: DeckItemVisualWallTwoCornerLowerLeft
@@ -34,22 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &8770374599845433748
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92419127608998867}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.75, y: 2, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 2, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!114 &6395205563783229675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +52,7 @@ MonoBehaviour:
   displayOffset: {x: 0, y: 0, z: 0}
   rigidbody: {fileID: 0}
   isOnTheGround: 0
-  collider: {fileID: 0}
+  collider: {fileID: 5782577306556632450}
   uniqueId:
     _id: 0
     IdString: 
@@ -133,6 +116,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
+--- !u!1 &8248662120655375098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
+  m_PrefabInstance: {fileID: 9131131460322817963}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5782577306556632450
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8248662120655375098}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.65, y: 1, z: 0.65}
+  m_Center: {x: -0.175, y: 0.5, z: 0.175}
+--- !u!208 &5918444677180876863
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8248662120655375098}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.32500002, y: 0.5, z: 0.32500002}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.17500001, y: 0.5, z: 0.17500001}
+  m_TimeToStationary: 0.5
 --- !u!4 &8733309612512645184 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}

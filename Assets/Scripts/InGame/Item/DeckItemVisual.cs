@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Data.Common;
 using Deck.Commands;
 using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
-using Deck.Save.Data;
 using Deck.Services;
 using Deck.Services.CellSelectionService;
 using Deck.UI.InGame;
@@ -32,6 +30,7 @@ namespace Deck.Item
         [SerializeField] private new Collider collider;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
+        
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
 
