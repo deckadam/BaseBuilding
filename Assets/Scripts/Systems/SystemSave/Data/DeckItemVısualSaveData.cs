@@ -5,19 +5,20 @@ using UnityEngine;
 namespace Deck.Save.Data
 {
     [Serializable]
-    public class DeckItemVisualSaveDatas
+    public struct DeckItemVisualSaveDatas
     {
-        public List<DeckItemVisualSaveData> datas = new();
+        public List<DeckItemVisualSaveDataPair> saveDatas;
+
+        public DeckItemVisualSaveDatas(List<DeckItemVisualSaveDataPair> saveDatas)
+        {
+            this.saveDatas = saveDatas;
+        }
     }
 
     [Serializable]
-    public class DeckItemVisualSaveData
+    public struct DeckItemVisualSaveDataPair
     {
-        public int prefabId;
-        public int uniqueId;
-        public Vector3 position;
-        public Vector3 rotation;
-        public bool isOnTheGround;
-        public object additionalData;
+        public string typeName;
+        public string saveData;
     }
 }

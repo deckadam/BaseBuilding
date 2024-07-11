@@ -100,7 +100,11 @@ namespace Deck.Commands
         private void EquipItem(DeckDataItem itemData, Transform target)
         {
             _currentlyEquippedItemData = itemData;
-            _currentlyEquippedItem = Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId);
+            if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
+            {
+                DeckLogger.Error("Can't get item visual for " + itemData.Name);
+                return;
+            }
             _currentlyEquippedItem.transform.SetParent(target, true);
             _currentlyEquippedItem.transform.localPosition = _currentlyEquippedItem.LocalEquipPosition;
             _currentlyEquippedItem.transform.eulerAngles = _currentlyEquippedItem.LocalEquipRotation;

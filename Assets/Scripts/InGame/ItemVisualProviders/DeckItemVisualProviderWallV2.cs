@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Item;
-using Deck.Save.Data;
+using Deck.Save;
 using Deck.UI.InGame;
 using Deck.Utility;
 using Deck.Utility.Iterators;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Deck.ItemVisualProviders
@@ -45,27 +46,26 @@ namespace Deck.ItemVisualProviders
             var pos = itemVisual.transform.position.ToVector2Int();
             _wallCheckSet.Remove(pos);
 
-            ConnectWalls(pos, true);
+            ConnectWalls(pos, 0);
 
             return true;
         }
 
-        public override bool RequestItemVisual(DeckId id, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool alert = true)
+        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool alert = true)
         {
             _wallCheckSet.Add(cellIndex);
-            ConnectWalls(cellIndex, true);
+            ConnectWalls(cellIndex, 0);
             itemVisual = null;
-            return true;
+            return false;
         }
 
-        private void ConnectWalls(Vector2Int changePosition, bool recursive = false)
+        private void ConnectWalls(Vector2Int changePosition, int depth)
         {
             var checkList = new bool[4];
             var neighbours = changePosition.GetNeighbours();
 
-            if (recursive && _activeWalls.TryGetValue(changePosition, out var itemVisual))
+            if (depth < 2 && _activeWalls.TryGetValue(changePosition, out var itemVisual))
             {
-                Debug.LogError("returning");
                 var result = ReturnIfHasItemVisual(itemVisual);
                 Debug.LogError(result);
                 _activeWalls.Remove(changePosition);
@@ -77,9 +77,9 @@ namespace Deck.ItemVisualProviders
 
                 checkList[index] = _wallCheckSet.Contains(neighbour);
 
-                if (recursive && _wallCheckSet.Contains(neighbour))
+                if (depth < 1 && _wallCheckSet.Contains(neighbour))
                 {
-                    ConnectWalls(neighbour);
+                    ConnectWalls(neighbour, depth + 1);
                 }
             }
 
@@ -89,19 +89,18 @@ namespace Deck.ItemVisualProviders
             visualInstance.transform.position = changePosition.ToVector3();
         }
 
+
         private DeckItemVisual GetVisualToPlace(IReadOnlyList<bool> checkList)
         {
             var trueCount = 0;
             foreach (var b in checkList)
             {
-                Debug.LogError(b);
                 if (b)
                 {
                     trueCount++;
                 }
             }
 
-            Debug.LogError(trueCount);
             if (trueCount == 4)
             {
                 Debug.LogError("Four corner wall detected");
@@ -167,7 +166,7 @@ namespace Deck.ItemVisualProviders
                     Debug.LogError("Vertical");
                     return _visualDictionary[WallStyle.Vertical];
                 }
-                
+
                 if (checkList[2] && checkList[3])
                 {
                     Debug.LogError("Horizontal");
@@ -201,8 +200,35 @@ namespace Deck.ItemVisualProviders
             return wallItemVisualPrefabs.Any(item => item.wallVisual.PrefabId.Equals(itemVisual.PrefabId));
         }
 
+
+        protected override string OnSaveDataRequested()
+        {
+            return null;
+            var saveData = new SaveData
+            {
+                wallPositions = _activeWalls.Keys.ToArray()
+            };
+            return DeckSaveUtility.GetSerializedData(saveData);
+        }
+
+        protected override void OnLoadDataRequested(string value)
+        {
+            var saveData = DeckSaveUtility.GetDeserializedData<SaveData>(value);
+            _wallCheckSet.AddRange(saveData.wallPositions);
+            foreach (var wallPosition in saveData.wallPositions)
+            {
+                ConnectWalls(wallPosition, 0);
+            }
+        }
+
         [Serializable]
-        private class WallVisual
+        private struct SaveData
+        {
+            public Vector2Int[] wallPositions;
+        }
+
+        [Serializable]
+        private struct WallVisual
         {
             public WallStyle wallStyle;
             public DeckItemVisual wallVisual;

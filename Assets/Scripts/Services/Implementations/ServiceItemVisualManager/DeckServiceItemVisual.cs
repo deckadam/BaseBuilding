@@ -10,13 +10,11 @@ namespace Deck.ItemVisualProviders
     public class DeckServiceItemVisual : DeckServiceBase
     {
         private DeckItemVisualProviderBasic[] _itemVisualProviders;
-        private DiContainer _container;
 
         [Inject]
-        private void Inject(DeckItemVisualProviderBasic[] itemVisualProviders, DiContainer container)
+        private void Inject(DeckItemVisualProviderBasic[] itemVisualProviders)
         {
             _itemVisualProviders = itemVisualProviders;
-            _container = container;
 
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
@@ -24,18 +22,19 @@ namespace Deck.ItemVisualProviders
             }
         }
 
-        public DeckItemVisual RequestItemVisual(DeckId deckId, Vector2Int cellIndex = default)
+        public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default, bool isInternal = true)
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out var itemVisual))
+                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal))
                 {
-                    return itemVisual;
+                    Debug.LogError(itemVisual == null);
+                    return true;
                 }
             }
 
-            DeckLogger.Error("No item visual found for id " + deckId.ID);
-            return null;
+            itemVisual = null;
+            return false;
         }
 
         public void ReturnItemVisual(DeckItemVisual itemVisual)

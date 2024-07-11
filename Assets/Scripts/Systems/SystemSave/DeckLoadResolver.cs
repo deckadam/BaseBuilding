@@ -1,7 +1,10 @@
-﻿using Deck.Agent;
-using Deck.Agent.Chest;
+﻿using System.Linq;
+using Deck.ItemVisualProviders;
 using Deck.Save.Data;
+using Deck.UI.InGame;
+using Deck.Utility;
 using Deck.Utility.Logger;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.Save
@@ -9,11 +12,13 @@ namespace Deck.Save
     public class DeckLoadResolver
     {
         private DeckInstanceCreator _instanceCreator;
+        private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
         [Inject]
-        private void Inject(DeckAgentCore agentCoreFactory, DeckAgentChest agentChestFactory, DeckInstanceCreator instanceCreator)
+        private void Inject(DeckInstanceCreator instanceCreator, DeckItemVisualProviderBasic[] itemVisualProviders)
         {
             _instanceCreator = instanceCreator;
+            _itemVisualProviders = itemVisualProviders;
         }
 
         public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas, DeckItemVisualSaveDatas itemVisualDatas)
@@ -32,26 +37,23 @@ namespace Deck.Save
                     continue;
                 }
 
+
                 var agentInstance = _instanceCreator.CreateNewAgentInstance(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
                 agentInstance.LoadData(deckComponentHolderSaveData);
             }
 
-            foreach (var itemVisualData in itemVisualDatas.datas)
+
+            foreach (var deckItemVisualSaveData in itemVisualDatas.saveDatas)
             {
-                if (itemVisualData.prefabId == 0)
+                var provider = _itemVisualProviders.First(item => item.GetType().ToString() == deckItemVisualSaveData.typeName);
+
+                if (provider == null)
                 {
-                    DeckLogger.Component($"Item visual Id has not been set, skipping. {itemVisualData.GetType()}");
+                    DeckLogger.Error("No provider found for item visual data " + deckItemVisualSaveData.typeName);
                     continue;
                 }
-
-                if (itemVisualData.uniqueId == 0)
-                {
-                    DeckLogger.Component($"Item visual Id has not been set, skipping. {itemVisualData.prefabId}  {itemVisualData.GetType()}");
-                    continue;
-                }
-
-                var itemVisual = _instanceCreator.CreateNewItemVisualInstance(itemVisualData.prefabId, itemVisualData.uniqueId);
-                itemVisual.LoadData(itemVisualData);
+                
+                provider.LoadData(deckItemVisualSaveData.saveData);
             }
         }
     }

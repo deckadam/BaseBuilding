@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -48,6 +49,10 @@ namespace Deck.Utility.Class
             return Assembly.GetAssembly(typeof(T))
                 .GetTypes()
                 .Where(TheType => TheType.IsClass && !TheType.IsAbstract && TheType.IsSubclassOf(typeof(T)));
+        }
+        
+        public static Stack<T> Clone<T>(this Stack<T> stack) {
+            return new Stack<T>(new Stack<T>(stack));
         }
     }
 }

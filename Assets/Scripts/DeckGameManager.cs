@@ -3,6 +3,7 @@ using System.Linq;
 using Deck.Agent;
 using Deck.Commands;
 using Deck.Data.Item;
+using Deck.ItemVisualProviders;
 using Deck.Services.MapService;
 using Deck.MVC;
 using Deck.Save;
@@ -26,13 +27,15 @@ namespace Deck.UI
         private DiContainer _container;
         private DeckLoadResolver _loadResolver;
         private DeckAgentCore _coreAgentPrefab;
+        private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
         [Inject]
-        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentCore agentCorePrefab)
+        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentCore agentCorePrefab, DeckItemVisualProviderBasic[] itemVisualProviders)
         {
             _container = container;
             _loadResolver = loadResolver;
             _coreAgentPrefab = agentCorePrefab;
+            _itemVisualProviders = itemVisualProviders;
         }
 
         public async void CreateNewGame()
@@ -68,18 +71,20 @@ namespace Deck.UI
                 });
             }
 
-            var itemVisuals = Deck.GetService<DeckServiceFinder>().GetItemVisuals();
-            var itemVisualDatas = new DeckItemVisualSaveDatas();
-            foreach (var itemVisual in itemVisuals)
+            var itemVisualDatas = new DeckItemVisualSaveDatas(new List<DeckItemVisualSaveDataPair>());
+
+            foreach (var itemVisualProvider in _itemVisualProviders)
             {
-                itemVisualDatas.datas.Add(new DeckItemVisualSaveData()
+                var data = itemVisualProvider.GetSaveData();
+                if (data == null)
                 {
-                    prefabId = itemVisual.PrefabId.ID,
-                    uniqueId = itemVisual.UniqueId.ID,
-                    position = itemVisual.transform.position,
-                    rotation = itemVisual.transform.rotation.eulerAngles,
-                    isOnTheGround = itemVisual.IsOnTheGround,
-                    additionalData = itemVisual.GetAdditionalData()
+                    continue;
+                }
+
+                itemVisualDatas.saveDatas.Add(new DeckItemVisualSaveDataPair()
+                {
+                    typeName = itemVisualProvider.GetType().ToString(),
+                    saveData = itemVisualProvider.GetSaveData()
                 });
             }
 

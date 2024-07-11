@@ -22,7 +22,7 @@ namespace Deck.UI
 
         public void InitializeBuilding()
         {
-            _itemVisualInstance = Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId,selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId, out _itemVisualInstance, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
         }

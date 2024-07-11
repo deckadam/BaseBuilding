@@ -55,6 +55,7 @@ namespace Deck.Item
                 }
 
                 Debug.LogError(name + "   " + prefabId.ID);
+                Debug.LogError(name );
                 throw new Exception("No valid prefab id");
             }
         }
@@ -229,20 +230,11 @@ namespace Deck.Item
             rigidbody.AddForce(force, ForceMode.Impulse);
         }
 
-        public object GetAdditionalData()
+        public string GetAdditionalData()
         {
             return null;
         }
 
         public bool IsOnTheGround => isOnTheGround;
-
-        public void LoadData(DeckItemVisualSaveData data)
-        {
-            transform.position = data.position;
-            transform.rotation = Quaternion.Euler(data.rotation);
-            prefabId = new DeckId(data.prefabId);
-            uniqueId = new DeckId(data.uniqueId);
-            isOnTheGround = data.isOnTheGround;
-        }
     }
 }

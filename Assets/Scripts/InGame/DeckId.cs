@@ -26,6 +26,19 @@ namespace Deck.UI.InGame
             IdString = _id.ToString();
         }
 
+
+        public DeckId(string id)
+        {
+            // Debug.LogError("Initialize called " + id);
+            if (!int.TryParse(id, out var intId))
+            {
+                throw new Exception($"Invalid id {id}");
+            }
+
+            _id = intId;
+            IdString = intId.ToString();
+        }
+
         public DeckId(int id)
         {
             // Debug.LogError("Initialize called " + id);
