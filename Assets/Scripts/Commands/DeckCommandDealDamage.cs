@@ -83,13 +83,11 @@ namespace Deck.Commands
             var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(movementComponent, _to.GetAgent().transform, range, token);
             if (isCanceled)
             {
-                Debug.LogError("Canceled");
                 return false;
             }
 
             if (_to.IsDead)
             {
-                Debug.LogError("Dead");
                 return false;
             }
 

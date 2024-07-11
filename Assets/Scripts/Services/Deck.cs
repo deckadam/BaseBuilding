@@ -25,7 +25,7 @@ namespace Deck
                 var instance = Object.FindObjectOfType(typeRef) as DeckServiceBase;
                 if (instance == null)
                 {
-                    Debug.LogWarning(typeRef.Name + "  service type not instantiated in scene");
+                    DeckLogger.Warning(typeRef.Name + "  service type not instantiated in scene");
                     continue;
                 }
 

@@ -22,14 +22,12 @@ namespace Deck.UI.InGame
         private DeckId(bool justShupUp = false)
         {
             _id = Random.Range(10000000, 99999999);
-            // Debug.LogError("Initialize called " + _id);
             IdString = _id.ToString();
         }
 
 
         public DeckId(string id)
         {
-            // Debug.LogError("Initialize called " + id);
             if (!int.TryParse(id, out var intId))
             {
                 throw new Exception($"Invalid id {id}");
@@ -41,7 +39,6 @@ namespace Deck.UI.InGame
 
         public DeckId(int id)
         {
-            // Debug.LogError("Initialize called " + id);
             _id = id;
             IdString = _id.ToString();
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Deck.Utility.Logger;
+using UnityEngine;
 
 namespace Deck.Utility
 {
@@ -17,7 +18,7 @@ namespace Deck.Utility
 
                 if (Instance == null)
                 {
-                    Debug.LogWarning(typeof(T).Name + " not found in hierarchy creating an instance");
+                    DeckLogger.Warning(typeof(T).Name + " not found in hierarchy creating an instance");
                     Instance = new GameObject().AddComponent<T>();
                 }
 

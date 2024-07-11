@@ -28,7 +28,6 @@ namespace Deck.ItemVisualProviders
             {
                 if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal))
                 {
-                    Debug.LogError(itemVisual == null);
                     return true;
                 }
             }

@@ -30,7 +30,7 @@ namespace Deck.Item
         [SerializeField] private new Collider collider;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
-        
+
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
 
@@ -53,9 +53,7 @@ namespace Deck.Item
                     return prefabId;
                 }
 
-                Debug.LogError(name + "   " + prefabId.ID);
-                Debug.LogError(name );
-                throw new Exception("No valid prefab id");
+                throw new Exception("No valid prefab id " + name + " " + prefabId.ID);
             }
         }
 

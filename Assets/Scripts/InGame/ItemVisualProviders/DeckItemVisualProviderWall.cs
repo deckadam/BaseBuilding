@@ -28,7 +28,6 @@ namespace Deck.ItemVisualProviders
 
         protected override async void OnSpawned(DeckItemVisual itemVisual)
         {
-            Debug.LogError("On spawned");
             WallItemVisualParts? part = null;
             foreach (var t in wallItemVisualParts)
             {

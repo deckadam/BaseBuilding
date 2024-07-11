@@ -67,7 +67,6 @@ namespace Deck.ItemVisualProviders
             if (depth < 2 && _activeWalls.TryGetValue(changePosition, out var itemVisual))
             {
                 var result = ReturnIfHasItemVisual(itemVisual);
-                Debug.LogError(result);
                 _activeWalls.Remove(changePosition);
             }
 

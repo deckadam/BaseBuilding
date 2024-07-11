@@ -185,7 +185,6 @@ namespace Deck.Save
         private static void GetLastSaveFilePath_Editor()
         {
             var lastSaveFilePath = GetLastSaveFilePath();
-            Debug.LogError(lastSaveFilePath);
         }
 
         [MenuItem("Deck/Save/Create dummy save file")]

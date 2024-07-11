@@ -247,7 +247,6 @@ namespace Deck.InputHandling
             var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
             if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 100, 1))
             {
-                Debug.LogError("No ground hit");
                 return;
             }
 

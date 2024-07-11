@@ -46,7 +46,6 @@ namespace Deck.Services
             var temp = _uiImplementations[typeOfT];
             if (temp._isAppeared || temp.isAppearing)
             {
-                Debug.LogError("Huh");
                 return;
             }
 
