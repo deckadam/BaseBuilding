@@ -8,8 +8,12 @@ using Deck.Save.Data;
 using Deck.Services.MapService;
 using Deck.UI.InGame;
 using Deck.UI.Stats;
+using Deck.Utility.Logger;
 using Services.AgentFinder;
+using UnityEditor;
+#if UNITY_EDITOR
 using UnityEngine;
+#endif
 
 namespace Deck.Agent
 {
@@ -50,6 +54,35 @@ namespace Deck.Agent
         {
             components = GetComponents<DeckComponent>();
             collider = GetComponent<Collider>();
+
+#if UNITY_EDITOR
+            if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            {
+                return;
+            }
+#endif
+
+            foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
+            {
+                var agentComponent = agent as DeckAgent;
+
+                if (agentComponent == this)
+                {
+                    continue;
+                }
+
+                if (agentComponent.prefabId.Equals(prefabId))
+                {
+                    DeckLogger.Error("Duplicate prefab id " + prefabId.ID + " " + name + " " + agentComponent.name, gameObject);
+                }
+            }
+
+            if (int.TryParse(name[..1], out var _))
+            {
+                Debug.LogError("Reseting id " + name + " " + prefabId.ID);
+                prefabId.ResetId();
+                return;
+            }
 
             if (!prefabId.IsValid)
             {

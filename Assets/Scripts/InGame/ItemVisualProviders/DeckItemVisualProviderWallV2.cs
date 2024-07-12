@@ -6,6 +6,7 @@ using Deck.Save;
 using Deck.UI.InGame;
 using Deck.Utility;
 using Deck.Utility.Iterators;
+using Deck.Utility.Logger;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -102,7 +103,6 @@ namespace Deck.ItemVisualProviders
 
             if (trueCount == 4)
             {
-                Debug.LogError("Four corner wall detected");
                 return _visualDictionary[WallStyle.FourCorner];
             }
 
@@ -110,87 +110,75 @@ namespace Deck.ItemVisualProviders
             {
                 if (!checkList[0])
                 {
-                    Debug.LogError("Three corner left wall detected");
                     return _visualDictionary[WallStyle.ThreeCornerLeft];
                 }
 
                 if (!checkList[1])
                 {
-                    Debug.LogError("Three corner right wall detected");
                     return _visualDictionary[WallStyle.ThreeCornerRight];
                 }
 
                 if (!checkList[2])
                 {
-                    Debug.LogError("Three corner lower wall detected");
                     return _visualDictionary[WallStyle.ThreeCornerLower];
                 }
 
                 if (!checkList[3])
                 {
-                    Debug.LogError("Three corner upper wall detected");
                     return _visualDictionary[WallStyle.ThreeCornerUpper];
                 }
+
+                DeckLogger.Error("Huh!!!!");
             }
 
             if (trueCount == 2)
             {
                 if (checkList[0] && checkList[2])
                 {
-                    Debug.LogError("TwoCornerUpperLeft");
-
                     return _visualDictionary[WallStyle.TwoCornerUpperLeft];
                 }
 
                 if (checkList[0] && checkList[3])
                 {
-                    Debug.LogError("TwoCornerLowerLeft");
                     return _visualDictionary[WallStyle.TwoCornerLowerLeft];
                 }
 
                 if (checkList[1] && checkList[2])
                 {
-                    Debug.LogError("TwoCornerUpperRight");
                     return _visualDictionary[WallStyle.TwoCornerUpperRight];
                 }
 
                 if (checkList[1] && checkList[3])
                 {
-                    Debug.LogError("TwoCornerLowerRight");
                     return _visualDictionary[WallStyle.TwoCornerLowerRight];
                 }
 
                 if (checkList[0] && checkList[1])
                 {
-                    Debug.LogError("Vertical");
                     return _visualDictionary[WallStyle.Vertical];
                 }
 
                 if (checkList[2] && checkList[3])
                 {
-                    Debug.LogError("Horizontal");
                     return _visualDictionary[WallStyle.Horizontal];
                 }
 
-                Debug.LogError("Huh");
+                DeckLogger.Error("Huh!!!!");
             }
 
             if (trueCount == 1)
             {
                 if (checkList[0] || checkList[1])
                 {
-                    Debug.LogError("Vertical");
                     return _visualDictionary[WallStyle.Vertical];
                 }
 
                 if (checkList[2] || checkList[3])
                 {
-                    Debug.LogError("Horizontal");
                     return _visualDictionary[WallStyle.Horizontal];
                 }
             }
 
-            Debug.LogError("Empty wall detected");
             return _visualDictionary[WallStyle.Empty];
         }
 
@@ -202,7 +190,6 @@ namespace Deck.ItemVisualProviders
 
         protected override string OnSaveDataRequested()
         {
-            return null;
             var saveData = new SaveData
             {
                 wallPositions = _activeWalls.Keys.ToArray()

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using Deck.Agent;
 using Deck.Item;
 using Deck.UI.InGame;
+#if UNITY_EDITOR
+using UnityEditor.Callbacks;
+#endif
 using UnityEngine;
 using Zenject;
 
@@ -17,6 +20,25 @@ namespace Deck.Save.Data
         private Dictionary<int, DeckItemVisual> _itemVisualDictionary;
         private bool _initialized;
         private DiContainer _container;
+
+#if UNITY_EDITOR
+        [DidReloadScripts]
+        private static void OnScriptsReloaded()
+        {
+            var instanceCreator = Resources.Load<DeckInstanceCreator>("Data/Resolver/Deck Instance Creator");
+            instanceCreator.itemVisuals = new List<DeckItemVisual>();
+            foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
+            {
+                instanceCreator.itemVisuals.Add(itemVisual as DeckItemVisual);
+            }
+
+            instanceCreator.agents = new List<DeckAgent>();
+            foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
+            {
+                instanceCreator.agents.Add(agent as DeckAgent);
+            }
+        }
+#endif
 
         [Inject]
         private void Inject(DiContainer container)

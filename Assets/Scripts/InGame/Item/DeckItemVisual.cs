@@ -11,6 +11,9 @@ using Deck.Utility.Logger;
 using DG.Tweening;
 using Services.AgentFinder;
 using Unity.Collections;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -107,7 +110,34 @@ namespace Deck.Item
 
             collider = GetComponentInChildren<Collider>();
 
-            UniqueId.ResetId();
+#if UNITY_EDITOR
+            if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            {
+                return;
+            }
+#endif
+
+
+            foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
+            {
+                var itemVisualComponent = itemVisual as DeckItemVisual;
+
+                if (itemVisual == this)
+                {
+                    continue;
+                }
+
+                if (itemVisualComponent.prefabId.Equals(prefabId))
+                {
+                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + " " + name);
+                }
+            }
+
+            if (int.TryParse(name[^1].ToString(), out var _))
+            {
+                prefabId.ResetId();
+                return;
+            }
 
             if (!prefabId.IsValid)
             {
