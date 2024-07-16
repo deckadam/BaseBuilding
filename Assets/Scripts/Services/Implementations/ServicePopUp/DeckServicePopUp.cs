@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Agent;
 using Deck.UI;
 using Deck.UI.Pool;
 using Deck.Utility.Logger;
-using Deck.Utility.Poolable;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -80,7 +78,8 @@ namespace Deck.Services
                 return;
             }
 
-            Deck.GetService<DeckServiceUI>().GetUI<DeckMainMenu>().SwapAppearanceStatus();
+            var uiService = Deck.GetService<DeckServiceUI>();
+            uiService.CloseIfRequired();
         }
     }
 }

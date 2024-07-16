@@ -2,6 +2,7 @@
 using Deck.Data.UI;
 using Deck.Utility.Poolable;
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -26,10 +27,16 @@ namespace Deck.UI
             this.binderUI = binderUI;
         }
 
+        [Button]
         private void OnValidate()
         {
-            canvasGroup = GetComponent<CanvasGroup>();
-            rectTransform = GetComponent<RectTransform>();
+            canvasGroup ??= GetComponent<CanvasGroup>();
+            rectTransform ??= GetComponent<RectTransform>();
+            AfterValidate();
+        }
+
+        protected virtual void AfterValidate()
+        {
         }
 
         private void Awake()

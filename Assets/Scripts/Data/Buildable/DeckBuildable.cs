@@ -11,7 +11,9 @@ namespace Deck.Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private DeckItemRequirement[] requirements;
+        [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))]
+        private DeckItemRequirement[] requirements;
+
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
@@ -24,6 +26,12 @@ namespace Deck.Data.Buildable
         public DeckAgent Agent => agent;
         public string Name => name;
 
+        [Button]
+        private void OnValidate()
+        {
+            CollectSilouetteData();
+            CheckUniqueness();
+        }
 
         private bool CheckUniqueness()
         {
@@ -36,7 +44,6 @@ namespace Deck.Data.Buildable
             return distinctItemCount != requirements.Length;
         }
 
-        [Button]
         private void CollectSilouetteData()
         {
             if (agent == null)
@@ -49,9 +56,9 @@ namespace Deck.Data.Buildable
                 throw new Exception("Agent is not centered");
             }
 
+            Debug.LogError((itemVisual == null) + "  " + name);
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
             silouette = new SilouetteData[filters.Length];
-            Debug.LogError(filters.Length);
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];

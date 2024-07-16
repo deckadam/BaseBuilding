@@ -1,12 +1,25 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.EventManager;
+using Deck.Services;
+using UnityEngine;
 
 namespace Deck.UI.Building
 {
-    public class DeckBuildingUI : DeckUIBase
+    public class DeckBuildingUI : DeckUIBase, IDeckUIRequiresClose
     {
+        [SerializeField] private List<BuildingSet> buildingSets;
+        private BuildingSet _currentlyShownBuildingSet;
+
         public override void Initialize()
         {
+            foreach (var deckBuildingSet in buildingSets)
+            {
+                deckBuildingSet.button.Initialize(this, deckBuildingSet.page);
+                deckBuildingSet.page.Initialize(this, deckBuildingSet.button);
+            }
+
             DeckEventManager.Register<DeckOnGameSceneLoadedEvent>(OnEventAppear);
             DeckEventManager.Register<DeckOnMainMenuDisappearEvent>(OnEventAppear);
             DeckEventManager.Register<DeckOnMainMenuAppearedEvent>(OnEventDisappear);
@@ -28,6 +41,37 @@ namespace Deck.UI.Building
         private void OnEventDisappear(DeckEvent _)
         {
             Disappear().Forget();
+        }
+
+        public void OnBuildingSetButtonClicked(DeckBuildingButton button)
+        {
+            foreach (var deckBuildingSet in buildingSets)
+            {
+                if (deckBuildingSet.button == button)
+                {
+                    _currentlyShownBuildingSet = deckBuildingSet;
+                    deckBuildingSet.page.Appear().Forget();
+                }
+                else
+                {
+                    deckBuildingSet.page.Disappear().Forget();
+                }
+            }
+
+            Deck.GetService<DeckServiceUI>().PushToUIStack(this);
+        }
+
+        public override void OnCloseRequested()
+        {
+            _currentlyShownBuildingSet.page.Disappear().Forget();
+            _currentlyShownBuildingSet.button.Disappear().Forget();
+        }
+
+        [Serializable]
+        private struct BuildingSet
+        {
+            public DeckBuildingButton button;
+            public DeckBuildingPage page;
         }
     }
 }

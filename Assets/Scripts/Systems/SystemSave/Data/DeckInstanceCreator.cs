@@ -231,8 +231,6 @@ namespace Deck.Save.Data
             var agentPrefab = GetUIElementById(prefabId);
             var uiElement = _container.InstantiatePrefab(agentPrefab).GetComponent<DeckUIElement>();
 
-            uiElement.Initialize();
-
             return uiElement;
         }
     }

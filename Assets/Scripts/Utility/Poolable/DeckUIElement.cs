@@ -13,9 +13,9 @@ namespace Deck.Utility.Poolable
     public class DeckUIElement : MonoBehaviour
     {
         [SerializeField] private DeckId prefabId;
-        
+
         public RectTransform rectTransform;
-        
+
         private Transform _parent;
         private bool _isSpawned;
 
@@ -44,7 +44,7 @@ namespace Deck.Utility.Poolable
         private void OnValidate()
         {
             rectTransform ??= GetComponent<RectTransform>();
-            
+
 #if UNITY_EDITOR
             if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
@@ -78,10 +78,6 @@ namespace Deck.Utility.Poolable
             {
                 prefabId = DeckId.CreateNew();
             }
-        }
-
-        public void Initialize()
-        {
         }
 
         public void Despawned()

@@ -54,7 +54,6 @@ namespace Deck.ItemVisualProviders
                 return false;
             }
 
-            Debug.LogError("Request item visual");
             _wallCheckSet.Add(cellIndex);
             ConnectWalls(cellIndex, 0);
             itemVisual = null;
@@ -95,7 +94,6 @@ namespace Deck.ItemVisualProviders
                 }
             }
 
-            Debug.LogError(changePosition);
             var visualPrefab = GetVisualToPlace(checkList);
             RentIfHasItemVisual(visualPrefab.PrefabId, out var visualInstance, false);
             _activeWalls[changePosition] = visualInstance;
@@ -105,14 +103,7 @@ namespace Deck.ItemVisualProviders
 
         private DeckItemVisual GetVisualToPlace(IReadOnlyList<bool> checkList)
         {
-            var trueCount = 0;
-            foreach (var b in checkList)
-            {
-                if (b)
-                {
-                    trueCount++;
-                }
-            }
+            var trueCount = checkList.Count(b => b);
 
             if (trueCount == 4)
             {
