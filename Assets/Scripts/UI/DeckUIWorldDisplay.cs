@@ -1,12 +1,14 @@
-﻿using Deck.Services;
+﻿using System;
+using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.UI.Health;
+using Deck.Utility.Logger;
 using UnityEngine;
 using Deck.Utility.Poolable;
 
 namespace Deck.UI
 {
-    public class DeckUIWorldDisplay : DeckPoolable
+    public class DeckUIWorldDisplay : DeckUIElement
     {
         [SerializeField] protected Transform target;
         protected Camera mainCamera;
@@ -34,24 +36,27 @@ namespace Deck.UI
             positionOffset = offset;
         }
 
-        protected override void Despawned()
+        protected override void OnDespawned()
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
         }
 
-        protected override void Spawned()
+        protected override void OnSpawned()
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
         }
 
         private void LateUpdate()
         {
-            if (target == null || !target.gameObject || mainCamera == null || !mainCamera.gameObject)
+            try
             {
-                Despawn();
+                rect.position = mainCamera.WorldToScreenPoint(target.transform.position + positionOffset);
             }
-
-            rect.position = mainCamera.WorldToScreenPoint(target.transform.position + positionOffset);
+            catch (Exception e)
+            {
+                DeckLogger.Inform("Agent system is not working properly. Please check the agent system.");
+                uiPool.Return(this);
+            }
         }
     }
 }

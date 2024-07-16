@@ -1,19 +1,17 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using System;
 using Deck.Commands;
 using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
-using Deck.Services;
 using Deck.Services.CellSelectionService;
 using Deck.UI.InGame;
-using Deck.UI.Item;
 using Deck.Utility.Logger;
 using DG.Tweening;
 using Services.AgentFinder;
 using Unity.Collections;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -38,8 +36,6 @@ namespace Deck.Item
         public Vector3 LocalEquipRotation => localEquipRotation;
 
         private DeckBinderGeneral.DeckGeneralData _generalData;
-        private DeckFactoryProviderUI _factoryProvider;
-        private DeckUIItemDisplayer _display;
         private bool _hasDropped;
         private bool _hasInitialized;
         public void SetItem(DeckDataItem item) => bindedItem = item;
@@ -61,9 +57,8 @@ namespace Deck.Item
         }
 
         [Inject]
-        private void Inject(DeckFactoryProviderUI factoryProvider, DeckBinderGeneral.DeckGeneralData generalDataData)
+        private void Inject(DeckBinderGeneral.DeckGeneralData generalDataData)
         {
-            _factoryProvider = factoryProvider;
             _generalData = generalDataData;
         }
 
@@ -122,14 +117,14 @@ namespace Deck.Item
             {
                 var itemVisualComponent = itemVisual as DeckItemVisual;
 
-                if (itemVisual == this)
+                if (itemVisualComponent.name == name)
                 {
                     continue;
                 }
 
                 if (itemVisualComponent.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + " " + name);
+                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + " " + name + itemVisualComponent.name);
                 }
             }
 
@@ -167,11 +162,6 @@ namespace Deck.Item
                 transform.position = temp;
             }).SetEase(_generalData.ItemCollectingFlyAnimation.Ease).AsyncWaitForCompletion();
 
-            if (_display != null)
-            {
-                _display.Despawn();
-            }
-
             Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(this);
             _hasDropped = false;
         }
@@ -188,11 +178,6 @@ namespace Deck.Item
             {
                 return;
             }
-
-            _display = _factoryProvider.GetFactory<DeckUIItemDisplayer, DeckUIItemDisplayer.Factory>().Create();
-            _display.SetTarget(transform);
-            _display.SetData(bindedItem, CreatePickUpCommand);
-            _display.SetPositionOffset(displayOffset);
 
             _hasDropped = true;
             isOnTheGround = true;
@@ -232,11 +217,6 @@ namespace Deck.Item
 
         public void OnEquip()
         {
-            if (_display != null)
-            {
-                _display.Despawn();
-            }
-
             if (!isStatic)
             {
                 rigidbody.isKinematic = true;

@@ -35,9 +35,5 @@ namespace Deck.UI.Item
         {
             _onClick?.Invoke();
         }
-
-        public class Factory : PlaceholderFactory<DeckUIItemDisplayer>
-        {
-        }
     }
 }

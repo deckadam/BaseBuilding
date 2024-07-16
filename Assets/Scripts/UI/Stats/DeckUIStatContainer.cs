@@ -1,52 +1,48 @@
+using System;
 using System.Collections.Generic;
+using Deck.UI.Pool;
 using Deck.Utility.Poolable;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.UI.Stats
 {
-    public class DeckUIStatContainer : DeckPoolable
+    public class DeckUIStatContainer : DeckUIElement
     {
-        private DeckUIStatElement.Factory _statElementFactory;
+        [SerializeField] private DeckUIStatElement _statElementPrefab;
+        private DeckUIPool _uiPool;
         private List<DeckUIStatElement> _activeElements;
-        
-        
+
+
         [Inject]
-        private void Inject(DeckUIStatElement.Factory statElementFactory)
+        private void Inject(DeckUIPool uiPool)
         {
-            _statElementFactory = statElementFactory;
+            _uiPool = uiPool;
             _activeElements = new List<DeckUIStatElement>();
         }
 
         public void SetStats(DeckStat[] stats)
         {
-            foreach (var deckUIStatElement in _activeElements)
-            {
-                deckUIStatElement.Despawn();
-            }
-            
-            _activeElements.Clear();
+            ClearStatElements();
 
             foreach (var stat in stats)
             {
-                var statElement = _statElementFactory.Create();
+                var statElement = _uiPool.Rent<DeckUIStatElement>(_statElementPrefab.PrefabId);
                 statElement.SetStat(stat);
                 statElement.transform.SetParent(transform);
                 _activeElements.Add(statElement);
             }
         }
 
-        protected override void Despawned()
+        private void ClearStatElements()
         {
-            foreach (var deckUIStatElement in _activeElements)
-            {
-                deckUIStatElement.Despawn();
-            }
-            
+            _uiPool.Return(_activeElements);
             _activeElements.Clear();
         }
 
-        public class Factory : PlaceholderFactory<DeckUIStatContainer>
+        protected override void OnDespawned()
         {
+            ClearStatElements();
         }
     }
 }

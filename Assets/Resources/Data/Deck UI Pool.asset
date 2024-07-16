@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b49e67f866c64c53bde0d455e64e5de2, type: 3}
+  m_Name: Deck UI Pool
+  m_EditorClassIdentifier: 
+  uiElements:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 247278068047595257, guid: b8951a37592bdd94abb2206d0aea5035, type: 3}
+  - {fileID: 247278067180706307, guid: b8951a37592bdd94abb2206d0aea5035, type: 3}
+  - {fileID: 2723310245254155678, guid: 4bbb9be0973a742438360145ff1cbdba, type: 3}
+  - {fileID: 2723310244387402592, guid: 4bbb9be0973a742438360145ff1cbdba, type: 3}
+  - {fileID: 1245273441074704364, guid: 312d972a37c5a264cab5311154999da7, type: 3}
+  - {fileID: 1164016999914887788, guid: 531f81a2de536514db62578b29c6937a, type: 3}
+  - {fileID: 8084667271872032341, guid: 919ca2ecdd5515f46a1fc511ee538610, type: 3}
+  - {fileID: 4610122870488080173, guid: 8dc7e0c4d823cba4bac4e2f37c124a52, type: 3}
+  - {fileID: 7992348406185406158, guid: 524e3c986bd1ca447863e30d3c25459a, type: 3}
+  - {fileID: 2567935391902249751, guid: ae04ee79bcdab08408cec2e659aa41b9, type: 3}
+  - {fileID: 4404796017030528476, guid: 5dad9374731c09947894160b14166603, type: 3}
+  - {fileID: 905410879313077160, guid: d3eb427e777b018409173d5a484ff695, type: 3}
+  - {fileID: 6518674741442962127, guid: 6194370f68e4bfd4b9c7a9b4a9e52c6a, type: 3}
+  - {fileID: 3570150931093313685, guid: 6194370f68e4bfd4b9c7a9b4a9e52c6a, type: 3}
+  - {fileID: 298883552483655361, guid: 524e3c986bd1ca447863e30d3c25459a, type: 3}
+  - {fileID: 832943731794504173, guid: 524e3c986bd1ca447863e30d3c25459a, type: 3}
+  - {fileID: 7320391495939164608, guid: 7f4b14da46bd8b443a362dee05544b15, type: 3}
+  - {fileID: 8158672690522780417, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+  - {fileID: 896419519321683057, guid: b9d91e490e2b986488e1bd0c97fcdead, type: 3}

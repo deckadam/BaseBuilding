@@ -6,7 +6,6 @@ using Deck.UI.Inventory;
 using Deck.UI.SaveListingMenu.Events;
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace Deck.UI.SaveListingMenu
 {
@@ -14,14 +13,8 @@ namespace Deck.UI.SaveListingMenu
     {
         [SerializeField] private RectTransform scrollParent;
         [SerializeField] private GridLayoutGroup gridLayoutGroup;
-        private DeckSaveDisplayer.Factory _saveDisplayerFactory;
         private List<DeckSaveDisplayer> _activeDisplayers = new();
 
-        [Inject]
-        private void Inject(DeckSaveDisplayer.Factory saveDisplayerFactory)
-        {
-            _saveDisplayerFactory = saveDisplayerFactory;
-        }
 
         protected override void OnPreAppear()
         {
@@ -30,11 +23,12 @@ namespace Deck.UI.SaveListingMenu
 
         private void InitializeSaveDisplayers()
         {
-            if (_activeDisplayers != null && _activeDisplayers.Count != 0)
+            if (_activeDisplayers != null)
             {
-                _activeDisplayers.ForEach(item => item.ReturnToPool());
-                _activeDisplayers.Clear();
+                uiPool.Return(_activeDisplayers);
             }
+
+            _activeDisplayers.Clear();
 
 
             var saveFiles = DeckSaveSystem.GetAllSaves();
@@ -42,7 +36,7 @@ namespace Deck.UI.SaveListingMenu
 
             for (var index = 0; index < saveFiles.Length; index++)
             {
-                var newDisplayer = _saveDisplayerFactory.Create();
+                var newDisplayer = uiPool.Rent<DeckSaveDisplayer>();
                 newDisplayer.SetData(saveFiles[index]);
                 newDisplayer.transform.SetParent(scrollParent, false);
                 newDisplayer.transform.localPosition = Vector2.zero;
@@ -77,7 +71,7 @@ namespace Deck.UI.SaveListingMenu
                 return;
             }
 
-            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp, DeckConfirmationPopUp.Factory>();
+            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
             var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;

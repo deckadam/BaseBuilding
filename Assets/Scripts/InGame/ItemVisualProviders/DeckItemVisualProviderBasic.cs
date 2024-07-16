@@ -41,9 +41,14 @@ namespace Deck.ItemVisualProviders
             OnInitialize();
         }
 
-        public virtual bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool alert = true)
+        public virtual bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
         {
-            return RentIfHasItemVisual(prefabId, out itemVisual, alert);
+            return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
+        }
+        
+        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal = true)
+        {
+            return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
         }
 
         public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)

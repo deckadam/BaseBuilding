@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Deck.UI.Stats
 {
-    public class DeckUIStatElement : DeckPoolable
+    public class DeckUIStatElement : DeckUIElement
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI valueText;
@@ -16,10 +16,6 @@ namespace Deck.UI.Stats
         {
             nameText.text = stat.Name;
             valueText.text = stat.Value;
-        }
-
-        public class Factory : PlaceholderFactory<DeckUIStatElement>
-        {
         }
     }
 }

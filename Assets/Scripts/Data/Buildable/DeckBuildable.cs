@@ -2,6 +2,7 @@
 using System.Linq;
 using Deck.Agent;
 using Deck.Data.Item;
+using Deck.Item;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Deck.Data.Buildable
     {
         [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))] private DeckItemRequirement[] requirements;
         [SerializeField] private DeckAgent agent;
+        [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
         [SerializeField] private SilouetteData[] silouette;
         [SerializeField] private Vector2Int[] indices;
@@ -47,8 +49,9 @@ namespace Deck.Data.Buildable
                 throw new Exception("Agent is not centered");
             }
 
-            var filters = agent.GetComponentsInChildren<MeshFilter>();
+            var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
             silouette = new SilouetteData[filters.Length];
+            Debug.LogError(filters.Length);
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];

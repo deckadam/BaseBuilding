@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using Deck.ItemVisualProviders;
 using Deck.Save.Data;
-using Deck.UI.InGame;
-using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;

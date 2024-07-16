@@ -6,6 +6,7 @@ using Deck.Services;
 using Deck.Services.CellSelectionService;
 using Deck.UI.GamePlay;
 using Deck.ItemVisualProviders.Implementations.Inventory;
+using Deck.Utility.Poolable;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,13 +16,12 @@ using Zenject;
 
 namespace Deck.UI.Inventory
 {
-    public class DeckInventoryDisplayerCell : MonoBehaviour, IPoolable<IMemoryPool>, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+    public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image image;
         [FormerlySerializedAs("amount")] [SerializeField] private TextMeshProUGUI amountText;
         [SerializeField] private RectTransform visualParent;
 
-        private IMemoryPool _pool;
         private DeckInventoryPopUp _popup;
         private CancellationTokenSource _source;
         private DeckDataItem _item;
@@ -38,22 +38,11 @@ namespace Deck.UI.Inventory
             _popup = popup;
         }
 
-        public void Despawn()
-        {
-            _pool?.Despawn(this);
-        }
-
-        public void OnDespawned()
+        protected override void OnDespawned()
         {
             _source?.Cancel();
             _source?.Dispose();
             _source = null;
-            _pool = null;
-        }
-
-        public void OnSpawned(IMemoryPool pool)
-        {
-            _pool = pool;
         }
 
         private async void FollowCursor(CancellationTokenSource tokenSource)
@@ -78,10 +67,6 @@ namespace Deck.UI.Inventory
         public DeckInventoryPopUp GetPopUp() => _popup;
         public DeckDataItem GetItem() => _item;
         public int GetAmount() => _amount;
-        
-        public class Factory : PlaceholderFactory<DeckInventoryDisplayerCell>
-        {
-        }
 
         public void OnPointerDown(PointerEventData eventData)
         {

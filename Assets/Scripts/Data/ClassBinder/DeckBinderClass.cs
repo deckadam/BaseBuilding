@@ -9,7 +9,6 @@ namespace Deck.Installers
         public override void InstallBindings()
         {
             //Class references
-            Container.Bind<DeckFactoryProviderUI>().AsSingle();
             Container.Bind<DeckLoadResolver>().AsSingle();
         }
     }

@@ -498,9 +498,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f25e2be3b22f4b649ea72d22e565cc0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 45996629
+    IdString: 
+  rectTransform: {fileID: 2723310244387402623}
   canvasGroup: {fileID: 2723310244387402595}
   isAppearedOnStartUp: 0
-  rectTransform: {fileID: 2723310244387402623}
   _isAppeared: 0
   scrollParent: {fileID: 2723310245794592125}
   gridLayoutGroup: {fileID: 2723310245794592124}
@@ -1591,9 +1594,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3bb3a688af248789d5b1343594cc3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 92531510
+    IdString: 
+  rectTransform: {fileID: 2723310245254155679}
   canvasGroup: {fileID: 2723310245254155649}
   isAppearedOnStartUp: 1
-  rectTransform: {fileID: 2723310245254155679}
   _isAppeared: 0
   newGameButton: {fileID: 2723310245400854709}
   loadLastSaveButton: {fileID: 2723310245690132021}

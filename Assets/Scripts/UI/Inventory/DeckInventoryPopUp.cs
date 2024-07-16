@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 using Deck.Commands;
 using Deck.Data.Item;
-using Deck.Services;
-using Deck.UI.GamePlay;
 using Deck.ItemVisualProviders.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Zenject;
 
 namespace Deck.UI.Inventory
 {
@@ -14,16 +11,9 @@ namespace Deck.UI.Inventory
     {
         [SerializeField] private RectTransform cellParent;
 
-        private DeckInventoryDisplayerCell.Factory _inventoryCellFactory;
         private DeckServiceInventory _serviceInventory;
         private List<DeckInventoryDisplayerCell> _cells = new();
         private DeckComponentInventory _componentInventory;
-
-        [Inject]
-        private void Inject(DeckInventoryDisplayerCell.Factory factory)
-        {
-            _inventoryCellFactory = factory;
-        }
 
         public void SetTarget(DeckComponentInventory componentInventory)
         {
@@ -45,7 +35,7 @@ namespace Deck.UI.Inventory
 
             foreach (var deckItem in items)
             {
-                var newCell = _inventoryCellFactory.Create();
+                var newCell = uiPool.Rent<DeckInventoryDisplayerCell>();
                 newCell.transform.SetParent(cellParent, false);
                 newCell.Initialize(deckItem.Key, deckItem.Value, this);
                 newCell.gameObject.SetActive(true);
@@ -55,15 +45,11 @@ namespace Deck.UI.Inventory
 
         private void ClearCurrentCells()
         {
-            foreach (var cell in _cells)
-            {
-                cell.Despawn();
-            }
-
+            uiPool.Return(_cells);
             _cells.Clear();
         }
 
-        protected override void Despawned()
+        protected override void OnDespawned()
         {
             ClearCurrentCells();
             _componentInventory.RemoveListener(CreateNewCells);
@@ -71,7 +57,7 @@ namespace Deck.UI.Inventory
             _componentInventory = null;
         }
 
-        protected override void Spawned()
+        protected override void OnSpawned()
         {
             _serviceInventory = Deck.GetService<DeckServiceInventory>();
         }
@@ -87,10 +73,6 @@ namespace Deck.UI.Inventory
         public void OnPointerExit(PointerEventData eventData)
         {
             _serviceInventory.OnInventoryHoverEnd(this);
-        }
-
-        public class Factory : PlaceholderFactory<DeckInventoryPopUp>
-        {
         }
     }
 }

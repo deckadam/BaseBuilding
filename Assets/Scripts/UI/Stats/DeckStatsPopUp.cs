@@ -9,15 +9,14 @@ namespace Deck.UI.Stats
     public class DeckStatsPopUp : DeckPopUpBase
     {
         [SerializeField] private Transform _statsContainer;
-        private DeckUIStatContainer.Factory _statContainerFactory;
+        [SerializeField] private DeckUIStatContainer _statContainerPrefab;
+
         private Dictionary<DeckComponent, DeckUIStatContainer> _activeStats;
         private DeckAgent _agent;
 
         [Inject]
-        private void Inject(DeckUIStatContainer.Factory statContainerFactory)
+        private void Inject()
         {
-            _statContainerFactory = statContainerFactory;
-
             _activeStats = new Dictionary<DeckComponent, DeckUIStatContainer>();
         }
 
@@ -33,7 +32,7 @@ namespace Deck.UI.Stats
                     continue;
                 }
 
-                var statContainer = _statContainerFactory.Create();
+                var statContainer = uiPool.Rent<DeckUIStatContainer>(_statContainerPrefab.PrefabId);
                 statContainer.SetStats(stat.Stats);
                 statContainer.transform.SetParent(_statsContainer);
                 _activeStats[stat.Component] = statContainer;
@@ -42,7 +41,7 @@ namespace Deck.UI.Stats
             }
         }
 
-        protected override void Despawned()
+        protected override void OnDespawned()
         {
             foreach (var stat in _activeStats)
             {
@@ -65,15 +64,11 @@ namespace Deck.UI.Stats
             }
             else
             {
-                var statContainer = _statContainerFactory.Create();
+                var statContainer = uiPool.Rent<DeckUIStatContainer>(_statContainerPrefab.PrefabId);
                 statContainer.SetStats(statGroup.Stats);
                 statContainer.transform.SetParent(_statsContainer);
                 _activeStats[statGroup.Component] = statContainer;
             }
-        }
-
-        public class Factory : PlaceholderFactory<DeckStatsPopUp>
-        {
         }
     }
 }

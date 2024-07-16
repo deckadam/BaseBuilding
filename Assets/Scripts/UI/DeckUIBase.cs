@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Data.UI;
+using Deck.Utility.Poolable;
 using DG.Tweening;
 using UnityEngine;
 using Zenject;
@@ -7,14 +8,12 @@ using Zenject;
 namespace Deck.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class DeckUIBase : MonoBehaviour
+    public class DeckUIBase : DeckUIElement
     {
-        protected DiContainer container;
         protected DeckBinderUI binderUI;
 
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
-        [SerializeField] protected RectTransform rectTransform;
 
         // [ShowInInspector, ReadOnly] internal bool _isAppeared;
         [SerializeField] internal bool _isAppeared;
@@ -22,9 +21,8 @@ namespace Deck.UI
         internal bool isDisappearing;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderUI binderUI)
+        private void Inject(DeckBinderUI binderUI)
         {
-            this.container = container;
             this.binderUI = binderUI;
         }
 

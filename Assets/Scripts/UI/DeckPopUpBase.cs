@@ -1,15 +1,15 @@
-﻿using System;
-using Deck.Services;
+﻿using Deck.Services;
 using Deck.UI.GamePlay;
-using Deck.Utility.Logger;
+using Deck.UI.Pool;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Deck.Utility.Poolable;
+using Zenject;
 
 namespace Deck.UI
 {
     [RequireComponent(typeof(EventTrigger))]
-    public abstract class DeckPopUpBase : DeckPoolable
+    public abstract class DeckPopUpBase : DeckUIElement
     {
         [SerializeField] protected RectTransform rect;
 
@@ -62,7 +62,7 @@ namespace Deck.UI
 
         public void OnCloseRequested()
         {
-            Despawn();
+            uiPool.Return(this);
         }
 
         public virtual bool CanDrag => true;

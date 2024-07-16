@@ -34,7 +34,5 @@ namespace Deck.UI.Inventory
         }
 
         public override bool CanDrag => false;
-
-        public class Factory : PlaceholderFactory<DeckConfirmationPopUp> { }
     }
 }

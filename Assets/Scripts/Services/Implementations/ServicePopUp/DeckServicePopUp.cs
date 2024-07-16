@@ -1,23 +1,72 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Deck.Agent;
 using Deck.UI;
+using Deck.UI.Pool;
+using Deck.Utility.Logger;
+using Deck.Utility.Poolable;
+using Sirenix.OdinInspector;
+using UnityEditor;
+using UnityEngine;
 using Zenject;
 
 namespace Deck.Services
 {
     public class DeckServicePopUp : DeckServiceBase
     {
+        [SerializeField] private List<DeckPopUpBase> popUps;
+
+        private Dictionary<Type, DeckPopUpBase> _typeDictionary;
         private Stack<DeckPopUpBase> _popUpStack = new();
-        private DeckFactoryProviderUI _factoryProvider;
+        private DeckUIPool _uiPool;
+
+#if UNITY_EDITOR
+        [Button]
+        private void OnValidate()
+        {
+            popUps = new List<DeckPopUpBase>();
+            foreach (var popup in Resources.FindObjectsOfTypeAll(typeof(DeckPopUpBase)))
+            {
+                if (PrefabUtility.GetPrefabParent(popup) == null && !PrefabUtility.IsPartOfPrefabAsset(popup))
+                {
+                    continue;
+                }
+
+                var element = popup as DeckPopUpBase;
+
+                if (!string.IsNullOrEmpty(element.gameObject.scene.name))
+                {
+                    continue;
+                }
+
+                popUps.Add(popup as DeckPopUpBase);
+            }
+        }
+#endif
 
         [Inject]
-        private void Inject(DeckFactoryProviderUI factoryProvider)
+        private void Inject(DeckUIPool uiPool)
         {
-            _factoryProvider = factoryProvider;
+            _uiPool = uiPool;
         }
 
-        public T OpenPopUp<T, J>() where T : DeckPopUpBase where J : PlaceholderFactory<T>
+        public override void Initialize()
         {
-            var result = _factoryProvider.GetFactory<T, J>().Create();
+            _typeDictionary = new Dictionary<Type, DeckPopUpBase>();
+            foreach (var deckPopUpBase in popUps)
+            {
+                _typeDictionary[deckPopUpBase.GetType()] = deckPopUpBase;
+            }
+        }
+
+        public T OpenPopUp<T>() where T : DeckPopUpBase
+        {
+            if (!_typeDictionary.TryGetValue(typeof(T), out var popUp))
+            {
+                DeckLogger.Error("Prefab not found type: " + typeof(T).Name);
+            }
+
+            var result = _uiPool.Rent<T>(popUp.PrefabId);
             _popUpStack.Push(result);
             return result;
         }

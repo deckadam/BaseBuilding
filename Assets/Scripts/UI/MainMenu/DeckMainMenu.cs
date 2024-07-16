@@ -18,7 +18,6 @@ namespace Deck.UI
         [SerializeField] private Button loadLastSaveButton;
         [SerializeField] private Button loadSavesButton;
 
-
         public override void Initialize()
         {
             DeckEventManager.Register<OnLoadRequestedEvent>(OnLoadRequested);
@@ -41,6 +40,12 @@ namespace Deck.UI
             var result = DeckSaveSystem.HasValidSaveFile();
             loadLastSaveButton.interactable = result;
             loadLastSaveButton.interactable = result;
+            DeckOnMainMenuAppearedEvent.Create().Send();
+        }
+
+        protected override void OnPostDisappear()
+        {
+            DeckOnMainMenuDisappearEvent.Create().Send();
         }
 
         public async void OnNewGame()
@@ -48,6 +53,7 @@ namespace Deck.UI
             DeckLogger.Inform("New game starting");
 
             Deck.GetService<DeckGameManager>().CreateNewGame();
+            DeckOnGameSceneLoadedEvent.Create().Send();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -59,6 +65,7 @@ namespace Deck.UI
         {
             DeckSaveSystem.LoadLastSaveData();
             Deck.GetService<DeckGameManager>().LoadGame();
+            DeckOnGameSceneLoadedEvent.Create().Send();
 
             await UniTask.NextFrame();
             await Disappear();

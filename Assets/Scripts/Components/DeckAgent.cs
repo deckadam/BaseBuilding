@@ -66,7 +66,7 @@ namespace Deck.Agent
             {
                 var agentComponent = agent as DeckAgent;
 
-                if (agentComponent == this)
+                if (agentComponent.GetHashCode() == this.GetHashCode())
                 {
                     continue;
                 }

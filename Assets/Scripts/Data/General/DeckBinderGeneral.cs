@@ -3,6 +3,7 @@ using Deck.Agent;
 using Deck.Agent.Chest;
 using Deck.Animators;
 using Deck.ItemVisualProviders;
+using Deck.UI.Pool;
 using UnityEngine;
 using Zenject;
 
@@ -12,6 +13,9 @@ namespace Deck.Data.General
     public class DeckBinderGeneral : ScriptableObjectInstaller
     {
         [SerializeField] private DeckItemVisualProviderBasic[] itemVisualProviders;
+        [SerializeField] private DeckItemVisualProviderWall wallProvider;
+        [SerializeField] private DeckUIPool uiPool;
+
         [SerializeField] private DeckAgentCore agentCorePrefab;
         [SerializeField] private DeckAgentChest agentChestPrefab;
         [SerializeField] private DeckGeneralData deckGeneralData;
@@ -22,6 +26,11 @@ namespace Deck.Data.General
             Container.BindInstance(agentChestPrefab);
             Container.BindInstance(deckGeneralData);
             Container.BindInstance(itemVisualProviders);
+            Container.BindInstance(wallProvider);
+            Container.BindInstance(uiPool);
+
+            Container.QueueForInject(uiPool);
+
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {
                 Container.QueueForInject(deckItemVisualProviderBasic);

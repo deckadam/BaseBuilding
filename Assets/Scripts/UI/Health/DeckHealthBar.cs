@@ -18,9 +18,5 @@ namespace Deck.Utility.Health
             numberDisplay.text = value.ToString();
             fillBar.fillAmount = ratio;
         }
-
-        public class Factory : PlaceholderFactory<DeckHealthBar>
-        {
-        }
     }
 }

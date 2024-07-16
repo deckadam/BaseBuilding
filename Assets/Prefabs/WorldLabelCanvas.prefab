@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2388927960142445060}
   - component: {fileID: 2388927960142445063}
   - component: {fileID: 2388927960142445062}
-  - component: {fileID: 2388927960142445061}
   m_Layer: 5
   m_Name: WorldLabelUI
   m_TagString: Untagged
@@ -59,23 +58,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2388927960142445061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2388927960142445059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ecf8a3845f0428a97a8262aae4eb2c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 2388927960142445062}
-  isAppearedOnStartUp: 1
-  rectTransform: {fileID: 2388927960142445060}
-  _isAppeared: 0
-  _healthBars: []
 --- !u!1 &2388927961216497818
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,6 +70,8 @@ GameObject:
   - component: {fileID: 2388927961216497820}
   - component: {fileID: 2388927961216497819}
   - component: {fileID: 2388927961216497822}
+  - component: {fileID: 9071835479568499845}
+  - component: {fileID: 896419519321683057}
   m_Layer: 5
   m_Name: WorldLabelCanvas
   m_TagString: Untagged
@@ -177,3 +161,35 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 2147483703
+--- !u!225 &9071835479568499845
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2388927961216497818}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &896419519321683057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2388927961216497818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ecf8a3845f0428a97a8262aae4eb2c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId:
+    _id: 18032862
+    IdString: 
+  rectTransform: {fileID: 2388927961216497821}
+  canvasGroup: {fileID: 9071835479568499845}
+  isAppearedOnStartUp: 1
+  _isAppeared: 0
+  _healthBars: []

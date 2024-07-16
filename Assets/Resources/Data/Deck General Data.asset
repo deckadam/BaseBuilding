@@ -15,6 +15,9 @@ MonoBehaviour:
   itemVisualProviders:
   - {fileID: 11400000, guid: 3ca7721443fcec543a468f3e322649de, type: 2}
   - {fileID: 11400000, guid: 2f3dfdff3650c9b4c9d860e5059e2d18, type: 2}
+  - {fileID: 11400000, guid: 1a0bda4a77760d74a972462831dab50f, type: 2}
+  wallProvider: {fileID: 11400000, guid: 2f3dfdff3650c9b4c9d860e5059e2d18, type: 2}
+  uiPool: {fileID: 11400000, guid: f52e42bec88f98d42879989cbded92e0, type: 2}
   agentCorePrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   agentChestPrefab: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   deckGeneralData:

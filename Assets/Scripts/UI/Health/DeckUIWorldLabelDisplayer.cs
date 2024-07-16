@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
-using Deck.Utility.Health;
 using UnityEngine;
-using Zenject;
 
 namespace Deck.UI.Health
 {
     public class DeckUIWorldLabelDisplayer : DeckUIBase
     {
         [SerializeField] private List<DeckUIWorldDisplay> _healthBars = new();
-
-        private DeckHealthBar.Factory _healthBarFactory;
 
         public override void Initialize()
         {
@@ -21,12 +17,6 @@ namespace Deck.UI.Health
             {
                 _healthBars.Clear();
             }
-        }
-
-        [Inject]
-        private void Inject(DeckHealthBar.Factory healthBarFactory)
-        {
-            _healthBarFactory = healthBarFactory;
         }
 
         public void AddDisplay(DeckUIWorldDisplay healthBar)

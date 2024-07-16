@@ -26,7 +26,7 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal))
+                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual,isInternal: isInternal))
                 {
                     return true;
                 }

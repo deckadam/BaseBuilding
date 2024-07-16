@@ -5,6 +5,7 @@ using Deck.Agent;
 using Deck.Data.Component;
 using Deck.MVC;
 using Deck.Save;
+using Deck.UI.Pool;
 using Deck.UI.Stats;
 using Deck.Utility.Health;
 using Deck.Utility.Logger;
@@ -25,18 +26,18 @@ namespace Deck.Commands
         [ReadOnly, SerializeField] private int _currentHealth;
 
         private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
-        private DeckHealthBar.Factory _healthBarFactory;
         private DeckHealthBar _healthBar;
         private bool _hasHealthBar;
         private int _limitHealth;
+        private DeckUIPool _uiPool;
         public bool IsDead => _currentHealth <= 0;
 
         public event Action<DeckAgent> OnDamageTaken;
 
         [Inject]
-        private void Inject(DeckHealthBar.Factory healthBarFactory)
+        private void Inject(DeckUIPool uiPool)
         {
-            _healthBarFactory = healthBarFactory;
+            _uiPool = uiPool;
         }
 
         protected override void InternalPreInitialize()
@@ -93,7 +94,7 @@ namespace Deck.Commands
         {
             if (_hasHealthBar) return;
 
-            _healthBar = _healthBarFactory.Create();
+            _healthBar = _uiPool.Rent<DeckHealthBar>();
             _healthBar.SetPositionOffset(Vector3.up * 2f);
             _healthBar.SetTarget(GetAgent().transform);
             _hasHealthBar = true;
@@ -103,7 +104,7 @@ namespace Deck.Commands
         {
             if (_hasHealthBar)
             {
-                _healthBar.Despawn();
+                _uiPool.Return(_healthBar);
                 _hasHealthBar = false;
             }
         }

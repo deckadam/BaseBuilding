@@ -15,3 +15,4 @@ MonoBehaviour:
   buildables:
   - {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
   - {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  - {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}

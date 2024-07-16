@@ -252,6 +252,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b969cac9314cb7a6b02390557ece2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 43000360
+    IdString: 
+  rectTransform: {fileID: 0}
   rect: {fileID: 4610122870488080168}
   cellParent: {fileID: 3398868552594088923}
 --- !u!222 &2231052728833718567

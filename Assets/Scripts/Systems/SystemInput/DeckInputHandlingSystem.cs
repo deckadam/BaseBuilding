@@ -60,9 +60,10 @@ namespace Deck.InputHandling
 
         private void CheckForStatsPopUp()
         {
+            return;
             if (Input.GetKeyDown(KeyCode.C))
             {
-                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp, DeckStatsPopUp.Factory>();
+                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
                 newPopUp.Show();
                 newPopUp.ShowStats(DeckServiceSelection.currentSelection);
             }
@@ -76,6 +77,7 @@ namespace Deck.InputHandling
         private void CheckForBuilding()
         {
             CheckForBuilding2(KeyCode.V, "WoodAndStoneWall");
+            CheckForBuilding2(KeyCode.C, "Door");
             CheckForBuilding2(KeyCode.B, "Chest");
         }
 
@@ -160,7 +162,7 @@ namespace Deck.InputHandling
         {
             if (DeckServiceSelection.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
-                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckInventoryPopUp, DeckInventoryPopUp.Factory>();
+                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckInventoryPopUp>();
                 var inventoryComponent = DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>();
                 if (inventoryComponent == null)
                 {

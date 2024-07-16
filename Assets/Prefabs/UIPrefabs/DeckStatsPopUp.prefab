@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 6403237549020756579}
   - component: {fileID: 6403237549020756578}
   - component: {fileID: 4404796017030528476}
+  - component: {fileID: 4682833882474538372}
   m_Layer: 5
   m_Name: DeckStatsPopUp
   m_TagString: Untagged
@@ -237,8 +238,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481685817e844da7b155fde37d30de00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 86512876
+    IdString: 
+  rectTransform: {fileID: 0}
   rect: {fileID: 6403237549020756577}
   _statsContainer: {fileID: 3704600880377911370}
+  _statContainerPrefab: {fileID: 0}
+--- !u!114 &4682833882474538372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6403237549020756576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates: []
 --- !u!1 &6447567533977020497
 GameObject:
   m_ObjectHideFlags: 0
