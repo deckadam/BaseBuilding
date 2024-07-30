@@ -48,6 +48,12 @@ namespace Deck.ItemVisualProviders
 
         public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
         {
+            if (_wallCheckSet.Contains(cellIndex))
+            {
+                itemVisual = null;
+                return true;
+            }
+
             if (!IsWall(prefabId))
             {
                 itemVisual = null;

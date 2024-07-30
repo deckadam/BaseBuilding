@@ -13,6 +13,7 @@ using Deck.UI.Inventory;
 using Deck.UI.Stats;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
+using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -53,14 +54,12 @@ namespace Deck.InputHandling
             CheckForAttack();
             CheckForEscapeMenu();
             SaveCheck();
-            CheckForBuilding();
             CheckForCommandStackStatus();
             CheckForStatsPopUp();
         }
 
         private void CheckForStatsPopUp()
         {
-            return;
             if (Input.GetKeyDown(KeyCode.C))
             {
                 var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
@@ -72,45 +71,6 @@ namespace Deck.InputHandling
         private void CheckForCommandStackStatus()
         {
             IsInterruptingCommandModeActive = !Input.GetKey(KeyCode.LeftShift);
-        }
-
-        private void CheckForBuilding()
-        {
-            CheckForBuilding2(KeyCode.V, "WoodAndStoneWall");
-            CheckForBuilding2(KeyCode.C, "Door");
-            CheckForBuilding2(KeyCode.B, "Chest");
-        }
-
-        private void CheckForBuilding2(KeyCode keyCode, string id)
-        {
-            if (Input.GetKeyDown(keyCode))
-            {
-                Deck.GetService<DeckServiceBuilding>().StartSilouette(id);
-            }
-
-            if (Input.GetKey(keyCode))
-            {
-                Deck.GetService<DeckServiceBuilding>().UpdateSilouette(GetWorldPosition());
-            }
-
-            if (Input.GetKeyUp(keyCode))
-            {
-                Deck.GetService<DeckServiceBuilding>().Build(GetWorldPosition());
-            }
-        }
-
-        private Vector3 GetWorldPosition()
-        {
-            var screenPosition = Input.mousePosition;
-            var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(screenPosition);
-            var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
-
-            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
-            {
-                return Vector3.zero;
-            }
-
-            return navMeshHit.position;
         }
 
         private void SaveCheck()
@@ -154,7 +114,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Deck.GetService<DeckServicePopUp>().CloseLastPopUp();
+                Deck.GetService<DeckServiceEscapable>().CloseEscapable();
             }
         }
 
@@ -257,12 +217,10 @@ namespace Deck.InputHandling
 
         private void RaycastToGround()
         {
-            var screenPosition = Input.mousePosition;
-            var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(screenPosition);
-            if (!Physics.Raycast(ray, out var hit, 100f, 1 << 6)) return;
-
-            var pos = hit.textureCoord;
-            DeckOnGroundPositionChangeEvent.Create(pos).Send();
+            if (Input.GetMouseButtonDown(0))
+            {
+                DeckEventOnLeftClick.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+            }
         }
     }
 }

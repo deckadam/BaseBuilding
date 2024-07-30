@@ -1,6 +1,5 @@
-﻿using Deck.Services;
-using UnityEngine;
-using Zenject;
+﻿using UnityEngine;
+using UnityEngine.AI;
 
 namespace Deck.Services.CameraService
 {
@@ -9,6 +8,20 @@ namespace Deck.Services.CameraService
         private BoxCollider _generatedCollider;
 
         private Camera _camera;
+
+        public Vector3 GetCursorWorldPosition()
+        {
+            var screenPosition = Input.mousePosition;
+            var ray = _camera.ScreenPointToRay(screenPosition);
+            var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
+
+            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
+            {
+                return Vector3.zero;
+            }
+
+            return navMeshHit.position;
+        }
 
         public override void Initialize()
         {

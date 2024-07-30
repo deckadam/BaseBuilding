@@ -10,29 +10,11 @@ namespace Deck.Services
     public class DeckServiceUI : DeckServiceBase
     {
         private Dictionary<Type, DeckUIBase> _uiImplementations = new();
-        private Stack<IDeckUIRequiresClose> _uiStack = new();
 
         public T GetUI<T>() where T : DeckUIBase
         {
             var typeOfT = typeof(T);
             return (T)_uiImplementations[typeOfT];
-        }
-
-        public void PushToUIStack(IDeckUIRequiresClose ui)
-        {
-            _uiStack.Push(ui);
-        }
-
-        public void CloseIfRequired()
-        {
-            if (_uiStack.Count == 0)
-            {
-                GetUI<DeckMainMenu>().SwapAppearanceStatus();
-                return;
-            }
-
-            var ui = _uiStack.Pop();
-            ui.OnCloseRequested();
         }
 
         public async void SwapStatus<T>() where T : DeckUIBase

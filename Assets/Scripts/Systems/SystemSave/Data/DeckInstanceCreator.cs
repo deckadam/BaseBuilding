@@ -4,12 +4,12 @@ using Deck.Item;
 using Deck.UI.InGame;
 using Deck.Utility.Poolable;
 using Sirenix.OdinInspector;
+using UnityEngine;
+using Zenject;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Callbacks;
 #endif
-using UnityEngine;
-using Zenject;
 
 namespace Deck.Save.Data
 {
@@ -213,6 +213,7 @@ namespace Deck.Save.Data
         {
             var itemVisualPrefab = GetItemVisualById(prefabId);
             var itemVisualInstance = _container.InstantiatePrefab(itemVisualPrefab).GetComponent<DeckItemVisual>();
+            itemVisualInstance.gameObject.SetActive(false);
             if (uniqueId == 0)
             {
                 itemVisualInstance.SetNewUniqueId();

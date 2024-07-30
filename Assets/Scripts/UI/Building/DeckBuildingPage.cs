@@ -37,9 +37,22 @@ namespace Deck.UI.Building
 
         public async UniTask Disappear()
         {
+            OnDisappearStart();
             canvasGroup.interactable = false;
             await canvasGroup.DOFade(0f, appearDuration).SetEase(ease).AsyncWaitForCompletion();
             gameObject.SetActive(false);
+            OnDisappearEnd();
+        }
+
+        protected virtual void OnDisappearStart()
+        {
+            
+        }
+        
+        
+        protected virtual void OnDisappearEnd()
+        {
+            
         }
     }
 }

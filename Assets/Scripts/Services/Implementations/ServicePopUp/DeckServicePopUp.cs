@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Deck.UI;
 using Deck.UI.Pool;
 using Deck.Utility.Logger;
+using Services.Implementations.Escapable;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,6 @@ namespace Deck.Services
         [SerializeField] private List<DeckPopUpBase> popUps;
 
         private Dictionary<Type, DeckPopUpBase> _typeDictionary;
-        private Stack<DeckPopUpBase> _popUpStack = new();
         private DeckUIPool _uiPool;
 
 #if UNITY_EDITOR
@@ -65,21 +65,7 @@ namespace Deck.Services
             }
 
             var result = _uiPool.Rent<T>(popUp.PrefabId);
-            _popUpStack.Push(result);
             return result;
-        }
-
-        public void CloseLastPopUp()
-        {
-            if (_popUpStack.Count != 0)
-            {
-                var lastPopUp = _popUpStack.Pop();
-                lastPopUp.OnCloseRequested();
-                return;
-            }
-
-            var uiService = Deck.GetService<DeckServiceUI>();
-            uiService.CloseIfRequired();
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace Deck.Services
 {
-    public interface IDeckUIRequiresClose
+    public interface IDeckEscapable
     {
         void OnCloseRequested();
     }

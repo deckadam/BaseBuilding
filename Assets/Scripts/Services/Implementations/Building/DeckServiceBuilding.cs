@@ -72,6 +72,11 @@ namespace Deck.Services.Building
                 return;
             }
 
+            StartSilouette(buildable);
+        }
+
+        public void StartSilouette(DeckBuildable buildable)
+        {
             _activeBuildable = buildable;
 
             var silouetteData = _activeBuildable.Silouette;
@@ -120,7 +125,6 @@ namespace Deck.Services.Building
             }
 
             var cellPosition = position.ToVector3Int();
-            StopSilouette();
             if (!CheckIfAgentBuildableInArea(_activeBuildable, position.ToVector2Int()))
             {
                 DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
@@ -142,8 +146,10 @@ namespace Deck.Services.Building
             SetCellOccupied(cellPosition, _activeBuildable.Indices, newBuilding);
         }
 
-        private void StopSilouette()
+        public void Clear()
         {
+            _activeBuildable = null;
+            
             foreach (var meshFilter in _filters)
             {
                 Destroy(meshFilter.gameObject);

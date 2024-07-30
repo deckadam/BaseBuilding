@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.EventManager;
 using Deck.Services;
+using Services.Implementations.Escapable;
 using UnityEngine;
 
 namespace Deck.UI.Building
 {
-    public class DeckBuildingUI : DeckUIBase, IDeckUIRequiresClose
+    public class DeckBuildingUI : DeckUIBase, IDeckEscapable
     {
         [SerializeField] private List<BuildingSet> buildingSets;
         private BuildingSet _currentlyShownBuildingSet;
@@ -58,7 +59,7 @@ namespace Deck.UI.Building
                 }
             }
 
-            Deck.GetService<DeckServiceUI>().PushToUIStack(this);
+            Deck.GetService<DeckServiceEscapable>().RegisterEscapable(this);
         }
 
         public override void OnCloseRequested()

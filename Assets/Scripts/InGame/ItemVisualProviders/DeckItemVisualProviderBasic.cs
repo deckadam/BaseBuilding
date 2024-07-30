@@ -45,7 +45,7 @@ namespace Deck.ItemVisualProviders
         {
             return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
         }
-        
+
         public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal = true)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
@@ -116,6 +116,7 @@ namespace Deck.ItemVisualProviders
 
         private DeckItemVisual CreateItemVisual(int id)
         {
+            Debug.LogError("Create item visual  " + id);
             var newObject = _instanceCreator.CreateNewItemVisualInstance(id);
             newObject.transform.SetParent(_poolParent);
             var temp = newObject.GetComponent<DeckItemVisual>();

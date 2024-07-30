@@ -56,7 +56,6 @@ namespace Deck.Data.Buildable
                 throw new Exception("Agent is not centered");
             }
 
-            Debug.LogError((itemVisual == null) + "  " + name);
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
             silouette = new SilouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)

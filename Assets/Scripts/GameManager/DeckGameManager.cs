@@ -84,7 +84,7 @@ namespace Deck.UI
                 itemVisualDatas.saveDatas.Add(new DeckItemVisualSaveDataPair()
                 {
                     typeName = itemVisualProvider.GetType().ToString(),
-                    saveData = itemVisualProvider.GetSaveData()
+                    saveData = data
                 });
             }
 
