@@ -4,6 +4,9 @@ namespace Deck.Services
 {
     public class DeckServiceBase : MonoBehaviour
     {
+#if UNITY_EDITOR
+        public bool showGizmos = true;
+#endif
         private bool _hasWarmedUp;
 
         public void ControlledWarmUp(int index)

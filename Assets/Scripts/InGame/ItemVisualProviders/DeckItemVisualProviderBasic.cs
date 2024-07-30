@@ -116,7 +116,6 @@ namespace Deck.ItemVisualProviders
 
         private DeckItemVisual CreateItemVisual(int id)
         {
-            Debug.LogError("Create item visual  " + id);
             var newObject = _instanceCreator.CreateNewItemVisualInstance(id);
             newObject.transform.SetParent(_poolParent);
             var temp = newObject.GetComponent<DeckItemVisual>();

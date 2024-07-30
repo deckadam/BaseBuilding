@@ -221,6 +221,10 @@ namespace Deck.InputHandling
             {
                 DeckEventOnLeftClick.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
             }
+            else if (Input.GetMouseButton(0))
+            {
+                DeckEventOnMouseMove.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+            }
         }
     }
 }

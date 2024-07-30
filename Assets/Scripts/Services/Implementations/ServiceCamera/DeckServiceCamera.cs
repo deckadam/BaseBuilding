@@ -8,24 +8,25 @@ namespace Deck.Services.CameraService
         private BoxCollider _generatedCollider;
 
         private Camera _camera;
+        private Plane _groundPlane;
 
         public Vector3 GetCursorWorldPosition()
         {
             var screenPosition = Input.mousePosition;
             var ray = _camera.ScreenPointToRay(screenPosition);
-            var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
 
-            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 1, 1))
+            if (_groundPlane.Raycast(ray, out var distance))
             {
-                return Vector3.zero;
+                return ray.GetPoint(distance);
             }
 
-            return navMeshHit.position;
+            return Vector3.zero;
         }
 
         public override void Initialize()
         {
             _camera = Camera.main;
+            _groundPlane = new Plane(Vector3.up, Vector3.zero);
         }
 
         public Camera GetCamera()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Deck.Agent;
 using Deck.Commands;
 using Deck.Data.Buildable;
@@ -7,44 +6,36 @@ using Deck.Data.General;
 using Deck.Services.CellSelectionService;
 using Deck.Services.MapService;
 using Deck.UI;
+using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
-using Deck.Utility;
 using Zenject;
 
 namespace Deck.Services.Building
 {
     public class DeckServiceBuilding : DeckServiceBase
     {
-#if UNITY_EDITOR
-        public bool showGizmos = true;
-#endif
         private Dictionary<Vector2Int, DeckAgent> _grid = new();
-        private Dictionary<string, DeckBuildable> _buildableDictionary;
         private List<MeshRenderer> _renderers = new();
         private List<MeshFilter> _filters = new();
         private DeckDataBuilding _buildingData;
         private DeckBuildable _activeBuildable;
-        private GameObject _silouetteMaster;
-        private DeckBuildable[] _buildables;
+        private GameObject _silouetteParent;
         private DiContainer _container;
 
         [Inject]
         private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData, DiContainer container)
         {
-            _buildables = buildables;
             _buildingData = buildingData;
             _container = container;
         }
 
         private void Awake()
         {
-            _silouetteMaster = new GameObject();
-            _buildableDictionary = new Dictionary<string, DeckBuildable>();
-            foreach (var deckBuildable in _buildables)
+            _silouetteParent = new GameObject()
             {
-                _buildableDictionary[deckBuildable.Name] = deckBuildable;
-            }
+                name = "SilouetteParent"
+            };
         }
 
 #if UNITY_EDITOR
@@ -63,33 +54,21 @@ namespace Deck.Services.Building
         }
 #endif
 
-        public void StartSilouette(string id)
-        {
-            var buildable = GetBuildable(id);
-            if (buildable == null)
-            {
-                DeckLogger.Warning($"Buildable not found {id}");
-                return;
-            }
-
-            StartSilouette(buildable);
-        }
-
         public void StartSilouette(DeckBuildable buildable)
         {
             _activeBuildable = buildable;
 
             var silouetteData = _activeBuildable.Silouette;
-            for (var i = 0; i < silouetteData.Length; i++)
+
+            foreach (var data in silouetteData)
             {
-                var data = silouetteData[i];
                 var newObject = new GameObject();
                 var newFilter = newObject.AddComponent<MeshFilter>();
                 newFilter.mesh = data.GetMesh();
                 var newRenderer = newObject.AddComponent<MeshRenderer>();
                 newRenderer.sharedMaterial = _buildingData.GetAvailableMaterial();
 
-                newObject.transform.SetParent(_silouetteMaster.transform);
+                newObject.transform.SetParent(_silouetteParent.transform);
                 newObject.transform.localPosition = data.GetPosition();
                 newObject.transform.eulerAngles = data.GetRotation();
 
@@ -113,7 +92,7 @@ namespace Deck.Services.Building
                 meshRenderer.sharedMaterial = material;
             }
 
-            _silouetteMaster.transform.position = cellIndex.ToVector3();
+            _silouetteParent.transform.position = cellIndex.ToVector3();
         }
 
         public void Build(Vector3 position)
@@ -130,6 +109,8 @@ namespace Deck.Services.Building
                 DeckNotificationRequestedEvent.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
                 return;
             }
+
+            Debug.LogError(position + "   " + cellPosition);
 
             var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(_activeBuildable.Requeriements);
             if (!hasItems)
@@ -149,7 +130,7 @@ namespace Deck.Services.Building
         public void Clear()
         {
             _activeBuildable = null;
-            
+
             foreach (var meshFilter in _filters)
             {
                 Destroy(meshFilter.gameObject);
@@ -197,16 +178,6 @@ namespace Deck.Services.Building
             }
 
             return true;
-        }
-
-        private DeckBuildable GetBuildable(string name)
-        {
-            if (_buildableDictionary.TryGetValue(name, out var match))
-            {
-                return match;
-            }
-
-            return null;
         }
     }
 }

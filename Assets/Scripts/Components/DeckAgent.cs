@@ -210,7 +210,7 @@ namespace Deck.Agent
 
             if (!_hasSetComponents)
             {
-                throw new Exception("Components hasn't been set");
+                throw new Exception($"Components hasn't been set {name}");
             }
 
             _alreadyDeinitialized = true;

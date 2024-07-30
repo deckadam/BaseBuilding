@@ -37,26 +37,25 @@ namespace Deck.UI.Building.BuildingSets
 
         private void OnBuildableSelected(DeckBuildable buildable)
         {
-            Debug.LogError("OnBuildableSelected");
             if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
             {
                 _escapableBuildMode.OnCloseRequested();
             }
 
-            _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested);
+            _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
             _escapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;
             _buildingService.StartSilouette(buildable);
         }
 
-        private void OnBuildRequested(Vector3 obj)
+        private void OnBuildRequested(Vector3 position)
         {
             if (!_isBuildModeActive)
             {
                 return;
             }
 
-            _buildingService.Build(_cameraService.GetCursorWorldPosition());
+            _buildingService.Build(position);
         }
 
         private void Update()
