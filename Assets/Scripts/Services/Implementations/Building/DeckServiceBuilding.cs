@@ -110,8 +110,6 @@ namespace Deck.Services.Building
                 return;
             }
 
-            Debug.LogError(position + "   " + cellPosition);
-
             var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>().ReduceIfPossible(_activeBuildable.Requeriements);
             if (!hasItems)
             {
@@ -119,6 +117,8 @@ namespace Deck.Services.Building
                 return;
             }
 
+            Debug.LogError(_activeBuildable == null);
+            Debug.LogError(_activeBuildable.Agent == null);
             var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellPosition;

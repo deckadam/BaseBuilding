@@ -2,6 +2,7 @@
 using Deck.Services;
 using Deck.Services.MapService;
 using Deck.Utility.Logger;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,8 @@ namespace Deck.Services.Navigation
 {
     public class DeckServiceNavigation : DeckServiceBase
     {
+        [SerializeField] private NavMeshBuildSettings settings;
+
         public void GenerateNavigation(DeckBinderMap binderMap)
         {
             var map = DeckServiceScene.GetMap();
@@ -25,8 +28,16 @@ namespace Deck.Services.Navigation
             surface.layerMask = 1 << 6;
             surface.size = new Vector3(binderMap.GetSize().x, 100f, binderMap.GetSize().y);
 
+            var asd = surface.GetBuildSettings();
+            asd.minRegionArea = 0.1f;
             surface.BuildNavMesh();
             DeckLogger.Navigation("Finished generating the navigation", map.gameObject);
+        }
+
+        [Button]
+        public void Test()
+        {
+            settings.minRegionArea = 0.1f;
         }
     }
 }
