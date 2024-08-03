@@ -1,7 +1,5 @@
 using Deck.Data.Buildable;
-using Deck.Services;
 using Deck.Services.Building;
-using Deck.Services.CameraService;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -12,27 +10,35 @@ namespace Deck.UI.Building.BuildingSets
         [SerializeField] private DeckBuildable wallBuildable;
         [SerializeField] private DeckBuildable doorBuildable;
 
+        [SerializeField] private RectTransform container;
+
         private DeckEscapableBuildMode _escapableBuildMode;
-        private DeckServiceCamera _cameraService;
         private DeckServiceBuilding _buildingService;
         private DeckServiceEscapable _escapableService;
+        private DeckBuildableButton _wallButton;
+        private DeckBuildableButton _doorButton;
         private bool _isBuildModeActive;
+
+        private void OnDestroy()
+        {
+            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            {
+                _escapableBuildMode.OnCloseRequested();
+            }
+        }
 
         protected override void OnInitialize()
         {
-            _cameraService = Deck.GetService<DeckServiceCamera>();
             _escapableService = Deck.GetService<DeckServiceEscapable>();
             _buildingService = Deck.GetService<DeckServiceBuilding>();
-        }
 
-        public void OnBuildDoorClicked()
-        {
-            OnBuildableSelected(doorBuildable);
-        }
+            _wallButton = uiPool.Rent<DeckBuildableButton>();
+            _wallButton.Initialize(OnBuildableSelected, wallBuildable);
+            _wallButton.rectTransform.SetParent(container, false);
 
-        public void OnBuildWallClicked()
-        {
-            OnBuildableSelected(wallBuildable);
+            _doorButton = uiPool.Rent<DeckBuildableButton>();
+            _doorButton.Initialize(OnBuildableSelected, doorBuildable);
+            _doorButton.rectTransform.SetParent(container, false);
         }
 
         private void OnBuildableSelected(DeckBuildable buildable)
@@ -55,14 +61,14 @@ namespace Deck.UI.Building.BuildingSets
                 return;
             }
 
-            _buildingService.Build(position);
+            _buildingService.BuildInCell(position);
         }
 
         private void Update()
         {
             if (_isBuildModeActive)
             {
-                _buildingService.UpdateSilouette(_cameraService.GetCursorWorldPosition());
+                _buildingService.UpdateSilouette();
             }
         }
 

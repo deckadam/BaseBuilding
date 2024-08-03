@@ -8,14 +8,14 @@ namespace Deck.Agent
     {
         protected override void InternalRequestDeath()
         {
-            DeckOnCoreAgentDeathEvent.Create(this).Send();
+            DeckEventOnCoreAgentDeath.Create(this).Send();
             Destroy(gameObject);
         }
 
         private void OnEnable()
         {
             DeckLogger.Level("Adding player");
-            DeckOnCoreAgentCreatedEvent.Create(this).Send();
+            DeckEventOnCoreAgentCreated.Create(this).Send();
         }
     }
 }

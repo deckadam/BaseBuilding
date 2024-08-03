@@ -2,13 +2,13 @@
 
 namespace Deck.UI
 {
-    public class DeckNotificationRequestedEvent : DeckEvent
+    public class DeckEventNotificationRequested : DeckEvent
     {
         public string message { get; private set; }
 
-        public static DeckNotificationRequestedEvent Create(string message)
+        public static DeckEventNotificationRequested Create(string message)
         {
-            return new DeckNotificationRequestedEvent
+            return new DeckEventNotificationRequested
             {
                 message = message
             };

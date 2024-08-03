@@ -2,11 +2,11 @@
 
 namespace Deck.UI.Hotkey.Events
 {
-    public class DeckOnHotkeySelected : DeckEvent
+    public class DeckEventOnHotkeySelected : DeckEvent
     {
         public int index { get; private set; }
 
-        public static DeckOnHotkeySelected Create(int index)
+        public static DeckEventOnHotkeySelected Create(int index)
         {
             return new()
             {

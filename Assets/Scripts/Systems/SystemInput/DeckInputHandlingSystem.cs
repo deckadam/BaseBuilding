@@ -22,11 +22,9 @@ namespace Deck.InputHandling
 {
     public class DeckInputHandlingSystem : MonoBehaviour
     {
-        [SerializeField] private DeckDataDamage testDataDamage;
         public static bool IsInterruptingCommandModeActive;
         private float _lastPressTime;
         private DeckBinderItem _binderItem;
-        private DeckServiceSelection _serviceSelection;
         private DeckAgentCore _coreAgentPrefab;
         private DiContainer _container;
 
@@ -36,11 +34,6 @@ namespace Deck.InputHandling
             _container = container;
             _coreAgentPrefab = coreAgentPrefab;
             _binderItem = tempBinderItem;
-        }
-
-        private void Awake()
-        {
-            _serviceSelection = Deck.GetService<DeckServiceSelection>();
         }
 
         private void Update()
@@ -224,6 +217,11 @@ namespace Deck.InputHandling
             else if (Input.GetMouseButton(0))
             {
                 DeckEventOnMouseMove.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+            }
+
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                DeckEventMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
             }
         }
     }

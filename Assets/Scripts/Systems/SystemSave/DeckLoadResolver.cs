@@ -35,7 +35,6 @@ namespace Deck.Save
                     continue;
                 }
 
-
                 var agentInstance = _instanceCreator.CreateNewAgentInstance(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
                 agentInstance.LoadData(deckComponentHolderSaveData);
             }
@@ -50,7 +49,7 @@ namespace Deck.Save
                     DeckLogger.Error("No provider found for item visual data " + deckItemVisualSaveData.typeName);
                     continue;
                 }
-                
+
                 provider.LoadData(deckItemVisualSaveData.saveData);
             }
         }

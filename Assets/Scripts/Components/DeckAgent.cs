@@ -66,7 +66,12 @@ namespace Deck.Agent
             {
                 var agentComponent = agent as DeckAgent;
 
-                if (agentComponent.GetHashCode() == this.GetHashCode())
+                if (agentComponent.GetHashCode() == GetHashCode())
+                {
+                    continue;
+                }
+
+                if (agentComponent.name == name)
                 {
                     continue;
                 }
@@ -228,6 +233,7 @@ namespace Deck.Agent
 
         public List<DeckComponentSaveData> GetSaveData()
         {
+            Debug.LogError(name + " " + uniqueId.ID + " " + prefabId.ID + " " + components.Length);
             var result = new List<DeckComponentSaveData>();
             foreach (var deckComponent in components)
             {
@@ -250,6 +256,10 @@ namespace Deck.Agent
 
         public void LoadData(DeckComponentHolderSaveData data)
         {
+            transform.position = data.position;
+            transform.eulerAngles = data.rotation;
+            transform.localScale = data.scale;
+            
             Initialize();
             foreach (var saveData in data.componentDatas)
             {

@@ -1,5 +1,4 @@
 ﻿using Deck.Data.Map;
-using Deck.Services;
 using Deck.Services.MapService;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
@@ -27,15 +26,13 @@ namespace Deck.Services.Navigation
 
             surface.layerMask = 1 << 6;
             surface.size = new Vector3(binderMap.GetSize().x, 100f, binderMap.GetSize().y);
-
-            var asd = surface.GetBuildSettings();
-            asd.minRegionArea = 0.1f;
             surface.BuildNavMesh();
+
             DeckLogger.Navigation("Finished generating the navigation", map.gameObject);
         }
 
         [Button]
-        public void Test()
+        public void SetMinRegion()
         {
             settings.minRegionArea = 0.1f;
         }

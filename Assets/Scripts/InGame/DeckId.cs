@@ -25,7 +25,6 @@ namespace Deck.UI.InGame
             IdString = _id.ToString();
         }
 
-
         public DeckId(string id)
         {
             if (!int.TryParse(id, out var intId))

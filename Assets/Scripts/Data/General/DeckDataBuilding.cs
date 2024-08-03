@@ -6,6 +6,7 @@ namespace Deck.Data.General
     [CreateAssetMenu(menuName = "Deck/Binder/Building", fileName = "Deck Building Data")]
     public class DeckDataBuilding : ScriptableObjectInstaller
     {
+        [SerializeField] private float buildableRotationSpeed;
         [SerializeField] private Material availableMaterial;
         [SerializeField] private Material unavailableMaterial;
 
@@ -16,5 +17,6 @@ namespace Deck.Data.General
 
         public Material GetAvailableMaterial() => availableMaterial;
         public Material GetUnavailableMaterial() => unavailableMaterial;
+        public float GetBuildableRotationSpeed() => buildableRotationSpeed;
     }
 }

@@ -16,29 +16,29 @@ namespace Deck.Services.CellSelectionService
         public void Initialize()
         {
             _serviceSelection = Deck.GetService<DeckServiceSelection>();
-            DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
-            DeckEventManager.Register<DeckOnCoreAgentCreatedEvent>(OnCoreAgentCreated);
-            DeckEventManager.Register<DeckOnCoreAgentDeathEvent>(OnCoreAgentDeath);
+            DeckEventManager.Register<DeckEventOnAgentPossessed>(OnAgentPossessed);
+            DeckEventManager.Register<DeckEventOnCoreAgentCreated>(OnCoreAgentCreated);
+            DeckEventManager.Register<DeckEventOnCoreAgentDeath>(OnCoreAgentDeath);
         }
 
-        private void OnCoreAgentDeath(DeckOnCoreAgentDeathEvent obj)
+        private void OnCoreAgentDeath(DeckEventOnCoreAgentDeath obj)
         {
             _agents.Remove(obj.agent);
-            DeckOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
+            DeckEventOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
         }
 
-        private void OnCoreAgentCreated(DeckOnCoreAgentCreatedEvent obj)
+        private void OnCoreAgentCreated(DeckEventOnCoreAgentCreated obj)
         {
             _agents.Add(obj.agent);
-            DeckOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
+            DeckEventOnActiveHotkeyCountChanged.Create(_agents.Count).Send();
         }
 
         public void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckOnAgentPossessedEvent>(OnAgentPossessed);
+            DeckEventManager.Unregister<DeckEventOnAgentPossessed>(OnAgentPossessed);
         }
 
-        private void OnAgentPossessed(DeckOnAgentPossessedEvent obj)
+        private void OnAgentPossessed(DeckEventOnAgentPossessed obj)
         {
             var index = _agents.IndexOf(obj.agent);
             if (index == -1)
@@ -100,7 +100,7 @@ namespace Deck.Services.CellSelectionService
                 return;
             }
 
-            DeckOnHotkeySelected.Create(index).Send();
+            DeckEventOnHotkeySelected.Create(index).Send();
             var agentToPossess = _agents[index];
             _serviceSelection.OnPossession(agentToPossess);
         }

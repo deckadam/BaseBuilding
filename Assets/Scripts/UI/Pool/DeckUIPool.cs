@@ -55,6 +55,18 @@ namespace Deck.UI.Pool
             }
         }
 
+        public DeckUIElement Rent(DeckId prefabId)
+        {
+            if (_inPoolElements[prefabId].TryPop(out var poppedElement))
+            {
+                return poppedElement;
+            }
+
+            var newElement = _instanceCreator.CreateNewUIElement(prefabId.ID);
+            newElement.Spawned();
+            return newElement;
+        }
+
         public T Rent<T>(DeckId prefabId) where T : DeckUIElement
         {
             if (_inPoolElements[prefabId].TryPop(out var poppedElement))

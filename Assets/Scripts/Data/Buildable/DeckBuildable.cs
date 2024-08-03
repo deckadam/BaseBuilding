@@ -19,18 +19,41 @@ namespace Deck.Data.Buildable
         [SerializeField] private new string name;
         [SerializeField] private SilouetteData[] silouette;
         [SerializeField] private Vector2Int[] indices;
+        [SerializeField] private bool rotatable;
+        [SerializeField] private Sprite icon;
+        [SerializeField] private Vector3 extents;
 
         public DeckItemRequirement[] Requeriements => requirements;
         public SilouetteData[] Silouette => silouette;
         public Vector2Int[] Indices => indices;
+        public bool Rotatable => rotatable;
         public DeckAgent Agent => agent;
         public string Name => name;
+        public Sprite Icon => icon;
+        public Vector3 Extents => extents;
 
         [Button]
         private void OnValidate()
         {
             CollectSilouetteData();
+            CollectExtentsData();
             CheckUniqueness();
+        }
+
+        private void CollectExtentsData()
+        {
+            if (itemVisual == null)
+            {
+                throw new Exception("Item visual not set");
+            }
+
+            var bounds = new Bounds();
+            foreach (var renderer in itemVisual.GetComponentsInChildren<MeshRenderer>())
+            {
+                bounds.Encapsulate(renderer.bounds);
+            }
+            
+            extents = bounds.size;
         }
 
         private bool CheckUniqueness()
@@ -66,7 +89,7 @@ namespace Deck.Data.Buildable
         }
 
         [Serializable]
-        public class SilouetteData
+        public struct SilouetteData
         {
             [SerializeField] private Mesh mesh;
             [SerializeField] private Vector3 position;

@@ -692,6 +692,10 @@ PrefabInstance:
       propertyPath: showGizmos
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3631151458206779410, guid: 976e3fb7b654e2946b55505202ff95ad, type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3631151458642728504, guid: 976e3fb7b654e2946b55505202ff95ad, type: 3}
       propertyPath: m_Name
       value: Services
@@ -1031,6 +1035,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 379073717072854997, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950030522200197599, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950030522200197599, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950030522200197599, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950030522200197599, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5950030522200197599, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8158672689101588011, guid: 0afeffa5ed752dd4c9015282f36dc255, type: 3}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Commands;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Deck.Save.Data
@@ -16,6 +17,9 @@ namespace Deck.Save.Data
     {
         public int prefabId;
         [FormerlySerializedAs("agentGuid")] public int uniqueId;
+        public Vector3 position;
+        public Vector3 rotation;
+        public Vector3 scale;
         public List<DeckComponentSaveData> componentDatas;
     }
 }

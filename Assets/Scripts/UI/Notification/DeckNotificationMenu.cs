@@ -11,23 +11,23 @@ namespace Deck.UI
 
         public override void Initialize()
         {
-            DeckEventManager.Register<DeckNotificationRequestedEvent>(OnNotificationRequested);
+            DeckEventManager.Register<DeckEventNotificationRequested>(OnNotificationRequested);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckNotificationRequestedEvent>(OnNotificationRequested);
+            DeckEventManager.Unregister<DeckEventNotificationRequested>(OnNotificationRequested);
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.N))
             {
-                DeckNotificationRequestedEvent.Create("Test").Send();
+                DeckEventNotificationRequested.Create("Test").Send();
             }
         }
 
-        private void OnNotificationRequested(DeckNotificationRequestedEvent obj)
+        private void OnNotificationRequested(DeckEventNotificationRequested obj)
         {
             var newNotification = Instantiate(notificationPrefab, spawnPoint);
             newNotification.SetMessage(obj.message);

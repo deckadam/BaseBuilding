@@ -3,13 +3,13 @@ using Deck.EventManager;
 
 namespace Deck.Services
 {
-    public class DeckOnAgentPossessedEvent : DeckEvent
+    public class DeckEventOnAgentPossessed : DeckEvent
     {
         public DeckAgent agent { get; private set; }
 
-        public static DeckOnAgentPossessedEvent Crate(DeckAgent agent)
+        public static DeckEventOnAgentPossessed Crate(DeckAgent agent)
         {
-            return new DeckOnAgentPossessedEvent
+            return new DeckEventOnAgentPossessed
             {
                 agent = agent
             };

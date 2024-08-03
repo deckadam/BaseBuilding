@@ -2,6 +2,7 @@ using System;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Services;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Deck.UI.Building.BuildingSets
@@ -10,6 +11,7 @@ namespace Deck.UI.Building.BuildingSets
     {
         private Action _onEscape;
         private Action<Vector3> _onBuild;
+        private Action<Vector3, Quaternion> _onBuildWithRotation;
         private bool _isEscaped;
         private bool _canMoveBuild;
 

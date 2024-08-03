@@ -45,7 +45,7 @@ namespace Deck.Commands
 
             if (!inventoryComponent.TryGetItemWithTag(healthComponent.GetDamagingTags(), out var requiredItem))
             {
-                DeckNotificationRequestedEvent.Create("Can't damage this " + target.name).Send();
+                DeckEventNotificationRequested.Create("Can't damage this " + target.name).Send();
                 return;
             }
 

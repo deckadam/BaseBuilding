@@ -63,11 +63,15 @@ namespace Deck.UI
                     continue;
                 }
 
+                Debug.LogError(agent.PrefabId.ID);
                 agentDatas.datas.Add(new DeckComponentHolderSaveData
                 {
                     uniqueId = agent.GetUniqueId().ID,
                     componentDatas = agent.GetSaveData(),
-                    prefabId = agent.PrefabId.ID
+                    prefabId = agent.PrefabId.ID,
+                    position = agent.transform.position,
+                    rotation = agent.transform.eulerAngles,
+                    scale = agent.transform.localScale
                 });
             }
 

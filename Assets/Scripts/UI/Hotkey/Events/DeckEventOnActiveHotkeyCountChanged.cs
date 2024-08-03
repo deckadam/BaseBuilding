@@ -2,13 +2,13 @@
 
 namespace Deck.UI.Hotkey.Events
 {
-    public class DeckOnActiveHotkeyCountChanged : DeckEvent
+    public class DeckEventOnActiveHotkeyCountChanged : DeckEvent
     {
         public int count { get; private set; }
 
-        public static DeckOnActiveHotkeyCountChanged Create(int count)
+        public static DeckEventOnActiveHotkeyCountChanged Create(int count)
         {
-            return new DeckOnActiveHotkeyCountChanged()
+            return new DeckEventOnActiveHotkeyCountChanged()
             {
                 count = count
             };

@@ -14,6 +14,11 @@ namespace Deck.UI.Building
         protected DeckBuildingUI buildingUI;
         protected DeckBuildingButton button;
 
+        protected override void InternalOnValidate()
+        {
+            canvasGroup ??= GetComponent<CanvasGroup>();
+        }
+
         public void Initialize(DeckBuildingUI buildingUI, DeckBuildingButton button)
         {
             this.buildingUI = buildingUI;

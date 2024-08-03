@@ -28,9 +28,10 @@ namespace Deck.Save.Data
 
 #if UNITY_EDITOR
         [DidReloadScripts]
+        [Button]
         private static void OnScriptsReloaded()
         {
-            var instanceCreator = Resources.Load<DeckInstanceCreator>("Data/Resolver/Deck Instance Creator");
+            var instanceCreator = Resources.Load<DeckInstanceCreator>("Data/Deck Instance Creator");
             instanceCreator.itemVisuals = new List<DeckItemVisual>();
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
             {

@@ -36,7 +36,7 @@ namespace Deck.UI.SaveListingMenu
             var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
-            newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => OnLoadRequestedEvent.Create(_saveFile).Send(), null);
+            newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => DeckEventOnLoadRequested.Create(_saveFile).Send(), null);
         }
 
         public DeckSaveSystem.SaveFile GetSaveFile()

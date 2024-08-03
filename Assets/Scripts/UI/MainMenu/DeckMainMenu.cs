@@ -20,15 +20,15 @@ namespace Deck.UI
 
         public override void Initialize()
         {
-            DeckEventManager.Register<OnLoadRequestedEvent>(OnLoadRequested);
+            DeckEventManager.Register<DeckEventOnLoadRequested>(OnLoadRequested);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<OnLoadRequestedEvent>(OnLoadRequested);
+            DeckEventManager.Unregister<DeckEventOnLoadRequested>(OnLoadRequested);
         }
 
-        private void OnLoadRequested(OnLoadRequestedEvent obj)
+        private void OnLoadRequested(DeckEventOnLoadRequested obj)
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
             Deck.GetService<DeckGameManager>().LoadGame();
@@ -40,12 +40,12 @@ namespace Deck.UI
             var result = DeckSaveSystem.HasValidSaveFile();
             loadLastSaveButton.interactable = result;
             loadLastSaveButton.interactable = result;
-            DeckOnMainMenuAppearedEvent.Create().Send();
+            DeckEventOnMainMenuAppeared.Create().Send();
         }
 
         protected override void OnPostDisappear()
         {
-            DeckOnMainMenuDisappearEvent.Create().Send();
+            DeckEventOnMainMenuDisappear.Create().Send();
         }
 
         public async void OnNewGame()
@@ -53,7 +53,7 @@ namespace Deck.UI
             DeckLogger.Inform("New game starting");
 
             Deck.GetService<DeckGameManager>().CreateNewGame();
-            DeckOnGameSceneLoadedEvent.Create().Send();
+            DeckEventOnGameSceneLoaded.Create().Send();
 
             await UniTask.NextFrame();
             await Disappear();
@@ -65,7 +65,7 @@ namespace Deck.UI
         {
             DeckSaveSystem.LoadLastSaveData();
             Deck.GetService<DeckGameManager>().LoadGame();
-            DeckOnGameSceneLoadedEvent.Create().Send();
+            DeckEventOnGameSceneLoaded.Create().Send();
 
             await UniTask.NextFrame();
             await Disappear();

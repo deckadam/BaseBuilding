@@ -11,26 +11,33 @@ namespace Deck.UI.Building
     public class DeckBuildingUI : DeckUIBase, IDeckEscapable
     {
         [SerializeField] private List<BuildingSet> buildingSets;
-        private BuildingSet _currentlyShownBuildingSet;
+        [SerializeField] private RectTransform buttonsContainer;
+        [SerializeField] private RectTransform pagesContainer;
 
         public override void Initialize()
         {
-            foreach (var deckBuildingSet in buildingSets)
+            foreach (var buildingSet in buildingSets)
             {
-                deckBuildingSet.button.Initialize(this, deckBuildingSet.page);
-                deckBuildingSet.page.Initialize(this, deckBuildingSet.button);
+                var page = uiPool.Rent<DeckBuildingPage>(buildingSet.page.PrefabId);
+                page.rectTransform.SetParent(pagesContainer, false);
+                
+                var button = uiPool.Rent<DeckBuildingButton>(buildingSet.button.PrefabId);
+                button.rectTransform.SetParent(buttonsContainer, false);
+                
+                page.Initialize(this, buildingSet.button);
+                button.Initialize(this, page);
             }
 
-            DeckEventManager.Register<DeckOnGameSceneLoadedEvent>(OnEventAppear);
-            DeckEventManager.Register<DeckOnMainMenuDisappearEvent>(OnEventAppear);
-            DeckEventManager.Register<DeckOnMainMenuAppearedEvent>(OnEventDisappear);
+            DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnEventAppear);
+            DeckEventManager.Register<DeckEventOnMainMenuDisappear>(OnEventAppear);
+            DeckEventManager.Register<DeckEventOnMainMenuAppeared>(OnEventDisappear);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckOnGameSceneLoadedEvent>(OnEventAppear);
-            DeckEventManager.Unregister<DeckOnMainMenuDisappearEvent>(OnEventAppear);
-            DeckEventManager.Unregister<DeckOnMainMenuAppearedEvent>(OnEventDisappear);
+            DeckEventManager.Unregister<DeckEventOnGameSceneLoaded>(OnEventAppear);
+            DeckEventManager.Unregister<DeckEventOnMainMenuDisappear>(OnEventAppear);
+            DeckEventManager.Unregister<DeckEventOnMainMenuAppeared>(OnEventDisappear);
         }
 
         private void OnEventAppear(DeckEvent _)
@@ -38,34 +45,9 @@ namespace Deck.UI.Building
             Appear().Forget();
         }
 
-
         private void OnEventDisappear(DeckEvent _)
         {
             Disappear().Forget();
-        }
-
-        public void OnBuildingSetButtonClicked(DeckBuildingButton button)
-        {
-            foreach (var deckBuildingSet in buildingSets)
-            {
-                if (deckBuildingSet.button == button)
-                {
-                    _currentlyShownBuildingSet = deckBuildingSet;
-                    deckBuildingSet.page.Appear().Forget();
-                }
-                else
-                {
-                    deckBuildingSet.page.Disappear().Forget();
-                }
-            }
-
-            Deck.GetService<DeckServiceEscapable>().RegisterEscapable(this);
-        }
-
-        public override void OnCloseRequested()
-        {
-            _currentlyShownBuildingSet.page.Disappear().Forget();
-            _currentlyShownBuildingSet.button.Disappear().Forget();
         }
 
         [Serializable]

@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿using Deck.EventManager;
+using Deck.InputHandling.Events;
+using UnityEditor;
 
 namespace Deck.Utility.Editor
 {
@@ -7,6 +9,8 @@ namespace Deck.Utility.Editor
         [MenuItem("Deck/Clear Listeners")]
         private static void ClearListeners()
         {
+            DeckEventManager.ClearEvents<DeckEventMiddleScroll>();
+            DeckEventManager.ClearEvents<DeckEventOnLeftClick>();
         }
     }
 }

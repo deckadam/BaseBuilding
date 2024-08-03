@@ -61,7 +61,7 @@ namespace Deck.UI.SaveListingMenu
                 return;
             }
 
-            OnLoadRequestedEvent.Create(DeckSaveDisplayer.CurrentlySelectedDsiplayer.GetSaveFile()).Send();
+            DeckEventOnLoadRequested.Create(DeckSaveDisplayer.CurrentlySelectedDsiplayer.GetSaveFile()).Send();
         }
 
         public void OnDeleteButtonClicked()

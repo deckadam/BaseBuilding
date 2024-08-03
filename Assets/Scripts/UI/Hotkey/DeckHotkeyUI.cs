@@ -9,17 +9,17 @@ namespace Deck.UI.Hotkey
 
         public override void Initialize()
         {
-            DeckEventManager.Register<DeckOnHotkeySelected>(OnHotkeySelected);
-            DeckEventManager.Register<DeckOnActiveHotkeyCountChanged>(OnHotkeyCountChanged);
+            DeckEventManager.Register<DeckEventOnHotkeySelected>(OnHotkeySelected);
+            DeckEventManager.Register<DeckEventOnActiveHotkeyCountChanged>(OnHotkeyCountChanged);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckOnHotkeySelected>(OnHotkeySelected);
-            DeckEventManager.Unregister<DeckOnActiveHotkeyCountChanged>(OnHotkeyCountChanged);
+            DeckEventManager.Unregister<DeckEventOnHotkeySelected>(OnHotkeySelected);
+            DeckEventManager.Unregister<DeckEventOnActiveHotkeyCountChanged>(OnHotkeyCountChanged);
         }
 
-        private void OnHotkeyCountChanged(DeckOnActiveHotkeyCountChanged obj)
+        private void OnHotkeyCountChanged(DeckEventOnActiveHotkeyCountChanged obj)
         {
             for (var i = 0; i < obj.count; i++)
             {
@@ -32,7 +32,7 @@ namespace Deck.UI.Hotkey
             }
         }
 
-        private void OnHotkeySelected(DeckOnHotkeySelected obj)
+        private void OnHotkeySelected(DeckEventOnHotkeySelected obj)
         {
             foreach (var deckHotKeyPiece in hotkeyObjects)
             {

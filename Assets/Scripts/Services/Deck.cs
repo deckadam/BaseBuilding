@@ -13,7 +13,7 @@ namespace Deck
     {
         private static Dictionary<Type, DeckServiceBase> _services;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
             _services = new Dictionary<Type, DeckServiceBase>();

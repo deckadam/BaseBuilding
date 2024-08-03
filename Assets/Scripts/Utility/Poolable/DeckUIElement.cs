@@ -43,6 +43,7 @@ namespace Deck.Utility.Poolable
 
         private void OnValidate()
         {
+            InternalOnValidate();
             rectTransform ??= GetComponent<RectTransform>();
 
 #if UNITY_EDITOR
@@ -64,7 +65,7 @@ namespace Deck.Utility.Poolable
 
                 if (uiElement.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + " " + name + uiElement.name);
+                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + "  " + uiElement.prefabId.ID+"  " + name +"   "+ uiElement.name);
                 }
             }
 
@@ -78,6 +79,11 @@ namespace Deck.Utility.Poolable
             {
                 prefabId = DeckId.CreateNew();
             }
+        }
+
+        protected virtual void InternalOnValidate()
+        {
+            
         }
 
         public void Despawned()

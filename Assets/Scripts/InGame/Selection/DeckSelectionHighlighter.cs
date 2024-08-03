@@ -15,10 +15,10 @@ namespace Deck.Selection
 
         private void OnEnable()
         {
-            DeckEventManager.Register<DeckOnAgentSelectedEvent>(OnAgentSelected);
-            DeckEventManager.Register<DeckOnAgentPossessedEvent>(OnAgentPossessed);
-            DeckEventManager.Register<DeckOnAgentReleasedEvent>(ClearTarget);
-            DeckEventManager.Register<DeckOnSelectionReleasedEvent>(ClearTarget);
+            DeckEventManager.Register<DeckEventOnAgentSelected>(OnAgentSelected);
+            DeckEventManager.Register<DeckEventOnAgentPossessed>(OnAgentPossessed);
+            DeckEventManager.Register<DeckEventOnAgentReleased>(ClearTarget);
+            DeckEventManager.Register<DeckEventOnSelectionReleased>(ClearTarget);
             _tokenSource = new CancellationTokenSource();
             Follow(_tokenSource.Token);
         }
@@ -26,20 +26,20 @@ namespace Deck.Selection
 
         private void OnDisable()
         {
-            DeckEventManager.Unregister<DeckOnAgentSelectedEvent>(OnAgentSelected);
-            DeckEventManager.Unregister<DeckOnAgentPossessedEvent>(OnAgentPossessed);
-            DeckEventManager.Unregister<DeckOnAgentReleasedEvent>(ClearTarget);
-            DeckEventManager.Unregister<DeckOnSelectionReleasedEvent>(ClearTarget);
+            DeckEventManager.Unregister<DeckEventOnAgentSelected>(OnAgentSelected);
+            DeckEventManager.Unregister<DeckEventOnAgentPossessed>(OnAgentPossessed);
+            DeckEventManager.Unregister<DeckEventOnAgentReleased>(ClearTarget);
+            DeckEventManager.Unregister<DeckEventOnSelectionReleased>(ClearTarget);
             _tokenSource.Cancel();
             _tokenSource.Dispose();
         }
 
-        private void OnAgentPossessed(DeckOnAgentPossessedEvent obj)
+        private void OnAgentPossessed(DeckEventOnAgentPossessed obj)
         {
             SetTarget(obj.agent);
         }
 
-        private void OnAgentSelected(DeckOnAgentSelectedEvent obj)
+        private void OnAgentSelected(DeckEventOnAgentSelected obj)
         {
             SetTarget(obj.agent);
         }
