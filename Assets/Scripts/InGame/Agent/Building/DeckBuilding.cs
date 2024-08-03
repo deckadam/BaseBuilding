@@ -38,7 +38,7 @@ namespace Deck.UI
                 {
                     _itemVisualInstance.transform.localPosition = Vector3.zero;
                 }
-                
+
                 if (setVisualRotation)
                 {
                     _itemVisualInstance.transform.localRotation = Quaternion.identity;

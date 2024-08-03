@@ -61,6 +61,7 @@ MonoBehaviour:
   ease: 27
   furnitureBuildable:
   - {fileID: 11400000, guid: fcecd0616c929d6438ba26a5da4e2a5b, type: 2}
+  - {fileID: 11400000, guid: 7c259c88abf2bb44ca64fb004c4bd56c, type: 2}
   container: {fileID: 8582541736764332237}
 --- !u!225 &4330169967580350106
 CanvasGroup:

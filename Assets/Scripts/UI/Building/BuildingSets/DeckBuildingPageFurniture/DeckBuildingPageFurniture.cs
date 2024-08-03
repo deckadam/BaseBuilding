@@ -49,7 +49,7 @@ namespace Deck.UI.Building.BuildingSets.DeckBuildingPageFurniture
             _escapableBuildMode = new DeckEscapableBuildMode(OnEscapeRequested, OnBuildRequested);
             _escapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;
-            _buildingService.StartSilouette(buildable, true);
+            _buildingService.StartSilouette(buildable);
         }
 
         private void OnBuildRequested(Vector3 position)
@@ -59,7 +59,7 @@ namespace Deck.UI.Building.BuildingSets.DeckBuildingPageFurniture
                 return;
             }
 
-            _buildingService.BuildFree(position, _buildingService.GetRotation());
+            _buildingService.BuildFree(position);
         }
 
         private void Update()

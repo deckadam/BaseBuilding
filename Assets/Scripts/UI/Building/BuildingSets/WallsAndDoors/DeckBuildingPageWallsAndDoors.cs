@@ -51,7 +51,7 @@ namespace Deck.UI.Building.BuildingSets
             _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
             _escapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;
-            _buildingService.StartSilouette(buildable);
+            _buildingService.StartSilouette(buildable, true);
         }
 
         private void OnBuildRequested(Vector3 position)

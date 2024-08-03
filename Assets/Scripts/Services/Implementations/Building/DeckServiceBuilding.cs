@@ -27,7 +27,6 @@ namespace Deck.Services.Building
         private GameObject _silouetteParent;
         private DiContainer _container;
         private Quaternion _rotation;
-        private bool _rotatable;
         private bool _cellBased;
 
         [Inject]
@@ -71,7 +70,7 @@ namespace Deck.Services.Building
         }
 #endif
 
-        public void StartSilouette(DeckBuildable buildable, bool rotatable = false, bool cellBased = false)
+        public void StartSilouette(DeckBuildable buildable, bool cellBased = false)
         {
             _activeBuildable = buildable;
             _cellBased = cellBased;
@@ -88,15 +87,13 @@ namespace Deck.Services.Building
 
                 newObject.transform.SetParent(_silouetteParent.transform);
                 newObject.transform.localPosition = data.GetPosition();
-                newObject.transform.eulerAngles = data.GetRotation();
+                newObject.transform.localRotation = Quaternion.Euler(data.GetRotation());
 
                 _filters.Add(newFilter);
                 _renderers.Add(newRenderer);
             }
 
-            _rotatable = rotatable;
-
-            if (_rotatable)
+            if (buildable.Rotatable)
             {
                 DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
             }
@@ -139,7 +136,7 @@ namespace Deck.Services.Building
             }
         }
 
-        public void BuildFree(Vector3 position, Quaternion rotation)
+        public void BuildFree(Vector3 position)
         {
             if (_activeBuildable == null)
             {
@@ -166,7 +163,8 @@ namespace Deck.Services.Building
             var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = position;
-            newBuilding.transform.rotation = rotation;
+            newBuilding.transform.rotation = _rotation;
+            Debug.LogError(_rotation.eulerAngles);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
         }
@@ -206,7 +204,7 @@ namespace Deck.Services.Building
 
         public void Clear()
         {
-            if (_rotatable)
+            if (_activeBuildable != null && _activeBuildable.Rotatable)
             {
                 DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
             }
@@ -220,7 +218,6 @@ namespace Deck.Services.Building
 
             _filters.Clear();
             _renderers.Clear();
-            _rotatable = false;
             _rotation = Quaternion.identity;
         }
 

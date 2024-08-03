@@ -21,6 +21,7 @@ namespace Deck.UI.Hotkey
 
         private void OnHotkeyCountChanged(DeckEventOnActiveHotkeyCountChanged obj)
         {
+            return;
             for (var i = 0; i < obj.count; i++)
             {
                 hotkeyObjects[i].gameObject.SetActive(true);
@@ -34,6 +35,7 @@ namespace Deck.UI.Hotkey
 
         private void OnHotkeySelected(DeckEventOnHotkeySelected obj)
         {
+            return;
             foreach (var deckHotKeyPiece in hotkeyObjects)
             {
                 deckHotKeyPiece.Normalize();
