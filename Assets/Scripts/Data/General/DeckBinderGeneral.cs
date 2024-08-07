@@ -14,6 +14,7 @@ namespace Deck.Data.General
     {
         [SerializeField] private DeckItemVisualProviderBasic[] itemVisualProviders;
         [SerializeField] private DeckItemVisualProviderWall wallProvider;
+        [SerializeField] private DeckItemVisualProviderDoor doorProvider;
         [SerializeField] private DeckUIPool uiPool;
 
         [SerializeField] private DeckAgentCore agentCorePrefab;
@@ -27,6 +28,7 @@ namespace Deck.Data.General
             Container.BindInstance(deckGeneralData);
             Container.BindInstance(itemVisualProviders);
             Container.BindInstance(wallProvider);
+            Container.BindInstance(doorProvider);
             Container.BindInstance(uiPool);
 
             Container.QueueForInject(uiPool);

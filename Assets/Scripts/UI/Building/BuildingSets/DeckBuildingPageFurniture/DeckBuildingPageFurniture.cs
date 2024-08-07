@@ -43,7 +43,7 @@ namespace Deck.UI.Building.BuildingSets.DeckBuildingPageFurniture
         {
             if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
             {
-                _escapableBuildMode.OnCloseRequested();
+                _escapableService.CloseEscapable();
             }
 
             _escapableBuildMode = new DeckEscapableBuildMode(OnEscapeRequested, OnBuildRequested);

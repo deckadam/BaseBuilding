@@ -49,7 +49,10 @@ namespace Deck.UI
         protected override void InternalRequestDeath()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(_itemVisualInstance);
+            if (_itemVisualInstance != null)
+            {
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(_itemVisualInstance);
+            }
         }
 
         public DeckBuildable BuildingData => buildingData;

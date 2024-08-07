@@ -14,6 +14,7 @@ namespace Deck.UI.Building.BuildingSets
         private Action<Vector3, Quaternion> _onBuildWithRotation;
         private bool _isEscaped;
         private bool _canMoveBuild;
+        private bool _isClosed;
 
         public DeckEscapableBuildMode(Action onEscape, Action<Vector3> onBuild, bool canMoveBuild = false)
         {
@@ -30,6 +31,11 @@ namespace Deck.UI.Building.BuildingSets
 
         public void OnCloseRequested()
         {
+            if (_isClosed)
+            {
+                return;
+            }
+
             DeckEventManager.Unregister<DeckEventOnLeftClick>(OnLeftClick);
 
             if (_canMoveBuild)
@@ -39,6 +45,8 @@ namespace Deck.UI.Building.BuildingSets
 
             _isEscaped = true;
             _onEscape?.Invoke();
+
+            _isClosed = true;
         }
 
         private void OnLeftClick(DeckEventOnLeftClick obj)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.Commands;
 using Deck.InputHandling;
+using Deck.Item;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services.MapService;
@@ -49,7 +50,7 @@ namespace Deck.Agent
                 throw new Exception("No valid prefab id");
             }
         }
-
+        
         private void OnValidate()
         {
             components = GetComponents<DeckComponent>();
@@ -233,7 +234,6 @@ namespace Deck.Agent
 
         public List<DeckComponentSaveData> GetSaveData()
         {
-            Debug.LogError(name + " " + uniqueId.ID + " " + prefabId.ID + " " + components.Length);
             var result = new List<DeckComponentSaveData>();
             foreach (var deckComponent in components)
             {

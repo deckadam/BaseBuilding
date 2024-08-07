@@ -18,7 +18,6 @@ namespace Deck.UI.Building
             _onClick = onClick;
             _buildable = buildable;
             icon.sprite = _buildable.Icon;
-            Debug.LogError(_onClick == null);
         }
 
         public void OnClick()

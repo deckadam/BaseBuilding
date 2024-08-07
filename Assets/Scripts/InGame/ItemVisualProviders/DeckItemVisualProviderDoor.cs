@@ -20,6 +20,7 @@ namespace Deck.ItemVisualProviders
         private readonly Quaternion VerticalRotation = Quaternion.Euler(0, 0, 0);
 
         private HashSet<Vector2Int> _doorCheckSet;
+        private Dictionary<Vector2Int, DeckItemVisual> _activeWalls;
 
         private DeckItemVisualProviderWall _wallProvider;
 
@@ -32,6 +33,17 @@ namespace Deck.ItemVisualProviders
         protected override void OnInitialize()
         {
             _doorCheckSet = new HashSet<Vector2Int>();
+            _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
+        }
+
+        public bool ReturnItemVisual(Vector2Int cellIndex)
+        {
+            if (!_doorCheckSet.Contains(cellIndex)) return false;
+
+            _doorCheckSet.Remove(cellIndex);
+            ReturnIfHasItemVisual(_activeWalls[cellIndex]);
+            _wallProvider.OnDoorRemoved(cellIndex);
+            return true;
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -43,26 +55,34 @@ namespace Deck.ItemVisualProviders
             ReturnIfHasItemVisual(itemVisual);
 
             _wallProvider.OnDoorRemoved(pos);
+            _activeWalls.Remove(pos);
             return true;
         }
 
         public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
         {
-            if (_doorCheckSet.Contains(cellIndex))
-            {
-                itemVisual = null;
-                return true;
-            }
-
             if (!prefabId.Equals(doorPrefab.PrefabId))
             {
                 itemVisual = null;
                 return false;
             }
 
+            if (_doorCheckSet.Contains(cellIndex))
+            {
+                itemVisual = null;
+                return true;
+            }
+
+            if (_wallProvider.IsWall(cellIndex))
+            {
+                _wallProvider.ReturnItemVisual(cellIndex);
+            }
+
+
             _doorCheckSet.Add(cellIndex);
             itemVisual = null;
             RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
+            _activeWalls[cellIndex] = itemVisual;
             itemVisual.transform.rotation = GetDoorRotation(cellIndex);
             itemVisual.transform.position = cellIndex.ToVector3();
 

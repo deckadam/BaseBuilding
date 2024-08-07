@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2194557779227110626}
   - component: {fileID: 6046576298412244727}
   - component: {fileID: -6978723622339963111}
-  - component: {fileID: 6079846305064869096}
+  - component: {fileID: -7197348414825284670}
   m_Layer: 0
   m_Name: DeckAgentDoor
   m_TagString: Untagged
@@ -61,7 +61,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataHealth: {fileID: 11400000, guid: ba87eba4b2db1164ebefac7fdb7a8010, type: 2}
   _currentHealth: 0
---- !u!114 &6079846305064869096
+--- !u!114 &-7197348414825284670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,22 +70,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1531067746401826392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a74441d72e174b92b95c945d6f6c1cf8, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d311cc186494400bc179479225b26cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerPosition: {fileID: 0}
   components:
   - {fileID: 6046576298412244727}
   - {fileID: -6978723622339963111}
-  activeSize: 1.4
+  activeSize: 1
   collider: {fileID: 0}
   willSave: 1
   uniqueId:
     _id: 0
     IdString: 
   prefabId:
-    _id: 49648457
-    IdString: 
+    _id: 50001853
+    IdString: 50001853
   selfTransform: {fileID: 0}
-  buildingData: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  buildingData: {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
   itemVisualPrefab: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
+  setVisualPosition: 1
+  setVisualRotation: 0

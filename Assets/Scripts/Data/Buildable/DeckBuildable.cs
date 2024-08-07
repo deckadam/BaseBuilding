@@ -28,6 +28,7 @@ namespace Deck.Data.Buildable
         public Vector2Int[] Indices => indices;
         public bool Rotatable => rotatable;
         public DeckAgent Agent => agent;
+        public DeckItemVisual ItemVisual => itemVisual;
         public string Name => name;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
@@ -52,7 +53,7 @@ namespace Deck.Data.Buildable
             {
                 bounds.Encapsulate(renderer.bounds);
             }
-            
+
             extents = bounds.size;
         }
 

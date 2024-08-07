@@ -35,6 +35,15 @@ namespace Deck.ItemVisualProviders
             }
         }
 
+        public bool ReturnItemVisual(Vector2Int cellIndex)
+        {
+            if (!IsWall(cellIndex)) return false;
+            _wallCheckSet.Remove(cellIndex);
+
+            ConnectWalls(cellIndex, 0);
+            return true;
+        }
+
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
         {
             if (!IsWall(itemVisual)) return false;
@@ -195,6 +204,11 @@ namespace Deck.ItemVisualProviders
         private bool IsWall(DeckId prefabId)
         {
             return wallItemVisualPrefabs.Any(item => item.wallVisual.PrefabId.Equals(prefabId));
+        }
+
+        public bool IsWall(Vector2Int cellIndex)
+        {
+            return _wallCheckSet.Contains(cellIndex);
         }
 
         private bool IsWall(DeckItemVisual itemVisual)

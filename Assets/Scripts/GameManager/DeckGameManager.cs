@@ -63,7 +63,6 @@ namespace Deck.UI
                     continue;
                 }
 
-                Debug.LogError(agent.PrefabId.ID);
                 agentDatas.datas.Add(new DeckComponentHolderSaveData
                 {
                     uniqueId = agent.GetUniqueId().ID,

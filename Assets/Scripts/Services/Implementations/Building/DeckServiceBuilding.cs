@@ -28,6 +28,7 @@ namespace Deck.Services.Building
         private DiContainer _container;
         private Quaternion _rotation;
         private bool _cellBased;
+        private bool _isDirty;
 
         [Inject]
         private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData, DeckDataBuilding buildableRotationSpeed, DiContainer container)
@@ -72,6 +73,7 @@ namespace Deck.Services.Building
 
         public void StartSilouette(DeckBuildable buildable, bool cellBased = false)
         {
+            _isDirty = true;
             _activeBuildable = buildable;
             _cellBased = cellBased;
 
@@ -178,10 +180,17 @@ namespace Deck.Services.Building
             }
 
             var cellPosition = position.ToVector3Int();
-            if (!CheckIfAgentBuildableInCell(_activeBuildable, position.ToVector2Int()))
+            if (!CheckIfAgentBuildableInCell(_activeBuildable, position.ToVector2Int(), out var encounteredAgents))
             {
-                DeckEventNotificationRequested.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
-                return;
+                foreach (var encounteredAgent in encounteredAgents)
+                {
+                    if (encounteredAgent.PrefabId.Equals(_activeBuildable.Agent.PrefabId))
+                    {
+                        return;
+                    }
+
+                    encounteredAgent.RequestDeath();
+                }
             }
 
             if (_activeBuildable.Requeriements.Length > 0)
@@ -204,6 +213,11 @@ namespace Deck.Services.Building
 
         public void Clear()
         {
+            if (!_isDirty)
+            {
+                return;
+            }
+
             if (_activeBuildable != null && _activeBuildable.Rotatable)
             {
                 DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
@@ -219,6 +233,7 @@ namespace Deck.Services.Building
             _filters.Clear();
             _renderers.Clear();
             _rotation = Quaternion.identity;
+            _isDirty = false;
         }
 
         public void OnBuildingDestroyed(DeckBuilding buildable)
@@ -259,6 +274,27 @@ namespace Deck.Services.Building
             }
 
             return true;
+        }
+
+
+        private bool CheckIfAgentBuildableInCell(DeckBuildable buildable, Vector2Int cellIndex, out HashSet<DeckAgent> encounteredAgents)
+        {
+            encounteredAgents = new HashSet<DeckAgent>();
+            foreach (var index in buildable.Indices)
+            {
+                var temp = cellIndex + index;
+                if (!_grid.ContainsKey(temp))
+                {
+                    continue;
+                }
+
+                if (_grid[temp] != null)
+                {
+                    encounteredAgents.Add(_grid[temp]);
+                }
+            }
+
+            return encounteredAgents.Count <= 0;
         }
 
         private Collider[] _possibleColliders = new Collider[2];
