@@ -1,12 +1,12 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Deck.Data.Damage;
-using Deck.InGame.Agent;
-using Deck.InGame.Agent.Building;
+using Deck.Components;
+using Deck.Components.Building;
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     [Serializable]
     public class DeckComponentCommandCreator : DeckComponent

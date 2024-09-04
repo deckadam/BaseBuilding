@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using Deck.Commands;
-using Deck.InGame.Agent.Tree;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building.Stats
+namespace Deck.Components.Building.Stats
 {
     public class DeckStatsPopUp : DeckPopUpBase
     {
@@ -32,7 +30,7 @@ namespace Deck.InGame.Agent.Building.Stats
                     continue;
                 }
 
-                var statContainer = uiPool.Rent<DeckUIStatContainer>(_statContainerPrefab.PrefabId);
+                var statContainer = InstanceProvider.RentUIElement<DeckUIStatContainer>();
                 statContainer.SetStats(stat.Stats);
                 statContainer.transform.SetParent(_statsContainer);
                 _activeStats[stat.Component] = statContainer;
@@ -41,11 +39,16 @@ namespace Deck.InGame.Agent.Building.Stats
             }
         }
 
-        protected override void OnDespawned()
+        protected override void InternalOnDespawned()
         {
             foreach (var stat in _activeStats)
             {
                 stat.Key.OnStatsChanged -= OnStatsChanged;
+            }
+
+            foreach (var statContainer in _activeStats)
+            {
+                InstanceProvider.ReturnUIElement(statContainer.Value);
             }
 
             _activeStats.Clear();
@@ -64,7 +67,7 @@ namespace Deck.InGame.Agent.Building.Stats
             }
             else
             {
-                var statContainer = uiPool.Rent<DeckUIStatContainer>(_statContainerPrefab.PrefabId);
+                var statContainer = InstanceProvider.RentUIElement<DeckUIStatContainer>();
                 statContainer.SetStats(statGroup.Stats);
                 statContainer.transform.SetParent(_statsContainer);
                 _activeStats[statGroup.Component] = statContainer;

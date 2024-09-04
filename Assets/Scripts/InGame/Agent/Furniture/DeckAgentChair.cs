@@ -1,6 +1,6 @@
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 
-namespace Deck.InGame.Agent.Furniture
+namespace Deck.Components.Furniture
 {
     public class DeckAgentChair:DeckBuilding
     {

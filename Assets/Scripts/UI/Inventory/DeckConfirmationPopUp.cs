@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building.Inventory
+namespace Deck.Components.Building.Inventory
 {
     public class DeckConfirmationPopUp : DeckPopUpBase
     {

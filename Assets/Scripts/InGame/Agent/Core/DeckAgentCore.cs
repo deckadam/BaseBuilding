@@ -1,9 +1,9 @@
-﻿using Deck.InGame.Agent.Tree;
+﻿using Deck.Components.Tree;
 using Deck.Services;
 using Deck.InputHandling.Events;
 using Deck.Utility.Logger;
 
-namespace Deck.InGame.Agent.Core
+namespace Deck.Components.Core
 {
     public class DeckAgentCore : DeckAgent
     {

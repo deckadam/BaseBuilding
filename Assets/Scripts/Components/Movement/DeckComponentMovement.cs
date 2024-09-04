@@ -3,11 +3,11 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data.Component;
 using Deck.Save;
-using Deck.InGame.Agent.Building.Stats;
+using Deck.Components.Building.Stats;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     [Serializable]
     public class DeckComponentMovement : DeckComponent

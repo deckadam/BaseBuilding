@@ -1,7 +1,6 @@
-using Deck.InGame.Agent;
-using Deck.Item;
+using Deck.Components;
 using Deck.Services;
-using Deck.InGame.Agent.Building.InGame;
+using Deck.Components.Building.InGame;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using Deck.Commands;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Deck.InGame.Agent.Building.Inventory
+namespace Deck.Components.Building.Inventory
 {
     public class DeckInventoryPopUp : DeckPopUpBase, IPointerEnterHandler, IPointerExitHandler
     {
@@ -35,7 +34,7 @@ namespace Deck.InGame.Agent.Building.Inventory
 
             foreach (var deckItem in items)
             {
-                var newCell = uiPool.Rent<DeckInventoryDisplayerCell>();
+                var newCell = InstanceProvider.RentUIElement<DeckInventoryDisplayerCell>();
                 newCell.transform.SetParent(cellParent, false);
                 newCell.Initialize(deckItem.Key, deckItem.Value, this);
                 newCell.gameObject.SetActive(true);
@@ -45,11 +44,11 @@ namespace Deck.InGame.Agent.Building.Inventory
 
         private void ClearCurrentCells()
         {
-            uiPool.Return(_cells);
+            InstanceProvider.ReturnUIElement(_cells);
             _cells.Clear();
         }
 
-        protected override void OnDespawned()
+        protected override void InternalOnDespawned()
         {
             ClearCurrentCells();
             _componentInventory.RemoveListener(CreateNewCells);
@@ -57,9 +56,8 @@ namespace Deck.InGame.Agent.Building.Inventory
             _componentInventory = null;
         }
 
-        protected override void OnSpawned()
+        protected override void InternalOnSpawned()
         {
-            _serviceInventory = Deck.GetService<DeckServiceInventory>();
         }
 
         public DeckComponentInventory GetBindedInventory() => _componentInventory;

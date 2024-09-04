@@ -1,11 +1,11 @@
 using System;
 using Deck.Data.Buildable;
-using Deck.Utility.Poolable;
+using Deck.Components;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.InGame.Agent.Building.Building
+namespace Deck.Components.Building.Building
 {
     public class DeckBuildableButton : DeckUIElement
     {

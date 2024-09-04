@@ -1,6 +1,5 @@
-﻿using Deck.Commands;
+﻿using Deck.Components;
 using Deck.EventManager;
-using Deck.InGame.Agent;
 using Deck.InputHandling.Events;
 using Deck.Utility.Logger;
 

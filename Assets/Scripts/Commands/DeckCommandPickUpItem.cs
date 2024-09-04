@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Item;
+using Deck.Components;
 using Deck.Save;
 using Deck.Utility;
 using Services.AgentFinder;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckCommandPickUpItem : DeckCommand
     {

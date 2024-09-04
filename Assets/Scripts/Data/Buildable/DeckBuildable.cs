@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Deck.Data.Item;
-using Deck.InGame.Agent;
-using Deck.Item;
+using Deck.Components;
+using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -82,6 +82,7 @@ namespace Deck.Data.Buildable
 
             if (agent.transform.position != Vector3.zero)
             {
+                DeckLogger.Error("Agent is not centered",agent.gameObject);
                 throw new Exception("Agent is not centered");
             }
 

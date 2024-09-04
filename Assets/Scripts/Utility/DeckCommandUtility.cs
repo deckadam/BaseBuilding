@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
+using Deck.Components;
 using UnityEngine;
 
 namespace Deck.Utility

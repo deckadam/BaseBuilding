@@ -1,9 +1,9 @@
 ﻿using System;
 using Deck.Constants;
-using Deck.InGame.Agent;
+using Deck.Components;
 using UnityEngine;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentAnimatorCore : DeckComponent, IDeckAnimationImmediatePlay, IDeckAnimationSetBool, IDeckAnimationSetFloat
     {

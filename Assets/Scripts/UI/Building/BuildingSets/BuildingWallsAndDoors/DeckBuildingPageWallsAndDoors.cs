@@ -3,7 +3,7 @@ using Deck.Services.Building;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Building.Building.BuildingSets.BuildingWallsAndDoors
+namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
 {
     public class DeckBuildingPageWallsAndDoors : DeckBuildingPage
     {
@@ -28,11 +28,11 @@ namespace Deck.InGame.Agent.Building.Building.BuildingSets.BuildingWallsAndDoors
             EscapableService = Deck.GetService<DeckServiceEscapable>();
             BuildingService = Deck.GetService<DeckServiceBuilding>();
 
-            _wallButton = uiPool.Rent<DeckBuildableButton>();
+            _wallButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
             _wallButton.Initialize(OnBuildableSelected, wallBuildable);
             _wallButton.rectTransform.SetParent(container, false);
 
-            _doorButton = uiPool.Rent<DeckBuildableButton>();
+            _doorButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
             _doorButton.Initialize(OnBuildableSelected, doorBuildable);
             _doorButton.rectTransform.SetParent(container, false);
         }

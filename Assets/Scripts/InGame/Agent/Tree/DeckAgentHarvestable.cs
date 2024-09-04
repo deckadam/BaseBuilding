@@ -1,4 +1,4 @@
-﻿namespace Deck.InGame.Agent.Tree
+﻿namespace Deck.Components.Tree
 {
     public class DeckAgentHarvestable : DeckAgent
     {

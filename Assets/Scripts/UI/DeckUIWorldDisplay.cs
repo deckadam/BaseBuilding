@@ -1,12 +1,11 @@
 ﻿using System;
-using Deck.InGame.Agent.Building.Health;
 using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.Utility.Logger;
 using UnityEngine;
-using Deck.Utility.Poolable;
+using Deck.Components.Building.Health;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     public class DeckUIWorldDisplay : DeckUIElement
     {
@@ -36,12 +35,12 @@ namespace Deck.InGame.Agent.Building
             positionOffset = offset;
         }
 
-        protected override void OnDespawned()
+        protected override void InternalOnDespawned()
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
         }
 
-        protected override void OnSpawned()
+        protected override void InternalOnSpawned()
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
         }
@@ -55,7 +54,7 @@ namespace Deck.InGame.Agent.Building
             catch (Exception)
             {
                 DeckLogger.Inform("Agent system is not working properly. Please check the agent system.");
-                uiPool.Return(this);
+                InstanceProvider.ReturnUIElement(this);
             }
         }
     }

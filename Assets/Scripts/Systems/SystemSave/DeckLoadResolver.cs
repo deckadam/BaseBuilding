@@ -9,13 +9,13 @@ namespace Deck.Save
 {
     public class DeckLoadResolver
     {
-        private DeckInstanceCreator _instanceCreator;
+        private DeckInstanceProvider _instanceProvider;
         private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
         [Inject]
-        private void Inject(DeckInstanceCreator instanceCreator, DeckItemVisualProviderBasic[] itemVisualProviders)
+        private void Inject(DeckInstanceProvider instanceProvider, DeckItemVisualProviderBasic[] itemVisualProviders)
         {
-            _instanceCreator = instanceCreator;
+            _instanceProvider = instanceProvider;
             _itemVisualProviders = itemVisualProviders;
         }
 
@@ -35,7 +35,7 @@ namespace Deck.Save
                     continue;
                 }
 
-                var agentInstance = _instanceCreator.CreateNewAgentInstance(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
+                var agentInstance = _instanceProvider.RentAgent(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
                 agentInstance.LoadData(deckComponentHolderSaveData);
             }
 

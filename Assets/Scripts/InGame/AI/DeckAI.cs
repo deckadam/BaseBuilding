@@ -1,6 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.InGame.Agent;
+using Deck.Components;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.Rendering;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     public class DeckConstantsShader
     {

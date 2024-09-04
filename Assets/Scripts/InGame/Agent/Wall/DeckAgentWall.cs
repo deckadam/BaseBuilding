@@ -1,11 +1,11 @@
-﻿using Deck.InGame.Agent.Building;
+﻿using Deck.Components.Building;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Wall
+namespace Deck.Components.Wall
 {
     public class DeckAgentWall : DeckBuilding
     {

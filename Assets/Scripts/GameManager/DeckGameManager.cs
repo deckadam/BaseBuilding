@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Deck.Commands;
+using Deck.Components;
+using Deck.Components.Core;
 using Deck.Data.Item;
-using Deck.InGame.Agent.Core;
 using Deck.ItemVisualProviders;
 using Deck.MVC;
 using Deck.Save;
@@ -12,7 +12,7 @@ using Services.AgentFinder;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     public class DeckGameManager : DeckServiceBase
     {

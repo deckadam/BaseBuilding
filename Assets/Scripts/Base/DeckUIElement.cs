@@ -1,6 +1,7 @@
 using System;
-using Deck.InGame.Agent.Building.InGame;
-using Deck.InGame.Agent.Building.Pool;
+using Deck.Base;
+using Deck.Components.Building.InGame;
+using Deck.Save.Data;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -8,13 +9,15 @@ using Zenject;
 using UnityEditor;
 #endif
 
-namespace Deck.Utility.Poolable
+namespace Deck.Components
 {
-    public class DeckUIElement : MonoBehaviour
+    public class DeckUIElement : DeckPoolable
     {
         [SerializeField] private DeckId prefabId;
 
         public RectTransform rectTransform;
+
+        protected DeckInstanceProvider InstanceProvider;
 
         private Transform _parent;
         private bool _isSpawned;
@@ -32,14 +35,11 @@ namespace Deck.Utility.Poolable
             }
         }
 
-        protected DeckUIPool uiPool;
-
         [Inject]
-        private void Inject(DeckUIPool uiPool)
+        private void Inject(DeckInstanceProvider instanceProvider)
         {
-            this.uiPool = uiPool;
+            InstanceProvider = instanceProvider;
         }
-
 
         private void OnValidate()
         {
@@ -53,7 +53,6 @@ namespace Deck.Utility.Poolable
             }
 #endif
 
-
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckUIElement)))
             {
                 var uiElement = itemVisual as DeckUIElement;
@@ -65,7 +64,7 @@ namespace Deck.Utility.Poolable
 
                 if (uiElement.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + "  " + uiElement.prefabId.ID+"  " + name +"   "+ uiElement.name);
+                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + "  " + uiElement.prefabId.ID + "  " + name + "   " + uiElement.name);
                 }
             }
 
@@ -81,12 +80,7 @@ namespace Deck.Utility.Poolable
             }
         }
 
-        protected virtual void InternalOnValidate()
-        {
-            
-        }
-
-        public void Despawned()
+        public override void OnDespawned()
         {
             if (!_isSpawned)
             {
@@ -97,10 +91,11 @@ namespace Deck.Utility.Poolable
             _isSpawned = false;
             transform.SetParent(_parent);
             gameObject.SetActive(false);
-            OnDespawned();
+            InternalOnDespawned();
         }
 
-        public void Spawned()
+
+        public override void OnSpawned()
         {
             if (_isSpawned)
             {
@@ -112,14 +107,18 @@ namespace Deck.Utility.Poolable
             gameObject.SetActive(true);
             _isSpawned = true;
 
-            OnSpawned();
+            InternalOnSpawned();
         }
 
-        protected virtual void OnSpawned()
+        protected virtual void InternalOnValidate()
         {
         }
 
-        protected virtual void OnDespawned()
+        protected virtual void InternalOnSpawned()
+        {
+        }
+
+        protected virtual void InternalOnDespawned()
         {
         }
     }

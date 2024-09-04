@@ -1,6 +1,6 @@
-﻿using Deck.InGame.Agent.Building;
+﻿using Deck.Components.Building;
 
-namespace Deck.InGame.Agent.Chest
+namespace Deck.Components.Chest
 {
     public class DeckAgentChest : DeckBuilding { }
 }

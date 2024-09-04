@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Building.Health
+namespace Deck.Components.Building.Health
 {
     public class DeckUIWorldLabelDisplayer : DeckUIBase
     {

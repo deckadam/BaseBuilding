@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using Deck.InGame.Agent.Building.Inventory;
-using Deck.InGame.Agent.Building.SaveListingMenu.Events;
+using Deck.Components.Building.Inventory;
+using Deck.Components.Building.SaveListingMenu.Events;
 using Deck.Save;
 using Deck.Services;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.InGame.Agent.Building.SaveListingMenu
+namespace Deck.Components.Building.SaveListingMenu
 {
     public class DeckSaveListingMenu : DeckUIBase
     {
@@ -25,7 +25,7 @@ namespace Deck.InGame.Agent.Building.SaveListingMenu
         {
             if (_activeDisplayers != null)
             {
-                uiPool.Return(_activeDisplayers);
+                InstanceProvider.ReturnUIElement(_activeDisplayers);
             }
 
             _activeDisplayers.Clear();
@@ -36,7 +36,7 @@ namespace Deck.InGame.Agent.Building.SaveListingMenu
 
             for (var index = 0; index < saveFiles.Length; index++)
             {
-                var newDisplayer = uiPool.Rent<DeckSaveDisplayer>();
+                var newDisplayer = InstanceProvider.RentUIElement<DeckSaveDisplayer>();
                 newDisplayer.SetData(saveFiles[index]);
                 newDisplayer.transform.SetParent(scrollParent, false);
                 newDisplayer.transform.localPosition = Vector2.zero;

@@ -15,14 +15,13 @@ GameObject:
   - component: {fileID: 6518674741442962127}
   - component: {fileID: 2907936083373871261}
   - component: {fileID: 9203346949784182452}
-  - component: {fileID: 3570150931093313685}
   m_Layer: 5
   m_Name: DeckUIStatContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4528829065517616721
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36,7 +35,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -113,6 +111,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2fa8d8a6a0a4071b3aa188fb7597ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 22495285
+    IdString: 22495285
+  rectTransform: {fileID: 4528829065517616721}
 --- !u!114 &2907936083373871261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,15 +155,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!114 &3570150931093313685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8776704517885317346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2fa8d8a6a0a4071b3aa188fb7597ca0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

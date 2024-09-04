@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Deck.InGame.Agent;
-using Deck.Item;
+using Deck.Components;
 using Deck.Services;
 
 namespace Services.AgentFinder

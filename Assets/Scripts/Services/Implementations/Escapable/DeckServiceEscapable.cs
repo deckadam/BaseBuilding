@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Deck.Services;
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 using Unity.VisualScripting;
 
 namespace Services.Implementations.Escapable

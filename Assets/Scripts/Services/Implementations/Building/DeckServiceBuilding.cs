@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using Deck.Commands;
+using Deck.Components;
 using Deck.Data.Buildable;
 using Deck.Data.General;
 using Deck.EventManager;
-using Deck.InGame.Agent;
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 using Deck.InputHandling.Events;
-using Deck.Item;
+using Deck.Save.Data;
 using Deck.Services.CameraService;
 using Deck.Services.CellSelectionService;
 using Deck.Services.MapService;
@@ -33,17 +32,17 @@ namespace Deck.Services.Building
         private DeckBuildable _activeBuildable;
         private DeckServiceCamera _cameraService;
         private GameObject _silouetteParent;
-        private DiContainer _container;
+        private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
         private Quaternion _rotation;
         private bool _isDirty;
 
         [Inject]
         private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData,
-            DeckDataBuilding buildableRotationSpeed, DiContainer container)
+            DeckDataBuilding buildableRotationSpeed, DeckInstanceProvider instanceProvider)
         {
             _buildingData = buildingData;
-            _container = container;
+            _instanceProvider = instanceProvider;
         }
 
         public override void Initialize()
@@ -177,8 +176,6 @@ namespace Deck.Services.Building
                 meshRenderer.sharedMaterial = material;
             }
 
-            Debug.LogError("3");
-
             _silouetteParent.transform.position = buildPosition;
             _silouetteParent.transform.eulerAngles = buildRotation;
         }
@@ -220,11 +217,9 @@ namespace Deck.Services.Building
 
             if (CollidesWithOtherItemsOnWall(buildPosition, buildRotation))
             {
-                Debug.LogError("Collides with object");
+                DeckLogger.Inform("Collides with object");
                 return;
             }
-
-            Debug.LogError("Build");
 
             if (_activeBuildable.Requeriements.Length > 0)
             {
@@ -237,7 +232,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
@@ -277,7 +272,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = _rotation;
@@ -310,7 +305,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = position;
             newBuilding.transform.rotation = _rotation;
@@ -359,7 +354,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            var newBuilding = _container.InstantiatePrefab(_activeBuildable.Agent).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellPosition.ToVector3();
             newBuilding.Initialize();

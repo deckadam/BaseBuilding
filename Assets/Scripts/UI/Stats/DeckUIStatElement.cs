@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
-using Deck.Utility.Poolable;
+using Deck.Components;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building.Stats
+namespace Deck.Components.Building.Stats
 {
     public class DeckUIStatElement : DeckUIElement
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Deck.Item;
+using Deck.Components;
 using Deck.Save;
 using Deck.Save.Data;
-using Deck.InGame.Agent.Building.InGame;
+using Deck.Components.Building.InGame;
 using Deck.Utility;
 using Deck.Utility.Class;
 using Services.AgentFinder;
@@ -21,12 +21,12 @@ namespace Deck.ItemVisualProviders
         private Dictionary<int, Stack<DeckItemVisual>> _activeItemVisuals;
 
         private Transform _poolParent;
-        private DeckInstanceCreator _instanceCreator;
+        private DeckInstanceProvider _instanceProvider;
 
         [Inject]
-        private void Inject(DeckInstanceCreator instanceCreator)
+        private void Inject(DeckInstanceProvider instanceProvider)
         {
-            _instanceCreator = instanceCreator;
+            _instanceProvider = instanceProvider;
         }
 
         public void Initialize()
@@ -120,7 +120,7 @@ namespace Deck.ItemVisualProviders
 
         private DeckItemVisual CreateItemVisual(int id)
         {
-            var newObject = _instanceCreator.CreateNewItemVisualInstance(id);
+            var newObject = _instanceProvider.RentItemVisual(id);
             newObject.transform.SetParent(_poolParent);
             var temp = newObject.GetComponent<DeckItemVisual>();
             temp.SetNewUniqueId();

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.InGame.Agent;
-using Deck.Item;
+using Deck.Components;
 using Deck.Save;
-using Deck.InGame.Agent.Building.InGame;
+using Deck.Components.Building.InGame;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;

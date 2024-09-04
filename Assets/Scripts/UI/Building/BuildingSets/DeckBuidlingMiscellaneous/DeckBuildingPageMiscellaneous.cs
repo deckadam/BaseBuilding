@@ -3,7 +3,7 @@ using Deck.Services.Building;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Building.Building.BuildingSets.BuildingMiscellaneous
+namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
 {
     public class DeckBuildingPageMiscellaneous : DeckBuildingPage
     {
@@ -20,7 +20,7 @@ namespace Deck.InGame.Agent.Building.Building.BuildingSets.BuildingMiscellaneous
 
             foreach (var buildable in miscellaneousBuildable)
             {
-                var buildableButton = uiPool.Rent<DeckBuildableButton>();
+                var buildableButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
                 buildableButton.Initialize(OnBuildableClicked, buildable);
                 buildableButton.rectTransform.SetParent(container, false);
             }

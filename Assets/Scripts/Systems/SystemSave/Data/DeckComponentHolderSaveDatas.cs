@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Commands;
+using Deck.Components;
 using UnityEngine;
 using UnityEngine.Serialization;
 

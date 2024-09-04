@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.InGame.Agent.Building;
-using Deck.InGame.Agent.Building.Pool;
+using Deck.Components.Building;
+using Deck.Save.Data;
 using Deck.Utility.Logger;
-using Services.Implementations.Escapable;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace Deck.Services
         [SerializeField] private List<DeckPopUpBase> popUps;
 
         private Dictionary<Type, DeckPopUpBase> _typeDictionary;
-        private DeckUIPool _uiPool;
+        private DeckInstanceProvider _instanceProvider;
 
 #if UNITY_EDITOR
         [Button]
@@ -43,9 +42,9 @@ namespace Deck.Services
 #endif
 
         [Inject]
-        private void Inject(DeckUIPool uiPool)
+        private void Inject(DeckInstanceProvider instanceProvider)
         {
-            _uiPool = uiPool;
+            _instanceProvider = instanceProvider;
         }
 
         public override void Initialize()
@@ -64,8 +63,7 @@ namespace Deck.Services
                 DeckLogger.Error("Prefab not found type: " + typeof(T).Name);
             }
 
-            var result = _uiPool.Rent<T>(popUp.PrefabId);
-            return result;
+            return _instanceProvider.RentUIElement<T>().GetComponent<T>();
         }
     }
 }

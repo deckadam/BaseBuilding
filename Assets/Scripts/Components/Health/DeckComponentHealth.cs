@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.Components.Building.Stats;
 using Deck.Data.Component;
-using Deck.InGame.Agent;
-using Deck.InGame.Agent.Building.Pool;
-using Deck.InGame.Agent.Building.Stats;
 using Deck.MVC;
 using Deck.Save;
+using Deck.Save.Data;
 using Deck.Utility.Health;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     [Serializable]
     public class DeckComponentHealth : DeckComponent
@@ -29,15 +28,15 @@ namespace Deck.Commands
         private DeckHealthBar _healthBar;
         private bool _hasHealthBar;
         private int _limitHealth;
-        private DeckUIPool _uiPool;
+        private DeckInstanceProvider _instanceProvider;
         public bool IsDead => _currentHealth <= 0;
 
         public event Action<DeckAgent> OnDamageTaken;
 
         [Inject]
-        private void Inject(DeckUIPool uiPool)
+        private void Inject(DeckInstanceProvider instanceProvider)
         {
-            _uiPool = uiPool;
+            _instanceProvider = instanceProvider;
         }
 
         protected override void InternalPreInitialize()
@@ -94,7 +93,7 @@ namespace Deck.Commands
         {
             if (_hasHealthBar) return;
 
-            _healthBar = _uiPool.Rent<DeckHealthBar>();
+            _healthBar = _instanceProvider.RentUIElement<DeckHealthBar>();
             _healthBar.SetPositionOffset(Vector3.up * 2f);
             _healthBar.SetTarget(GetAgent().transform);
             _hasHealthBar = true;
@@ -104,7 +103,7 @@ namespace Deck.Commands
         {
             if (_hasHealthBar)
             {
-                _uiPool.Return(_healthBar);
+                _instanceProvider.ReturnUIElement(_healthBar);
                 _hasHealthBar = false;
             }
         }

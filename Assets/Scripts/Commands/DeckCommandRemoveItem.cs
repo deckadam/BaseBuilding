@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckCommandRemoveItem : DeckCommand
     {

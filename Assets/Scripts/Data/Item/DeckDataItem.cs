@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Item;
+using Deck.Components;
 using UnityEngine;
 
 namespace Deck.Data.Item

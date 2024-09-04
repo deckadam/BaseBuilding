@@ -1,11 +1,11 @@
 using Deck.Services;
-using Deck.Utility.Poolable;
+using Deck.Components;
 using DG.Tweening;
 using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.InGame.Agent.Building.Building
+namespace Deck.Components.Building.Building
 {
     public class DeckBuildingButton : DeckUIElement, IDeckEscapable
     {

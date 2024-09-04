@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.EventManager;
-using Deck.InGame.Agent;
+using Deck.Components;
 using Deck.Services;
 using UnityEngine;
 
@@ -10,6 +10,7 @@ namespace Deck.Selection
     public class DeckSelectionHighlighter : MonoBehaviour
     {
         [SerializeField] private float distanceFromGround;
+       
         private DeckAgent _target;
         private CancellationTokenSource _tokenSource;
 
@@ -46,7 +47,7 @@ namespace Deck.Selection
 
         private void SetTarget(DeckAgent obj)
         {
-            if (_target != null)
+            if (_target)
             {
                 _target.OnAgentSizeChanged -= OnTargetSizeChanged;
             }

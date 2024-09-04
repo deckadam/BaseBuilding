@@ -1,9 +1,9 @@
 ﻿using System;
-using Deck.InGame.Agent;
-using Deck.InGame.Agent.Building.Stats;
+using Deck.Components;
+using Deck.Components.Building.Stats;
 using UnityEngine;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public abstract class DeckComponent : MonoBehaviour, IDeckComponent
     {

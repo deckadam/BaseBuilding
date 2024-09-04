@@ -1,6 +1,6 @@
-﻿using Deck.Commands;
+﻿using Deck.Components;
 using Deck.Services;
-using Deck.InGame.Agent.Building.Inventory;
+using Deck.Components.Building.Inventory;
 
 namespace Deck.ItemVisualProviders.Implementations.Inventory
 {

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
+using Deck.Base;
+using Deck.Components.Building.InGame;
+using Deck.Components.Building.Stats;
 using Deck.InputHandling;
-using Deck.Item;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services.MapService;
-using Deck.InGame.Agent.Building.InGame;
-using Deck.InGame.Agent.Building.Stats;
 using Deck.Utility.Logger;
 using Services.AgentFinder;
 using UnityEditor;
@@ -16,12 +15,12 @@ using UnityEditor;
 using UnityEngine;
 #endif
 
-namespace Deck.InGame.Agent
+namespace Deck.Components
 {
-    public abstract class DeckAgent : MonoBehaviour
+    public abstract class DeckAgent : DeckPoolable
     {
         public event Action<float> OnAgentSizeChanged;
-        public event Action<DeckAgent> OnAgentDeath;
+        public event Action<DeckAgent> OnAgentDestroyed;
         public event Action OnItemVisualChanged;
 
         [SerializeField] protected Transform centerPosition;
@@ -50,14 +49,14 @@ namespace Deck.InGame.Agent
                 throw new Exception("No valid prefab id");
             }
         }
-        
+
         private void OnValidate()
         {
             components = GetComponents<DeckComponent>();
             collider = GetComponent<Collider>();
 
 #if UNITY_EDITOR
-            if ( !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
@@ -66,6 +65,11 @@ namespace Deck.InGame.Agent
             foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
             {
                 var agentComponent = agent as DeckAgent;
+
+                if (agentComponent == null)
+                {
+                    continue;
+                }
 
                 if (agentComponent.GetHashCode() == GetHashCode())
                 {
@@ -83,9 +87,9 @@ namespace Deck.InGame.Agent
                 }
             }
 
-            if (int.TryParse(name[..1], out var _))
+            if (int.TryParse(name[..1], out _))
             {
-                Debug.LogError("Reseting id " + name + " " + prefabId.ID);
+                Debug.LogError("Resetting id " + name + " " + prefabId.ID);
                 prefabId.ResetId();
                 return;
             }
@@ -259,7 +263,7 @@ namespace Deck.InGame.Agent
             transform.position = data.position;
             transform.eulerAngles = data.rotation;
             transform.localScale = data.scale;
-            
+
             Initialize();
             foreach (var saveData in data.componentDatas)
             {
@@ -284,7 +288,7 @@ namespace Deck.InGame.Agent
             }
         }
 
-        public void EnqueCommand(DeckCommand command)
+        public void EnqueueCommand(DeckCommand command)
         {
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
@@ -300,7 +304,7 @@ namespace Deck.InGame.Agent
 
         public void RequestDestroy()
         {
-            if (collider != null)
+            if (collider)
             {
                 collider.enabled = false;
             }
@@ -311,7 +315,7 @@ namespace Deck.InGame.Agent
             }
 
             InternalRequestDestroy();
-            OnAgentDeath?.Invoke(this);
+            OnAgentDestroyed?.Invoke(this);
 
             Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
         }

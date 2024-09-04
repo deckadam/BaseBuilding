@@ -1,5 +1,5 @@
 using Deck.Data.Buildable;
-using Deck.Item;
+using Deck.Components;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
@@ -8,7 +8,7 @@ using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     public class DeckBuilding : DeckAgent
     {

@@ -4,7 +4,7 @@ using Deck.Utility;
 using Deck.Animators;
 using Deck.Utility.Logger;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentAnimatorChest : DeckComponent, IDeckAnimationImmediatePlay
     {

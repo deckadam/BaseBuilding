@@ -1,5 +1,5 @@
 ﻿using Deck.EventManager;
-using Deck.InGame.Agent.Core;
+using Deck.Components.Core;
 
 namespace Deck.InputHandling.Events
 {

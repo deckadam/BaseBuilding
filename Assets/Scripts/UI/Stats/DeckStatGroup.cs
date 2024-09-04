@@ -1,6 +1,6 @@
-using Deck.Commands;
+using Deck.Components;
 
-namespace Deck.InGame.Agent.Building.Stats
+namespace Deck.Components.Building.Stats
 {
     public struct DeckStatGroup
     {

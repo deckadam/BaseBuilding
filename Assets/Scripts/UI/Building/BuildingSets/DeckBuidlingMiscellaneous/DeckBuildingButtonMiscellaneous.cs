@@ -1,4 +1,4 @@
-namespace Deck.InGame.Agent.Building.Building.BuildingSets.BuildingMiscellaneous
+namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
 {
     public class DeckBuildingButtonMiscellaneous:DeckBuildingButton
     {

@@ -6,7 +6,7 @@ using Deck.Services;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Building.Building
+namespace Deck.Components.Building.Building
 {
     public class DeckUIBuilding : DeckUIBase, IDeckEscapable
     {
@@ -21,10 +21,10 @@ namespace Deck.InGame.Agent.Building.Building
         {
             foreach (var buildingSet in buildingSets)
             {
-                var page = uiPool.Rent<DeckBuildingPage>(buildingSet.page.PrefabId);
+                var page = InstanceProvider.RentUIElement(buildingSet.page.GetType()).GetComponent<DeckBuildingPage>();
                 page.rectTransform.SetParent(pagesContainer, false);
 
-                var button = uiPool.Rent<DeckBuildingButton>(buildingSet.button.PrefabId);
+                var button = InstanceProvider.RentUIElement(buildingSet.button.GetType()).GetComponent<DeckBuildingButton>();
                 button.rectTransform.SetParent(buttonsContainer, false);
 
                 page.Initialize(this, buildingSet.button);

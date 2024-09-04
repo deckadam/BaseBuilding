@@ -1,9 +1,9 @@
 ﻿using Data.Component.Tree;
-using Deck.InGame.Agent;
+using Deck.Components;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentAnimatorHarvestable : DeckComponent
     {

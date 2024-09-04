@@ -1,12 +1,9 @@
-﻿using Deck.InGame.Agent.Building.GamePlay;
+﻿using Deck.Components.Building.GamePlay;
 using Deck.Services;
-using Deck.InGame.Agent.Building.Pool;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Deck.Utility.Poolable;
-using Zenject;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     [RequireComponent(typeof(EventTrigger))]
     public abstract class DeckPopUpBase : DeckUIElement
@@ -62,7 +59,7 @@ namespace Deck.InGame.Agent.Building
 
         public void OnCloseRequested()
         {
-            uiPool.Return(this);
+            InstanceProvider.ReturnUIElement(this);
         }
 
         public virtual bool CanDrag => true;

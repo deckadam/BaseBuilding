@@ -2,8 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using Data.Component;
-using Deck.Commands;
-using Deck.InGame.Agent;
+using Deck.Components;
 using Deck.Utility.Logger;
 using UnityEngine;
 

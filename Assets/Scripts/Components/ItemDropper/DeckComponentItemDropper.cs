@@ -4,7 +4,7 @@ using Deck.Utility.Logger;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentItemDropper : DeckComponent
     {

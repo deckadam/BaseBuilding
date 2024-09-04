@@ -1,4 +1,4 @@
-namespace Deck.InGame.Agent.Building.Stats
+namespace Deck.Components.Building.Stats
 {
     public struct DeckStat
     {

@@ -2,13 +2,11 @@
 using UnityEditor;
 #endif
 using System;
-using Deck.Commands;
+using Deck.Base;
+using Deck.Components.Building.InGame;
 using Deck.Data.General;
 using Deck.Data.Item;
-using Deck.InGame.Agent;
 using Deck.ItemVisualProviders;
-using Deck.Services.CellSelectionService;
-using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility.Logger;
 using DG.Tweening;
 using Services.AgentFinder;
@@ -17,9 +15,9 @@ using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace Deck.Item
+namespace Deck.Components
 {
-    public class DeckItemVisual : MonoBehaviour
+    public class DeckItemVisual : DeckPoolable
     {
         [ReadOnly, SerializeField] private bool isStatic;
 

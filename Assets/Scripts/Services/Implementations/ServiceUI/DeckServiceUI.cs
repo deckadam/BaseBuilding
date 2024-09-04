@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 using Deck.Utility.Class;
 using Deck.Utility.Logger;
 

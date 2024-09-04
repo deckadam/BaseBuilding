@@ -1,12 +1,11 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
 using Deck.Data.Item;
-using Deck.InGame.Agent.Building.GamePlay;
 using Deck.Services;
 using Deck.Services.CellSelectionService;
 using Deck.ItemVisualProviders.Implementations.Inventory;
-using Deck.Utility.Poolable;
+using Deck.Components;
+using Deck.Components.Building.GamePlay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +13,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building.Inventory
+namespace Deck.Components.Building.Inventory
 {
     public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -38,7 +37,7 @@ namespace Deck.InGame.Agent.Building.Inventory
             _popup = popup;
         }
 
-        protected override void OnDespawned()
+        protected override void InternalOnDespawned()
         {
             _source?.Cancel();
             _source?.Dispose();

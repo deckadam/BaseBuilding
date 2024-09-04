@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building.Item
+namespace Deck.Components.Building.Item
 {
     public class DeckUIItemDisplayer : DeckUIWorldDisplay
     {

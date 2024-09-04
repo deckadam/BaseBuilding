@@ -1,12 +1,10 @@
-﻿using Deck.Commands;
+﻿using Deck.Components;
 using Deck.Data.Item;
-using Deck.InGame.Agent;
-using Deck.InGame.Agent.Building;
-using Deck.InGame.Agent.Building.Inventory;
-using Deck.InGame.Agent.Building.Stats;
-using Deck.InGame.Agent.Core;
+using Deck.Components.Building;
+using Deck.Components.Building.Inventory;
+using Deck.Components.Building.Stats;
+using Deck.Components.Core;
 using Deck.InputHandling.Events;
-using Deck.Item;
 using Deck.ItemVisualProviders;
 using Deck.Save;
 using Deck.Services;
@@ -64,12 +62,14 @@ namespace Deck.InputHandling
 
             if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
             {
+                Debug.LogError("Agent death");
                 agent.RequestDestroy();
                 return;
             }
 
             if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
             {
+                Debug.LogError("Item visual death");
                 Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
             }
         }
@@ -158,7 +158,7 @@ namespace Deck.InputHandling
                 var items = _binderItem.GetItems();
                 foreach (var deckDataItem in items)
                 {
-                    DeckServiceSelection.currentSelection.EnqueCommand(new DeckCommandAddItem(deckDataItem, 100, DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>()));
+                    DeckServiceSelection.currentSelection.EnqueueCommand(new DeckCommandAddItem(deckDataItem, 100, DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>()));
                     DeckLogger.Inform(deckDataItem.name + " add to inventory of last selected agent");
                 }
             }

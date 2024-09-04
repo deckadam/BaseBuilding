@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Data.Item;
-using Deck.Item;
+using Deck.Components;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.InGame.Agent.Building.InGame;
+using Deck.Components.Building.InGame;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Deck.Utility.MonoBehaviours;
 using Zenject;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentEquipmentManager : DeckComponent, IDeckItemItemHolder
     {

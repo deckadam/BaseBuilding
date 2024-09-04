@@ -1,6 +1,6 @@
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 
-namespace Deck.InGame.Agent.Misc
+namespace Deck.Components.Misc
 {
     public class DeckAgentPainting : DeckBuilding
     {

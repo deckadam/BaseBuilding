@@ -2,10 +2,10 @@
 using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
 using Deck.Services.CellSelectionService;
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 using Deck.Utility;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckCommandTransferItem : DeckCommand
     {

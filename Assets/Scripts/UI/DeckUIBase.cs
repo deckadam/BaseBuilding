@@ -1,12 +1,12 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Data.UI;
-using Deck.Utility.Poolable;
+using Deck.Components;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.InGame.Agent.Building
+namespace Deck.Components.Building
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : DeckUIElement

@@ -1,4 +1,4 @@
-﻿using Deck.InGame.Agent.Building;
+﻿using Deck.Components.Building;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

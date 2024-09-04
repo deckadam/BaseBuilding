@@ -1,25 +1,10 @@
-using System;
 using System.Collections.Generic;
-using Deck.InGame.Agent.Building.Pool;
-using Deck.Utility.Poolable;
-using UnityEngine;
-using Zenject;
 
-namespace Deck.InGame.Agent.Building.Stats
+namespace Deck.Components.Building.Stats
 {
     public class DeckUIStatContainer : DeckUIElement
     {
-        [SerializeField] private DeckUIStatElement _statElementPrefab;
-        private DeckUIPool _uiPool;
         private List<DeckUIStatElement> _activeElements;
-
-
-        [Inject]
-        private void Inject(DeckUIPool uiPool)
-        {
-            _uiPool = uiPool;
-            _activeElements = new List<DeckUIStatElement>();
-        }
 
         public void SetStats(DeckStat[] stats)
         {
@@ -27,7 +12,7 @@ namespace Deck.InGame.Agent.Building.Stats
 
             foreach (var stat in stats)
             {
-                var statElement = _uiPool.Rent<DeckUIStatElement>(_statElementPrefab.PrefabId);
+                var statElement = InstanceProvider.RentUIElement<DeckUIStatElement>();
                 statElement.SetStat(stat);
                 statElement.transform.SetParent(transform);
                 _activeElements.Add(statElement);
@@ -36,11 +21,11 @@ namespace Deck.InGame.Agent.Building.Stats
 
         private void ClearStatElements()
         {
-            _uiPool.Return(_activeElements);
+            InstanceProvider.ReturnUIElement(_activeElements);
             _activeElements.Clear();
         }
 
-        protected override void OnDespawned()
+        protected override void InternalOnDespawned()
         {
             ClearStatElements();
         }

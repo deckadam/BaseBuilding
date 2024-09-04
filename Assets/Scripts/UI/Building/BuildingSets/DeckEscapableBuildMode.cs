@@ -4,7 +4,7 @@ using Deck.InputHandling.Events;
 using Deck.Services;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Building.Building.BuildingSets
+namespace Deck.Components.Building.Building.BuildingSets
 {
     public class DeckEscapableBuildMode : IDeckEscapable
     {

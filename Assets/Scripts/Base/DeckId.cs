@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Deck.InGame.Agent.Building.InGame
+namespace Deck.Components.Building.InGame
 {
     [Serializable]
     public struct DeckId

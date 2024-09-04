@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Data.Item;
-using Deck.Item;
+using Deck.Components;
 using Deck.Save;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckComponentInventory : DeckComponent
     {

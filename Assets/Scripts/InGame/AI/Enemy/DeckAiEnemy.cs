@@ -1,7 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
-using Deck.InGame.Agent;
+using Deck.Components;
 
 namespace Deck.InGame.AI.Enemy
 {

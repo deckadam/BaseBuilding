@@ -7,7 +7,7 @@ using Deck.Utility.Logger;
 using Services.AgentFinder;
 using UnityEngine;
 
-namespace Deck.Commands
+namespace Deck.Components
 {
     public class DeckCommandDealDamage : DeckCommand
     {

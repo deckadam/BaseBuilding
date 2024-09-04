@@ -1,10 +1,11 @@
 ﻿using Deck.Save.Data;
-using Deck.InGame.Agent.Building.Inventory;
-using Deck.InGame.Agent.Building.Item;
-using Deck.InGame.Agent.Building.SaveListingMenu;
-using Deck.InGame.Agent.Building.Stats;
+using Deck.Components.Building.Inventory;
+using Deck.Components.Building.Item;
+using Deck.Components.Building.SaveListingMenu;
+using Deck.Components.Building.Stats;
 using Deck.Utility.Health;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Data.Pool
@@ -13,7 +14,7 @@ namespace Deck.Data.Pool
     public class DeckBinderPool : ScriptableObjectInstaller
     {
         [SerializeField] private DeckHealthBar healthBarPrefab;
-        [SerializeField] private DeckInstanceCreator instanceCreator;
+        [FormerlySerializedAs("instanceCreator")] [SerializeField] private DeckInstanceProvider instanceProvider;
         [SerializeField] private DeckInventoryDisplayerCell inventoryDisplayerCellPrefab;
         [SerializeField] private DeckSaveDisplayer saveDisplayerPrefab;
         [SerializeField] private DeckInventoryPopUp inventoryPopUpPrefab;
@@ -25,8 +26,8 @@ namespace Deck.Data.Pool
 
         public override void InstallBindings()
         {
-            Container.BindInstance(instanceCreator).AsSingle().NonLazy();
-            Container.QueueForInject(instanceCreator);
+            Container.BindInstance(instanceProvider).AsSingle().NonLazy();
+            Container.QueueForInject(instanceProvider);
         }
     }
 }

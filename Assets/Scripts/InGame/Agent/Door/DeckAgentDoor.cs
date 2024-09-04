@@ -1,10 +1,10 @@
-using Deck.InGame.Agent.Building;
+using Deck.Components.Building;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
 using Zenject;
 
-namespace Deck.InGame.Agent.Door
+namespace Deck.Components.Door
 {
     public class DeckAgentDoor : DeckBuilding
     {
