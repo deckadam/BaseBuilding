@@ -1,8 +1,8 @@
 ﻿using Deck.Save.Data;
-using Deck.UI.Inventory;
-using Deck.UI.Item;
-using Deck.UI.SaveListingMenu;
-using Deck.UI.Stats;
+using Deck.InGame.Agent.Building.Inventory;
+using Deck.InGame.Agent.Building.Item;
+using Deck.InGame.Agent.Building.SaveListingMenu;
+using Deck.InGame.Agent.Building.Stats;
 using Deck.Utility.Health;
 using UnityEngine;
 using Zenject;

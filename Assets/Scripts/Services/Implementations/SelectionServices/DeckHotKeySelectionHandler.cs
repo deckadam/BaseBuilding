@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Deck.Agent;
 using Deck.EventManager;
+using Deck.InGame.Agent;
+using Deck.InGame.Agent.Building.Hotkey.Events;
 using Deck.InputHandling.Events;
-using Deck.UI.Hotkey.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 

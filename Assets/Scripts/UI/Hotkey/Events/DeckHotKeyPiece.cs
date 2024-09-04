@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.UI.Hotkey.Events
+namespace Deck.InGame.Agent.Building.Hotkey.Events
 {
     public class DeckHotKeyPiece : MonoBehaviour
     {

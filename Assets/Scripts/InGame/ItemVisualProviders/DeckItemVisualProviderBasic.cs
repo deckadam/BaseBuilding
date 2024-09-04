@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Deck.Item;
 using Deck.Save;
 using Deck.Save.Data;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
+using Deck.Utility;
 using Deck.Utility.Class;
 using Services.AgentFinder;
 using Sirenix.OdinInspector;
@@ -41,22 +42,22 @@ namespace Deck.ItemVisualProviders
             OnInitialize();
         }
 
-        public virtual bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
+        public virtual bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
         }
 
-        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal = true)
+        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
         }
 
-        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual, bool isInternal)
         {
-            return ReturnIfHasItemVisual(itemVisual);
+            return ReturnIfHasItemVisual(itemVisual, isInternal);
         }
 
-        protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal = true)
+        protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal)
         {
             itemVisual = null;
             foreach (var visualSet in itemVisualSets)
@@ -81,14 +82,17 @@ namespace Deck.ItemVisualProviders
             return false;
         }
 
-        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
+        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual, bool isInternal)
         {
-            if (_activeItemVisuals.TryGetValue(itemVisual.PrefabId.ID, out var list))
+            if (_activeItemVisuals.TryGetValue(itemVisual.PrefabId.ID, out var stack))
             {
-                list.Push(itemVisual);
+                stack.Push(itemVisual);
                 itemVisual.gameObject.SetActive(false);
                 Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
-                OnDespawned(itemVisual);
+                if (!isInternal)
+                {
+                    OnDespawned(itemVisual);
+                }
 
                 return true;
             }
@@ -98,11 +102,11 @@ namespace Deck.ItemVisualProviders
 
         protected virtual bool TryGetItemVisual(DeckItemVisual visual, out DeckItemVisual result)
         {
-            if (_activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var list))
+            if (_activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var stack))
             {
-                if (list.Count > 0)
+                if (stack.Count > 0)
                 {
-                    result = list.Pop();
+                    result = stack.Pop();
                     return true;
                 }
 

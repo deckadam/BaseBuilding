@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Deck.Agent;
 using Deck.Commands;
 using Deck.Data.Item;
+using Deck.InGame.Agent.Core;
 using Deck.ItemVisualProviders;
-using Deck.Services.MapService;
 using Deck.MVC;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services;
+using Deck.Services.MapService;
 using Services.AgentFinder;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     public class DeckGameManager : DeckServiceBase
     {
@@ -40,13 +39,13 @@ namespace Deck.UI
 
         public async void CreateNewGame()
         {
-            await Deck.GetService<DeckServiceScene>().LoadMap(false);
+            await Deck.GetService<DeckServiceScene>().LoadMap();
             _container.InstantiatePrefab(_coreAgentPrefab).GetComponent<DeckAgentCore>().Initialize();
         }
 
         public async void LoadGame()
         {
-            await Deck.GetService<DeckServiceScene>().LoadMap(true);
+            await Deck.GetService<DeckServiceScene>().LoadMap();
             var agentDatas = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             var itemVisualDatas = DeckSaveSystem.GetData<DeckItemVisualSaveDatas>(nameof(DeckItemVisualSaveDatas));
             _loadResolver.ResolveAndLoad(agentDatas, itemVisualDatas);

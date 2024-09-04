@@ -1,4 +1,3 @@
-using Deck.Agent;
 using Deck.Data.Buildable;
 using Deck.Item;
 using Deck.ItemVisualProviders;
@@ -8,7 +7,7 @@ using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     public class DeckBuilding : DeckAgent
     {
@@ -17,7 +16,7 @@ namespace Deck.UI
         [SerializeField] private bool setVisualPosition;
         [SerializeField] private bool setVisualRotation;
 
-        private DeckItemVisual _itemVisualInstance;
+        protected DeckItemVisual ItemVisualInstance;
 
         protected override void AfterLoad()
         {
@@ -26,32 +25,32 @@ namespace Deck.UI
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId, out _itemVisualInstance, selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
 
-            if (_itemVisualInstance != null)
+            if (ItemVisualInstance != null)
             {
-                _itemVisualInstance.transform.SetParent(transform, false);
+                ItemVisualInstance.transform.SetParent(transform, false);
 
                 if (setVisualPosition)
                 {
-                    _itemVisualInstance.transform.localPosition = Vector3.zero;
+                    ItemVisualInstance.transform.localPosition = Vector3.zero;
                 }
 
                 if (setVisualRotation)
                 {
-                    _itemVisualInstance.transform.localRotation = Quaternion.identity;
+                    ItemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
         }
 
-        protected override void InternalRequestDeath()
+        protected override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            if (_itemVisualInstance != null)
+            if (ItemVisualInstance != null)
             {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(_itemVisualInstance);
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(ItemVisualInstance);
             }
         }
 

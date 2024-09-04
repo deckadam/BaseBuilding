@@ -1,10 +1,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
+using Deck.InGame.Agent;
 
-namespace Deck.UI.InGame.AI.Enemy
+namespace Deck.InGame.AI
 {
-    public interface DeckAIState
+    public interface IDeckAIState
     {
         UniTask OnStateRequest(CancellationTokenSource source, params object[] args);
         void SetAgent(DeckAgent agent);

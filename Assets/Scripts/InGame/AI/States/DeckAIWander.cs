@@ -1,14 +1,14 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data.Component;
-using Deck.Agent;
 using Deck.Commands;
+using Deck.InGame.Agent;
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.UI.InGame.AI.Enemy
+namespace Deck.InGame.AI
 {
-    public class DeckAIWander : MonoBehaviour, DeckAIState
+    public class DeckAIWander : MonoBehaviour, IDeckAIState
     {
         [SerializeField] private DeckDataMovement wanderingSpeed;
         [SerializeField] private float wanderingRadius;

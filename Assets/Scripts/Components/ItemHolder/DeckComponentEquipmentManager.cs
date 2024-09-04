@@ -4,7 +4,7 @@ using Deck.Data.Item;
 using Deck.Item;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Deck.Utility.MonoBehaviours;
@@ -105,6 +105,7 @@ namespace Deck.Commands
                 DeckLogger.Error("Can't get item visual for " + itemData.Name);
                 return;
             }
+
             _currentlyEquippedItem.transform.SetParent(target, true);
             _currentlyEquippedItem.transform.localPosition = _currentlyEquippedItem.LocalEquipPosition;
             _currentlyEquippedItem.transform.eulerAngles = _currentlyEquippedItem.LocalEquipRotation;

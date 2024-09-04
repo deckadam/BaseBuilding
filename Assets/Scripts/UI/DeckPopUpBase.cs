@@ -1,12 +1,12 @@
-﻿using Deck.Services;
-using Deck.UI.GamePlay;
-using Deck.UI.Pool;
+﻿using Deck.InGame.Agent.Building.GamePlay;
+using Deck.Services;
+using Deck.InGame.Agent.Building.Pool;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Deck.Utility.Poolable;
 using Zenject;
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     [RequireComponent(typeof(EventTrigger))]
     public abstract class DeckPopUpBase : DeckUIElement

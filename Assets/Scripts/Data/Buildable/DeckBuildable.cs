@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Deck.Agent;
 using Deck.Data.Item;
+using Deck.InGame.Agent;
 using Deck.Item;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -17,11 +17,13 @@ namespace Deck.Data.Buildable
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
+        [SerializeField] private string visibleName;
         [SerializeField] private SilouetteData[] silouette;
         [SerializeField] private Vector2Int[] indices;
         [SerializeField] private bool rotatable;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
+        [SerializeField] private bool canBeHangedToWall;
 
         public DeckItemRequirement[] Requeriements => requirements;
         public SilouetteData[] Silouette => silouette;
@@ -30,8 +32,11 @@ namespace Deck.Data.Buildable
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
         public string Name => name;
+        public string VisibleName => visibleName;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
+        public bool CanBePlacedOnTopOfAnotherObject => itemVisual.CanBePlacedOnTopOfAnotherObject;
+        public bool CanBeHangedToWall => canBeHangedToWall;
 
         [Button]
         private void OnValidate()

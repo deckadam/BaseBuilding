@@ -1,10 +1,11 @@
-﻿using Deck.ItemVisualProviders;
+﻿using Deck.InGame.Agent.Building;
+using Deck.ItemVisualProviders;
 using Deck.Services.Building;
-using Deck.UI;
 using Deck.Utility;
+using UnityEngine;
 using Zenject;
 
-namespace Deck.Agent
+namespace Deck.InGame.Agent.Wall
 {
     public class DeckAgentWall : DeckBuilding
     {
@@ -16,10 +17,10 @@ namespace Deck.Agent
             _wallProvider = wallProvider;
         }
 
-        protected override void InternalRequestDeath()
+        protected override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            _wallProvider.ReturnItemVisual(transform.position.ToVector2Int());
+            _wallProvider.ReturnItemVisual(transform.position.ToVector2Int(), true);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
 using Deck.EventManager;
+using Deck.InGame.Agent;
 using Deck.Services;
 using UnityEngine;
 

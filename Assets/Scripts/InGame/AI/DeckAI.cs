@@ -1,30 +1,30 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
-using Deck.UI.InGame.AI.Enemy;
+using Deck.InGame.Agent;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Deck.UI.InGame.AI
+namespace Deck.InGame.AI
 {
     public class DeckAI : MonoBehaviour
     {
-        [SerializeField] protected SerializedDictionary<DeckAITrigger, DeckAIState> stateDictionary;
+        [SerializeField] protected SerializedDictionary<DeckAITrigger, IDeckAIState> stateDictionary;
         [SerializeField] protected DeckAITrigger initialTrigger;
         protected DeckAgent AgentToControl;
         protected CancellationTokenSource TokenSource;
-        protected DeckAIState ActiveState;
+        protected IDeckAIState ActiveState;
 
         public void StartAi()
         {
             AgentToControl = GetComponent<DeckAgent>();
-            stateDictionary = new SerializedDictionary<DeckAITrigger, DeckAIState>();
-            var states = GetComponentsInChildren<DeckAIState>();
+            stateDictionary = new SerializedDictionary<DeckAITrigger, IDeckAIState>();
+            var states = GetComponentsInChildren<IDeckAIState>();
             foreach (var deckAIState in states)
             {
                 stateDictionary.Add(deckAIState.GetTrigger(), deckAIState);
-            }  
+            }
+
             foreach (var deckAIState in stateDictionary.Values)
             {
                 deckAIState.SetAgent(AgentToControl);

@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.InGame.Agent;
 using Deck.Item;
 using Deck.Save;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;
@@ -35,27 +36,29 @@ namespace Deck.ItemVisualProviders
             }
         }
 
-        public bool ReturnItemVisual(Vector2Int cellIndex)
+        public void ReturnItemVisual(Vector2Int cellIndex, bool isInternal)
         {
-            if (!IsWall(cellIndex)) return false;
-            _wallCheckSet.Remove(cellIndex);
+            if (!IsWall(cellIndex))
+            {
+                return;
+            }
 
-            ConnectWalls(cellIndex, 0);
-            return true;
+            _wallCheckSet.Remove(cellIndex);
+            ReturnItemVisual(_activeWalls[cellIndex], isInternal);
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public override bool ReturnItemVisual(DeckItemVisual itemVisual, bool isInternal)
         {
             if (!IsWall(itemVisual)) return false;
-            var pos = itemVisual.transform.position.ToVector2Int();
-            _wallCheckSet.Remove(pos);
 
-            ConnectWalls(pos, 0);
+            var itemPos = itemVisual.transform.position.ToVector2Int();
+            _wallCheckSet.Remove(itemPos);
+            ConnectWalls(itemPos, 0);
 
             return true;
         }
 
-        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
+        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
         {
             if (_wallCheckSet.Contains(cellIndex))
             {
@@ -71,8 +74,8 @@ namespace Deck.ItemVisualProviders
 
             _wallCheckSet.Add(cellIndex);
             ConnectWalls(cellIndex, 0);
-            itemVisual = null;
-            return false;
+            itemVisual = _activeWalls[cellIndex];
+            return true;
         }
 
         private void ConnectWalls(Vector2Int changePosition, int depth)
@@ -80,20 +83,16 @@ namespace Deck.ItemVisualProviders
             var checkList = new bool[4];
             var neighbours = changePosition.GetNeighbours();
 
+            DeckAgent agent = null;
             if (depth < 2 && _activeWalls.TryGetValue(changePosition, out var itemVisual))
             {
-                var result = ReturnIfHasItemVisual(itemVisual);
-                if (!result)
+                agent = itemVisual.Agent;
+                if (!ReturnIfHasItemVisual(itemVisual, true))
                 {
                     DeckLogger.Error("ReturnIfHasItemVisual failed!");
                 }
 
                 _activeWalls.Remove(changePosition);
-            }
-
-            if (!_wallCheckSet.Contains(changePosition))
-            {
-                return;
             }
 
             for (var index = 0; index < neighbours.Length; index++)
@@ -109,10 +108,20 @@ namespace Deck.ItemVisualProviders
                 }
             }
 
+            if (!_wallCheckSet.Contains(changePosition))
+            {
+                return;
+            }
+
             var visualPrefab = GetVisualToPlace(checkList);
-            RentIfHasItemVisual(visualPrefab.PrefabId, out var visualInstance, false);
+            RentIfHasItemVisual(visualPrefab.PrefabId, out var visualInstance, true);
             _activeWalls[changePosition] = visualInstance;
             visualInstance.transform.position = changePosition.ToVector3();
+            
+            if (!agent) return;
+            
+            Debug.LogError("Replacing parent");
+            visualInstance.transform.parent = agent.transform;
         }
 
 

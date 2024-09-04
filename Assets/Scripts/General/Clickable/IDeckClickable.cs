@@ -1,4 +1,4 @@
-﻿namespace Deck.UI.General.Clickable
+﻿namespace Deck.InGame.Agent.Building.General.Clickable
 {
     public interface IDeckClickable
     {

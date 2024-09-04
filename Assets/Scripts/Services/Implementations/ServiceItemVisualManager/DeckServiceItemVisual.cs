@@ -1,6 +1,7 @@
+using Deck.InGame.Agent;
 using Deck.Item;
 using Deck.Services;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -26,7 +27,7 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual,isInternal: isInternal))
+                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal: isInternal))
                 {
                     return true;
                 }
@@ -40,13 +41,13 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.ReturnItemVisual(itemVisual))
+                if (deckItemVisualProvider.ReturnItemVisual(itemVisual, false))
                 {
                     return;
                 }
             }
 
-            DeckLogger.Error("No item visual found for id " + itemVisual.PrefabId);
+            DeckLogger.Error("No item visual found for id " + itemVisual.name);
         }
     }
 }

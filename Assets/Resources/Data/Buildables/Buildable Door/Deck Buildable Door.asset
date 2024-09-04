@@ -16,6 +16,7 @@ MonoBehaviour:
   agent: {fileID: -7197348414825284670, guid: c32ff13636e69064cab335d07b740c8f, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
   name: Door
+  visibleName: Door
   silouette:
   - mesh: {fileID: 8013014795085914972, guid: 63c56a19a10f8c047ac758590bc0d7c1, type: 3}
     position: {x: 0, y: 0, z: 0}

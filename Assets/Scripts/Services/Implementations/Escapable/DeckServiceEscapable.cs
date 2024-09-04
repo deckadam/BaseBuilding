@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Deck.Services;
-using Deck.UI;
+using Deck.InGame.Agent.Building;
+using Unity.VisualScripting;
 
 namespace Services.Implementations.Escapable
 {
@@ -29,6 +30,16 @@ namespace Services.Implementations.Escapable
             {
                 Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckMainMenu>().SwapAppearanceStatus();
             }
+        }
+
+        public void ClearEscapables()
+        {
+            while (_escapables.TryPop(out var escapable))
+            {
+                escapable.OnCloseRequested();
+            }
+
+            _escapables.Clear();
         }
     }
 }

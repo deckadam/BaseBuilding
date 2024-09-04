@@ -5,9 +5,10 @@ using System;
 using Deck.Commands;
 using Deck.Data.General;
 using Deck.Data.Item;
+using Deck.InGame.Agent;
 using Deck.ItemVisualProviders;
 using Deck.Services.CellSelectionService;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility.Logger;
 using DG.Tweening;
 using Services.AgentFinder;
@@ -31,17 +32,22 @@ namespace Deck.Item
         [SerializeField] private new Collider collider;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
+        [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
+        [SerializeField] private bool canBePlacedOnTop;
+        public DeckAgent Agent { get; set; }
 
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
-
         private DeckBinderGeneral.DeckGeneralData _generalData;
-        private bool _hasDropped;
-        private bool _hasInitialized;
         public void SetItem(DeckDataItem item) => bindedItem = item;
         public DeckDataItem GetBindedItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
+        public Collider Collider => collider;
         public bool IsStatic => isStatic;
+        public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
+        public bool CanBePlacedOnTop => canBePlacedOnTop;
+        private bool _hasDropped;
+        private bool _hasInitialized;
 
         public DeckId PrefabId
         {
@@ -106,7 +112,7 @@ namespace Deck.Item
             collider = GetComponentInChildren<Collider>();
 
 #if UNITY_EDITOR
-            if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
@@ -184,36 +190,10 @@ namespace Deck.Item
             collider.enabled = true;
         }
 
-        private void CreatePickUpCommand()
+        public void SetAgent(DeckAgent agent)
         {
-            if (isStatic)
-            {
-                return;
-            }
-
-            var agent = DeckServiceSelection.currentPossession;
-            if (agent == null)
-            {
-                return;
-            }
-
-            var inventory = agent.GetDeckComponent<DeckComponentInventory>();
-            if (inventory == null)
-            {
-                return;
-            }
-
-            var movement = agent.GetDeckComponent<DeckComponentMovement>();
-            if (movement == null)
-            {
-                return;
-            }
-
-            var command = new DeckCommandPickUpItem();
-            command.Initialize(inventory, movement, this);
-            agent.AddCommand(command);
+            Agent = agent;
         }
-
 
         public void OnEquip()
         {

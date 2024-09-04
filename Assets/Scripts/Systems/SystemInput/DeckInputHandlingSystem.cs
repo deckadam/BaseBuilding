@@ -1,19 +1,21 @@
-﻿using Deck.Agent;
-using Deck.Commands;
-using Deck.Data.Damage;
+﻿using Deck.Commands;
 using Deck.Data.Item;
+using Deck.InGame.Agent;
+using Deck.InGame.Agent.Building;
+using Deck.InGame.Agent.Building.Inventory;
+using Deck.InGame.Agent.Building.Stats;
+using Deck.InGame.Agent.Core;
 using Deck.InputHandling.Events;
+using Deck.Item;
+using Deck.ItemVisualProviders;
 using Deck.Save;
 using Deck.Services;
-using Deck.Services.Building;
 using Deck.Services.CameraService;
 using Deck.Services.CellSelectionService;
-using Deck.UI;
-using Deck.UI.Inventory;
-using Deck.UI.Stats;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
 using Services.Implementations.Escapable;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -49,6 +51,29 @@ namespace Deck.InputHandling
             SaveCheck();
             CheckForCommandStackStatus();
             CheckForStatsPopUp();
+            CheckForDestroyBuilding();
+        }
+
+        private void CheckForDestroyBuilding()
+        {
+            if (!Input.GetKeyDown(KeyCode.Delete)) return;
+
+            var dCam = Deck.GetService<DeckServiceCamera>().GetCamera();
+            var ray = dCam.ScreenPointToRay(Input.mousePosition);
+            if (!Physics.Raycast(ray, out var hit)) return;
+
+            if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
+            {
+                Debug.LogError("Agent death");
+                agent.RequestDestroy();
+                return;
+            }
+
+            if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
+            {
+                Debug.LogError("Item visual death");
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
+            }
         }
 
         private void CheckForStatsPopUp()

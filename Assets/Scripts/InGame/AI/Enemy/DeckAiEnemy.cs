@@ -1,10 +1,9 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
 using Deck.Commands;
-using Deck.UI.InGame.AI;
+using Deck.InGame.Agent;
 
-namespace InGame.AI.Enemy
+namespace Deck.InGame.AI.Enemy
 {
     public class DeckAiEnemy : DeckAI
     {

@@ -1,8 +1,7 @@
-﻿using Deck.Agent;
-using Deck.Commands;
+﻿using Deck.Commands;
 using Deck.EventManager;
+using Deck.InGame.Agent;
 using Deck.InputHandling.Events;
-using Deck.Services;
 using Deck.Utility.Logger;
 
 namespace Deck.Services.CellSelectionService

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.UI;
-using Deck.UI.Pool;
+using Deck.InGame.Agent.Building;
+using Deck.InGame.Agent.Building.Pool;
 using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using Sirenix.OdinInspector;
@@ -25,7 +25,7 @@ namespace Deck.Services
             popUps = new List<DeckPopUpBase>();
             foreach (var popup in Resources.FindObjectsOfTypeAll(typeof(DeckPopUpBase)))
             {
-                if (PrefabUtility.GetPrefabParent(popup) == null && !PrefabUtility.IsPartOfPrefabAsset(popup))
+                if (!PrefabUtility.IsPartOfPrefabAsset(popup))
                 {
                     continue;
                 }

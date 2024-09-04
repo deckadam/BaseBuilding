@@ -1,5 +1,5 @@
-﻿using Deck.Agent;
-using Deck.EventManager;
+﻿using Deck.EventManager;
+using Deck.InGame.Agent;
 
 namespace Deck.Services
 {

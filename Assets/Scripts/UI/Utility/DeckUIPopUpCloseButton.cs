@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.Utility
+namespace Deck.InGame.Agent.Building.Utility
 {
     public class DeckUIPopUpCloseButton : MonoBehaviour
     {

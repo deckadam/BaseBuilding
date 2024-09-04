@@ -29,7 +29,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8158672690522780418}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -68,7 +67,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8158672690522780418}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -173,7 +171,6 @@ RectTransform:
   - {fileID: 4922600709843253251}
   - {fileID: 8158672689194224392}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -197,7 +194,9 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -273,9 +272,11 @@ MonoBehaviour:
   isAppearedOnStartUp: 0
   _isAppeared: 0
   buildingSets:
-  - button: {fileID: 1464873640965513975, guid: 4b4364fd2e761404f849778b37b8a497, type: 3}
+  - button: {fileID: 8432023853462673980, guid: 4b4364fd2e761404f849778b37b8a497, type: 3}
     page: {fileID: 6560618859166587799, guid: 42829b76db044e0409950f054d191447, type: 3}
   - button: {fileID: 6905810452175096246, guid: b0fb6a496795cd64eb88cb47bd5ccd44, type: 3}
     page: {fileID: 2743536138830366345, guid: f47bf7688728b2e4280e3dd47e91e980, type: 3}
+  - button: {fileID: 1603869472940069730, guid: 0946697eac1887f4e9432ddd08b66285, type: 3}
+    page: {fileID: 429786604705594565, guid: 1bf0cddb387380a40ae02170baaa811f, type: 3}
   buttonsContainer: {fileID: 8158672689194224392}
   pagesContainer: {fileID: 4922600709843253251}

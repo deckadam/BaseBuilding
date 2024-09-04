@@ -1,6 +1,6 @@
 using Deck.Commands;
 
-namespace Deck.UI.Stats
+namespace Deck.InGame.Agent.Building.Stats
 {
     public struct DeckStatGroup
     {

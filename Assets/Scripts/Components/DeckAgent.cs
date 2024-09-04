@@ -7,8 +7,8 @@ using Deck.Item;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Services.MapService;
-using Deck.UI.InGame;
-using Deck.UI.Stats;
+using Deck.InGame.Agent.Building.InGame;
+using Deck.InGame.Agent.Building.Stats;
 using Deck.Utility.Logger;
 using Services.AgentFinder;
 using UnityEditor;
@@ -16,7 +16,7 @@ using UnityEditor;
 using UnityEngine;
 #endif
 
-namespace Deck.Agent
+namespace Deck.InGame.Agent
 {
     public abstract class DeckAgent : MonoBehaviour
     {
@@ -57,7 +57,7 @@ namespace Deck.Agent
             collider = GetComponent<Collider>();
 
 #if UNITY_EDITOR
-            if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if ( !PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
@@ -298,7 +298,7 @@ namespace Deck.Agent
             OnAgentSizeChanged?.Invoke(activeSize);
         }
 
-        public void RequestDeath()
+        public void RequestDestroy()
         {
             if (collider != null)
             {
@@ -310,13 +310,13 @@ namespace Deck.Agent
                 deckComponent.OnDeath();
             }
 
-            InternalRequestDeath();
+            InternalRequestDestroy();
             OnAgentDeath?.Invoke(this);
 
             Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
         }
 
-        protected virtual void InternalRequestDeath()
+        protected virtual void InternalRequestDestroy()
         {
             Destroy(gameObject);
         }

@@ -1,6 +1,6 @@
 ﻿using Deck.EventManager;
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     public class DeckEventNotificationRequested : DeckEvent
     {

@@ -1,6 +1,6 @@
 ﻿using System;
-using Deck.Agent;
 using Deck.Constants;
+using Deck.InGame.Agent;
 using UnityEngine;
 
 namespace Deck.Commands

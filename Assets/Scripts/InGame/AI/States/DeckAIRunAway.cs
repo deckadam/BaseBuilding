@@ -2,14 +2,14 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
 using Data.Component;
-using Deck.Agent;
 using Deck.Commands;
+using Deck.InGame.Agent;
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.UI.InGame.AI.Enemy
+namespace Deck.InGame.AI
 {
-    public class DeckAIRunAway : MonoBehaviour, DeckAIState
+    public class DeckAIRunAway : MonoBehaviour, IDeckAIState
     {
         [SerializeField] private DeckDataMovement runningSpeed;
         [SerializeField] private int runDuration;

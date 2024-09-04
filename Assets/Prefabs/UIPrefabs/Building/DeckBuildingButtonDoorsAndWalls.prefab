@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7289677456814834294}
   - component: {fileID: 7289677456814834288}
-  - component: {fileID: 1464873640965513975}
   - component: {fileID: 1196966266820864154}
+  - component: {fileID: 8432023853462673980}
   m_Layer: 5
   m_Name: DeckBuildingButtonDoorsAndWalls
   m_TagString: Untagged
@@ -33,7 +33,6 @@ RectTransform:
   m_Children:
   - {fileID: 3198694126069398644}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -30}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -48,27 +47,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7289677456814834295}
   m_CullTransparentMesh: 1
---- !u!114 &1464873640965513975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7289677456814834295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad0b3bf92f2d4d989e8cb34d8cfd8619, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabId:
-    _id: 60164565
-    IdString: 
-  rectTransform: {fileID: 7289677456814834294}
-  movementDuration: 0.2
-  movementEase: 3
-  appearPosition: {x: 0, y: 50}
-  disappearPosition: {x: 0, y: 0}
-  background: {fileID: 1880821553232054039}
 --- !u!114 &1196966266820864154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +91,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464873640965513975}
+      - m_Target: {fileID: 8432023853462673980}
         m_TargetAssemblyTypeName: Deck.UI.Building.DeckBuildingButton, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
@@ -125,6 +103,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8432023853462673980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7289677456814834295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6aa82f5ba94092836466e05b6ff0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId:
+    _id: 87681154
+    IdString: 87681154
+  rectTransform: {fileID: 7289677456814834294}
+  movementDuration: 0.2
+  movementEase: 27
+  appearPosition: {x: 0, y: 50}
+  disappearPosition: {x: 0, y: 0}
+  background: {fileID: 1880821553232054039}
 --- !u!1 &8800942647104551398
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +155,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7289677456814834294}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}

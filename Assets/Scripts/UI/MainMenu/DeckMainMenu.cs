@@ -1,16 +1,16 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.EventManager;
+using Deck.InGame.Agent.Building.SaveListingMenu;
+using Deck.InGame.Agent.Building.SaveListingMenu.Events;
 using Deck.Save;
 using Deck.Services;
-using Deck.UI.SaveListingMenu;
-using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
 #pragma warning disable 4014
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     public class DeckMainMenu : DeckUIBase
     {

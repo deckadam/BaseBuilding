@@ -16,6 +16,7 @@ MonoBehaviour:
   agent: {fileID: -4123667621523898490, guid: 1bfe988f2fcd6ab48804a7f7660d675a, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
   name: FurnitureChair_001
+  visibleName: Chair
   silouette:
   - mesh: {fileID: -5495902117074765545, guid: e84e48d726420ac4fb4405450808072a, type: 3}
     position: {x: 0, y: 0, z: 0}

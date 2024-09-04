@@ -1,6 +1,6 @@
 using System;
-using Deck.UI.InGame;
-using Deck.UI.Pool;
+using Deck.InGame.Agent.Building.InGame;
+using Deck.InGame.Agent.Building.Pool;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -47,7 +47,7 @@ namespace Deck.Utility.Poolable
             rectTransform ??= GetComponent<RectTransform>();
 
 #if UNITY_EDITOR
-            if (PrefabUtility.GetPrefabParent(gameObject) == null && !PrefabUtility.IsPartOfPrefabAsset(gameObject))
+            if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }

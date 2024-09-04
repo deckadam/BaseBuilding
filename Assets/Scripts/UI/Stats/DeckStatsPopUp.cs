@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Deck.Agent;
 using Deck.Commands;
+using Deck.InGame.Agent.Tree;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI.Stats
+namespace Deck.InGame.Agent.Building.Stats
 {
     public class DeckStatsPopUp : DeckPopUpBase
     {

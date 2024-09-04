@@ -1,4 +1,4 @@
-﻿namespace Deck.UI
+﻿namespace Deck.InGame.Agent.Building
 {
     public static class DeckConstantsPrimitive
     {

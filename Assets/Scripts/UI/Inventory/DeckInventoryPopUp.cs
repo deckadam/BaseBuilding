@@ -5,7 +5,7 @@ using Deck.ItemVisualProviders.Implementations.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Deck.UI.Inventory
+namespace Deck.InGame.Agent.Building.Inventory
 {
     public class DeckInventoryPopUp : DeckPopUpBase, IPointerEnterHandler, IPointerExitHandler
     {

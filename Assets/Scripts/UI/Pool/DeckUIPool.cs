@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Save.Data;
-using Deck.UI.InGame;
 using Deck.Utility.Poolable;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI.Pool
+namespace Deck.InGame.Agent.Building.Pool
 {
     [CreateAssetMenu(menuName = "Deck/UI/Pool", fileName = "Deck UI Pool")]
     public class DeckUIPool : ScriptableObject

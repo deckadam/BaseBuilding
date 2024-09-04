@@ -1,7 +1,7 @@
 ﻿using Deck.EventManager;
-using Deck.UI.Hotkey.Events;
+using Deck.InGame.Agent.Building.Hotkey.Events;
 
-namespace Deck.UI.Hotkey
+namespace Deck.InGame.Agent.Building.Hotkey
 {
     public class DeckHotkeyUI : DeckUIBase
     {

@@ -3,7 +3,7 @@ using UnityEngine;
 using Deck.Utility.Poolable;
 using Zenject;
 
-namespace Deck.UI.Stats
+namespace Deck.InGame.Agent.Building.Stats
 {
     public class DeckUIStatElement : DeckUIElement
     {

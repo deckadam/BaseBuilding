@@ -1,12 +1,12 @@
 ﻿using System;
+using Deck.InGame.Agent.Building.Health;
 using Deck.Services;
 using Deck.Services.CameraService;
-using Deck.UI.Health;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Deck.Utility.Poolable;
 
-namespace Deck.UI
+namespace Deck.InGame.Agent.Building
 {
     public class DeckUIWorldDisplay : DeckUIElement
     {
@@ -52,7 +52,7 @@ namespace Deck.UI
             {
                 rect.position = mainCamera.WorldToScreenPoint(target.transform.position + positionOffset);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 DeckLogger.Inform("Agent system is not working properly. Please check the agent system.");
                 uiPool.Return(this);

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Deck.Agent;
+using Deck.InGame.Agent;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Item;
-using Deck.UI.InGame;
 using Deck.Utility.Poolable;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -35,7 +35,7 @@ namespace Deck.Save.Data
             instanceCreator.itemVisuals = new List<DeckItemVisual>();
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
             {
-                if (PrefabUtility.GetPrefabParent(itemVisual) == null && !PrefabUtility.IsPartOfPrefabAsset(itemVisual))
+                if (!PrefabUtility.IsPartOfPrefabAsset(itemVisual))
                 {
                     continue;
                 }
@@ -53,7 +53,7 @@ namespace Deck.Save.Data
             instanceCreator.agents = new List<DeckAgent>();
             foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
             {
-                if (PrefabUtility.GetPrefabParent(agent) == null && !PrefabUtility.IsPartOfPrefabAsset(agent))
+                if (!PrefabUtility.IsPartOfPrefabAsset(agent))
                 {
                     continue;
                 }
@@ -71,7 +71,7 @@ namespace Deck.Save.Data
             instanceCreator.uiElements = new List<DeckUIElement>();
             foreach (var uiElement in Resources.FindObjectsOfTypeAll(typeof(DeckUIElement)))
             {
-                if (PrefabUtility.GetPrefabParent(uiElement) == null && !PrefabUtility.IsPartOfPrefabAsset(uiElement))
+                if (!PrefabUtility.IsPartOfPrefabAsset(uiElement))
                 {
                     continue;
                 }
@@ -93,7 +93,7 @@ namespace Deck.Save.Data
             itemVisuals = new List<DeckItemVisual>();
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
             {
-                if (PrefabUtility.GetPrefabParent(itemVisual) == null && !PrefabUtility.IsPartOfPrefabAsset(itemVisual))
+                if (!PrefabUtility.IsPartOfPrefabAsset(itemVisual))
                 {
                     continue;
                 }
@@ -111,7 +111,7 @@ namespace Deck.Save.Data
             agents = new List<DeckAgent>();
             foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
             {
-                if (PrefabUtility.GetPrefabParent(agent) == null && !PrefabUtility.IsPartOfPrefabAsset(agent))
+                if (!PrefabUtility.IsPartOfPrefabAsset(agent))
                 {
                     continue;
                 }
@@ -129,7 +129,7 @@ namespace Deck.Save.Data
             uiElements = new List<DeckUIElement>();
             foreach (var uiElement in Resources.FindObjectsOfTypeAll(typeof(DeckUIElement)))
             {
-                if (PrefabUtility.GetPrefabParent(uiElement) == null && !PrefabUtility.IsPartOfPrefabAsset(uiElement))
+                if (!PrefabUtility.IsPartOfPrefabAsset(uiElement))
                 {
                     continue;
                 }

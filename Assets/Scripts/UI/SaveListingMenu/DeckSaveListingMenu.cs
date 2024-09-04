@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
+using Deck.InGame.Agent.Building.Inventory;
+using Deck.InGame.Agent.Building.SaveListingMenu.Events;
 using Deck.Save;
 using Deck.Services;
 using Deck.Utility.Logger;
-using Deck.UI.Inventory;
-using Deck.UI.SaveListingMenu.Events;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.SaveListingMenu
+namespace Deck.InGame.Agent.Building.SaveListingMenu
 {
     public class DeckSaveListingMenu : DeckUIBase
     {

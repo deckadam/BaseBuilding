@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Deck.Data.Item;
 using Deck.Services.CellSelectionService;
-using Deck.UI;
+using Deck.InGame.Agent.Building;
 using Deck.Utility;
 
 namespace Deck.Commands

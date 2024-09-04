@@ -7,33 +7,33 @@ namespace Deck.Services.MapService
 {
     public class DeckServiceScene : DeckServiceBase
     {
-        private static DeckMap sceneParent;
+        private const string MapName = "MapScene";
+        private static DeckMap _sceneParent;
 
         public static DeckMap GetMap()
         {
-            if (sceneParent != null)
+            if (_sceneParent != null)
             {
-                return sceneParent;
+                return _sceneParent;
             }
 
-            sceneParent = FindObjectOfType<DeckMap>();
-            return sceneParent;
+            _sceneParent = FindObjectOfType<DeckMap>();
+            return _sceneParent;
         }
 
-        public async UniTask LoadMap(bool isEmpty)
+        public async UniTask LoadMap()
         {
-            var mapName = isEmpty ? "MapScene_Empty" : "MapScene";
-            var isLoaded = SceneManager.GetSceneByName(mapName).isLoaded;
+            var isLoaded = SceneManager.GetSceneByName(MapName).isLoaded;
             if (isLoaded)
             {
-                DeckLogger.Map("Old map scene unloading");
-                await SceneManager.UnloadSceneAsync(mapName);
-                DeckLogger.Map("Old map scene unloaded");
+                DeckLogger.Map("Map scene unloading");
+                await SceneManager.UnloadSceneAsync(MapName);
+                DeckLogger.Map("Map scene unloaded");
             }
 
             DeckLogger.Map("New map scene loading");
-            await SceneManager.LoadSceneAsync(mapName, LoadSceneMode.Additive);
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(mapName));
+            await SceneManager.LoadSceneAsync(MapName, LoadSceneMode.Additive);
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(MapName));
             DeckLogger.Map("New map scene loaded");
         }
     }

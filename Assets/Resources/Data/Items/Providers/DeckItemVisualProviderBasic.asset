@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DeckItemVisualProviderBasic
   m_EditorClassIdentifier: 
   itemVisualSets:
+  - {fileID: 7699648442756046541, guid: 1e911432e0397af4080d1269a85a3d91, type: 3}
   - {fileID: 9032209925360883485, guid: 18bf077b66d7d254d8ef277154b2edbe, type: 3}
   - {fileID: 2583041291122265383, guid: 5363a9918ffaa1a43add940170ac2269, type: 3}
   - {fileID: 4006595031824536313, guid: 15e172e1f124fba4d92024f4f4512869, type: 3}
@@ -21,3 +22,4 @@ MonoBehaviour:
   - {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
   - {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
   - {fileID: 6395205563783229675, guid: 6ab5c165dfab7304da8a2a037521096c, type: 3}
+  - {fileID: 5825906728500267455, guid: b6b77ac6f5cb6594780c7535e4f901e5, type: 3}

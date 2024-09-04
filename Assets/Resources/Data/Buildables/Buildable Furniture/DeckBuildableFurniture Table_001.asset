@@ -16,6 +16,7 @@ MonoBehaviour:
   agent: {fileID: -4123667621523898490, guid: 8830b8231e1803f4fb031892fd2b0467, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 6ab5c165dfab7304da8a2a037521096c, type: 3}
   name: FurnitureTable_001
+  visibleName: Table
   silouette:
   - mesh: {fileID: 2534964839176971238, guid: 4bbe435fcede879488e1a8236baeae3f, type: 3}
     position: {x: 0, y: 0, z: 0}
@@ -23,4 +24,4 @@ MonoBehaviour:
   indices: []
   rotatable: 1
   icon: {fileID: 0}
-  extents: {x: 2.2050002, y: 0.90000004, z: 2.7619197}
+  extents: {x: 2, y: 0.8000001, z: 2}

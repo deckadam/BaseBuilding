@@ -1,6 +1,6 @@
 ﻿using System;
-using Deck.Agent;
-using Deck.UI.Stats;
+using Deck.InGame.Agent;
+using Deck.InGame.Agent.Building.Stats;
 using UnityEngine;
 
 namespace Deck.Commands

@@ -2,10 +2,9 @@ using System;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Services;
-using Unity.Mathematics;
 using UnityEngine;
 
-namespace Deck.UI.Building.BuildingSets
+namespace Deck.InGame.Agent.Building.Building.BuildingSets
 {
     public class DeckEscapableBuildMode : IDeckEscapable
     {
@@ -15,6 +14,7 @@ namespace Deck.UI.Building.BuildingSets
         private bool _isEscaped;
         private bool _canMoveBuild;
         private bool _isClosed;
+        public bool HasEscaped { get; private set; }
 
         public DeckEscapableBuildMode(Action onEscape, Action<Vector3> onBuild, bool canMoveBuild = false)
         {
@@ -28,6 +28,7 @@ namespace Deck.UI.Building.BuildingSets
                 DeckEventManager.Register<DeckEventOnMouseMove>(OnMouseMove);
             }
         }
+
 
         public void OnCloseRequested()
         {

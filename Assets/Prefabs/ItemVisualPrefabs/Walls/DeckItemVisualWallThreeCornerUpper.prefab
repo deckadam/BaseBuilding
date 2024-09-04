@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6395205563783229675}
   m_Layer: 0
   m_Name: DeckItemVisualWallThreeCornerUpper
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92419127608998867}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,7 +33,6 @@ Transform:
   - {fileID: 8286643042912793270}
   - {fileID: 2694014158194595168}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6395205563783229675
 MonoBehaviour:
@@ -60,6 +60,8 @@ MonoBehaviour:
   prefabId:
     _id: 74765311
     IdString: 
+  canBePlacedOnTopOfAnotherObject: 0
+  canBePlacedOnTop: 0
 --- !u!1 &3326153751823093722
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,13 +87,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3326153751823093722}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071069, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5299075911979825411}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &3565119841693411070
 BoxCollider:
@@ -101,9 +103,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3326153751823093722}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.65, y: 1.5, z: 0.3}
   m_Center: {x: -0.175, y: 0.75, z: 0}
 --- !u!208 &9002557278786969568
@@ -127,6 +137,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5299075911979825411}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bc406a48524348340b4ebba7d11d3e50, type: 3}
@@ -178,6 +189,15 @@ PrefabInstance:
       value: ThreeCornerWall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc406a48524348340b4ebba7d11d3e50, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7174977024076243767}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bc406a48524348340b4ebba7d11d3e50, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 935552962121402356}
   m_SourcePrefab: {fileID: 100100000, guid: bc406a48524348340b4ebba7d11d3e50, type: 3}
 --- !u!4 &8286643042912793270 stripped
 Transform:
@@ -197,9 +217,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8668234517073831948}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.3, y: 1.5, z: 1}
   m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!208 &935552962121402356

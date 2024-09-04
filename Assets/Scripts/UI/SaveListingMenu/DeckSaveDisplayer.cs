@@ -1,15 +1,15 @@
-﻿using Deck.Save;
+﻿using Deck.InGame.Agent.Building.Inventory;
+using Deck.InGame.Agent.Building.SaveListingMenu.Events;
+using Deck.Save;
 using Deck.Services;
 using Deck.Utility.Logger;
-using Deck.UI.Inventory;
-using Deck.UI.SaveListingMenu.Events;
 using Deck.Utility.Poolable;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace Deck.UI.SaveListingMenu
+namespace Deck.InGame.Agent.Building.SaveListingMenu
 {
     public class DeckSaveDisplayer : DeckUIElement, IPointerClickHandler
     {

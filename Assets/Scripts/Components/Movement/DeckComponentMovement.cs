@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Data.Component;
 using Deck.Save;
-using Deck.UI.Stats;
+using Deck.InGame.Agent.Building.Stats;
 using UnityEngine;
 using UnityEngine.AI;
 

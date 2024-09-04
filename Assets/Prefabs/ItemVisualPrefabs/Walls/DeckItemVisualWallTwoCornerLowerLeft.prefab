@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6395205563783229675}
   m_Layer: 0
   m_Name: DeckItemVisualWallTwoCornerLowerLeft
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 92419127608998867}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,7 +33,6 @@ Transform:
   - {fileID: 8733309612512645184}
   - {fileID: 1753975795173949759}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6395205563783229675
 MonoBehaviour:
@@ -60,6 +60,8 @@ MonoBehaviour:
   prefabId:
     _id: 47132526
     IdString: 
+  canBePlacedOnTopOfAnotherObject: 0
+  canBePlacedOnTop: 0
 --- !u!1 &1377132944229555077
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,13 +87,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377132944229555077}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000058114523}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5299075911979825411}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!65 &6586356907947542932
 BoxCollider:
@@ -101,9 +103,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1377132944229555077}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.65, y: 1, z: 0.3}
   m_Center: {x: -0.175, y: 0.5, z: 0}
 --- !u!208 &1610225012095408895
@@ -127,6 +137,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 5299075911979825411}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
@@ -178,6 +189,15 @@ PrefabInstance:
       value: TwoCornerWall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5782577306556632450}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5918444677180876863}
   m_SourcePrefab: {fileID: 100100000, guid: f4227d0c2043c6643928dcc0b175c5cd, type: 3}
 --- !u!1 &8248662120655375098 stripped
 GameObject:
@@ -192,9 +212,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8248662120655375098}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.3, y: 1, z: 0.65}
   m_Center: {x: 0, y: 0.5, z: 0.175}
 --- !u!208 &5918444677180876863

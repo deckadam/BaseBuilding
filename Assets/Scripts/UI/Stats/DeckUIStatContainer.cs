@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Deck.UI.Pool;
+using Deck.InGame.Agent.Building.Pool;
 using Deck.Utility.Poolable;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI.Stats
+namespace Deck.InGame.Agent.Building.Stats
 {
     public class DeckUIStatContainer : DeckUIElement
     {

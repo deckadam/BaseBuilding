@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Deck.Services;
 using Deck.Utility.Poolable;
 using DG.Tweening;
@@ -6,7 +5,7 @@ using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.Building
+namespace Deck.InGame.Agent.Building.Building
 {
     public class DeckBuildingButton : DeckUIElement, IDeckEscapable
     {
@@ -18,15 +17,26 @@ namespace Deck.UI.Building
 
         [SerializeField] protected Image background;
 
-        protected DeckBuildingUI buildingUI;
+        public bool HasEscaped { get; private set; } = true;
+
+        protected DeckUIBuilding uiBuilding;
         protected DeckBuildingPage page;
 
         private DeckServiceEscapable _escapableService;
         private bool _isAppeared;
 
-        public void Initialize(DeckBuildingUI buildingUI, DeckBuildingPage page)
+        public DeckBuildingButton(bool hasEscaped)
         {
-            this.buildingUI = buildingUI;
+            HasEscaped = hasEscaped;
+        }
+
+        protected DeckBuildingButton()
+        {
+        }
+
+        public void Initialize(DeckUIBuilding uiBuilding, DeckBuildingPage page)
+        {
+            this.uiBuilding = uiBuilding;
             this.page = page;
             _escapableService = Deck.GetService<DeckServiceEscapable>();
             OnInitialize();
@@ -38,13 +48,14 @@ namespace Deck.UI.Building
 
         public void OnClick()
         {
+            uiBuilding.PageOpenRequested(this);
             _escapableService.RegisterEscapable(this);
-            
-            Appear().Forget();
-            page.Appear().Forget();
+
+            Appear();
+            page.Appear();
         }
 
-        protected virtual async UniTask Appear()
+        private void Appear()
         {
             if (_isAppeared)
             {
@@ -52,10 +63,11 @@ namespace Deck.UI.Building
             }
 
             _isAppeared = true;
-            await background.rectTransform.DOAnchorPos(appearPosition, movementDuration).SetEase(movementEase).AsyncWaitForCompletion();
+            background.rectTransform.DOAnchorPos(appearPosition, movementDuration).SetEase(movementEase);
+            HasEscaped = false;
         }
 
-        public virtual async UniTask Disappear()
+        private void Disappear()
         {
             if (!_isAppeared)
             {
@@ -64,13 +76,15 @@ namespace Deck.UI.Building
 
             _isAppeared = false;
 
-            await background.rectTransform.DOAnchorPos(disappearPosition, movementDuration).SetEase(movementEase).AsyncWaitForCompletion();
+            background.rectTransform.DOAnchorPos(disappearPosition, movementDuration).SetEase(movementEase);
+            HasEscaped = true;
         }
+
 
         public void OnCloseRequested()
         {
-            Disappear().Forget();
-            page.Disappear().Forget();
+            Disappear();
+            page.Disappear();
         }
     }
 }

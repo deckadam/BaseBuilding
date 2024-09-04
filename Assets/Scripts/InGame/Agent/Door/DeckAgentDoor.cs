@@ -1,10 +1,10 @@
+using Deck.InGame.Agent.Building;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
-using UnityEngine;
 using Zenject;
 
-namespace Deck.UI.InGame.Agent.Door
+namespace Deck.InGame.Agent.Door
 {
     public class DeckAgentDoor : DeckBuilding
     {
@@ -16,10 +16,10 @@ namespace Deck.UI.InGame.Agent.Door
             _doorProvider = doorProvider;
         }
 
-        protected override void InternalRequestDeath()
+        protected override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            _doorProvider.ReturnItemVisual(transform.position.ToVector2Int());
+            _doorProvider.ReturnItemVisual(transform.position.ToVector2Int(), false);
         }
     }
 }

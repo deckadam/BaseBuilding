@@ -2,9 +2,9 @@
 using Cysharp.Threading.Tasks;
 using Deck.Commands;
 using Deck.Data.Item;
+using Deck.InGame.Agent.Building.GamePlay;
 using Deck.Services;
 using Deck.Services.CellSelectionService;
-using Deck.UI.GamePlay;
 using Deck.ItemVisualProviders.Implementations.Inventory;
 using Deck.Utility.Poolable;
 using TMPro;
@@ -14,7 +14,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.UI.Inventory
+namespace Deck.InGame.Agent.Building.Inventory
 {
     public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {

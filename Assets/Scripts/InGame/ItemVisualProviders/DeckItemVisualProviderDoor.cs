@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.InGame.Agent;
 using Deck.Item;
 using Deck.Save;
-using Deck.UI.InGame;
+using Deck.InGame.Agent.Building.InGame;
 using Deck.Utility;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -36,30 +37,30 @@ namespace Deck.ItemVisualProviders
             _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
         }
 
-        public bool ReturnItemVisual(Vector2Int cellIndex)
+        public bool ReturnItemVisual(Vector2Int cellIndex, bool isInternal)
         {
             if (!_doorCheckSet.Contains(cellIndex)) return false;
 
             _doorCheckSet.Remove(cellIndex);
-            ReturnIfHasItemVisual(_activeWalls[cellIndex]);
+            ReturnIfHasItemVisual(_activeWalls[cellIndex], isInternal);
             _wallProvider.OnDoorRemoved(cellIndex);
             return true;
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public override bool ReturnItemVisual(DeckItemVisual itemVisual, bool isInternal)
         {
             if (!itemVisual.PrefabId.Equals(doorPrefab.PrefabId)) return false;
 
             var pos = itemVisual.transform.position.ToVector2Int();
             _doorCheckSet.Remove(pos);
-            ReturnIfHasItemVisual(itemVisual);
+            ReturnIfHasItemVisual(itemVisual, isInternal);
 
             _wallProvider.OnDoorRemoved(pos);
             _activeWalls.Remove(pos);
             return true;
         }
 
-        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal = true)
+        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
         {
             if (!prefabId.Equals(doorPrefab.PrefabId))
             {
@@ -75,7 +76,7 @@ namespace Deck.ItemVisualProviders
 
             if (_wallProvider.IsWall(cellIndex))
             {
-                _wallProvider.ReturnItemVisual(cellIndex);
+                _wallProvider.ReturnItemVisual(cellIndex, true);
             }
 
 
@@ -105,34 +106,6 @@ namespace Deck.ItemVisualProviders
             }
 
             return HorizontalRotation;
-        }
-
-        protected override string OnSaveDataRequested()
-        {
-            return string.Empty;
-            var saveData = new SaveData
-            {
-                wallPositions = _doorCheckSet.ToArray()
-            };
-
-            return DeckSaveUtility.GetSerializedData(saveData);
-        }
-
-        protected override void OnLoadDataRequested(string value)
-        {
-            return;
-            var saveData = DeckSaveUtility.GetDeserializedData<SaveData>(value);
-            _doorCheckSet.AddRange(saveData.wallPositions);
-            foreach (var pos in _doorCheckSet)
-            {
-                RequestItemVisual(doorPrefab.PrefabId, pos, out _);
-            }
-        }
-
-        [Serializable]
-        private struct SaveData
-        {
-            public Vector2Int[] wallPositions;
         }
     }
 }

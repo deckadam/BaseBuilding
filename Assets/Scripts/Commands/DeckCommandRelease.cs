@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
+using Deck.InGame.Agent;
 
 namespace Deck.Commands
 {

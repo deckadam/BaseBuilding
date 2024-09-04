@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Agent;
 using Deck.Data.Component;
+using Deck.InGame.Agent;
+using Deck.InGame.Agent.Building.Pool;
+using Deck.InGame.Agent.Building.Stats;
 using Deck.MVC;
 using Deck.Save;
-using Deck.UI.Pool;
-using Deck.UI.Stats;
 using Deck.Utility.Health;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
@@ -72,7 +72,7 @@ namespace Deck.Commands
                     DeckLogger.Component("Requesting death on " + agent.GetUniqueId().ID);
                     ReleaseHealthBar();
                     _currentHealth = 0;
-                    agent.RequestDeath();
+                    agent.RequestDestroy();
                     return;
                 }
 

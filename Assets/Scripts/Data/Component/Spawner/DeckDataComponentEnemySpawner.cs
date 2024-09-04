@@ -1,4 +1,4 @@
-using Deck.Agent;
+using Deck.InGame.Agent;
 using UnityEngine;
 
 namespace Data.Component.Tree

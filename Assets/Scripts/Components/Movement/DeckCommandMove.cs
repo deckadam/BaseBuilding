@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Agent;
+using Deck.InGame.Agent;
 using Deck.Services.CellSelectionService;
 using UnityEngine;
 
