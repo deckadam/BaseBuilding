@@ -64,14 +64,12 @@ namespace Deck.InputHandling
 
             if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
             {
-                Debug.LogError("Agent death");
                 agent.RequestDestroy();
                 return;
             }
 
             if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
             {
-                Debug.LogError("Item visual death");
                 Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
             }
         }

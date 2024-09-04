@@ -3,6 +3,7 @@ using Deck.Item;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
+using Deck.Utility.Logger;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -32,7 +33,7 @@ namespace Deck.InGame.Agent.Building
             if (ItemVisualInstance != null)
             {
                 ItemVisualInstance.transform.SetParent(transform, false);
-
+                ItemVisualInstance.Agent = this;
                 if (setVisualPosition)
                 {
                     ItemVisualInstance.transform.localPosition = Vector3.zero;
@@ -42,6 +43,10 @@ namespace Deck.InGame.Agent.Building
                 {
                     ItemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
+            }
+            else
+            {
+                DeckLogger.Warning("No ItemVisualInstance assigned");
             }
         }
 

@@ -436,7 +436,10 @@ namespace Deck.Services.Building
 
             foreach (var meshFilter in _filters)
             {
-                Destroy(meshFilter.gameObject);
+                if (meshFilter)
+                {
+                    Destroy(meshFilter.gameObject);
+                }
             }
 
             _filters.Clear();

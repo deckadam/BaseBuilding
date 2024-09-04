@@ -119,8 +119,6 @@ namespace Deck.ItemVisualProviders
             visualInstance.transform.position = changePosition.ToVector3();
             
             if (!agent) return;
-            
-            Debug.LogError("Replacing parent");
             visualInstance.transform.parent = agent.transform;
         }
 
