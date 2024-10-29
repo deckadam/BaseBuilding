@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8982334086589103889}
   - component: {fileID: 8560112403335899720}
   m_Layer: 0
-  m_Name: DeckAgentPainting_001
+  m_Name: DeckAgentPainting_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,10 +53,9 @@ MonoBehaviour:
     _id: 0
     IdString: 
   prefabId:
-    _id: 39429655
+    _id: 50510773
     IdString: 
   selfTransform: {fileID: 0}
-  buildingData: {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
-  itemVisualPrefab: {fileID: 5825906728500267455, guid: b6b77ac6f5cb6594780c7535e4f901e5, type: 3}
+  buildingData: {fileID: 11400000, guid: e93101c5ed9aa914a9c3fb5bcf93b9dd, type: 2}
   setVisualPosition: 0
   setVisualRotation: 0

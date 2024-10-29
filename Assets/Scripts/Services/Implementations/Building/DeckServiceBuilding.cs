@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
+using Deck.Components.Building;
 using Deck.Data.Buildable;
 using Deck.Data.General;
 using Deck.EventManager;
-using Deck.Components.Building;
 using Deck.InputHandling.Events;
 using Deck.Save.Data;
 using Deck.Services.CameraService;
@@ -80,10 +80,16 @@ namespace Deck.Services.Building
         }
 #endif
 
+        private void SetActiveBuildable(DeckBuildable buildable)
+        {
+            Debug.LogError("set active buildable  " + buildable.name);
+            _activeBuildable = buildable;
+        }
+
         public void StartSilhouette(DeckBuildable buildable)
         {
             _isDirty = true;
-            _activeBuildable = buildable;
+            SetActiveBuildable(buildable);
 
             var silhouetteData = _activeBuildable.Silouette;
 
@@ -215,9 +221,9 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (CollidesWithOtherItemsOnWall(buildPosition, buildRotation))
+            if (CollidesWithOtherItemsOnWall(buildPosition, buildRotation, out var collidedObject))
             {
-                DeckLogger.Inform("Collides with object");
+                DeckLogger.Inform("Collides with object", collidedObject);
                 return;
             }
 
@@ -282,6 +288,9 @@ namespace Deck.Services.Building
 
         public void BuildFree(Vector3 position)
         {
+            Debug.LogError(_activeBuildable.name);
+            Debug.LogError(_activeBuildable.Agent.name);
+            Debug.LogError(_activeBuildable.ItemVisual.name);
             if (_activeBuildable == null)
             {
                 DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
@@ -362,21 +371,23 @@ namespace Deck.Services.Building
             SetCellOccupied(cellPosition.ToVector3(), _activeBuildable.Indices, newBuilding);
         }
 
-        private bool CollidesWithOtherItemsOnWall(Vector3 position, Vector3 normal)
+        private bool CollidesWithOtherItemsOnWall(Vector3 position, Vector3 normal, out GameObject collidedObject)
         {
             var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
             if (!boxCollider)
             {
                 DeckLogger.Warning("Collider is not BoxCollider");
+                collidedObject = null;
                 return true;
             }
 
             if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, layerMask, QueryTriggerInteraction.Ignore) > 0)
             {
-                Debug.LogError(_possibleColliders[0].transform.name);
+                collidedObject = _possibleColliders[0].gameObject;
                 return true;
             }
 
+            collidedObject = null;
             return false;
         }
 

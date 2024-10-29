@@ -50,7 +50,7 @@ namespace Deck.Components
             }
         }
 
-        private void OnValidate()
+        public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
             collider = GetComponent<Collider>();

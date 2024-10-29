@@ -13,7 +13,6 @@ namespace Deck.Components.Building
     public class DeckBuilding : DeckAgent
     {
         [SerializeField] private DeckBuildable buildingData;
-        [SerializeField] private DeckItemVisual itemVisualPrefab;
         [SerializeField] private bool setVisualPosition;
         [SerializeField] private bool setVisualRotation;
 
@@ -26,7 +25,9 @@ namespace Deck.Components.Building
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemVisualPrefab.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
+            Debug.LogError(name);
+            Debug.LogError(buildingData.ItemVisual.name);
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
 

@@ -69,11 +69,10 @@ MonoBehaviour:
   rectTransform: {fileID: 5327040660684750421}
   container: {fileID: 8582541736764332237}
   canvasGroup: {fileID: 4330169967580350106}
-  appearDuration: 0
-  ease: 0
   miscellaneousBuildable:
   - {fileID: 11400000, guid: f994cd9af2402ec4796711f96dbbdcd4, type: 2}
   - {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
+  - {fileID: 11400000, guid: e93101c5ed9aa914a9c3fb5bcf93b9dd, type: 2}
 --- !u!1 &683066293051858034
 GameObject:
   m_ObjectHideFlags: 0

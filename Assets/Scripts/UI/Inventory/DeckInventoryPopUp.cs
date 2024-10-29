@@ -16,10 +16,12 @@ namespace Deck.Components.Building.Inventory
 
         public void SetTarget(DeckComponentInventory componentInventory)
         {
+            _serviceInventory = Deck.GetService<DeckServiceInventory>();
+            
             _componentInventory = componentInventory;
             _componentInventory.AddListener(CreateNewCells);
             _componentInventory.OnInventoryViewStatusChanged(true);
-
+            
             CreateNewCells(componentInventory.GetItems());
         }
 

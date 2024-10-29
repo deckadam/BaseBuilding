@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1311640935592332458
+--- !u!1 &1688244125595013509
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8982334086589103889}
-  - component: {fileID: 8560112403335899720}
+  - component: {fileID: 3243664932160554566}
+  - component: {fileID: -4123667621523898490}
   m_Layer: 0
-  m_Name: DeckAgentPainting_001
+  m_Name: DeckAgentFurnitureChair_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8982334086589103889
+--- !u!4 &3243664932160554566
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311640935592332458}
+  m_GameObject: {fileID: 1688244125595013509}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,16 +32,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8560112403335899720
+--- !u!114 &-4123667621523898490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311640935592332458}
+  m_GameObject: {fileID: 1688244125595013509}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a73d4f39fba64a599f15a5a98eb11774, type: 3}
+  m_Script: {fileID: 11500000, guid: cfa7c750658442c796b37652e142f206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerPosition: {fileID: 0}
@@ -53,10 +53,10 @@ MonoBehaviour:
     _id: 0
     IdString: 
   prefabId:
-    _id: 39429655
+    _id: 94160235
     IdString: 
   selfTransform: {fileID: 0}
-  buildingData: {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
-  itemVisualPrefab: {fileID: 5825906728500267455, guid: b6b77ac6f5cb6594780c7535e4f901e5, type: 3}
-  setVisualPosition: 0
-  setVisualRotation: 0
+  buildingData: {fileID: 11400000, guid: 474edb263dd37134283f7840aa603453, type: 2}
+  itemVisualPrefab: {fileID: 6395205563783229675, guid: daa9d44ae22aed340abc21f3319a02bc, type: 3}
+  setVisualPosition: 1
+  setVisualRotation: 1

@@ -40,6 +40,7 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
                 EscapableService.CloseEscapable();
             }
 
+
             _escapableBuildMode = new DeckEscapableBuildMode(OnEscapeRequested, OnBuildRequested);
             EscapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;

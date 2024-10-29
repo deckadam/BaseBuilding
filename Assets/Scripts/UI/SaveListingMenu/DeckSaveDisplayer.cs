@@ -1,35 +1,31 @@
 ﻿using Deck.Save;
 using Deck.Services;
 using Deck.Utility.Logger;
-using Deck.Components;
 using Deck.Components.Building.Inventory;
 using Deck.Components.Building.SaveListingMenu.Events;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Zenject;
 
 namespace Deck.Components.Building.SaveListingMenu
 {
     public class DeckSaveDisplayer : DeckUIElement, IPointerClickHandler
     {
-        [field: ClearOnReload] public static DeckSaveDisplayer CurrentlySelectedDsiplayer { get; private set; }
 
         [SerializeField] private TextMeshProUGUI displayText;
 
         private DeckSaveSystem.SaveFile _saveFile;
-
-        public void SetData(DeckSaveSystem.SaveFile saveFile)
+        private DeckSaveListingMenu _saveListingMenu;
+        public void SetData(DeckSaveSystem.SaveFile saveFile, DeckSaveListingMenu saveListingMenu)
         {
-
+            _saveListingMenu = saveListingMenu;
             _saveFile = saveFile;
             displayText.text = saveFile.name;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            CurrentlySelectedDsiplayer = this;
-
+            _saveListingMenu.SetSelected(this);
             if (eventData.clickCount != 2) return;
 
             var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();

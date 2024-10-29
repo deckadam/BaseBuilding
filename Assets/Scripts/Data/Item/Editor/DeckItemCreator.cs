@@ -8,14 +8,15 @@ namespace Deck.Data.Item.Editor
 {
     public class DeckItemCreator : EditorWindow
     {
-        private Sprite _icon;
-        private int _amount;
-        private string _name;
-        private bool _holdable;
-        private bool _isBoxCollider;
-        private string _animationName;
         private List<DeckActionTag> _tags = new();
         private GameObject _itemVisual;
+        private GameObject _model;
+        private string _animationName;
+        private bool _isBoxCollider;
+        private bool _holdable;
+        private Sprite _icon;
+        private string _name;
+        private int _amount;
 
         [MenuItem("Deck/Item Creator")]
         private static void ShowWindow()
@@ -38,7 +39,7 @@ namespace Deck.Data.Item.Editor
             _isBoxCollider = EditorGUILayout.Toggle("Is box collider: ", _holdable);
             _animationName = EditorGUILayout.TextField("Animation name", _animationName);
 
-            _itemVisual = (GameObject)EditorGUILayout.ObjectField("Item visual: ", _itemVisual, typeof(GameObject), false);
+            _model = (GameObject)EditorGUILayout.ObjectField("Item model: ", _model, typeof(GameObject), false);
 
             for (var i = 0; i < _tags.Count; i++)
             {
@@ -73,18 +74,18 @@ namespace Deck.Data.Item.Editor
             ClearPrefabIfExists(prefabName);
             ClearScriptableIfExists(assetName);
 
-            var instance = InitializeItemInstance();
-            if (instance)
+            var itemVisualInstance = InitializeItemInstance();
+            if (itemVisualInstance)
             {
                 return;
             }
 
-            var prefab = PrefabUtility.SaveAsPrefabAsset(instance, prefabName).GetComponent<DeckItemVisual>();
+            var prefab = PrefabUtility.SaveAsPrefabAsset(itemVisualInstance, prefabName).GetComponent<DeckItemVisual>();
             var newScriptableObject = DeckDataItem.Create(_name, _icon, _amount, prefab, _holdable, _animationName, _tags);
 
             AssetDatabase.CreateAsset(newScriptableObject, assetName);
 
-            UpdatePrefabData(prefab, newScriptableObject, prefabName, instance);
+            UpdatePrefabData(prefab, newScriptableObject, prefabName, itemVisualInstance);
 
             DeckLogger.Success(_name + "  item and prefab succesfully created");
 
@@ -124,29 +125,31 @@ namespace Deck.Data.Item.Editor
 
         private GameObject InitializeItemInstance()
         {
-            var instance = Instantiate(_itemVisual, Vector3.zero, Quaternion.identity);
-            if (instance == null)
+            var newObject = new GameObject();
+            var itemVisualInstance = newObject.AddComponent<DeckItemVisual>();
+            var modelInstance = Instantiate(_model, newObject.transform);
+            if (newObject == null)
             {
                 return null;
             }
 
             if (_isBoxCollider)
             {
-                instance.AddComponent<BoxCollider>();
+                modelInstance.AddComponent<BoxCollider>();
             }
             else
             {
-                instance.AddComponent<CapsuleCollider>();
+                modelInstance.AddComponent<CapsuleCollider>();
             }
 
-            instance.AddComponent<DeckItemVisual>();
-            var rb = instance.GetComponent<Rigidbody>();
-            rb.isKinematic = true;
 
             var mat = Resources.Load<Material>("AtlasMaterial");
-            instance.GetComponent<MeshRenderer>().material = mat;
-            instance.transform.localScale = Vector3.one;
-            return instance;
+            newObject.GetComponent<MeshRenderer>().material = mat;
+            newObject.transform.localScale = Vector3.one;
+            
+            itemVisualInstance.OnValidate();
+            
+            return newObject;
         }
 
         private void ClearPrefabIfExists(string prefabName)

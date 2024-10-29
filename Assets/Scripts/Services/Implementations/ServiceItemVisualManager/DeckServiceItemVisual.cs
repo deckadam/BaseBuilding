@@ -32,6 +32,7 @@ namespace Deck.ItemVisualProviders
                 }
             }
 
+            Debug.LogError("RequestItemVisual failed");
             itemVisual = null;
             return false;
         }

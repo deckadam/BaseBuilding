@@ -1,9 +1,9 @@
 ﻿using Deck.Components;
-using Deck.Data.Item;
 using Deck.Components.Building;
 using Deck.Components.Building.Inventory;
 using Deck.Components.Building.Stats;
 using Deck.Components.Core;
+using Deck.Data.Item;
 using Deck.InputHandling.Events;
 using Deck.ItemVisualProviders;
 using Deck.Save;
@@ -13,9 +13,9 @@ using Deck.Services.CellSelectionService;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
 using Services.Implementations.Escapable;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using Zenject;
 
 namespace Deck.InputHandling
@@ -76,6 +76,7 @@ namespace Deck.InputHandling
 
         private void CheckForStatsPopUp()
         {
+            return;
             if (Input.GetKeyDown(KeyCode.C))
             {
                 var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
@@ -231,14 +232,29 @@ namespace Deck.InputHandling
             DeckServiceSelection.currentPossession.AddCommand(new DeckCommandMove(navMeshHit.position, DeckServiceSelection.currentPossession));
         }
 
+        private bool _isInputStartedOnUI;
+
         private void RaycastToGround()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                DeckEventOnLeftClick.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+                if (IsOnUI())
+                {
+                    _isInputStartedOnUI = true;
+                }
+                else
+                {
+                    _isInputStartedOnUI = false;
+                    DeckEventOnLeftClick.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+                }
             }
             else if (Input.GetMouseButton(0))
             {
+                if (_isInputStartedOnUI)
+                {
+                    return;
+                }
+
                 DeckEventOnMouseMove.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
             }
 
@@ -246,6 +262,11 @@ namespace Deck.InputHandling
             {
                 DeckEventMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
             }
+        }
+
+        private bool IsOnUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
         }
     }
 }

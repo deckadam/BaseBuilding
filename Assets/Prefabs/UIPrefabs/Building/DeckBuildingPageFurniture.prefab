@@ -33,7 +33,6 @@ RectTransform:
   - {fileID: 6001842767896317800}
   - {fileID: 8582541736764332237}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -56,13 +55,13 @@ MonoBehaviour:
     _id: 96093006
     IdString: 
   rectTransform: {fileID: 5327040660684750421}
+  container: {fileID: 8582541736764332237}
   canvasGroup: {fileID: 4330169967580350106}
-  appearDuration: 0.2
-  ease: 27
   furnitureBuildable:
   - {fileID: 11400000, guid: fcecd0616c929d6438ba26a5da4e2a5b, type: 2}
+  - {fileID: 11400000, guid: 474edb263dd37134283f7840aa603453, type: 2}
   - {fileID: 11400000, guid: 7c259c88abf2bb44ca64fb004c4bd56c, type: 2}
-  container: {fileID: 8582541736764332237}
+  - {fileID: 11400000, guid: 1c14826bc0419c94c9cf8cab6c826fac, type: 2}
 --- !u!225 &4330169967580350106
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -106,7 +105,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5327040660684750421}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -181,7 +179,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5327040660684750421}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

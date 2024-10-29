@@ -1,7 +1,6 @@
-using Deck.Services.Building;
-using Deck.Components;
-using DG.Tweening;
 using Services.Implementations.Escapable;
+using Deck.Services.Building;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Deck.Components.Building.Building
@@ -9,10 +8,8 @@ namespace Deck.Components.Building.Building
     public class DeckBuildingPage : DeckUIElement
     {
         [SerializeField] protected RectTransform container;
-        
+
         [SerializeField] protected CanvasGroup canvasGroup;
-        [SerializeField] protected float appearDuration;
-        [SerializeField] protected Ease ease;
 
         protected DeckServiceEscapable EscapableService;
         protected DeckServiceBuilding BuildingService;
@@ -31,10 +28,10 @@ namespace Deck.Components.Building.Building
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
-            
+
             EscapableService = Deck.GetService<DeckServiceEscapable>();
             BuildingService = Deck.GetService<DeckServiceBuilding>();
-            
+
             OnInitialize();
         }
 
@@ -47,28 +44,25 @@ namespace Deck.Components.Building.Building
             gameObject.SetActive(true);
             canvasGroup.interactable = true;
             canvasGroup.DOKill();
-            canvasGroup.DOFade(1f, appearDuration).SetEase(ease);
+            canvasGroup.alpha = 1f;
         }
 
         public void Disappear()
         {
             OnDisappearStart();
             canvasGroup.interactable = false;
-            canvasGroup.DOKill();
-            canvasGroup.DOFade(0f, appearDuration).SetEase(ease);
+            canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
             OnDisappearEnd();
         }
 
         protected virtual void OnDisappearStart()
         {
-            
         }
-        
-        
+
+
         protected virtual void OnDisappearEnd()
         {
-            
         }
     }
 }

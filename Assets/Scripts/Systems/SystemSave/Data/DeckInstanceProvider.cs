@@ -44,18 +44,21 @@ namespace Deck.Save.Data
             instanceCreator.itemVisuals = new List<DeckItemVisual>();
 
             instanceCreator.agents = new List<DeckAgent>();
-            EditorInitialize(instanceCreator);
+            EditorInitialize();
         }
 
         [Button]
         private void OnValidate()
         {
-            EditorInitialize(this);
+            EditorInitialize();
         }
 
-        private static void EditorInitialize(DeckInstanceProvider instanceCreator)
+        [MenuItem("Deck/Collect Instances")]
+        private static void EditorInitialize()
         {
-            instanceCreator.agents = new List<DeckAgent>();
+            
+            var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
+            instanceProvider.agents = new List<DeckAgent>();
             var agents = Resources.FindObjectsOfTypeAll(typeof(DeckAgent));
             var distinctAgents = agents.Select(item => item).Distinct();
             foreach (var agent in distinctAgents)
@@ -72,13 +75,13 @@ namespace Deck.Save.Data
                     continue;
                 }
 
-                if (!instanceCreator.agents.Any(item => item.PrefabId.Equals(instance.PrefabId)))
+                if (!instanceProvider.agents.Any(item => item.PrefabId.Equals(instance.PrefabId)))
                 {
-                    instanceCreator.agents.Add(instance);
+                    instanceProvider.agents.Add(instance);
                 }
             }
 
-            instanceCreator.itemVisuals = new List<DeckItemVisual>();
+            instanceProvider.itemVisuals = new List<DeckItemVisual>();
             var itemVisuals = Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual));
             var distinctItemVisuals = itemVisuals.Select(item => item).Distinct();
             foreach (var itemVisual in distinctItemVisuals)
@@ -95,21 +98,19 @@ namespace Deck.Save.Data
                     continue;
                 }
 
-                if (!instanceCreator.itemVisuals.Any(item => item.PrefabId.Equals(instance.PrefabId)))
+                if (!instanceProvider.itemVisuals.Any(item => item.PrefabId.Equals(instance.PrefabId)))
                 {
-                    instanceCreator.itemVisuals.Add(instance);
+                    instanceProvider.itemVisuals.Add(instance);
                 }
             }
 
-            instanceCreator.uiElements = new List<DeckUIElement>();
+            instanceProvider.uiElements = new List<DeckUIElement>();
             var uiElements = Resources.FindObjectsOfTypeAll(typeof(DeckUIElement));
             var distinctUiElements = uiElements.Select(item => item).Distinct();
             foreach (var uiElement in distinctUiElements)
             {
-                Debug.LogError(uiElement.GetType().ToString());
                 if (!PrefabUtility.IsPartOfPrefabAsset(uiElement))
                 {
-                    Debug.LogError("part of prefab  " + uiElement.GetType());
                     continue;
                 }
 
@@ -117,18 +118,12 @@ namespace Deck.Save.Data
 
                 if (!string.IsNullOrEmpty(instance.gameObject.scene.name))
                 {
-                    Debug.LogError("scene name not empty " + uiElement.GetType());
                     continue;
                 }
 
-                if (!instanceCreator.uiElements.Any(item => item.PrefabId.Equals(instance.PrefabId)))
+                if (!instanceProvider.uiElements.Any(item => item.PrefabId.Equals(instance.PrefabId)))
                 {
-                    Debug.LogError("added  " + uiElement.GetType().ToString());
-                    instanceCreator.uiElements.Add(instance);
-                }
-                else
-                {
-                    Debug.LogError("contained  " + uiElement.GetType().ToString());
+                    instanceProvider.uiElements.Add(instance);
                 }
             }
         }
@@ -137,7 +132,6 @@ namespace Deck.Save.Data
         [Inject]
         private void Inject(DiContainer container)
         {
-            Debug.LogError("Inject deck instance provider");
             _container = container;
             Initialize();
         }
@@ -312,7 +306,6 @@ namespace Deck.Save.Data
 
             if (instances.Count == 0)
             {
-                DeckLogger.Error("Zero elements returned");
                 return;
             }
 

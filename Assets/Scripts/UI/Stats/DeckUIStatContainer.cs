@@ -21,6 +21,8 @@ namespace Deck.Components.Building.Stats
 
         private void ClearStatElements()
         {
+            if (_activeElements.Count <= 0) return;
+            
             InstanceProvider.ReturnUIElement(_activeElements);
             _activeElements.Clear();
         }

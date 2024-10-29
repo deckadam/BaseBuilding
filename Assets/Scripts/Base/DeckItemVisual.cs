@@ -10,7 +10,7 @@ using Deck.ItemVisualProviders;
 using Deck.Utility.Logger;
 using DG.Tweening;
 using Services.AgentFinder;
-using Unity.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -19,7 +19,7 @@ namespace Deck.Components
 {
     public class DeckItemVisual : DeckPoolable
     {
-        [ReadOnly, SerializeField] private bool isStatic;
+        [Unity.Collections.ReadOnly, SerializeField] private bool isStatic;
 
         [SerializeField] private Vector3 localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
@@ -102,7 +102,8 @@ namespace Deck.Components
             }
         }
 
-        private void OnValidate()
+        [Button]
+        public void OnValidate()
         {
             rigidbody = GetComponent<Rigidbody>();
             isStatic = rigidbody == null;
@@ -115,7 +116,6 @@ namespace Deck.Components
                 return;
             }
 #endif
-
 
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
             {
