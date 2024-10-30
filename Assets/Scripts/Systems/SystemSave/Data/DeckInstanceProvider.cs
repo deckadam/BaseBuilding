@@ -53,10 +53,70 @@ namespace Deck.Save.Data
             EditorInitialize();
         }
 
+        public void AddItemVisual(DeckItemVisual visual)
+        {
+            if (!itemVisuals.Contains(visual))
+            {
+                itemVisuals.Add(visual);
+            }
+            else
+            {
+                DeckLogger.Error("Duplicate deck item visual");
+            }
+
+            itemVisuals.RemoveAll(item => item == null);
+        }
+
+        public void AddAgent(DeckAgent agent)
+        {
+            if (!agents.Contains(agent))
+            {
+                agents.Add(agent);
+            }
+            else
+            {
+                DeckLogger.Error("Duplicate deck item visual");
+            }
+
+            agents.RemoveAll(item => item == null);
+        }
+
+        [MenuItem("Deck/Check Uniqueness")]
+        private static void CheckUniqueness()
+        {
+            var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
+            
+            var agentHashSet = new HashSet<int>();
+            foreach (var agent in instanceProvider.agents)
+            {
+                if (!agentHashSet.Add(agent.PrefabId.ID))
+                {
+                    Debug.LogError("Multiple id " + agent.name);
+                }
+            }
+
+            var itemVisualHashSet = new HashSet<int>();
+            foreach (var itemVisual in instanceProvider.itemVisuals)
+            {
+                if (!itemVisualHashSet.Add(itemVisual.PrefabId.ID))
+                {
+                    Debug.LogError("Multiple id " + itemVisual.name);
+                }
+            }
+
+            var uiElements = new HashSet<int>();
+            foreach (var uiElement in instanceProvider.uiElements)
+            {
+                if (!uiElements.Add(uiElement.PrefabId.ID))
+                {
+                    Debug.LogError("Multiple id " + uiElement.name);
+                }
+            }
+        }
+
         [MenuItem("Deck/Collect Instances")]
         private static void EditorInitialize()
         {
-            
             var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
             instanceProvider.agents = new List<DeckAgent>();
             var agents = Resources.FindObjectsOfTypeAll(typeof(DeckAgent));
@@ -126,6 +186,10 @@ namespace Deck.Save.Data
                     instanceProvider.uiElements.Add(instance);
                 }
             }
+            
+            instanceProvider.agents.RemoveAll(item => item == null);
+            instanceProvider.itemVisuals.RemoveAll(item => item == null);
+            instanceProvider.uiElements.RemoveAll(item => item == null);
         }
 #endif
 

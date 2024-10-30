@@ -12,7 +12,6 @@ namespace Deck.Data.Item
         [SerializeField] private Sprite icon;
         [SerializeField] private int amount;
         [SerializeField] private DeckItemVisual representation;
-        [SerializeField] private bool holdable;
         [SerializeField] private string animationName;
         [SerializeField] private List<DeckActionTag> tags;
 
@@ -21,7 +20,6 @@ namespace Deck.Data.Item
         public DeckItemVisual Representation => representation;
         public string AnimationName => animationName;
         public int Amount => amount;
-        public bool Holdable => holdable;
         public List<DeckActionTag> Tags => tags;
         public bool HasTag(DeckActionTag tag) => tags.Contains(tag);
 
@@ -49,14 +47,14 @@ namespace Deck.Data.Item
 
             return false;
         }
-        public static DeckDataItem Create(string name, Sprite icon, int amount, DeckItemVisual representation, bool holdable, string animationName, List<DeckActionTag> tags)
+
+        public static DeckDataItem Create(string name, Sprite icon, int amount, DeckItemVisual representation, string animationName, List<DeckActionTag> tags)
         {
             var newItem = CreateInstance<DeckDataItem>();
             newItem.name = name;
             newItem.icon = icon;
             newItem.amount = amount;
             newItem.representation = representation;
-            newItem.holdable = holdable;
             newItem.animationName = animationName;
             newItem.tags = tags;
             return newItem;

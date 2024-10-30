@@ -16,7 +16,6 @@ namespace Deck.Components.Building
         [SerializeField] private bool setVisualPosition;
         [SerializeField] private bool setVisualRotation;
 
-        protected DeckItemVisual ItemVisualInstance;
 
         protected override void AfterLoad()
         {
@@ -25,24 +24,22 @@ namespace Deck.Components.Building
 
         public void InitializeBuilding()
         {
-            Debug.LogError(name);
-            Debug.LogError(buildingData.ItemVisual.name);
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out itemVisualPrefab, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
 
-            if (ItemVisualInstance != null)
+            if (itemVisualPrefab != null)
             {
-                ItemVisualInstance.transform.SetParent(transform, false);
-                ItemVisualInstance.Agent = this;
+                itemVisualPrefab.transform.SetParent(transform, false);
+                itemVisualPrefab.Agent = this;
                 if (setVisualPosition)
                 {
-                    ItemVisualInstance.transform.localPosition = Vector3.zero;
+                    itemVisualPrefab.transform.localPosition = Vector3.zero;
                 }
 
                 if (setVisualRotation)
                 {
-                    ItemVisualInstance.transform.localRotation = Quaternion.identity;
+                    itemVisualPrefab.transform.localRotation = Quaternion.identity;
                 }
             }
             else
@@ -54,12 +51,17 @@ namespace Deck.Components.Building
         protected override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            if (ItemVisualInstance != null)
+            if (itemVisualPrefab != null)
             {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(ItemVisualInstance);
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualPrefab);
             }
         }
 
         public DeckBuildable BuildingData => buildingData;
+
+        public void SetBuildingData(DeckBuildable buildingData)
+        {
+            this.buildingData = buildingData;
+        }
     }
 }

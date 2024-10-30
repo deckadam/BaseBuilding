@@ -11,13 +11,14 @@ using Deck.Services.MapService;
 using Deck.Utility.Logger;
 using Services.AgentFinder;
 using UnityEditor;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEngine;
 #endif
 
 namespace Deck.Components
 {
-    public abstract class DeckAgent : DeckPoolable
+    public class DeckAgent : DeckPoolable
     {
         public event Action<float> OnAgentSizeChanged;
         public event Action<DeckAgent> OnAgentDestroyed;
@@ -30,6 +31,9 @@ namespace Deck.Components
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
+
+        [FormerlySerializedAs("itemVisualInstance")] [FormerlySerializedAs("ItemVisualInstance")] [SerializeField]
+        protected DeckItemVisual itemVisualPrefab;
 
         [HideInInspector] public Transform selfTransform;
 
@@ -151,6 +155,11 @@ namespace Deck.Components
             this.components = components;
         }
 
+        public void SetNewUniqueId()
+        {
+            uniqueId = DeckId.CreateNew();
+        }
+
         public void Initialize(int guid)
         {
             if (_hasBeenInitialized)
@@ -167,11 +176,6 @@ namespace Deck.Components
             if (_hasBeenInitialized)
             {
                 return;
-            }
-
-            if (activeSize < 0f)
-            {
-                throw new Exception("Size value can not be lower than zero");
             }
 
             if (createNewGuid)
@@ -209,6 +213,12 @@ namespace Deck.Components
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
+            
+            
+            if (activeSize < 0f)
+            {
+                throw new Exception("Size value can not be lower than zero  "  + name);
+            }
         }
 
         protected void DeInitialize()
@@ -358,6 +368,11 @@ namespace Deck.Components
 
         protected virtual void AfterLoad()
         {
+        }
+
+        public void SetItemVisual(DeckItemVisual itemVisualPrefab)
+        {
+            this.itemVisualPrefab = itemVisualPrefab;
         }
     }
 }

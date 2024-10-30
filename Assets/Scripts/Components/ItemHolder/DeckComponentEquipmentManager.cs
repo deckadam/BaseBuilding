@@ -74,10 +74,10 @@ namespace Deck.Components
                 agent.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, false);
             }
 
-            if (!itemToHold.Holdable)
-            {
-                return;
-            }
+            // if (!itemToHold.Holdable)
+            // {
+                // return;
+            // }
 
             var animationName = itemToHold.AnimationName;
 

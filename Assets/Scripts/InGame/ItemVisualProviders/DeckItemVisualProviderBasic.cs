@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Deck.Components;
 using Deck.Save;
 using Deck.Save.Data;
 using Deck.Components.Building.InGame;
 using Deck.Utility.Class;
+using Deck.Utility.Logger;
 using Services.AgentFinder;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -15,7 +17,7 @@ namespace Deck.ItemVisualProviders
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBasic", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBasic")]
     public class DeckItemVisualProviderBasic : ScriptableObject
     {
-        [SerializeField, InlineEditor] private DeckItemVisual[] itemVisualSets;
+        [SerializeField, InlineEditor] private List<DeckItemVisual> itemVisualSets;
 
         private Dictionary<int, Stack<DeckItemVisual>> _activeItemVisuals;
 
@@ -26,6 +28,21 @@ namespace Deck.ItemVisualProviders
         private void Inject(DeckInstanceProvider instanceProvider)
         {
             _instanceProvider = instanceProvider;
+        }
+
+        public void AddItemVisual(DeckItemVisual itemVisual)
+        {
+            Debug.LogError("Add item visual");
+            if (!itemVisualSets.Contains(itemVisual))
+            {
+                itemVisualSets.Add(itemVisual);
+            }
+            else
+            {
+                DeckLogger.Error("Already contains item visual");
+            }
+
+            itemVisualSets = itemVisualSets.Where(x => x != null).ToList();
         }
 
         public void Initialize()

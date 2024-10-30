@@ -46,6 +46,20 @@ namespace Deck.Data.Buildable
             CheckUniqueness();
         }
 
+        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall)
+        {
+            var newItem = CreateInstance<DeckBuildable>();
+            newItem.name = name;
+            newItem.icon = icon;
+            newItem.itemVisual = representation;
+            newItem.agent = agent;
+            newItem.visibleName = name;
+            newItem.rotatable = rotatable;
+            newItem.canBeHangedToWall = canBeHangedToWall;
+            newItem.OnValidate();
+            return newItem;
+        }
+
         private void CollectExtentsData()
         {
             if (itemVisual == null)
@@ -82,7 +96,7 @@ namespace Deck.Data.Buildable
 
             if (agent.transform.position != Vector3.zero)
             {
-                DeckLogger.Error("Agent is not centered",agent.gameObject);
+                DeckLogger.Error("Agent is not centered", agent.gameObject);
                 throw new Exception("Agent is not centered");
             }
 
@@ -112,6 +126,16 @@ namespace Deck.Data.Buildable
             public Mesh GetMesh() => mesh;
             public Vector3 GetPosition() => position;
             public Vector3 GetRotation() => rotation;
+        }
+
+        public void SetAgent(DeckAgent agentPrefab)
+        {
+            agent = agentPrefab;
+        }
+
+        public void SetItemVisual(DeckItemVisual itemVisualPrefab)
+        {
+            itemVisual = itemVisualPrefab;
         }
     }
 }

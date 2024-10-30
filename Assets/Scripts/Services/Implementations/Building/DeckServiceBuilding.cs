@@ -82,7 +82,6 @@ namespace Deck.Services.Building
 
         private void SetActiveBuildable(DeckBuildable buildable)
         {
-            Debug.LogError("set active buildable  " + buildable.name);
             _activeBuildable = buildable;
         }
 
@@ -288,9 +287,6 @@ namespace Deck.Services.Building
 
         public void BuildFree(Vector3 position)
         {
-            Debug.LogError(_activeBuildable.name);
-            Debug.LogError(_activeBuildable.Agent.name);
-            Debug.LogError(_activeBuildable.ItemVisual.name);
             if (_activeBuildable == null)
             {
                 DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
