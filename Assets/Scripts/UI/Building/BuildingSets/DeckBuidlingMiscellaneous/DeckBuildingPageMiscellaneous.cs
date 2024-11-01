@@ -7,8 +7,6 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
 {
     public class DeckBuildingPageMiscellaneous : DeckBuildingPage
     {
-        [SerializeField] private DeckBuildable[] miscellaneousBuildable;
-
         private DeckEscapableBuildMode _escapableBuildMode;
         private DeckBuildable _selectedMiscellaneous;
         private bool _isBuildModeActive;
@@ -18,7 +16,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
             BuildingService = Deck.GetService<DeckServiceBuilding>();
             EscapableService = Deck.GetService<DeckServiceEscapable>();
 
-            foreach (var buildable in miscellaneousBuildable)
+            foreach (var buildable in buildables)
             {
                 var buildableButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
                 buildableButton.Initialize(OnBuildableClicked, buildable);

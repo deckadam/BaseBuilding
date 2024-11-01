@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using Deck.Data.Buildable;
 using Services.Implementations.Escapable;
 using Deck.Services.Building;
+using Deck.Utility.Logger;
 using DG.Tweening;
 using UnityEngine;
 
@@ -7,6 +10,8 @@ namespace Deck.Components.Building.Building
 {
     public class DeckBuildingPage : DeckUIElement
     {
+        [SerializeField] protected List<DeckBuildable> buildables;
+
         [SerializeField] protected RectTransform container;
 
         [SerializeField] protected CanvasGroup canvasGroup;
@@ -63,6 +68,14 @@ namespace Deck.Components.Building.Building
 
         protected virtual void OnDisappearEnd()
         {
+        }
+
+        public void AddBuildable(DeckBuildable buildingData)
+        {
+            buildables.RemoveAll(item => item == null);
+            buildables.Add(buildingData);
+
+            DeckLogger.Inform("Buildable :" + buildingData.Name + "  is added to building list.  " + GetType());
         }
     }
 }

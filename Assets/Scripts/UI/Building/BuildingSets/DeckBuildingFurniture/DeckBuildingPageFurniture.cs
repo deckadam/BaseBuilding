@@ -7,8 +7,6 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
 {
     public class DeckBuildingPageFurniture : DeckBuildingPage
     {
-        [SerializeField] private DeckBuildable[] furnitureBuildable;
-
         private DeckEscapableBuildMode _escapableBuildMode;
         private bool _isBuildModeActive;
 
@@ -17,7 +15,7 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
             BuildingService = Deck.GetService<DeckServiceBuilding>();
             EscapableService = Deck.GetService<DeckServiceEscapable>();
 
-            foreach (var buildable in furnitureBuildable)
+            foreach (var buildable in buildables)
             {
                 var buildableButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
                 buildableButton.Initialize(OnBuildableClicked, buildable);

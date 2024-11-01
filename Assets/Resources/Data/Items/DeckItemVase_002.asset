@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DeckItemVase_002
   m_EditorClassIdentifier: 
   requirements: []
-  agent: {fileID: 1553812987616364906, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
-  itemVisual: {fileID: 5628362688092888009, guid: 13cdde138ba143c49a583bab1debdd28, type: 3}
+  agent: {fileID: 5134706524527623977, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
+  itemVisual: {fileID: 2219166243080827500, guid: 13cdde138ba143c49a583bab1debdd28, type: 3}
   name: Vase_002
   visibleName: Vase_002
   silouette:
@@ -22,7 +22,7 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
   indices: []
-  rotatable: 0
+  rotatable: 1
   icon: {fileID: 0}
   extents: {x: 0.32801348, y: 0.29977643, z: 0.32801336}
   canBeHangedToWall: 0

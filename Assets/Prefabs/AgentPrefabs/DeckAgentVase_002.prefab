@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6436283645452837885
+--- !u!1 &6319737562345886507
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,8 +8,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 990787639666252296}
-  - component: {fileID: 1553812987616364906}
+  - component: {fileID: 4283186268105256709}
+  - component: {fileID: 5134706524527623977}
   m_Layer: 0
   m_Name: DeckAgentVase_002
   m_TagString: Untagged
@@ -17,13 +17,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &990787639666252296
+--- !u!4 &4283186268105256709
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6436283645452837885}
+  m_GameObject: {fileID: 6319737562345886507}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,13 +32,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1553812987616364906
+--- !u!114 &5134706524527623977
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6436283645452837885}
+  m_GameObject: {fileID: 6319737562345886507}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10e458080b0a4ae4a49a179be0bad487, type: 3}
@@ -46,17 +46,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centerPosition: {fileID: 0}
   components: []
-  activeSize: 1
+  activeSize: -1
   collider: {fileID: 0}
   willSave: 1
   uniqueId:
-    _id: 72316101
-    IdString: 72316101
+    _id: 0
+    IdString: 
   prefabId:
-    _id: 44376448
-    IdString: 44376448
-  itemVisualPrefab: {fileID: 5628362688092888009, guid: 13cdde138ba143c49a583bab1debdd28, type: 3}
+    _id: 30223968
+    IdString: 30223968
+  itemVisualPrefab: {fileID: 0}
   selfTransform: {fileID: 0}
-  buildingData: {fileID: 11400000, guid: e08afad1a2e30f343ab8a76ae67a0637, type: 2}
+  buildingData: {fileID: 0}
   setVisualPosition: 0
   setVisualRotation: 0

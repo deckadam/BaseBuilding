@@ -1,6 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Deck.Components;
 using Deck.Components.Building;
+using Deck.Components.Building.Building;
+using Deck.Components.Building.Building.BuildingSets;
+using Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous;
+using Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors;
+using Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture;
 using Deck.Data.Buildable;
 using Deck.ItemVisualProviders;
 using Deck.Save.Data;
@@ -15,12 +21,15 @@ namespace Deck.Data.Item.Editor
         private List<DeckActionTag> _tags = new();
         private GameObject _itemVisual;
         private GameObject _model;
-        private string _animationName;
         private bool _isBoxCollider;
         private Sprite _icon;
         private int _amount;
-        private bool _rotatable;
+        private bool _rotatable = true;
         private bool _canBeHangedToWall;
+        private bool _isBasicItem = true;
+
+        private DeckBuildableType _selectedType;
+
 
         [MenuItem("Deck/Item Creator")]
         private static void ShowWindow()
@@ -41,9 +50,9 @@ namespace Deck.Data.Item.Editor
             _isBoxCollider = EditorGUILayout.Toggle("Is box collider: ", _isBoxCollider);
             _rotatable = EditorGUILayout.Toggle("Is rotatable: ", _rotatable);
             _canBeHangedToWall = EditorGUILayout.Toggle("Can be hanged to wall: ", _canBeHangedToWall);
-            _animationName = EditorGUILayout.TextField("Animation name", _animationName);
-
+            _isBasicItem = EditorGUILayout.Toggle("Is basic item: ", _isBasicItem);
             _model = (GameObject)EditorGUILayout.ObjectField("Item model: ", _model, typeof(GameObject), false);
+            _selectedType = (DeckBuildableType)EditorGUILayout.EnumPopup("Buildable type: ", _selectedType);
 
             for (var i = 0; i < _tags.Count; i++)
             {
@@ -72,9 +81,34 @@ namespace Deck.Data.Item.Editor
 
         private void CreateItem()
         {
-            var itemVisualPrefabName = "Assets/Prefabs/ItemVisualPrefabs/DeckItemVisual" + _model.name + ".prefab";
-            var agentPrefabName = "Assets/Prefabs/AgentPrefabs/DeckAgent" + _model.name + ".prefab";
-            var assetName = "Assets/Resources/Data/Items/DeckItem" + _model.name + ".asset";
+            string suffix;
+
+            DeckBuildingPage page = null;
+            switch (_selectedType)
+            {
+                case DeckBuildableType.WallsAndDoors:
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageWallsAndDoors>()[0];
+                    suffix = "Wall";
+                    break;
+
+                case DeckBuildableType.Furniture:
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageFurniture>()[0];
+                    suffix = "Furniture";
+                    break;
+
+                case DeckBuildableType.Miscellaneous:
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageMiscellaneous>()[0];
+                    suffix = "Misc";
+                    break;
+
+                default:
+                    throw new Exception("Page not found");
+            }
+
+
+            var itemVisualPrefabName = "Assets/Prefabs/ItemVisualPrefabs/DeckItemVisual" + suffix + _model.name + ".prefab";
+            var agentPrefabName = "Assets/Prefabs/AgentPrefabs/DeckAgent" + suffix + _model.name + ".prefab";
+            var assetName = "Assets/Resources/Data/Items/DeckBuildable" + suffix + _model.name + ".asset";
 
             var itemVisualInstance = CreateItemVisualInstance();
             var itemVisualPrefab = PrefabUtility.SaveAsPrefabAsset(itemVisualInstance.gameObject, itemVisualPrefabName).GetComponent<DeckItemVisual>();
@@ -86,18 +120,37 @@ namespace Deck.Data.Item.Editor
 
             var buildingData = DeckBuildable.Create(_model.name, _icon, itemVisualPrefab, agentPrefab, _rotatable, _canBeHangedToWall);
             AssetDatabase.CreateAsset(buildingData, assetName);
-            
+
             agentPrefab.SetBuildingData(buildingData);
 
             UpdatePrefabData(itemVisualPrefab, agentPrefab, buildingData, itemVisualInstance, agentInstance);
-            
-            var visualProvider = Resources.FindObjectsOfTypeAll<DeckItemVisualProviderBasic>()[0];
-            visualProvider.AddItemVisual(itemVisualPrefab);
+
+            if (_isBasicItem)
+            {
+                var visualProvider = Resources.FindObjectsOfTypeAll<DeckItemVisualProviderBasic>();
+
+                foreach (var deckItemVisualProviderBasic in visualProvider)
+                {
+                    if (deckItemVisualProviderBasic.GetType() == typeof(DeckItemVisualProviderBasic))
+                    {
+                        deckItemVisualProviderBasic.AddItemVisual(itemVisualPrefab);
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError("Please add item to proper item visual provider!!!");
+            }
+
+            // visualProvider.AddItemVisual(itemVisualPrefab);
 
             var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
             instanceProvider.AddAgent(agentPrefab);
             instanceProvider.AddItemVisual(itemVisualPrefab);
-            
+
+            page.AddBuildable(buildingData);
+
+
             UpdateEditor();
 
             DeckLogger.Success(_model.name + "  item and prefab successfully created");
