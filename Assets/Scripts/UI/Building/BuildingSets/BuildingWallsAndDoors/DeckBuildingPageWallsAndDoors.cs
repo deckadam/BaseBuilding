@@ -1,5 +1,7 @@
 using Deck.Data.Buildable;
 using Deck.Services.Building;
+using Deck.Utility;
+using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -13,11 +15,12 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         private DeckEscapableBuildMode _escapableBuildMode;
         private DeckBuildableButton _wallButton;
         private DeckBuildableButton _doorButton;
+        private DeckBuildable _selectedBuildable;
         private bool _isBuildModeActive;
 
         private void OnDestroy()
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 _escapableBuildMode.OnCloseRequested();
             }
@@ -39,25 +42,47 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
 
         private void OnBuildableSelected(DeckBuildable buildable)
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            _selectedBuildable = buildable;
+
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 EscapableService.CloseEscapable();
             }
 
-            _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
+            if (_selectedBuildable == wallBuildable)
+            {
+                _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, OnBuildRequested, true);
+            }
+            else
+            {
+                _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
+            }
+
             EscapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;
             BuildingService.StartSilhouette(buildable);
         }
 
-        private void OnBuildRequested(Vector3 position)
+        private void OnBuildRequested(Vector3[] positions)
         {
             if (!_isBuildModeActive)
             {
                 return;
             }
 
-            BuildingService.BuildInCell(position);
+            if (_selectedBuildable == wallBuildable)
+            {
+                BuildingService.BuildInCellRect(positions);
+            }
+            else
+            {
+                if (positions.Length > 1)
+                {
+                    DeckLogger.Error("OnBuildRequested: multiple positions not are supported for door");
+                }
+
+                BuildingService.BuildInCell(positions[0].ToVector2Int());
+            }
         }
 
         private void Update()
@@ -71,7 +96,13 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         private void OnBuildModeClosed()
         {
             _isBuildModeActive = false;
-            _escapableBuildMode = null;
+            if (!_escapableBuildMode.HasEscaped)
+            {
+                Deck.GetService<DeckServiceEscapable>().ListEscapables();
+                _escapableBuildMode.OnCloseRequested();
+                _escapableBuildMode = null;
+            }
+
             BuildingService.Clear();
         }
     }

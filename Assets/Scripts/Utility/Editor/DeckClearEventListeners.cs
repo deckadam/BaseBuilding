@@ -10,7 +10,9 @@ namespace Deck.Utility.Editor
         private static void ClearListeners()
         {
             DeckEventManager.ClearEvents<DeckEventMiddleScroll>();
-            DeckEventManager.ClearEvents<DeckEventOnLeftClick>();
+            DeckEventManager.ClearEvents<DeckEventOnLeftClickDown>();
+            DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
+            DeckEventManager.ClearEvents<DeckEventOnMouseMove>();
         }
     }
 }

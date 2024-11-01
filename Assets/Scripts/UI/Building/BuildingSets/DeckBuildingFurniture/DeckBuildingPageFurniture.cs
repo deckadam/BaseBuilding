@@ -1,5 +1,6 @@
 using Deck.Data.Buildable;
 using Deck.Services.Building;
+using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
 
         private void OnDestroy()
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 _escapableBuildMode.OnCloseRequested();
             }
@@ -33,7 +34,7 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
 
         private void OnBuildableClicked(DeckBuildable buildable)
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 EscapableService.CloseEscapable();
             }
@@ -45,14 +46,19 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
             BuildingService.StartSilhouette(buildable);
         }
 
-        private void OnBuildRequested(Vector3 position)
+        private void OnBuildRequested(Vector3[] positions)
         {
             if (!_isBuildModeActive)
             {
                 return;
             }
 
-            BuildingService.BuildFree(position);
+            if (positions.Length > 1)
+            {
+                DeckLogger.Error("OnBuildRequested: multiple positions not are supported for furniture");
+            }
+
+            BuildingService.BuildFree(positions[0]);
         }
 
         private void Update()
@@ -66,6 +72,12 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
         private void OnEscapeRequested()
         {
             _isBuildModeActive = false;
+            
+            if (!_escapableBuildMode.HasEscaped)
+            {
+                EscapableService.CloseEscapable();
+            }
+
             _escapableBuildMode = null;
             BuildingService.Clear();
         }

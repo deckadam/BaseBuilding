@@ -1,5 +1,6 @@
 using Deck.Data.Buildable;
 using Deck.Services.Building;
+using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
 
         private void OnDestroy()
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 _escapableBuildMode.OnCloseRequested();
             }
@@ -34,7 +35,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
 
         private void OnBuildableClicked(DeckBuildable buildable)
         {
-            if (_escapableBuildMode != null && !_escapableBuildMode.IsEscaped())
+            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
             {
                 EscapableService.CloseEscapable();
             }
@@ -46,7 +47,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
             BuildingService.StartSilhouette(buildable);
         }
 
-        private void OnBuildRequested(Vector3 position)
+        private void OnBuildRequested(Vector3[] positions)
         {
             if (!_isBuildModeActive)
             {
@@ -63,7 +64,12 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
             }
             else
             {
-                BuildingService.BuildFree(position);
+                if (positions.Length > 1)
+                {
+                    DeckLogger.Error("OnBuildRequested: multiple positions not are supported for miscellaneous");
+                }
+
+                BuildingService.BuildFree(positions[0]);
             }
         }
 
@@ -88,6 +94,11 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
         private void OnEscapeRequested()
         {
             _isBuildModeActive = false;
+            if (!_escapableBuildMode.HasEscaped)
+            {
+                EscapableService.CloseEscapable();
+            }
+
             _escapableBuildMode = null;
             BuildingService.Clear();
         }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Deck.Services;
 using Deck.Components.Building;
+using Deck.Utility.Logger;
 using Unity.VisualScripting;
 
 namespace Services.Implementations.Escapable
@@ -40,6 +41,16 @@ namespace Services.Implementations.Escapable
             }
 
             _escapables.Clear();
+        }
+
+        public void ListEscapables()
+        {
+            var enumerator = _escapables.GetEnumerator();
+
+            do
+            {
+                DeckLogger.Error((enumerator.MoveNext()).GetType().ToString());
+            } while (enumerator.MoveNext());
         }
     }
 }

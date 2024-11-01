@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Deck.InputHandling.Events
 {
-    public class DeckEventOnLeftClick : DeckEvent
+    public class DeckEventOnLeftClickDown : DeckEvent
     {
         public Vector3 position { get; private set; }
 
-        public static DeckEventOnLeftClick Create(Vector3 position)
+        public static DeckEventOnLeftClickDown Create(Vector3 position)
         {
-            return new DeckEventOnLeftClick
+            return new DeckEventOnLeftClickDown
             {
                 position = position
             };

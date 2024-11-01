@@ -1,5 +1,4 @@
 using Deck.Data.Buildable;
-using Deck.Components;
 using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Utility;
@@ -16,7 +15,6 @@ namespace Deck.Components.Building
         [SerializeField] private bool setVisualPosition;
         [SerializeField] private bool setVisualRotation;
 
-
         protected override void AfterLoad()
         {
             InitializeBuilding();
@@ -26,7 +24,7 @@ namespace Deck.Components.Building
         {
             Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out itemVisualPrefab, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
-            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position, buildingData.Indices, this);
+            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position.ToVector2Int(), buildingData.Indices, this);
 
             if (itemVisualPrefab != null)
             {

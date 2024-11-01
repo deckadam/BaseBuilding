@@ -48,7 +48,6 @@ namespace Deck.Components.Building.Building
         {
             gameObject.SetActive(true);
             canvasGroup.interactable = true;
-            canvasGroup.DOKill();
             canvasGroup.alpha = 1f;
         }
 

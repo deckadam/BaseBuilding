@@ -23,7 +23,7 @@ namespace Deck.Services.Building
 
         private const string WallTag = "Wall";
         private const float YOffsetForBuildOnTop = 0.1f;
-        private readonly Vector2Int _defaultCellPosition = new Vector2Int(1000000, 1000000);
+        private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private Dictionary<Vector2Int, DeckAgent> _grid = new();
         private Collider[] _possibleColliders = new Collider[2];
         private List<MeshRenderer> _renderers = new();
@@ -253,18 +253,16 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (!TryGetCollidedItemVisual(out var collidedItemVisual, out var buildPosition))
+            if (!TryGetCollidedItemVisual(out _, out var buildPosition))
             {
                 return;
             }
 
             if (CollidesWithOtherItemsOnTop(buildPosition))
             {
-                Debug.Log("Building is already on top");
+                DeckLogger.Inform("Building is already on top");
                 return;
             }
-
-            Debug.LogError("No collision");
 
             if (_activeBuildable.Requeriements.Length > 0)
             {
@@ -318,7 +316,7 @@ namespace Deck.Services.Building
             newBuilding.InitializeBuilding();
         }
 
-        public void BuildInCell(Vector3 position)
+        public void BuildInCellRect(Vector3[] position)
         {
             if (_activeBuildable == null)
             {
@@ -326,16 +324,97 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var cellPosition = position.ToVector2Int();
+            if (position.Length < 2)
+            {
+                DeckLogger.Error("Not enough positions provided: " + position.Length);
+            }
 
-            if (_lastCheckedCellIndex == cellPosition)
+            if (position.Length > 2)
+            {
+                DeckLogger.Error("Too much positions provided: " + position.Length);
+            }
+
+            var firstPos = position[0].ToVector2Int();
+            var secondPos = position[1].ToVector2Int();
+
+            var minX = Mathf.Min(firstPos.x, secondPos.x);
+            var maxX = Mathf.Max(firstPos.x, secondPos.x);
+
+            var minY = Mathf.Min(firstPos.y, secondPos.y);
+            var maxY = Mathf.Max(firstPos.y, secondPos.y);
+
+            var rectBuildPositions = new List<Vector2Int>();
+            // Bottom edge
+            for (int x = minX; x <= maxX; x++)
+                rectBuildPositions.Add(new Vector2Int(x, minY));
+
+            // Top edge
+            for (int x = minX; x <= maxX; x++)
+                rectBuildPositions.Add(new Vector2Int(x, maxY));
+
+            // Left edge
+            for (int y = minY + 1; y < maxY; y++)
+                rectBuildPositions.Add(new Vector2Int(minX, y));
+
+            // Right edge
+            for (int y = minY + 1; y < maxY; y++)
+                rectBuildPositions.Add(new Vector2Int(maxX, y));
+
+            var isAllCellsAvailable = true;
+
+            foreach (var rectBuildPosition in rectBuildPositions)
+            {
+                if (!CheckIfAgentBuildableInCell(_activeBuildable, rectBuildPosition, out var encounteredAgents))
+                {
+                    isAllCellsAvailable = false;
+                }
+            }
+
+            if (!isAllCellsAvailable)
+            {
+                DeckLogger.Inform("Not all cells are free");
+                return;
+            }
+
+            foreach (var rectBuildPosition in rectBuildPositions)
+            {
+                if (_activeBuildable.Requeriements.Length > 0)
+                {
+                    var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
+                        .ReduceIfPossible(_activeBuildable.Requeriements);
+                    if (!hasItems)
+                    {
+                        DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
+                        return;
+                    }
+                }
+
+                var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+                newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
+                newBuilding.transform.position = rectBuildPosition.ToVector3();
+                newBuilding.Initialize();
+                newBuilding.InitializeBuilding();
+                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
+            }
+        }
+
+        public void BuildInCell(Vector2Int cellIndex)
+        {
+            if (_activeBuildable == null)
+            {
+                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
+                return;
+            }
+
+
+            if (_lastCheckedCellIndex == cellIndex)
             {
                 return;
             }
 
-            _lastCheckedCellIndex = cellPosition;
+            _lastCheckedCellIndex = cellIndex;
 
-            if (!CheckIfAgentBuildableInCell(_activeBuildable, position.ToVector2Int(), out var encounteredAgents))
+            if (!CheckIfAgentBuildableInCell(_activeBuildable, cellIndex, out var encounteredAgents))
             {
                 foreach (var encounteredAgent in encounteredAgents)
                 {
@@ -361,10 +440,10 @@ namespace Deck.Services.Building
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
-            newBuilding.transform.position = cellPosition.ToVector3();
+            newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            SetCellOccupied(cellPosition.ToVector3(), _activeBuildable.Indices, newBuilding);
+            SetCellOccupied(cellIndex, _activeBuildable.Indices, newBuilding);
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, Vector3 normal, out GameObject collidedObject)
@@ -460,10 +539,8 @@ namespace Deck.Services.Building
             }
         }
 
-        public void SetCellOccupied(Vector3 cellPosition, IEnumerable<Vector2Int> indices, DeckAgent newAgent)
+        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgent newAgent)
         {
-            var cellIndex = cellPosition.ToVector2Int();
-
             foreach (var index in indices)
             {
                 var temp = cellIndex + index;
