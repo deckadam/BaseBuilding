@@ -1,6 +1,6 @@
 using Deck.Components;
-using Deck.Services;
 using Deck.Components.Building.InGame;
+using Deck.Services;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -27,6 +27,21 @@ namespace Deck.ItemVisualProviders
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
                 if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal: isInternal))
+                {
+                    return true;
+                }
+            }
+
+            Debug.LogError("RequestItemVisual failed");
+            itemVisual = null;
+            return false;
+        }
+
+        public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual, bool isInternal = true)
+        {
+            foreach (var deckItemVisualProvider in _itemVisualProviders)
+            {
+                if (deckItemVisualProvider.RequestItemVisual(deckId, out itemVisual, isInternal: isInternal))
                 {
                     return true;
                 }

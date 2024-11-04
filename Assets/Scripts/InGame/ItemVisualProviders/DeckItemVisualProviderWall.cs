@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Components;
-using Deck.Save;
 using Deck.Components.Building.InGame;
+using Deck.Save;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;
+using Sirenix.OdinInspector;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -51,6 +52,8 @@ namespace Deck.ItemVisualProviders
             if (!IsWall(itemVisual)) return false;
 
             var itemPos = itemVisual.transform.position.ToVector2Int();
+
+            ReturnIfHasItemVisual(itemVisual, isInternal);
             _wallCheckSet.Remove(itemPos);
             ConnectWalls(itemPos, 0);
 
@@ -81,11 +84,12 @@ namespace Deck.ItemVisualProviders
         {
             var checkList = new bool[4];
             var neighbours = changePosition.GetNeighbours();
-
             DeckAgent agent = null;
+
             if (depth < 2 && _activeWalls.TryGetValue(changePosition, out var itemVisual))
             {
                 agent = itemVisual.Agent;
+
                 if (!ReturnIfHasItemVisual(itemVisual, true))
                 {
                     DeckLogger.Error("ReturnIfHasItemVisual failed!");
@@ -98,8 +102,7 @@ namespace Deck.ItemVisualProviders
             {
                 var neighbour = neighbours[index];
                 var isWall = _wallCheckSet.Contains(neighbour);
-
-                checkList[index] = isWall || _doorCheckSet.Contains(neighbour);
+                checkList[index] = isWall;
 
                 if (depth < 1 && isWall)
                 {
@@ -113,12 +116,46 @@ namespace Deck.ItemVisualProviders
             }
 
             var visualPrefab = GetVisualToPlace(checkList);
+
             RentIfHasItemVisual(visualPrefab.PrefabId, out var visualInstance, true);
             _activeWalls[changePosition] = visualInstance;
             visualInstance.transform.position = changePosition.ToVector3();
-            
-            if (!agent) return;
+
+            if (!agent)
+            {
+                return;
+            }
+
             visualInstance.transform.parent = agent.transform;
+            visualInstance.Agent = agent;
+        }
+
+        [Button]
+        public void DebugWalls()
+        {
+            foreach (var wallPos in _wallCheckSet)
+            {
+                Debug.LogError(wallPos);
+            }
+        }
+
+        [Button]
+        public void DebugNeighbours(int x, int y)
+        {
+            var neighbours = new Vector2Int(x, y).GetNeighbours();
+            var checkList = new bool[4];
+            for (var index = 0; index < neighbours.Length; index++)
+            {
+                var neighbour = neighbours[index];
+                var isWall = _wallCheckSet.Contains(neighbour);
+
+                checkList[index] = isWall || _doorCheckSet.Contains(neighbour);
+                Debug.LogError(neighbours[index]);
+                Debug.LogError(checkList[index]);
+            }
+
+            var visualPrefab = GetVisualToPlace(checkList);
+            Debug.LogError(visualPrefab.name);
         }
 
 
@@ -160,22 +197,22 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] && checkList[2])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerUpperLeft];
+                    return _visualDictionary[WallStyle.TwoCornerUpperRight];
                 }
 
                 if (checkList[0] && checkList[3])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerLowerLeft];
+                    return _visualDictionary[WallStyle.TwoCornerLowerRight];
                 }
 
                 if (checkList[1] && checkList[2])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerUpperRight];
+                    return _visualDictionary[WallStyle.TwoCornerUpperLeft];
                 }
 
                 if (checkList[1] && checkList[3])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerLowerRight];
+                    return _visualDictionary[WallStyle.TwoCornerLowerLeft];
                 }
 
                 if (checkList[0] && checkList[1])

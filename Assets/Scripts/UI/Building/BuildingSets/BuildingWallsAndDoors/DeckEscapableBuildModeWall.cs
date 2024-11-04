@@ -16,13 +16,11 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
 
         protected override void OnLeftClickDown(DeckEventOnLeftClickDown obj)
         {
-            Debug.LogError("Mouse down");
             _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
         }
 
         protected override void OnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
-            Debug.LogError("Mouse up");
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
             Deck.GetService<DeckServiceBuilding>().BuildInCellRect(new[] { _initialCellPosition, currentCellPosition });
         }

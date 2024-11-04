@@ -32,7 +32,7 @@ namespace Deck.Components
             var item = drop.itemDrop.GetItem();
             for (var i = 0; i < drop.amount; i++)
             {
-                if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem))
+                if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem, true))
                 {
                     DeckLogger.Error("Item visual not found for id " + item.Representation.PrefabId);
                     continue;

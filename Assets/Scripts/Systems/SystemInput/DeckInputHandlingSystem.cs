@@ -77,13 +77,12 @@ namespace Deck.InputHandling
 
         private void CheckForStatsPopUp()
         {
-            return;
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
-                newPopUp.Show();
-                newPopUp.ShowStats(DeckServiceSelection.currentSelection);
-            }
+            // if (Input.GetKeyDown(KeyCode.C))
+            // {
+                // var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
+                // newPopUp.Show();
+                // newPopUp.ShowStats(DeckServiceSelection.currentSelection);
+            // }
         }
 
         private void CheckForCommandStackStatus()

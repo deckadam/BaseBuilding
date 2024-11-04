@@ -21,27 +21,25 @@ namespace Deck.Components.Building.Hotkey
 
         private void OnHotkeyCountChanged(DeckEventOnActiveHotkeyCountChanged obj)
         {
-            return;
-            for (var i = 0; i < obj.count; i++)
-            {
-                hotkeyObjects[i].gameObject.SetActive(true);
-            }
+            // for (var i = 0; i < obj.count; i++)
+            // {
+                // hotkeyObjects[i].gameObject.SetActive(true);
+            // }
 
-            for (var i = obj.count; i < 10; i++)
-            {
-                hotkeyObjects[i].gameObject.SetActive(false);
-            }
+            // for (var i = obj.count; i < 10; i++)
+            // {
+                // hotkeyObjects[i].gameObject.SetActive(false);
+            // }
         }
 
         private void OnHotkeySelected(DeckEventOnHotkeySelected obj)
         {
-            return;
-            foreach (var deckHotKeyPiece in hotkeyObjects)
-            {
-                deckHotKeyPiece.Normalize();
-            }
+            // foreach (var deckHotKeyPiece in hotkeyObjects)
+            // {
+                // deckHotKeyPiece.Normalize();
+            // }
 
-            hotkeyObjects[obj.index].Highlight();
+            // hotkeyObjects[obj.index].Highlight();
         }
 
         protected override bool CanDisappear()

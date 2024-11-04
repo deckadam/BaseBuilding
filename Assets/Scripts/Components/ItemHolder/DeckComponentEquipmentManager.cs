@@ -76,7 +76,7 @@ namespace Deck.Components
 
             // if (!itemToHold.Holdable)
             // {
-                // return;
+            // return;
             // }
 
             var animationName = itemToHold.AnimationName;
@@ -100,7 +100,7 @@ namespace Deck.Components
         private void EquipItem(DeckDataItem itemData, Transform target)
         {
             _currentlyEquippedItemData = itemData;
-            if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
+            if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem, false))
             {
                 DeckLogger.Error("Can't get item visual for " + itemData.Name);
                 return;

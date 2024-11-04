@@ -104,6 +104,7 @@ namespace Deck.ItemVisualProviders
             {
                 stack.Push(itemVisual);
                 itemVisual.gameObject.SetActive(false);
+                itemVisual.transform.parent = _poolParent;
                 Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
                 if (!isInternal)
                 {
