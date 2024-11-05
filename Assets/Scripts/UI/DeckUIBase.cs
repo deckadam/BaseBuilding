@@ -144,5 +144,17 @@ namespace Deck.Components.Building
         {
             Disappear().Forget();
         }
+
+        public virtual void BeforeGameSessionInitialized()
+        {
+        }
+
+        public virtual void BeforeGameSceneUnloaded()
+        {
+        }
+
+        public virtual void AfterGameSessionInitialized()
+        {
+        }
     }
 }

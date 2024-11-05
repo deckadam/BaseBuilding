@@ -15,6 +15,11 @@ namespace Deck.Save
         private static readonly string FILE_FORMAT = "MM'.'dd'.'yyyy' 'HH'.'mm'.'ss";
         private static SaveData _activeSaveData;
 
+        public static void CreateNewSave()
+        {
+            _activeSaveData = new SaveData();
+        }
+        
         public static void LoadLastSaveData()
         {
             DeckLogger.Save("Trying to load last save file");
@@ -158,14 +163,18 @@ namespace Deck.Save
             _activeSaveData[key] = data;
         }
 
+        public static bool HasData(string key)
+        {
+            return _activeSaveData.ContainsKey(key);
+        }
         public static T GetData<T>(string key)
         {
-            if (!_activeSaveData.ContainsKey(key))
+            if (!_activeSaveData.TryGetValue(key, out var value))
             {
                 return default;
             }
 
-            return (T)_activeSaveData[key];
+            return (T)value;
         }
 
         private static string ConvertToFilePath(string name)

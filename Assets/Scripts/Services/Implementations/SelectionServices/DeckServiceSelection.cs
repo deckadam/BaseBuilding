@@ -2,6 +2,7 @@
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Utility.Logger;
+using UnityEngine;
 
 namespace Deck.Services.CellSelectionService
 {

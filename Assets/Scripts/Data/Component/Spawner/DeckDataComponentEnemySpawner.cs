@@ -1,7 +1,7 @@
 using Deck.Components;
 using UnityEngine;
 
-namespace Data.Component.Tree
+namespace Deck.Data.Component.Tree
 {
     [CreateAssetMenu(fileName = "Deck Data Enemy Spawner", menuName = "Deck/Data/Component/Enemy Spawner")]
     public class DeckDataComponentEnemySpawner : DeckDataComponent

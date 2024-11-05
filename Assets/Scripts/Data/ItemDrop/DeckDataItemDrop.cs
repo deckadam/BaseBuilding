@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.Component;
+using Deck.Data.Component;
 using Deck.Data.Item;
 using UnityEngine;
 using Random = UnityEngine.Random;

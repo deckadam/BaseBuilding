@@ -46,7 +46,7 @@ namespace Deck
                 try
                 {
                     service.Value.Initialize();
-                    DeckLogger.Service(service.Value.GetType().Name + "  initialized succesfully");
+                    DeckLogger.Service(service.Value.GetType().Name + "  initialized successfully");
                 }
                 catch (Exception e)
                 {
@@ -56,11 +56,43 @@ namespace Deck
             }
         }
 
-
         public static T GetService<T>() where T : DeckServiceBase
         {
             var typeOfT = typeof(T);
             return (T)_services[typeOfT];
+        }
+
+
+        public static void BeforeGameSessionInitialized()
+        {
+            foreach (var deckServiceBase in _services)
+            {
+                deckServiceBase.Value.BeforeGameSessionInitialized();
+            }
+        }
+
+        public static void AfterGameSessionInitialized()
+        {
+            foreach (var deckServiceBase in _services)
+            {
+                deckServiceBase.Value.AfterGameSessionInitialized();
+            }
+        }
+
+        public static void BeforeGameSceneUnloaded()
+        {
+            foreach (var deckServiceBase in _services)
+            {
+                deckServiceBase.Value.BeforeGameSessionDeinitialized();
+            }
+        }
+
+        public static void BeforeSaveRequest()
+        {
+            foreach (var deckServiceBase in _services)
+            {
+                deckServiceBase.Value.BeforeSaveRequest();
+            }
         }
     }
 }

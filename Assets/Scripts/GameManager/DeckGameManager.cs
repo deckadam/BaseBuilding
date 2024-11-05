@@ -39,6 +39,7 @@ namespace Deck.Components.Building
 
         public async void CreateNewGame()
         {
+            DeckSaveSystem.CreateNewSave();
             await Deck.GetService<DeckServiceScene>().LoadMap();
             _container.InstantiatePrefab(_coreAgentPrefab).GetComponent<DeckAgentCore>().Initialize();
         }
@@ -53,6 +54,8 @@ namespace Deck.Components.Building
 
         public void GatherSaveData()
         {
+            Deck.BeforeSaveRequest();
+            
             var agents = Deck.GetService<DeckServiceFinder>().GetAgents();
             var agentDatas = new DeckComponentHolderSaveDatas();
             foreach (var agent in agents)

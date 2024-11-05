@@ -1,4 +1,4 @@
-﻿using Data.Component;
+﻿using Deck.Data.Component;
 using UnityEngine;
 
 namespace Deck.Data.Damage

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Data.Component;
+using Deck.Data.Component;
 using Deck.Save;
 using Deck.Components.Building.Stats;
 using UnityEngine;

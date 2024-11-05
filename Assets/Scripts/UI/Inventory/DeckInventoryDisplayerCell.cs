@@ -18,7 +18,7 @@ namespace Deck.Components.Building.Inventory
     public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image image;
-        [FormerlySerializedAs("amount")] [SerializeField] private TextMeshProUGUI amountText;
+        [SerializeField] private TextMeshProUGUI amountText;
         [SerializeField] private RectTransform visualParent;
 
         private DeckInventoryPopUp _popup;
@@ -46,7 +46,7 @@ namespace Deck.Components.Building.Inventory
 
         private async void FollowCursor(CancellationTokenSource tokenSource)
         {
-            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform(), true);
+            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform(), true);
             Deck.GetService<DeckServiceInventory>().OnDragBegin(this);
             image.raycastTarget = false;
             var offset = new Vector2(Screen.width / 2f, Screen.height / 2f);

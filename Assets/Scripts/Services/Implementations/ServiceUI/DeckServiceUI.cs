@@ -89,5 +89,30 @@ namespace Deck.Services
                 impl.Value.DeInitialize();
             }
         }
+
+        public override void BeforeGameSessionInitialized()
+        {
+            foreach (var keyValuePair in _uiImplementations)
+            {
+                keyValuePair.Value.BeforeGameSessionInitialized();
+            }
+        }
+
+        public override void AfterGameSessionInitialized()
+        {
+            
+            foreach (var keyValuePair in _uiImplementations)
+            {
+                keyValuePair.Value.AfterGameSessionInitialized();
+            }
+        }
+
+        public override void BeforeGameSessionDeinitialized()
+        {
+            foreach (var keyValuePair in _uiImplementations)
+            {
+                keyValuePair.Value.BeforeGameSceneUnloaded();
+            }
+        }
     }
 }

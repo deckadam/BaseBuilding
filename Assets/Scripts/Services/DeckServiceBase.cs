@@ -38,5 +38,21 @@ namespace Deck.Services
         public virtual void Initialize()
         {
         }
+
+        public virtual void BeforeGameSessionInitialized()
+        {
+        }
+
+        public virtual void AfterGameSessionInitialized()
+        {
+        }
+
+        public virtual void BeforeGameSessionDeinitialized()
+        {
+        }
+
+        public virtual void BeforeSaveRequest()
+        {
+        }
     }
 }

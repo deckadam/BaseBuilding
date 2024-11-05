@@ -51,7 +51,7 @@ namespace Deck.Components.Building
         public void Show()
         {
             gameObject.SetActive(true);
-            var gamePlayUIRect = Deck.GetService<DeckServiceUI>().GetUI<DeckGamePlayUI>().GetRectTransform();
+            var gamePlayUIRect = Deck.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform();
             rect.SetParent(gamePlayUIRect, false);
             rect.anchoredPosition = Vector2.zero;
         }

@@ -3,6 +3,7 @@ using Deck.Components.Building;
 using Deck.Components.Building.Inventory;
 using Deck.Components.Building.Stats;
 using Deck.Components.Core;
+using Deck.Data.Currency;
 using Deck.Data.Item;
 using Deck.InputHandling.Events;
 using Deck.ItemVisualProviders;
@@ -13,6 +14,7 @@ using Deck.Services.CellSelectionService;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
+using Services.Implementations.Currency;
 using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.AI;
@@ -51,6 +53,19 @@ namespace Deck.InputHandling
             CheckForCommandStackStatus();
             CheckForStatsPopUp();
             CheckForDestroyBuilding();
+            CheckForCurrency();
+        }
+
+        private void CheckForCurrency()
+        {
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, 50);
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, -50);
+            }
         }
 
         private void CheckForDestroyBuilding()
@@ -63,14 +78,12 @@ namespace Deck.InputHandling
 
             if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
             {
-                Debug.LogError("Agent death");
                 agent.RequestDestroy();
                 return;
             }
 
             if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
             {
-                Debug.LogError("Item visual death");
                 Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
             }
         }
@@ -79,9 +92,9 @@ namespace Deck.InputHandling
         {
             // if (Input.GetKeyDown(KeyCode.C))
             // {
-                // var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
-                // newPopUp.Show();
-                // newPopUp.ShowStats(DeckServiceSelection.currentSelection);
+            // var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
+            // newPopUp.Show();
+            // newPopUp.ShowStats(DeckServiceSelection.currentSelection);
             // }
         }
 
@@ -258,7 +271,7 @@ namespace Deck.InputHandling
                 }
 
                 var currentInputPosition = Input.mousePosition.ToVector2Int();
-                
+
                 if (_lastInputPosition == currentInputPosition)
                 {
                     return;

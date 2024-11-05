@@ -15,21 +15,21 @@ namespace Deck.Components.Building.SaveListingMenu
         [SerializeField] private TextMeshProUGUI displayText;
 
         private DeckSaveSystem.SaveFile _saveFile;
-        private DeckSaveListingMenu _saveListingMenu;
-        public void SetData(DeckSaveSystem.SaveFile saveFile, DeckSaveListingMenu saveListingMenu)
+        private DeckUISaveListing _uiSaveListing;
+        public void SetData(DeckSaveSystem.SaveFile saveFile, DeckUISaveListing uiSaveListing)
         {
-            _saveListingMenu = saveListingMenu;
+            _uiSaveListing = uiSaveListing;
             _saveFile = saveFile;
             displayText.text = saveFile.name;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _saveListingMenu.SetSelected(this);
+            _uiSaveListing.SetSelected(this);
             if (eventData.clickCount != 2) return;
 
             var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
-            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckSaveListingMenu>().GetRectTransform();
+            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => DeckEventOnLoadRequested.Create(_saveFile).Send(), null);

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Data.Component;
+using Deck.Data.Component;
 using UnityEngine;
 
 namespace Deck.Data.Component

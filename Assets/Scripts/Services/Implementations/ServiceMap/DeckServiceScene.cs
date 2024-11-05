@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.Services;
 using Deck.Utility.Logger;
+using Services;
 using UnityEngine.SceneManagement;
 
 namespace Deck.Services.MapService
@@ -27,12 +27,15 @@ namespace Deck.Services.MapService
             if (isLoaded)
             {
                 DeckLogger.Map("Map scene unloading");
+                Deck.BeforeGameSceneUnloaded();
                 await SceneManager.UnloadSceneAsync(MapName);
                 DeckLogger.Map("Map scene unloaded");
             }
 
             DeckLogger.Map("New map scene loading");
             await SceneManager.LoadSceneAsync(MapName, LoadSceneMode.Additive);
+            Deck.BeforeGameSessionInitialized();
+            Deck.AfterGameSessionInitialized();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(MapName));
             DeckLogger.Map("New map scene loaded");
         }
