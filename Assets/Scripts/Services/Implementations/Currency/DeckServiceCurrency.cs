@@ -1,8 +1,8 @@
+using System.Linq;
 using Deck.Data.Currency;
 using Deck.Save;
 using Deck.Services;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Services.Implementations.Currency
 {
@@ -31,10 +31,35 @@ namespace Services.Implementations.Currency
             }
         }
 
-        public void ChangeValueRelative(DeckCurrencyType currencyType, int amountToAdd)
+        public void ChangeValueRelative(DeckPrice[] prices, int multiplier, bool add)
         {
-            var currency = _currentCurrencies[(int)currencyType];
-            currency.ChangeValueRelative(amountToAdd);
+            var mul = add ? 1 : -1;
+            foreach (var price in prices)
+            {
+                var currency = _currentCurrencies.First(item => item.CurrencyType == price.CurrencyType);
+                currency.ChangeValueRelative(mul * price.Amount * multiplier);
+            }
+        }
+
+        public void ChangeValueRelative(DeckPrice[] prices,bool add)
+        {
+            foreach (var price in prices)
+            {
+                var currency = _currentCurrencies.First(item => item.CurrencyType == price.CurrencyType);
+                currency.ChangeValueRelative(price.Amount);
+            }
+        }
+
+        public void ChangeValueRelative(DeckCurrencyType currencyType, int amount)
+        {
+            var currency = _currentCurrencies.First(item => item.CurrencyType == currencyType);
+            currency.ChangeValueRelative(amount);
+        }
+
+        public void ChangeValueRelative(DeckPrice price)
+        {
+            var currency = _currentCurrencies.First(item => item.CurrencyType == price.CurrencyType);
+            currency.ChangeValueRelative(price.Amount);
         }
 
         public void ChangeValue(DeckCurrencyType currencyType, int newAmount)
@@ -43,9 +68,41 @@ namespace Services.Implementations.Currency
             currency.ChangeValue(newAmount);
         }
 
-        public bool HasEnoughAmount(DeckCurrencyType currencyType, int amountToCheck)
+        public bool CanAfford(DeckPrice[] prices, int multiplier)
         {
-            return _currentCurrencies[(int)currencyType].HasEnoughAmount(amountToCheck);
+            foreach (var deckPrice in prices)
+            {
+                if (!CanAfford(deckPrice, multiplier))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool CanAfford(DeckPrice[] prices)
+        {
+            foreach (var deckPrice in prices)
+            {
+                if (!CanAfford(deckPrice))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public bool CanAfford(DeckPrice price, int multiplier)
+        {
+            Debug.LogError(price.Amount * multiplier);
+            return _currentCurrencies[(int)price.CurrencyType].HasEnoughAmount(price.Amount * multiplier);
+        }
+
+        public bool CanAfford(DeckPrice price)
+        {
+            return _currentCurrencies[(int)price.CurrencyType].HasEnoughAmount(price.Amount);
         }
 
         public DeckCurrency[] GetCurrencies()
@@ -58,7 +115,7 @@ namespace Services.Implementations.Currency
             foreach (var currency in _currentCurrencies)
             {
                 DeckSaveSystem.SetData(currency.SaveKey, currency.Amount);
-                Debug.LogError(currency.SaveKey +"  " + currency.Amount);
+                Debug.LogError(currency.SaveKey + "  " + currency.Amount);
             }
         }
     }

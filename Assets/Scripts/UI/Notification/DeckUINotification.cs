@@ -29,7 +29,9 @@ namespace Deck.Components.Building
 
         private void OnNotificationRequested(DeckEventNotificationRequested obj)
         {
-            var newNotification = Instantiate(notificationPrefab, spawnPoint);
+            var newNotification = InstanceProvider.RentUIElement<DeckNotification>();
+            newNotification.transform.SetParent(spawnPoint);
+            newNotification.transform.localPosition = Vector3.zero;
             newNotification.SetMessage(obj.message);
         }
 

@@ -8,11 +8,11 @@ using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Save;
 using Deck.Services.CameraService;
-using Deck.Services.CellSelectionService;
 using Deck.Services.MapService;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
+using Services.Implementations.Currency;
 using UnityEngine;
 using Zenject;
 
@@ -35,6 +35,7 @@ namespace Deck.Services.Building
         private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
         private DeckServiceCamera _cameraService;
+        private DeckServiceCurrency _currencyService;
         private DeckDataBuilding _buildingData;
         private DeckBuildable _activeBuildable;
         private GameObject _silhouetteParent;
@@ -52,6 +53,7 @@ namespace Deck.Services.Building
         public override void Initialize()
         {
             _cameraService = Deck.GetService<DeckServiceCamera>();
+            _currencyService = Deck.GetService<DeckServiceCurrency>();
             _lastCheckedCellIndex = _defaultCellPosition;
         }
 
@@ -267,6 +269,15 @@ namespace Deck.Services.Building
                 return;
             }
 
+            if (!_currencyService.CanAfford(_activeBuildable.Prices))
+            {
+                DeckEventNotificationRequested.Create("Cant afford").Send();
+                ReturnAllSilhouettePiecesToPool();
+                return;
+            }
+
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+
             if (!TryGetWallCollision(out _, out var buildPosition, out var buildRotation))
             {
                 return;
@@ -276,17 +287,6 @@ namespace Deck.Services.Building
             {
                 DeckLogger.Inform("Collides with object", collidedObject);
                 return;
-            }
-
-            if (_activeBuildable.Requeriements.Length > 0)
-            {
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
-                    .ReduceIfPossible(_activeBuildable.Requeriements);
-                if (!hasItems)
-                {
-                    DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
-                }
             }
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
@@ -305,6 +305,15 @@ namespace Deck.Services.Building
                 return;
             }
 
+            if (!_currencyService.CanAfford(_activeBuildable.Prices))
+            {
+                DeckEventNotificationRequested.Create("Cant afford").Send();
+                ReturnAllSilhouettePiecesToPool();
+                return;
+            }
+
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+
             if (!TryGetCollidedItemVisualOnTop(out var item, out var buildPosition))
             {
                 return;
@@ -314,17 +323,6 @@ namespace Deck.Services.Building
             {
                 DeckLogger.Inform("Can't build on position");
                 return;
-            }
-
-            if (_activeBuildable.Requeriements.Length > 0)
-            {
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
-                    .ReduceIfPossible(_activeBuildable.Requeriements);
-                if (!hasItems)
-                {
-                    DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
-                }
             }
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
@@ -343,21 +341,19 @@ namespace Deck.Services.Building
                 return;
             }
 
+            if (!_currencyService.CanAfford(_activeBuildable.Prices))
+            {
+                DeckEventNotificationRequested.Create("Cant afford").Send();
+                ReturnAllSilhouettePiecesToPool();
+                return;
+            }
+
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+
             if (!CheckIfAgentBuildableInArea(_activeBuildable))
             {
                 DeckEventNotificationRequested.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
                 return;
-            }
-
-            if (_activeBuildable.Requeriements.Length > 0)
-            {
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
-                    .ReduceIfPossible(_activeBuildable.Requeriements);
-                if (!hasItems)
-                {
-                    DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
-                }
             }
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
@@ -387,7 +383,6 @@ namespace Deck.Services.Building
             }
 
             var rectBuildPositions = position.GetRectFromPoints();
-
             var isAllCellsAvailable = true;
 
             foreach (var rectBuildPosition in rectBuildPositions)
@@ -411,19 +406,17 @@ namespace Deck.Services.Building
                 return;
             }
 
+            if (!_currencyService.CanAfford(_activeBuildable.Prices, rectBuildPositions.Count))
+            {
+                DeckEventNotificationRequested.Create("Cant afford").Send();
+                ReturnAllSilhouettePiecesToPool();
+                return;
+            }
+
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, rectBuildPositions.Count, false);
+
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                if (_activeBuildable.Requeriements.Length > 0)
-                {
-                    var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
-                        .ReduceIfPossible(_activeBuildable.Requeriements);
-                    if (!hasItems)
-                    {
-                        DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                        return;
-                    }
-                }
-
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
                 newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
@@ -448,6 +441,15 @@ namespace Deck.Services.Building
                 return;
             }
 
+            if (!_currencyService.CanAfford(_activeBuildable.Prices))
+            {
+                DeckEventNotificationRequested.Create("Cant afford").Send();
+                ReturnAllSilhouettePiecesToPool();
+                return;
+            }
+
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+
 
             if (_lastCheckedCellIndex == cellIndex)
             {
@@ -466,17 +468,6 @@ namespace Deck.Services.Building
                     }
 
                     encounteredAgent.RequestDestroy();
-                }
-            }
-
-            if (_activeBuildable.Requeriements.Length > 0)
-            {
-                var hasItems = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentInventory>()
-                    .ReduceIfPossible(_activeBuildable.Requeriements);
-                if (!hasItems)
-                {
-                    DeckEventNotificationRequested.Create(DeckConstantsNotification.OnItemRequirementNotMet).Send();
-                    return;
                 }
             }
 
@@ -757,6 +748,16 @@ namespace Deck.Services.Building
             _pieceInUse.Add(newPiece);
 
             return newPiece;
+        }
+
+        private void ReturnAllSilhouettePiecesToPool()
+        {
+            foreach (var silhouettePiece in _pieceInUse)
+            {
+                ReturnSilhouettePieceToPool(silhouettePiece);
+            }
+
+            _pieceInUse.Clear();
         }
 
         private void ReturnSilhouettePieceToPool(SilhouettePiece piece)

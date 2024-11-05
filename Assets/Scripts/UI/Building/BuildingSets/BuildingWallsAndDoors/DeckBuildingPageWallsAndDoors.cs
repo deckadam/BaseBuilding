@@ -19,14 +19,6 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         private bool _isBuildModeActive;
         private bool _isBuildingWall;
 
-        private void OnDestroy()
-        {
-            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
-            {
-                _escapableBuildMode.OnCloseRequested();
-            }
-        }
-
         protected override void OnInitialize()
         {
             EscapableService = Deck.GetService<DeckServiceEscapable>();

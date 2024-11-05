@@ -1,4 +1,5 @@
 ﻿using Deck.EventManager;
+using UnityEngine;
 
 namespace Deck.Components.Building
 {
@@ -8,6 +9,7 @@ namespace Deck.Components.Building
 
         public static DeckEventNotificationRequested Create(string message)
         {
+            Debug.LogError("New notif");
             return new DeckEventNotificationRequested
             {
                 message = message

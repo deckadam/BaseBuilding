@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableFurniture Table_002
   m_EditorClassIdentifier: 
-  requirements: []
   agent: {fileID: -4123667621523898490, guid: 8a73920817637764e8e56772168c1475, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 9288e8735d2794747aefea2649c54cec, type: 3}
   name: FurnitureTable_002
@@ -25,5 +24,9 @@ MonoBehaviour:
   rotatable: 1
   icon: {fileID: 0}
   extents: {x: 0.61832714, y: 0.5998423, z: 0.61832714}
+  prices:
+  - currencyType: 0
+    amount: 80
   canBeHangedToWall: 0
+  canBePlacedOnTopOfAnotherObject: 0
   materialCount: 1

@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Linq;
 using Deck.Data.Item;
 using Deck.Components;
+using Deck.Data.Currency;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Deck.Data.Buildable
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeField, InfoBox("Duplicate item exists", nameof(CheckUniqueness))]
-        private DeckItemRequirement[] requirements;
-
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
@@ -24,10 +20,10 @@ namespace Deck.Data.Buildable
         [SerializeField] private bool rotatable;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
+        [SerializeField] private DeckPrice[] prices;
         [SerializeField] private bool canBeHangedToWall;
         [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
 
-        public DeckItemRequirement[] Requeriements => requirements;
         public SilouetteData[] Silouette => silouette;
         public int materialCount;
         public Vector2Int[] Indices => indices;
@@ -38,6 +34,7 @@ namespace Deck.Data.Buildable
         public string VisibleName => visibleName;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
+        public DeckPrice[] Prices => prices;
         public bool CanBeHangedToWall => canBeHangedToWall;
         public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
 
@@ -46,7 +43,6 @@ namespace Deck.Data.Buildable
         {
             CollectSilouetteData();
             CollectExtentsData();
-            CheckUniqueness();
         }
 
         public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall)
@@ -77,17 +73,6 @@ namespace Deck.Data.Buildable
             }
 
             extents = bounds.size;
-        }
-
-        private bool CheckUniqueness()
-        {
-            if (requirements == null || requirements.Length < 1)
-            {
-                return true;
-            }
-
-            var distinctItemCount = requirements.Select(item => item.Item).Distinct().Count();
-            return distinctItemCount != requirements.Length;
         }
 
         private void CollectSilouetteData()

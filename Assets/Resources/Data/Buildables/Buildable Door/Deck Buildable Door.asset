@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Door
   m_EditorClassIdentifier: 
-  requirements: []
   agent: {fileID: -7197348414825284670, guid: c32ff13636e69064cab335d07b740c8f, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
   name: Door
@@ -29,5 +28,9 @@ MonoBehaviour:
   rotatable: 0
   icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5000001, z: 1.0000001}
+  prices:
+  - currencyType: 0
+    amount: 50
   canBeHangedToWall: 0
+  canBePlacedOnTopOfAnotherObject: 0
   materialCount: 1

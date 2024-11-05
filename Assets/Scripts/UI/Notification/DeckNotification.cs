@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace Deck.Components.Building
 {
-    public class DeckNotification : MonoBehaviour
+    public class DeckNotification : DeckUIElement
     {
-        [SerializeField] private RectTransform rectTransform;
         [SerializeField] private TextMeshProUGUI display;
         [SerializeField] private CanvasGroup group;
 
