@@ -30,7 +30,6 @@ namespace Deck.Components
         [SerializeField] private new Collider collider;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
-        [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
         [SerializeField] private bool canBePlacedOnTop;
         public DeckAgent Agent { get; set; }
 
@@ -38,11 +37,9 @@ namespace Deck.Components
         public Vector3 LocalEquipRotation => localEquipRotation;
         private DeckBinderGeneral.DeckGeneralData _generalData;
         public void SetItem(DeckDataItem item) => bindedItem = item;
-        public DeckDataItem GetBindedItem() => bindedItem;
+        public DeckDataItem GetBoundItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
         public Collider Collider => collider;
-        public bool IsStatic => isStatic;
-        public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
         public bool CanBePlacedOnTop => canBePlacedOnTop;
         private bool _hasDropped;
         private bool _hasInitialized;

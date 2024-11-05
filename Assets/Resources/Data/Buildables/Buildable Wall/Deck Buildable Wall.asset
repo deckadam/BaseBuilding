@@ -26,3 +26,5 @@ MonoBehaviour:
   rotatable: 0
   icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5, z: 0.3}
+  canBeHangedToWall: 0
+  materialCount: 1

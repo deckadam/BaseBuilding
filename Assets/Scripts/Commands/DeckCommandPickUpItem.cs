@@ -30,7 +30,7 @@ namespace Deck.Components
             }
 
             _itemVisual.OnPickUp(_movement.GetAgent().GetCenter());
-            _inventory.AddItem(_itemVisual.GetBindedItem());
+            _inventory.AddItem(_itemVisual.GetBoundItem());
             return true;
         }
 

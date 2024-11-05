@@ -26,3 +26,4 @@ MonoBehaviour:
   icon: {fileID: 0}
   extents: {x: 0.7, y: 1.0028238, z: 0.075722866}
   canBeHangedToWall: 1
+  materialCount: 2

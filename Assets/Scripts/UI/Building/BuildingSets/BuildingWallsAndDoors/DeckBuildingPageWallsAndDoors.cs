@@ -17,6 +17,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         private DeckBuildableButton _doorButton;
         private DeckBuildable _selectedBuildable;
         private bool _isBuildModeActive;
+        private bool _isBuildingWall;
 
         private void OnDestroy()
         {
@@ -52,15 +53,17 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             if (_selectedBuildable == wallBuildable)
             {
                 _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, OnBuildRequested, true);
+                _isBuildingWall = true;
+                BuildingService.StartSilhouette(buildable);
             }
             else
             {
                 _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
+                BuildingService.StartSilhouette(buildable);
             }
 
             EscapableService.RegisterEscapable(_escapableBuildMode);
             _isBuildModeActive = true;
-            BuildingService.StartSilhouette(buildable);
         }
 
         private void OnBuildRequested(Vector3[] positions)
@@ -89,7 +92,16 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         {
             if (_isBuildModeActive)
             {
-                BuildingService.UpdateSilhouetteInCell();
+                if (_isBuildingWall)
+                {
+                    if (_escapableBuildMode.GetBuildPositionsIfChanged(out var positions))
+                    {
+                    }
+                }
+                else
+                {
+                    BuildingService.UpdateSilhouetteInCell();
+                }
             }
         }
 

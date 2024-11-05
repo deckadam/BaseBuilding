@@ -11,8 +11,26 @@ namespace Deck.Utility
 
         public static Vector2Int ToVector2Int(this Vector3 position)
         {
-            var x = Mathf.RoundToInt(position.x);
-            var z = Mathf.RoundToInt(position.z);
+            int x;
+            if (position.x % 1f > 0.55f)
+            {
+                x = (int)position.x + 1;
+            }
+            else
+            {
+                x = (int)position.x;
+            }
+
+            int z;
+            if (position.z % 1f > 0.55f)
+            {
+                z = (int)position.z + 1;
+            }
+            else
+            {
+                z = (int)position.z;
+            }
+
             return new Vector2Int(x, z);
         }
 

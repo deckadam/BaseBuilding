@@ -5,6 +5,7 @@ using Deck.Components;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Deck.Data.Buildable
 {
@@ -24,9 +25,11 @@ namespace Deck.Data.Buildable
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
         [SerializeField] private bool canBeHangedToWall;
+        [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
 
         public DeckItemRequirement[] Requeriements => requirements;
         public SilouetteData[] Silouette => silouette;
+        public int materialCount;
         public Vector2Int[] Indices => indices;
         public bool Rotatable => rotatable;
         public DeckAgent Agent => agent;
@@ -35,8 +38,8 @@ namespace Deck.Data.Buildable
         public string VisibleName => visibleName;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
-        public bool CanBePlacedOnTopOfAnotherObject => itemVisual.CanBePlacedOnTopOfAnotherObject;
         public bool CanBeHangedToWall => canBeHangedToWall;
+        public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
 
         [Button]
         private void OnValidate()

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
-  m_Name: DeckItemVase_002
+  m_Name: DeckBuildableMiscVase_002
   m_EditorClassIdentifier: 
   requirements: []
   agent: {fileID: 5134706524527623977, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
@@ -26,3 +26,5 @@ MonoBehaviour:
   icon: {fileID: 0}
   extents: {x: 0.32801348, y: 0.29977643, z: 0.32801336}
   canBeHangedToWall: 0
+  canBePlacedOnTopOfAnotherObject: 1
+  materialCount: 1
