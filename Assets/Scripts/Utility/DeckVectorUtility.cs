@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.Utility
@@ -13,9 +14,14 @@ namespace Deck.Utility
         public static Vector2Int ToVector2Int(this Vector3 position)
         {
             int x;
-            if (position.x % 1f > 0.55f)
+            var xRemainder = position.x % 1f;
+            if (xRemainder is > 0f and > 0.51f)
             {
                 x = (int)position.x + 1;
+            }
+            else if (xRemainder < 0f && xRemainder < -0.49f)
+            {
+                x = (int)position.x - 1;
             }
             else
             {
@@ -23,9 +29,14 @@ namespace Deck.Utility
             }
 
             int z;
-            if (position.z % 1f > 0.55f)
+            var zRemainder = position.z % 1f;
+            if (zRemainder is > 0f and > 0.51f)
             {
                 z = (int)position.z + 1;
+            }
+            else if (zRemainder is < 0f and < -0.49f)
+            {
+                z = (int)position.z - 1;
             }
             else
             {
@@ -56,7 +67,6 @@ namespace Deck.Utility
 
         public static List<Vector2Int> GetRectFromPoints(this Vector3[] points)
         {
-            
             var firstPos = points[0].ToVector2Int();
             var secondPos = points[1].ToVector2Int();
 

@@ -31,21 +31,21 @@ namespace Deck.CameraController
             movement += Input.GetAxis("Horizontal") * Vector3.right;
             movement += Input.GetAxis("Vertical") * Vector3.forward;
 
-            // var scroll = Input.mouseScrollDelta.y;
-            // if (scroll > 0 && transform.position.y > _binderCamera.GetMinimumHeight())
-            // {
-            //     var limit = transform.position.y - _binderCamera.GetMinimumHeight();
-            //     var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
-            //     delta = Mathf.Clamp(delta, 0, limit);
-            //     transform.position += transform.forward * delta;
-            // }
-            // else if (scroll < 0 && transform.position.y < _binderCamera.GetMaximumHeight())
-            // {
-            //     var limit = transform.position.y - _binderCamera.GetMaximumHeight();
-            //     var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
-            //     delta = Mathf.Clamp(delta, limit, 0);
-            //     transform.position += transform.forward * delta;
-            // }
+            var scroll = Input.mouseScrollDelta.y;
+            if (scroll > 0 && transform.position.y > _binderCamera.GetMinimumHeight())
+            {
+                var limit = transform.position.y - _binderCamera.GetMinimumHeight();
+                var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
+                delta = Mathf.Clamp(delta, 0, limit);
+                transform.position += transform.forward * delta;
+            }
+            else if (scroll < 0 && transform.position.y < _binderCamera.GetMaximumHeight())
+            {
+                var limit = transform.position.y - _binderCamera.GetMaximumHeight();
+                var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
+                delta = Mathf.Clamp(delta, limit, 0);
+                transform.position += transform.forward * delta;
+            }
 
             var deltaPosition = movement * (Time.deltaTime * _binderCamera.GetCameraMovementSpeed());
             // if (_collider.bounds.Contains(transform.position + deltaPosition))

@@ -59,6 +59,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             else
             {
                 _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
+                _isBuildingWall = false;
                 BuildingService.StartSilhouette(buildable);
             }
 
@@ -92,13 +93,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         {
             if (_isBuildModeActive)
             {
-                if (_isBuildingWall)
-                {
-                    if (_escapableBuildMode.GetBuildPositionsIfChanged(out var positions))
-                    {
-                    }
-                }
-                else
+                if (!_isBuildingWall)
                 {
                     BuildingService.UpdateSilhouetteInCell();
                 }

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Deck.Components;
 using Deck.Components.Building;
 using Deck.Data.Buildable;
 using Deck.Data.General;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Save.Data;
+using Deck.Save;
 using Deck.Services.CameraService;
 using Deck.Services.CellSelectionService;
 using Deck.Services.MapService;
@@ -20,15 +21,17 @@ namespace Deck.Services.Building
     public class DeckServiceBuilding : DeckServiceBase
     {
         [SerializeField] private LayerMask layerMask;
+        [SerializeField] private LayerMask onWallLayerMask;
 
         private const string WallTag = "Wall";
         private const float YOffsetForBuildOnTop = 0.1f;
-        
+
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private readonly Dictionary<Vector2Int, DeckAgent> _grid = new();
         private readonly Collider[] _possibleColliders = new Collider[2];
-        private readonly List<GameObject> _silhouettePieces = new();
-        
+        private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
+        private readonly List<SilhouettePiece> _pieceInUse = new();
+
         private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
         private DeckServiceCamera _cameraService;
@@ -50,11 +53,6 @@ namespace Deck.Services.Building
         {
             _cameraService = Deck.GetService<DeckServiceCamera>();
             _lastCheckedCellIndex = _defaultCellPosition;
-        }
-
-        public override void DeInitialize()
-        {
-            Clear();
         }
 
         private void Awake()
@@ -102,13 +100,11 @@ namespace Deck.Services.Building
             _isDirty = true;
             SetActiveBuildable(buildable);
 
-            var newPiece = CreateNewSilhouettePiece();
+            var newPiece = GetSilhouettePiece();
 
-            newPiece.transform.SetParent(_silhouetteParent.transform);
-            newPiece.transform.localPosition = Vector3.zero;
-            newPiece.transform.localRotation = _rotation;
-
-            _silhouettePieces.Add(newPiece);
+            newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+            newPiece.gameObject.transform.localPosition = Vector3.zero;
+            newPiece.gameObject.transform.localRotation = _rotation;
             if (buildable.Rotatable)
             {
                 DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
@@ -120,10 +116,10 @@ namespace Deck.Services.Building
             _isDirty = true;
             SetActiveBuildable(buildable);
 
-            var newPiece = CreateNewSilhouettePiece();
-            newPiece.transform.SetParent(_silhouetteParent.transform);
-            newPiece.transform.localPosition = Vector3.zero;
-            _silhouettePieces.Add(newPiece);
+            var newPiece = GetSilhouettePiece();
+
+            newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+            newPiece.gameObject.transform.localPosition = Vector3.zero;
 
             if (buildable.Rotatable)
             {
@@ -155,25 +151,22 @@ namespace Deck.Services.Building
             }
 
             var rectFromPoints = cells.GetRectFromPoints();
-            var necessaryCount = rectFromPoints.Count - _silhouettePieces.Count;
+            var necessaryCount = rectFromPoints.Count - _pieceInUse.Count;
 
             if (necessaryCount < 0)
             {
                 for (var i = 0; i < -necessaryCount; i++)
                 {
-                    var piecesToDisable = _silhouettePieces.GetRange(_silhouettePieces.Count + necessaryCount, -necessaryCount);
-                    foreach (var piece in piecesToDisable)
-                    {
-                        piece.SetActive(false);
-                    }
+                    var lastPiece = _pieceInUse.Last();
+                    _pieceInUse.RemoveAt(_pieceInUse.Count - 1);
+                    ReturnSilhouettePieceToPool(lastPiece);
                 }
             }
 
             for (var i = 0; i < necessaryCount; i++)
             {
-                var newPiece = CreateNewSilhouettePiece();
-                newPiece.transform.SetParent(_silhouetteParent.transform);
-                _silhouettePieces.Add(newPiece);
+                var newPiece = GetSilhouettePiece();
+                newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             }
 
             var isAllCellsFree = true;
@@ -181,12 +174,12 @@ namespace Deck.Services.Building
             {
                 var rectFromPoint = rectFromPoints[index];
 
-                if (!_silhouettePieces[index].activeSelf)
+                if (!_pieceInUse[index].gameObject.activeSelf)
                 {
-                    _silhouettePieces[index].SetActive(true);
+                    _pieceInUse[index].gameObject.SetActive(true);
                 }
 
-                _silhouettePieces[index].transform.position = rectFromPoint.ToVector3();
+                _pieceInUse[index].gameObject.transform.position = rectFromPoint.ToVector3();
 
                 if (isAllCellsFree && _grid.ContainsKey(rectFromPoint) && _grid[rectFromPoint] != null)
                 {
@@ -227,12 +220,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var material = !CollidesWithOtherItemsOnWall(buildPosition, buildRotation, out var collidedObject) ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-
-            if (collidedItem != null)
-            {
-                Debug.LogError(collidedItem.name);
-            }
+            var material = !CollidesWithOtherItemsOnWall(buildPosition, out var collidedObject) ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
 
@@ -266,19 +254,16 @@ namespace Deck.Services.Building
             var isPlaceable = !CollidesWithOtherItemsOnTop(buildPosition);
 
             var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-            foreach (var meshRenderer in _silhouettePieces)
-            {
-                meshRenderer.GetComponentInChildren<MeshRenderer>().sharedMaterial = material;
-            }
+            ApplyMaterialToSilhouette(material);
 
             _silhouetteParent.transform.position = buildPosition;
         }
 
         public void BuildOnWall()
         {
-            if (!_activeBuildable)
+            if (_activeBuildable == null)
             {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
+                DeckLogger.Warning("Active buildable is null");
                 return;
             }
 
@@ -287,7 +272,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (CollidesWithOtherItemsOnWall(buildPosition, buildRotation, out var collidedObject))
+            if (CollidesWithOtherItemsOnWall(buildPosition, out var collidedObject))
             {
                 DeckLogger.Inform("Collides with object", collidedObject);
                 return;
@@ -327,7 +312,7 @@ namespace Deck.Services.Building
 
             if (CollidesWithOtherItemsOnTop(buildPosition))
             {
-                DeckLogger.Inform("Building is already on top");
+                DeckLogger.Inform("Can't build on position");
                 return;
             }
 
@@ -417,11 +402,12 @@ namespace Deck.Services.Building
             {
                 DeckLogger.Inform("Not all cells are free");
 
-                foreach (var silhouettePiece in _silhouettePieces)
+                foreach (var piece in _pieceInUse)
                 {
-                    silhouettePiece.SetActive(false);
+                    ReturnSilhouettePieceToPool(piece);
                 }
 
+                _pieceInUse.Clear();
                 return;
             }
 
@@ -446,10 +432,12 @@ namespace Deck.Services.Building
                 SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
             }
 
-            foreach (var silhouettePiece in _silhouettePieces)
+            foreach (var silhouettePiece in _pieceInUse)
             {
-                silhouettePiece.SetActive(false);
+                ReturnSilhouettePieceToPool(silhouettePiece);
             }
+
+            _pieceInUse.Clear();
         }
 
         public void BuildInCell(Vector2Int cellIndex)
@@ -500,7 +488,7 @@ namespace Deck.Services.Building
             SetCellOccupied(cellIndex, _activeBuildable.Indices, newBuilding);
         }
 
-        private bool CollidesWithOtherItemsOnWall(Vector3 position, Vector3 normal, out GameObject collidedObject)
+        private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)
         {
             var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
             if (!boxCollider)
@@ -510,7 +498,7 @@ namespace Deck.Services.Building
                 return true;
             }
 
-            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, layerMask, QueryTriggerInteraction.Ignore) > 0)
+            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) > 0)
             {
                 collidedObject = _possibleColliders[0].gameObject;
                 return true;
@@ -526,44 +514,28 @@ namespace Deck.Services.Building
             {
                 var size = boxCollider.size;
                 var yOffset = new Vector3(0, boxCollider.size.y / 2f, 0);
-                if (Physics.OverlapBoxNonAlloc(position + yOffset, size, _possibleColliders) > 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return Physics.OverlapBoxNonAlloc(position + yOffset, size, _possibleColliders) > 0;
             }
 
             if (_activeBuildable.ItemVisual.Collider is SphereCollider sphereCollider)
             {
                 var radius = sphereCollider.radius;
                 var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
-                if (Physics.OverlapSphereNonAlloc(position + yOffset, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return Physics.OverlapSphereNonAlloc(position + yOffset, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
             }
 
             if (_activeBuildable.ItemVisual.Collider is CapsuleCollider capsuleCollider)
             {
-                var col = capsuleCollider;
                 var direction = new Vector3 { [capsuleCollider.direction] = 1 };
-                var offset = capsuleCollider.height / 2 - col.radius;
                 var radius = capsuleCollider.radius;
+                var offset = capsuleCollider.height / 2 - radius;
                 var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
                 var localPoint0 = capsuleCollider.center - direction * offset + yOffset;
                 var localPoint1 = capsuleCollider.center + direction * offset + yOffset;
                 var point0 = _silhouetteParent.transform.TransformPoint(localPoint0);
                 var point1 = _silhouetteParent.transform.TransformPoint(localPoint1);
 
-                if (Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
             }
 
             DeckLogger.Error($"Not suppoerted collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
@@ -585,15 +557,12 @@ namespace Deck.Services.Building
 
             _activeBuildable = null;
 
-            foreach (var piece in _silhouettePieces)
+            foreach (var piece in _pieceInUse)
             {
-                if (piece)
-                {
-                    Destroy(piece.gameObject);
-                }
+                ReturnSilhouettePieceToPool(piece);
             }
 
-            _silhouettePieces.Clear();
+            _pieceInUse.Clear();
             _rotation = Quaternion.identity;
             _isDirty = false;
         }
@@ -685,7 +654,7 @@ namespace Deck.Services.Building
                 {
                     if (itemVisual.CompareTag(WallTag))
                     {
-                        Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+                        // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
                         position = hit.point;
                         rotation = hit.normal;
                         return true;
@@ -712,37 +681,11 @@ namespace Deck.Services.Building
             return _cameraService.GetCamera().ScreenPointToRay(Input.mousePosition);
         }
 
-        private GameObject CreateNewSilhouettePiece()
-        {
-            var silhouetteData = _activeBuildable.Silouette;
-
-            var silhouettePiece = new GameObject();
-            foreach (var data in silhouetteData)
-            {
-                var newObject = new GameObject();
-                var newFilter = newObject.AddComponent<MeshFilter>();
-                newFilter.mesh = data.GetMesh();
-                var newRenderer = newObject.AddComponent<MeshRenderer>();
-                var materials = new Material[_activeBuildable.materialCount];
-                for (int i = 0; i < _activeBuildable.materialCount; i++)
-                {
-                    materials[i] = _buildingData.GetAvailableMaterial();
-                }
-
-                newRenderer.sharedMaterials = materials;
-
-                newObject.transform.SetParent(silhouettePiece.transform);
-            }
-
-            return silhouettePiece;
-        }
-
         private void ApplyMaterialToSilhouette(Material material)
         {
-            foreach (var silhouettePiece in _silhouettePieces)
+            foreach (var silhouettePiece in _pieceInUse)
             {
-                var renderers = silhouettePiece.GetComponentsInChildren<MeshRenderer>();
-                foreach (var meshRenderer in renderers)
+                foreach (var renderer in silhouettePiece.renderers)
                 {
                     var materials = new Material[_activeBuildable.materialCount];
                     for (int i = 0; i < _activeBuildable.materialCount; i++)
@@ -750,9 +693,83 @@ namespace Deck.Services.Building
                         materials[i] = material;
                     }
 
-                    meshRenderer.sharedMaterials = materials;
+                    renderer.sharedMaterials = materials;
                 }
             }
+        }
+
+        private SilhouettePiece GetSilhouettePiece()
+        {
+            var silhouetteData = _activeBuildable.Silouette;
+
+            if (!_pieceInPool.TryGetValue(silhouetteData.Length, out var pool))
+            {
+                pool = new Stack<SilhouettePiece>();
+                _pieceInPool[silhouetteData.Length] = pool;
+            }
+
+            var stack = _pieceInPool[silhouetteData.Length];
+            if (stack.Count > 0)
+            {
+                var piece = stack.Pop();
+
+                for (var i = 0; i < silhouetteData.Length; i++)
+                {
+                    var data = silhouetteData[i];
+                    piece.filters[i].mesh = data.GetMesh();
+                }
+
+                piece.gameObject.SetActive(true);
+                _pieceInUse.Add(piece);
+                return piece;
+            }
+
+            var newGameObject = new GameObject();
+            newGameObject.name = silhouetteData.Length.ToString();
+            var newPiece = new SilhouettePiece();
+            newPiece.gameObject = newGameObject;
+            newPiece.renderers = new MeshRenderer[silhouetteData.Length];
+            newPiece.filters = new MeshFilter[silhouetteData.Length];
+
+            for (var index = 0; index < silhouetteData.Length; index++)
+            {
+                var data = silhouetteData[index];
+                var newObject = new GameObject();
+                newObject.transform.SetParent(newGameObject.transform);
+                var newFilter = newObject.AddComponent<MeshFilter>();
+
+                newPiece.filters[index] = newFilter;
+
+                newFilter.mesh = data.GetMesh();
+                var newRenderer = newObject.AddComponent<MeshRenderer>();
+                var materials = new Material[_activeBuildable.materialCount];
+
+                newPiece.renderers[index] = newRenderer;
+
+                for (int i = 0; i < _activeBuildable.materialCount; i++)
+                {
+                    materials[i] = _buildingData.GetAvailableMaterial();
+                }
+
+                newRenderer.sharedMaterials = materials;
+            }
+
+            _pieceInUse.Add(newPiece);
+
+            return newPiece;
+        }
+
+        private void ReturnSilhouettePieceToPool(SilhouettePiece piece)
+        {
+            piece.gameObject.SetActive(false);
+            _pieceInPool[piece.filters.Length].Push(piece);
+        }
+
+        private class SilhouettePiece
+        {
+            public GameObject gameObject;
+            public MeshRenderer[] renderers;
+            public MeshFilter[] filters;
         }
     }
 }

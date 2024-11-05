@@ -1,7 +1,6 @@
 ﻿using Deck.Components;
 using Deck.Components.Building;
 using Deck.Components.Building.Inventory;
-using Deck.Components.Building.Stats;
 using Deck.Components.Core;
 using Deck.Data.Currency;
 using Deck.Data.Item;

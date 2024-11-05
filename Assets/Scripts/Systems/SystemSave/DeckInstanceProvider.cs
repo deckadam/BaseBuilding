@@ -12,7 +12,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 #endif
 
-namespace Deck.Save.Data
+namespace Deck.Save
 {
     [CreateAssetMenu(menuName = "Deck/Data/Resolver/Instance creator", fileName = "Instance creator")]
     public class DeckInstanceProvider : ScriptableObject

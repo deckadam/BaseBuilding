@@ -2,6 +2,7 @@
 using Deck.Animators;
 using Deck.Components.Core;
 using Deck.ItemVisualProviders;
+using Deck.Save;
 using UnityEngine;
 using Zenject;
 
@@ -16,6 +17,7 @@ namespace Deck.Data.General
 
         [SerializeField] private DeckAgentCore agentCorePrefab;
         [SerializeField] private DeckGeneralData deckGeneralData;
+        [SerializeField] private DeckInstanceProvider instanceProvider;
 
         public override void InstallBindings()
         {
@@ -24,11 +26,14 @@ namespace Deck.Data.General
             Container.BindInstance(itemVisualProviders);
             Container.BindInstance(wallProvider);
             Container.BindInstance(doorProvider);
+            Container.BindInstance(instanceProvider);
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {
                 Container.QueueForInject(deckItemVisualProviderBasic);
             }
+
+            Container.QueueForInject(instanceProvider);
         }
 
         [Serializable]

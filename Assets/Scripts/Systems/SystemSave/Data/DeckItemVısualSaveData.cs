@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Deck.Save.Data
+namespace Deck.Save
 {
     [Serializable]
     public struct DeckItemVisualSaveDatas

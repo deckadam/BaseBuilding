@@ -366,6 +366,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 1
+  onWallLayerMask:
+    serializedVersion: 2
+    m_Bits: 3221225527
 --- !u!1 &3631151458489471563
 GameObject:
   m_ObjectHideFlags: 0

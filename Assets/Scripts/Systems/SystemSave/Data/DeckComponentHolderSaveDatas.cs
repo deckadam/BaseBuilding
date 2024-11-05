@@ -4,7 +4,7 @@ using Deck.Components;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Deck.Save.Data
+namespace Deck.Save
 {
     [Serializable]
     public class DeckComponentHolderSaveDatas
