@@ -153,27 +153,47 @@ namespace Deck.Services.Building
             }
 
             var rectFromPoints = cells.GetRectFromPoints();
-
             var necessaryCount = rectFromPoints.Count - _silhouettePieces.Count;
 
-            for (int i = 0; i < necessaryCount; i++)
+            if (necessaryCount < 0)
+            {
+                Debug.LogError(_silhouettePieces.Count + necessaryCount + "   " + _silhouettePieces.Count + "   " + -necessaryCount);
+                for (var i = 0; i < -necessaryCount; i++)
+                {
+                    var piecesToDisable = _silhouettePieces.GetRange(_silhouettePieces.Count + necessaryCount, -necessaryCount);
+                    foreach (var piece in piecesToDisable)
+                    {
+                        piece.SetActive(false);
+                    }
+                }
+            }
+
+            for (var i = 0; i < necessaryCount; i++)
             {
                 var newPiece = CreateNewSilhouettePiece();
                 newPiece.transform.SetParent(_silouetteParent.transform);
                 _silhouettePieces.Add(newPiece);
             }
-            
+
+            var isAllCellsFree = true;
             for (var index = 0; index < rectFromPoints.Count; index++)
             {
                 var rectFromPoint = rectFromPoints[index];
 
+                if (!_silhouettePieces[index].activeSelf)
+                {
+                    _silhouettePieces[index].SetActive(true);
+                }
+
                 _silhouettePieces[index].transform.position = rectFromPoint.ToVector3();
+
+                if (isAllCellsFree && _grid.ContainsKey(rectFromPoint) && _grid[rectFromPoint] != null)
+                {
+                    isAllCellsFree = false;
+                }
             }
 
-            var cellIndex = _cameraService.GetCursorWorldPosition().ToVector2Int();
-            var isPlaceable = CheckIfAgentBuildableInCell(_activeBuildable, cellIndex);
-            var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-
+            var material = isAllCellsFree ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
             ApplyMaterialToSilhouette(material);
         }
 
@@ -381,7 +401,7 @@ namespace Deck.Services.Building
             }
 
             var rectBuildPositions = position.GetRectFromPoints();
-            
+
             var isAllCellsAvailable = true;
 
             foreach (var rectBuildPosition in rectBuildPositions)
@@ -395,6 +415,12 @@ namespace Deck.Services.Building
             if (!isAllCellsAvailable)
             {
                 DeckLogger.Inform("Not all cells are free");
+
+                foreach (var silhouettePiece in _silhouettePieces)
+                {
+                    silhouettePiece.SetActive(false);
+                }
+
                 return;
             }
 
@@ -417,6 +443,11 @@ namespace Deck.Services.Building
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
                 SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
+            }
+
+            foreach (var silhouettePiece in _silhouettePieces)
+            {
+                silhouettePiece.SetActive(false);
             }
         }
 
