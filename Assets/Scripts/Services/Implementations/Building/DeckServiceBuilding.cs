@@ -152,13 +152,29 @@ namespace Deck.Services.Building
                 return;
             }
 
+            var rectFromPoints = cells.GetRectFromPoints();
+
+            var necessaryCount = rectFromPoints.Count - _silhouettePieces.Count;
+
+            for (int i = 0; i < necessaryCount; i++)
+            {
+                var newPiece = CreateNewSilhouettePiece();
+                newPiece.transform.SetParent(_silouetteParent.transform);
+                _silhouettePieces.Add(newPiece);
+            }
+            
+            for (var index = 0; index < rectFromPoints.Count; index++)
+            {
+                var rectFromPoint = rectFromPoints[index];
+
+                _silhouettePieces[index].transform.position = rectFromPoint.ToVector3();
+            }
+
             var cellIndex = _cameraService.GetCursorWorldPosition().ToVector2Int();
             var isPlaceable = CheckIfAgentBuildableInCell(_activeBuildable, cellIndex);
             var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
-
-            _silouetteParent.transform.position = cellIndex.ToVector3();
         }
 
         public void UpdateSilhouetteFree()
@@ -364,32 +380,8 @@ namespace Deck.Services.Building
                 DeckLogger.Error("Too much positions provided: " + position.Length);
             }
 
-            var firstPos = position[0].ToVector2Int();
-            var secondPos = position[1].ToVector2Int();
-
-            var minX = Mathf.Min(firstPos.x, secondPos.x);
-            var maxX = Mathf.Max(firstPos.x, secondPos.x);
-
-            var minY = Mathf.Min(firstPos.y, secondPos.y);
-            var maxY = Mathf.Max(firstPos.y, secondPos.y);
-
-            var rectBuildPositions = new List<Vector2Int>();
-            // Bottom edge
-            for (int x = minX; x <= maxX; x++)
-                rectBuildPositions.Add(new Vector2Int(x, minY));
-
-            // Top edge
-            for (int x = minX; x <= maxX; x++)
-                rectBuildPositions.Add(new Vector2Int(x, maxY));
-
-            // Left edge
-            for (int y = minY + 1; y < maxY; y++)
-                rectBuildPositions.Add(new Vector2Int(minX, y));
-
-            // Right edge
-            for (int y = minY + 1; y < maxY; y++)
-                rectBuildPositions.Add(new Vector2Int(maxX, y));
-
+            var rectBuildPositions = position.GetRectFromPoints();
+            
             var isAllCellsAvailable = true;
 
             foreach (var rectBuildPosition in rectBuildPositions)
@@ -504,7 +496,6 @@ namespace Deck.Services.Building
                 var yOffset = new Vector3(0, boxCollider.size.y / 2f, 0);
                 if (Physics.OverlapBoxNonAlloc(position + yOffset, size, _possibleColliders) > 0)
                 {
-                    Debug.LogError($"Collides with {_possibleColliders[0].name}");
                     return true;
                 }
 
@@ -517,7 +508,6 @@ namespace Deck.Services.Building
                 var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
                 if (Physics.OverlapSphereNonAlloc(position + yOffset, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0)
                 {
-                    Debug.LogError($"Collides with {_possibleColliders[0].name}");
                     return true;
                 }
 
@@ -536,11 +526,8 @@ namespace Deck.Services.Building
                 var point0 = _silouetteParent.transform.TransformPoint(localPoint0);
                 var point1 = _silouetteParent.transform.TransformPoint(localPoint1);
 
-                Debug.DrawLine(point0, point1, Color.red);
-                
                 if (Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0)
                 {
-                    Debug.LogError($"Collides with {_possibleColliders[0].name}");
                     return true;
                 }
 
@@ -548,7 +535,6 @@ namespace Deck.Services.Building
             }
 
             DeckLogger.Error($"Not suppoerted collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
-
             return true;
         }
 

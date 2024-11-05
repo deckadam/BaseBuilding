@@ -54,7 +54,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             {
                 _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, OnBuildRequested, true);
                 _isBuildingWall = true;
-                BuildingService.StartSilhouette(buildable);
+                BuildingService.StartSilhouetteRect(buildable);
             }
             else
             {
