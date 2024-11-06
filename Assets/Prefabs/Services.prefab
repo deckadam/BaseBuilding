@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7159294905920430033}
   - component: {fileID: 8057250258314480126}
   m_Layer: 0
-  m_Name: DeckItemVisualService
+  m_Name: DeckServiceItemVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 3631151457364423317}
   - component: {fileID: 3631151457364423316}
   m_Layer: 0
-  m_Name: DeckUtilityService
+  m_Name: DeckServiceUtility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 3631151457482903250}
   - component: {fileID: 3631151457482903249}
   m_Layer: 0
-  m_Name: DeckHealthService
+  m_Name: DeckServiceHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 3631151457517409454}
   - component: {fileID: 3631151457517409453}
   m_Layer: 0
-  m_Name: DeckUIService
+  m_Name: DeckServiceUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 3631151458024894071}
   - component: {fileID: 3631151458024894070}
   m_Layer: 0
-  m_Name: DeckNavigationService
+  m_Name: DeckServiceNavigation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 3631151458078373410}
   - component: {fileID: 3631151458078373409}
   m_Layer: 0
-  m_Name: DeckMapService
+  m_Name: DeckServiceMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 3631151458116648475}
   - component: {fileID: 3631151458116648474}
   m_Layer: 0
-  m_Name: DeckSelectionService
+  m_Name: DeckServiceSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 3631151458206779411}
   - component: {fileID: 3631151458206779410}
   m_Layer: 0
-  m_Name: DeckBuildingService
+  m_Name: DeckServiceBuilding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 3631151458489471562}
   - component: {fileID: 3631151458489471561}
   m_Layer: 0
-  m_Name: DeckPopUpService
+  m_Name: DeckServicePopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -462,6 +462,7 @@ Transform:
   - {fileID: 7252145917690023301}
   - {fileID: 9101364877114335254}
   - {fileID: 1380086826589279779}
+  - {fileID: 903184748141523807}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3631151458734059769
@@ -475,7 +476,7 @@ GameObject:
   - component: {fileID: 3631151458734059768}
   - component: {fileID: 3631151458734059775}
   m_Layer: 0
-  m_Name: DeckCameraService
+  m_Name: DeckServiceCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -520,7 +521,7 @@ GameObject:
   - component: {fileID: 3631151458777620806}
   - component: {fileID: 3631151458777620805}
   m_Layer: 0
-  m_Name: DeckInventoryService
+  m_Name: DeckServiceInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -688,6 +689,51 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe2ba8afb0bf4283a975f31f85450be5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showGizmos: 1
+--- !u!1 &6504503804513027333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 903184748141523807}
+  - component: {fileID: 4620893654615688807}
+  m_Layer: 0
+  m_Name: DeckServiceArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &903184748141523807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6504503804513027333}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3631151458642728510}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4620893654615688807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6504503804513027333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d2b199bf784c0195b29023123b7afe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showGizmos: 1

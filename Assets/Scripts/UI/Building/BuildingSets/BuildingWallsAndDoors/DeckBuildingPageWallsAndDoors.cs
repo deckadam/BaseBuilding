@@ -1,7 +1,8 @@
 using Deck.Data.Buildable;
-using Deck.Services.Building;
 using Deck.Utility;
+using Deck.Services.Building;
 using Deck.Utility.Logger;
+using Services.Implementations.AreaController.Events;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -77,7 +78,12 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
                     DeckLogger.Error("OnBuildRequested: multiple positions not are supported for door");
                 }
 
-                BuildingService.BuildInCell(positions[0].ToVector2Int());
+                var position = positions[0].ToVector2Int();
+                var isSuccessful = BuildingService.BuildInCell(position);
+                if (isSuccessful)
+                {
+                    DeckEventOnDoorBuild.Create(position).Send();
+                }
             }
         }
 
@@ -97,7 +103,6 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             _isBuildModeActive = false;
             if (!_escapableBuildMode.HasEscaped)
             {
-                Deck.GetService<DeckServiceEscapable>().ListEscapables();
                 _escapableBuildMode.OnCloseRequested();
                 _escapableBuildMode = null;
             }

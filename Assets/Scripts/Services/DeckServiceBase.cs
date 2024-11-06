@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Deck.Services
 {
@@ -53,6 +54,21 @@ namespace Deck.Services
 
         public virtual void BeforeSaveRequest()
         {
+        }
+
+        public void OnDrawGizmos()
+        {
+            if (!showGizmos)
+            {
+                return;
+            }
+            
+            DrawGizmos();
+        }
+
+        protected virtual void DrawGizmos()
+        {
+            
         }
     }
 }

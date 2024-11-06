@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Components.Building;
 using Deck.Data.Item;
 using Deck.Services.CellSelectionService;
-using Deck.Components.Building;
 using Deck.Utility;
 
 namespace Deck.Components

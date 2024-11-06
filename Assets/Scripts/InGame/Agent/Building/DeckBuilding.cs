@@ -1,7 +1,7 @@
 using Deck.Data.Buildable;
 using Deck.ItemVisualProviders;
-using Deck.Services.Building;
 using Deck.Utility;
+using Deck.Services.Building;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;

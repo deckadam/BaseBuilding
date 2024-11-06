@@ -15,10 +15,16 @@ namespace Services.Implementations.Escapable
             _escapables = new Stack<IDeckEscapable>();
         }
 
+        public override void DeInitialize()
+        {
+            ClearEscapables();
+        }
+
         public void RegisterEscapable(IDeckEscapable escapable)
         {
             _escapables.Push(escapable);
         }
+
 
         public void CloseEscapable()
         {
@@ -41,16 +47,6 @@ namespace Services.Implementations.Escapable
             }
 
             _escapables.Clear();
-        }
-
-        public void ListEscapables()
-        {
-            var enumerator = _escapables.GetEnumerator();
-
-            do
-            {
-                DeckLogger.Error((enumerator.MoveNext()).GetType().ToString());
-            } while (enumerator.MoveNext());
         }
     }
 }

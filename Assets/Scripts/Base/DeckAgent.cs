@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
-using Deck.Components.Building.InGame;
+using Deck.Base.Id;
 using Deck.Components.Building.Stats;
 using Deck.InputHandling;
 using Deck.Save;
@@ -20,7 +20,6 @@ namespace Deck.Components
     public class DeckAgent : DeckPoolable
     {
         public event Action<float> OnAgentSizeChanged;
-        public event Action<DeckAgent> OnAgentDestroyed;
         public event Action OnItemVisualChanged;
 
         [SerializeField] protected Transform centerPosition;
@@ -36,7 +35,7 @@ namespace Deck.Components
         [HideInInspector] public Transform selfTransform;
 
         protected DeckItemVisual itemVisualInstance;
-        
+
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
         private bool _hasSetComponents;
@@ -309,13 +308,14 @@ namespace Deck.Components
 
             foreach (var deckComponent in components)
             {
-                deckComponent.OnDeath();
+                deckComponent.OnDestroy();
             }
 
             InternalRequestDestroy();
-            OnAgentDestroyed?.Invoke(this);
 
             Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
+
+            OnAgentDestroyed();
         }
 
         protected virtual void InternalRequestDestroy()
@@ -354,6 +354,10 @@ namespace Deck.Components
         }
 
         protected virtual void AfterLoad()
+        {
+        }
+
+        protected virtual void OnAgentDestroyed()
         {
         }
 

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.Base.Id;
 using Deck.Components;
-using Deck.Components.Building.InGame;
 using Deck.Save;
 using Deck.Utility;
 using Deck.Utility.Iterators;

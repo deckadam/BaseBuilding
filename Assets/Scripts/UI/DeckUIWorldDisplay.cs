@@ -1,9 +1,9 @@
 ﻿using System;
+using Deck.Components.Building.Health;
+using UnityEngine;
 using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.Utility.Logger;
-using UnityEngine;
-using Deck.Components.Building.Health;
 
 namespace Deck.Components.Building
 {

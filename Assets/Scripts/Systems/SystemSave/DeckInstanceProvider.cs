@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deck.Base.Id;
 using Deck.Components;
-using Deck.Components.Building.InGame;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -85,7 +85,7 @@ namespace Deck.Save
         private static void CheckUniqueness()
         {
             var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
-            
+
             var agentHashSet = new HashSet<int>();
             foreach (var agent in instanceProvider.agents)
             {
@@ -186,7 +186,7 @@ namespace Deck.Save
                     instanceProvider.uiElements.Add(instance);
                 }
             }
-            
+
             instanceProvider.agents.RemoveAll(item => item == null);
             instanceProvider.itemVisuals.RemoveAll(item => item == null);
             instanceProvider.uiElements.RemoveAll(item => item == null);

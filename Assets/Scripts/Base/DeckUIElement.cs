@@ -1,6 +1,6 @@
 using System;
 using Deck.Base;
-using Deck.Components.Building.InGame;
+using Deck.Base.Id;
 using Deck.Save;
 using Deck.Utility.Logger;
 using UnityEngine;

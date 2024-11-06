@@ -1,5 +1,4 @@
 ﻿using System;
-using Deck.Components;
 using Deck.Components.Building.Stats;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ namespace Deck.Components
             InternalPostInitialize();
         }
 
-        public virtual void OnDeath()
+        public virtual void OnDestroy()
         {
         }
 

@@ -1,5 +1,5 @@
-﻿using Deck.EventManager;
-using Deck.Components;
+﻿using Deck.Components;
+using Deck.EventManager;
 
 namespace Deck.Services
 {

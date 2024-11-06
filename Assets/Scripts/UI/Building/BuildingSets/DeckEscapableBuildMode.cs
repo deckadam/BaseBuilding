@@ -1,10 +1,10 @@
 using System;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Services;
-using Deck.Services.Building;
 using Deck.Services.CameraService;
 using Deck.Utility.Logger;
+using Deck.Services;
+using Deck.Services.Building;
 using UnityEngine;
 
 namespace Deck.Components.Building.Building.BuildingSets
@@ -18,10 +18,8 @@ namespace Deck.Components.Building.Building.BuildingSets
         private readonly Action _onEscape;
 
         public bool HasEscaped { get; private set; }
-
         private readonly bool _canMoveBuild;
         private bool _isClosed;
-
 
         public DeckEscapableBuildMode(Action onEscape, Action<Vector3[]> onBuild, bool canMoveBuild = false)
         {

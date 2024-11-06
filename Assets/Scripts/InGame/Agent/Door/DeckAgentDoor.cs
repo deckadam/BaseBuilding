@@ -1,7 +1,7 @@
 using Deck.Components.Building;
 using Deck.ItemVisualProviders;
-using Deck.Services.Building;
 using Deck.Utility;
+using Deck.Services.Building;
 using Zenject;
 
 namespace Deck.Components.Door

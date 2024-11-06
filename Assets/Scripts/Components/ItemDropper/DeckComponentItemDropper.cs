@@ -18,7 +18,7 @@ namespace Deck.Components
             }
         }
 
-        public override void OnDeath()
+        public override void OnDestroy()
         {
             var rolledItems = dropData.RollItem();
             foreach (var rolledItem in rolledItems)

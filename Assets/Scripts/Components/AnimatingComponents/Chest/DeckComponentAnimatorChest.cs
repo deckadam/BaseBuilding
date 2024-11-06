@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Deck.Utility;
 using Deck.Animators;
+using Deck.Utility;
 using Deck.Utility.Logger;
 
 namespace Deck.Components

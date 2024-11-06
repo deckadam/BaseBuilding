@@ -7,11 +7,12 @@ using Deck.Data.General;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Save;
+using Deck.Utility;
+using Deck.Utility.MonoBehaviours;
 using Deck.Services.CameraService;
 using Deck.Services.MapService;
-using Deck.Utility;
 using Deck.Utility.Logger;
-using Deck.Utility.MonoBehaviours;
+using Services.Implementations.AreaController.Events;
 using Services.Implementations.Currency;
 using UnityEngine;
 using Zenject;
@@ -66,8 +67,7 @@ namespace Deck.Services.Building
             };
         }
 
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
+        protected override void DrawGizmos()
         {
             if (!showGizmos)
             {
@@ -80,7 +80,6 @@ namespace Deck.Services.Building
                 Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
             }
         }
-#endif
 
         private void OnMiddleScroll(DeckEventMiddleScroll obj)
         {
@@ -365,7 +364,7 @@ namespace Deck.Services.Building
             newBuilding.InitializeBuilding();
         }
 
-        public void BuildInCellRect(Vector3[] position)
+        public void BuildInCellRect(Vector3[] positions)
         {
             if (_activeBuildable == null)
             {
@@ -373,17 +372,17 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (position.Length < 2)
+            if (positions.Length < 2)
             {
-                DeckLogger.Error("Not enough positions provided: " + position.Length);
+                DeckLogger.Error("Not enough positions provided: " + positions.Length);
             }
 
-            if (position.Length > 2)
+            if (positions.Length > 2)
             {
-                DeckLogger.Error("Too much positions provided: " + position.Length);
+                DeckLogger.Error("Too much positions provided: " + positions.Length);
             }
 
-            var rectBuildPositions = position.GetRectFromPoints();
+            var rectBuildPositions = positions.GetRectFromPoints();
             var isAllCellsAvailable = true;
 
             foreach (var rectBuildPosition in rectBuildPositions)
@@ -432,21 +431,23 @@ namespace Deck.Services.Building
             }
 
             _pieceInUse.Clear();
+
+            DeckEventOnAreaBuild.Create(positions, rectBuildPositions).Send();
         }
 
-        public void BuildInCell(Vector2Int cellIndex)
+        public bool BuildInCell(Vector2Int cellIndex)
         {
             if (_activeBuildable == null)
             {
                 DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
-                return;
+                return false;
             }
 
             if (!_currencyService.CanAfford(_activeBuildable.Prices))
             {
                 DeckEventNotificationRequested.Create("Cant afford").Send();
                 ReturnAllSilhouettePiecesToPool();
-                return;
+                return false;
             }
 
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
@@ -454,7 +455,7 @@ namespace Deck.Services.Building
 
             if (_lastCheckedCellIndex == cellIndex)
             {
-                return;
+                return false;
             }
 
             _lastCheckedCellIndex = cellIndex;
@@ -465,7 +466,7 @@ namespace Deck.Services.Building
                 {
                     if (encounteredAgent.PrefabId.Equals(_activeBuildable.Agent.PrefabId))
                     {
-                        return;
+                        return false;
                     }
 
                     encounteredAgent.RequestDestroy();
@@ -478,6 +479,8 @@ namespace Deck.Services.Building
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             SetCellOccupied(cellIndex, _activeBuildable.Indices, newBuilding);
+
+            return true;
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)

@@ -35,8 +35,8 @@ namespace Deck.Services.MapService
             DeckLogger.Map("New map scene loading");
             await SceneManager.LoadSceneAsync(MapName, LoadSceneMode.Additive);
             Deck.BeforeGameSessionInitialized();
-            Deck.AfterGameSessionInitialized();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(MapName));
+            Deck.AfterGameSessionInitialized();
             DeckLogger.Map("New map scene loaded");
         }
     }

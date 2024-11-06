@@ -1,8 +1,8 @@
 using System;
 using Deck.InputHandling.Events;
+using Deck.Utility;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
-using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors

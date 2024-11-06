@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Deck.Components;
 using Deck.Components.Core;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
 using Deck.MVC;
 using Deck.Save;
+using Deck.Components;
 using Deck.Services;
 using Deck.Services.MapService;
 using Services.AgentFinder;

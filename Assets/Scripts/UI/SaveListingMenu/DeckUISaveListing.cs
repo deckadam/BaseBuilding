@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Deck.SaveListingMenu.Events;
+using Deck.Components.Building;
 using Deck.Components.Building.Inventory;
-using Deck.Components.Building.SaveListingMenu.Events;
 using Deck.Save;
 using Deck.Services;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.Components.Building.SaveListingMenu
+namespace Deck.SaveListingMenu
 {
     public class DeckUISaveListing : DeckUIBase
     {
@@ -72,8 +73,8 @@ namespace Deck.Components.Building.SaveListingMenu
                 return;
             }
 
-            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
-            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
+            var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
+            var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.deleteSaveFileDialogue, () =>
