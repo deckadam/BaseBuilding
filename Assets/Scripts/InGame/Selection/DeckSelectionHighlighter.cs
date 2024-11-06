@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.EventManager;
 using Deck.Components;
+using Deck.EventManager;
 using Deck.Services;
 using UnityEngine;
 
@@ -10,7 +10,7 @@ namespace Deck.Selection
     public class DeckSelectionHighlighter : MonoBehaviour
     {
         [SerializeField] private float distanceFromGround;
-       
+
         private DeckAgent _target;
         private CancellationTokenSource _tokenSource;
 
@@ -53,11 +53,18 @@ namespace Deck.Selection
             }
 
             _target = obj;
-            transform.localScale = _target.GetSize() * Vector3.one;
+            var itemVisual = _target.GetItemVisual();
+            var targetSize = 1f;
+            if (itemVisual != null)
+            {
+                targetSize = itemVisual.GetSize();
+            }
+
+            transform.localScale = targetSize * Vector3.one;
             _target.OnAgentSizeChanged += OnTargetSizeChanged;
         }
 
-        private void ClearTarget(DeckEvent obj)
+        private void ClearTarget(IDeckEvent obj)
         {
             if (_target != null)
             {

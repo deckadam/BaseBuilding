@@ -2,7 +2,7 @@ using Deck.EventManager;
 
 namespace Deck.Components.Building
 {
-    public class DeckEventOnGameSceneLoaded : DeckEvent
+    public class DeckEventOnGameSceneLoaded : IDeckEvent
     {
         public static DeckEventOnGameSceneLoaded Create()
         {

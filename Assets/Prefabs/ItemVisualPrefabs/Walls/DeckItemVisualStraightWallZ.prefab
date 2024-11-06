@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5299075911979825411}
   - component: {fileID: 6395205563783229675}
   m_Layer: 0
-  m_Name: DeckItemVisuaStraightWallZ
+  m_Name: DeckItemVisualStraightWallZ
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,13 +53,13 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   isOnTheGround: 0
   collider: {fileID: 2948818710169037050}
+  size: 1.0000001
   uniqueId:
     _id: 0
     IdString: 
   prefabId:
     _id: 87247953
     IdString: 
-  canBePlacedOnTopOfAnotherObject: 0
   canBePlacedOnTop: 0
 --- !u!1001 &1436850761359725391
 PrefabInstance:

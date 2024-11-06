@@ -38,7 +38,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             }
 
             _currentCellPosition = currentCellPositions;
-            buildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPositions });
+            BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPositions });
         }
     }
 }

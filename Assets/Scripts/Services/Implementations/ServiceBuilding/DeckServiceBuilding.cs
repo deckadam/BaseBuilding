@@ -25,13 +25,14 @@ namespace Deck.Services.Building
 
         private const string WallTag = "Wall";
         private const float YOffsetForBuildOnTop = 0.1f;
+        private const float YOffsetForBuildOnGround = 0.1f;
 
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private readonly Dictionary<Vector2Int, DeckAgent> _grid = new();
         private readonly Collider[] _possibleColliders = new Collider[2];
         private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
         private readonly List<SilhouettePiece> _pieceInUse = new();
-
+        private readonly Vector3 _yOffset = new Vector3(0f, YOffsetForBuildOnGround, 0f);
         private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
         private DeckServiceCamera _cameraService;
@@ -661,7 +662,7 @@ namespace Deck.Services.Building
 
         private bool CheckIfAgentBuildableInArea(DeckBuildable buildable)
         {
-            var count = Physics.OverlapBoxNonAlloc(_cameraService.GetCursorWorldPosition(), buildable.Extents / 2f,
+            var count = Physics.OverlapBoxNonAlloc(_cameraService.GetCursorWorldPosition() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore);
 
             return count == 0;

@@ -2,7 +2,7 @@
 
 namespace Deck.Components.Building.Hotkey.Events
 {
-    public class DeckEventOnHotkeySelected : DeckEvent
+    public class DeckEventOnHotkeySelected : IDeckEvent
     {
         public int index { get; private set; }
 

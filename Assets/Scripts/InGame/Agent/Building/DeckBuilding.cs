@@ -22,22 +22,22 @@ namespace Deck.Components.Building
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out itemVisualPrefab, selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out itemVisualInstance, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position.ToVector2Int(), buildingData.Indices, this);
 
-            if (itemVisualPrefab != null)
+            if (itemVisualInstance != null)
             {
-                itemVisualPrefab.transform.SetParent(transform, false);
-                itemVisualPrefab.Agent = this;
+                itemVisualInstance.transform.SetParent(transform, false);
+                itemVisualInstance.Agent = this;
                 if (setVisualPosition)
                 {
-                    itemVisualPrefab.transform.localPosition = Vector3.zero;
+                    itemVisualInstance.transform.localPosition = Vector3.zero;
                 }
 
                 if (setVisualRotation)
                 {
-                    itemVisualPrefab.transform.localRotation = Quaternion.identity;
+                    itemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
             else

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Deck.InputHandling.Events
 {
-    public class DeckEventOnLeftClickDown : DeckEvent
+    public class DeckEventOnLeftClickDown : IDeckEvent
     {
         public Vector3 position { get; private set; }
 

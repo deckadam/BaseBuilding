@@ -3,7 +3,7 @@ using Deck.Components;
 
 namespace Deck.Services
 {
-    public class DeckEventOnSelectionReleased : DeckEvent
+    public class DeckEventOnSelectionReleased : IDeckEvent
     {
         public DeckAgent agent { get; private set; }
 

@@ -51,13 +51,13 @@ namespace Deck.Components.Building.Building
             _currentButton = button;
         }
 
-        private void OnEventAppear(DeckEvent _)
+        private void OnEventAppear(IDeckEvent _)
         {
             Appear().Forget();
             HasEscaped = false;
         }
 
-        private void OnEventDisappear(DeckEvent _)
+        private void OnEventDisappear(IDeckEvent _)
         {
             Disappear().Forget();
             HasEscaped = true;

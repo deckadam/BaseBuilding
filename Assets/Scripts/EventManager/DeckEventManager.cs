@@ -4,28 +4,28 @@ namespace Deck.EventManager
 {
     public static class DeckEventManager
     {
-        public static void Register<T>(Action<T> obj) where T : DeckEvent
+        public static void Register<T>(Action<T> obj) where T : IDeckEvent
         {
             Event<T>.Register(obj);
         }
 
-        public static void Unregister<T>(Action<T> obj) where T : DeckEvent
+        public static void Unregister<T>(Action<T> obj) where T : IDeckEvent
         {
             Event<T>.Unregister(obj);
         }
 
-        public static void Send<T>(T data) where T : DeckEvent
+        public static void Send<T>(T data) where T : IDeckEvent
         {
             Event<T>.Send(data);
         }
 
-        public static void ClearEvents<T>() where T : DeckEvent
+        public static void ClearEvents<T>() where T : IDeckEvent
         {
             Event<T>.Clear();
         }
     }
 
-    public class Event<T> where T : DeckEvent
+    public class Event<T> where T : IDeckEvent
     {
         private static Action<T> _listener;
 
@@ -50,7 +50,7 @@ namespace Deck.EventManager
         }
     }
 
-    public class DeckEvent
+    public interface IDeckEvent
     {
     }
 }

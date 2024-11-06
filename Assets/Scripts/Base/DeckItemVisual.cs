@@ -19,7 +19,8 @@ namespace Deck.Components
 {
     public class DeckItemVisual : DeckPoolable
     {
-        [Unity.Collections.ReadOnly, SerializeField] private bool isStatic;
+        [Unity.Collections.ReadOnly, SerializeField]
+        private bool isStatic;
 
         [SerializeField] private Vector3 localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
@@ -28,6 +29,7 @@ namespace Deck.Components
         [SerializeField] private new Rigidbody rigidbody;
         [SerializeField] private bool isOnTheGround;
         [SerializeField] private new Collider collider;
+        [SerializeField] private float size;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
         [SerializeField] private bool canBePlacedOnTop;
@@ -100,12 +102,36 @@ namespace Deck.Components
         }
 
         [Button]
+        private void CalculateSize()
+        {
+            if (collider != null)
+            {
+                if (collider is BoxCollider boxCollider)
+                {
+                    var sizes = boxCollider.bounds.size;
+                    size = Mathf.Max(sizes.x, sizes.z);
+                }
+                else if (collider is SphereCollider sphereCollider)
+                {
+                    size = sphereCollider.radius;
+                }
+                else if (collider is CapsuleCollider capsuleCollider)
+                {
+                    var sizes = capsuleCollider.bounds.size;
+                    size = Mathf.Max(sizes.x, sizes.y, sizes.z);
+                }
+                else
+                {
+                    DeckLogger.Error($"Invalid collider type {collider.GetType()}");
+                }
+            }
+        }
+
+        [Button]
         public void OnValidate()
         {
             rigidbody = GetComponent<Rigidbody>();
             isStatic = rigidbody == null;
-
-            collider = GetComponentInChildren<Collider>();
 
 #if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
@@ -218,5 +244,10 @@ namespace Deck.Components
         }
 
         public bool IsOnTheGround => isOnTheGround;
+
+        public float GetSize()
+        {
+            return size;
+        }
     }
 }

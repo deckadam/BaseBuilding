@@ -54,13 +54,13 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   isOnTheGround: 0
   collider: {fileID: 1863048148265901678}
+  size: 0.65
   uniqueId:
     _id: 0
     IdString: 
   prefabId:
     _id: 76752740
     IdString: 
-  canBePlacedOnTopOfAnotherObject: 0
   canBePlacedOnTop: 0
 --- !u!1 &2780525235856317984
 GameObject:

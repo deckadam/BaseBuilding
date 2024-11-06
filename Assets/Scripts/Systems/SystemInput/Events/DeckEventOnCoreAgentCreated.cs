@@ -3,7 +3,7 @@ using Deck.Components.Core;
 
 namespace Deck.InputHandling.Events
 {
-    public class DeckEventOnCoreAgentCreated : DeckEvent
+    public class DeckEventOnCoreAgentCreated : IDeckEvent
     {
         public DeckAgentCore agent { get; private set; }
 

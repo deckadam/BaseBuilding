@@ -4,6 +4,7 @@ using Deck.InputHandling.Events;
 using Deck.Services;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
+using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.Components.Building.Building.BuildingSets
@@ -11,6 +12,8 @@ namespace Deck.Components.Building.Building.BuildingSets
     public class DeckEscapableBuildMode : IDeckEscapable
     {
         private Action<Vector3, Quaternion> _onBuildWithRotation;
+
+        protected readonly DeckServiceBuilding BuildingService;
         private readonly Action<Vector3[]> _onBuild;
         private readonly Action _onEscape;
 
@@ -18,8 +21,7 @@ namespace Deck.Components.Building.Building.BuildingSets
 
         private readonly bool _canMoveBuild;
         private bool _isClosed;
-        
-        protected DeckServiceBuilding buildingService;
+
 
         public DeckEscapableBuildMode(Action onEscape, Action<Vector3[]> onBuild, bool canMoveBuild = false)
         {
@@ -35,7 +37,9 @@ namespace Deck.Components.Building.Building.BuildingSets
             }
 
 
-            buildingService = Deck.GetService<DeckServiceBuilding>();
+            BuildingService = Deck.GetService<DeckServiceBuilding>();
+
+            DeckEventOnBuildModeStarted.Create().Send();
         }
 
         public void OnCloseRequested()
@@ -57,13 +61,8 @@ namespace Deck.Components.Building.Building.BuildingSets
             _onEscape?.Invoke();
 
             _isClosed = true;
-        }
 
-        public virtual bool GetBuildPositionsIfChanged(out Vector3[] positions)
-        {
-            var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
-            positions = new[] { currentCellPosition };
-            return true;
+            DeckEventOnBuildModeStopped.Create().Send();
         }
 
         protected virtual void OnLeftClickDown(DeckEventOnLeftClickDown obj)
@@ -80,7 +79,7 @@ namespace Deck.Components.Building.Building.BuildingSets
 
         protected virtual void OnMouseMove(DeckEventOnMouseMove obj)
         {
-            buildingService.UpdateSilhouetteInCell();
+            BuildingService.UpdateSilhouetteInCell();
         }
     }
 }

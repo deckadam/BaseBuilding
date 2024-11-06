@@ -25,7 +25,6 @@ namespace Deck.Components
 
         [SerializeField] protected Transform centerPosition;
         [SerializeField] private DeckComponent[] components;
-        [SerializeField] private float activeSize = -1f;
         [SerializeField] private new Collider collider;
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
@@ -36,6 +35,8 @@ namespace Deck.Components
 
         [HideInInspector] public Transform selfTransform;
 
+        protected DeckItemVisual itemVisualInstance;
+        
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
         private bool _hasSetComponents;
@@ -212,12 +213,6 @@ namespace Deck.Components
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
-            
-            
-            if (activeSize < 0f)
-            {
-                throw new Exception("Size value can not be lower than zero  "  + name);
-            }
         }
 
         protected void DeInitialize()
@@ -305,12 +300,6 @@ namespace Deck.Components
             }
         }
 
-        protected void SetSize(float newSize)
-        {
-            activeSize = newSize;
-            OnAgentSizeChanged?.Invoke(activeSize);
-        }
-
         public void RequestDestroy()
         {
             if (collider)
@@ -357,7 +346,6 @@ namespace Deck.Components
         public DeckId GetUniqueId() => uniqueId;
         public DeckComponent[] GetDeckComponents() => components;
         public Transform GetCenter() => centerPosition;
-        public float GetSize() => activeSize;
         public bool WillSave() => willSave;
         public string GetPrefabId() => prefabId.ID.ToString();
 
@@ -372,6 +360,11 @@ namespace Deck.Components
         public void SetItemVisual(DeckItemVisual itemVisualPrefab)
         {
             this.itemVisualPrefab = itemVisualPrefab;
+        }
+
+        public DeckItemVisual GetItemVisual()
+        {
+            return itemVisualInstance;
         }
     }
 }

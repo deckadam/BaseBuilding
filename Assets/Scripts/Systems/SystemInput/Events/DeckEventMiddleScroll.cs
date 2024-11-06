@@ -2,7 +2,7 @@ using Deck.EventManager;
 
 namespace Deck.InputHandling.Events
 {
-    public class DeckEventMiddleScroll:DeckEvent
+    public class DeckEventMiddleScroll:IDeckEvent
     {
         public float scrollValue { get; private set; }
         

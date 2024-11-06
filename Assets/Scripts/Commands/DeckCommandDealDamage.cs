@@ -78,7 +78,7 @@ namespace Deck.Components
                 return false;
             }
 
-            var range = _to.GetAgent().GetSize() + _baseAttackRange;
+            var range = _to.GetAgent().GetItemVisual().GetSize() + _baseAttackRange;
 
             var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(movementComponent, _to.GetAgent().transform, range, token);
             if (isCanceled)

@@ -96,7 +96,6 @@ namespace Services.Implementations.Currency
 
         public bool CanAfford(DeckPrice price, int multiplier)
         {
-            Debug.LogError(price.Amount * multiplier);
             return _currentCurrencies[(int)price.CurrencyType].HasEnoughAmount(price.Amount * multiplier);
         }
 

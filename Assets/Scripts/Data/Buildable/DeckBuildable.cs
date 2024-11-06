@@ -1,5 +1,4 @@
 ﻿using System;
-using Deck.Data.Item;
 using Deck.Components;
 using Deck.Data.Currency;
 using Deck.Utility.Logger;

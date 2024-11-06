@@ -3,7 +3,7 @@ using Deck.Save;
 
 namespace Deck.Components.Building.SaveListingMenu.Events
 {
-    public class DeckEventOnLoadRequested : DeckEvent
+    public class DeckEventOnLoadRequested : IDeckEvent
     {
         public DeckSaveSystem.SaveFile saveFile { get; private set; }
 

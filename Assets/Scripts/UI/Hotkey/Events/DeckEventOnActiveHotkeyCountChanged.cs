@@ -2,7 +2,7 @@
 
 namespace Deck.Components.Building.Hotkey.Events
 {
-    public class DeckEventOnActiveHotkeyCountChanged : DeckEvent
+    public class DeckEventOnActiveHotkeyCountChanged : IDeckEvent
     {
         public int count { get; private set; }
 

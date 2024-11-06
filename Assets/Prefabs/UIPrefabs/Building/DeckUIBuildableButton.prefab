@@ -123,6 +123,7 @@ MonoBehaviour:
   rectTransform: {fileID: 2885142350697086359}
   icon: {fileID: 2247043978262042586}
   nameText: {fileID: 5435033728651188667}
+  priceText: {fileID: 7081625555286049808}
 --- !u!1 &3289601612996320624
 GameObject:
   m_ObjectHideFlags: 0

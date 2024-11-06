@@ -3,7 +3,7 @@ using Deck.Components.Core;
 
 namespace Deck.Services
 {
-    public class DeckEventOnCoreAgentDeath : DeckEvent
+    public class DeckEventOnCoreAgentDeath : IDeckEvent
     {
         public DeckAgentCore agent { get; private set; }
 

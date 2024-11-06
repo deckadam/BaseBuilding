@@ -2,7 +2,7 @@ using Deck.EventManager;
 
 namespace Deck.Components.Building
 {
-    public class DeckEventOnMainMenuDisappear : DeckEvent
+    public class DeckEventOnMainMenuDisappear : IDeckEvent
     {
         public static DeckEventOnMainMenuDisappear Create()
         {
