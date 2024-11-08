@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace Deck.Services.Implementations.AreaController.Events
 {
-    public struct DeckEventOnDoorBuild : IDeckEvent
+    public struct DeckEventOnDoorDestroyed : IDeckEvent
     {
         public Vector2Int position { get; private set; }
 
-        public static DeckEventOnDoorBuild Create(Vector2Int position)
+        public static DeckEventOnDoorDestroyed Create(Vector2Int position)
         {
-            return new DeckEventOnDoorBuild()
+            return new DeckEventOnDoorDestroyed()
             {
                 position = position
             };

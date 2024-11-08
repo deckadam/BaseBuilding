@@ -2,7 +2,7 @@ using Deck.Data.Buildable;
 using Deck.Utility;
 using Deck.Services.Building;
 using Deck.Utility.Logger;
-using Services.Implementations.AreaController.Events;
+using Deck.Services.Implementations.AreaController.Events;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
@@ -79,11 +79,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
                 }
 
                 var position = positions[0].ToVector2Int();
-                var isSuccessful = BuildingService.BuildInCell(position);
-                if (isSuccessful)
-                {
-                    DeckEventOnDoorBuild.Create(position).Send();
-                }
+                BuildingService.BuildInCell(position);
             }
         }
 

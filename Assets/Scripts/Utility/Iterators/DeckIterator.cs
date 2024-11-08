@@ -15,6 +15,23 @@ namespace Deck.Utility.Iterators
             };
         }
 
+
+        public static Vector2Int[] GetRectNeighbourIterator(Vector2Int position)
+        {
+            return new[]
+            {
+                new Vector2Int(position.x + 1, position.y + 1),
+                new Vector2Int(position.x + 1, position.y),
+                new Vector2Int(position.x + 1, position.y - 1),
+                new Vector2Int(position.x, position.y + 1),
+                new Vector2Int(position.x, position.y),
+                new Vector2Int(position.x, position.y - 1),
+                new Vector2Int(position.x - 1, position.y + 1),
+                new Vector2Int(position.x - 1, position.y),
+                new Vector2Int(position.x - 1, position.y - 1)
+            };
+        }
+
         public static Vector2Int[] GetNeighbourIterator(Vector2Int position, int multiplier)
         {
             return new[]
@@ -30,8 +47,13 @@ namespace Deck.Utility.Iterators
         {
             return GetNeighbourIterator(position);
         }
-        
-        
+
+
+        public static Vector2Int[] GetRectNeighbours(this Vector2Int position)
+        {
+            return GetRectNeighbourIterator(position);
+        }
+
         public static Vector2Int[] GetNeighbours(this Vector2Int position, int multiplier)
         {
             return GetNeighbourIterator(position, multiplier);

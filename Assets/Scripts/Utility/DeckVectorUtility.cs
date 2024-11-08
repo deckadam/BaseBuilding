@@ -1,5 +1,7 @@
 using System.Collections.Generic;
-using Deck.Utility.Logger;
+using System.Linq;
+using Deck.InGame.Area;
+using Deck.Utility.Iterators;
 using UnityEngine;
 
 namespace Deck.Utility
@@ -94,6 +96,22 @@ namespace Deck.Utility
                 rectBuildPositions.Add(new Vector2Int(maxX, y));
 
             return rectBuildPositions;
+        }
+
+        private static int GetNeighbourCount(this Vector2Int point, List<Vector2Int> points)
+        {
+            var neighbours = point.GetNeighbours();
+
+            var count = 0;
+            foreach (var currentPoint in neighbours)
+            {
+                if (points.Contains(currentPoint))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

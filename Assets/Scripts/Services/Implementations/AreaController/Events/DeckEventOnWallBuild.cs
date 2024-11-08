@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Deck.Services.Implementations.AreaController.Events
 {
-    public struct DeckEventOnDoorBuild : IDeckEvent
+    public struct DeckEventOnWallBuild : IDeckEvent
     {
         public Vector2Int position { get; private set; }
 
-        public static DeckEventOnDoorBuild Create(Vector2Int position)
+        public static DeckEventOnWallBuild Create(Vector2Int positions)
         {
-            return new DeckEventOnDoorBuild()
+            return new DeckEventOnWallBuild()
             {
-                position = position
+                position = positions
             };
         }
     }

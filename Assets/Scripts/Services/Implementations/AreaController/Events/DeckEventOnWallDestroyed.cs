@@ -1,7 +1,7 @@
 using Deck.EventManager;
 using UnityEngine;
 
-namespace Services.Implementations.AreaController.Events
+namespace Deck.Services.Implementations.AreaController.Events
 {
     public struct DeckEventOnWallDestroyed : IDeckEvent
     {

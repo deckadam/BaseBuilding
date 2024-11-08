@@ -7,13 +7,13 @@ using Deck.Data.General;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Save;
-using Deck.Utility;
-using Deck.Utility.MonoBehaviours;
 using Deck.Services.CameraService;
+using Deck.Services.Implementations.AreaController.Events;
+using Deck.Services.Implementations.Currency;
 using Deck.Services.MapService;
+using Deck.Utility;
 using Deck.Utility.Logger;
-using Services.Implementations.AreaController.Events;
-using Services.Implementations.Currency;
+using Deck.Utility.MonoBehaviours;
 using UnityEngine;
 using Zenject;
 
@@ -431,8 +431,6 @@ namespace Deck.Services.Building
             }
 
             _pieceInUse.Clear();
-
-            DeckEventOnAreaBuild.Create(positions, rectBuildPositions).Send();
         }
 
         public bool BuildInCell(Vector2Int cellIndex)

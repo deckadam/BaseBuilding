@@ -1,10 +1,10 @@
-﻿using Deck.Components.Building;
+﻿using Cysharp.Threading.Tasks;
+using Deck.Components.Building;
 using Deck.ItemVisualProviders;
+using Deck.Services.Building;
+using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
-using Deck.Services.Building;
-using Services.Implementations.AreaController.Events;
-using UnityEngine;
 using Zenject;
 
 namespace Deck.Components.Wall
@@ -19,9 +19,14 @@ namespace Deck.Components.Wall
             _wallProvider = wallProvider;
         }
 
+        protected override async void AfterInitialize()
+        {
+            await UniTask.Yield();
+            DeckEventOnWallBuild.Create(transform.position.ToVector2Int()).Send();
+        }
+
         protected override void OnAgentDestroyed()
         {
-            Debug.LogError("Wall destroyed");
             DeckEventOnWallDestroyed.Create(transform.position.ToVector2Int()).Send();
         }
 

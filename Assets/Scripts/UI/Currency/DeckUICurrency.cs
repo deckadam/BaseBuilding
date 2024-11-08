@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Deck.Components.Building;
 using Deck.Data.Currency;
-using Services.Implementations.Currency;
+using Deck.Services.Implementations.Currency;
 using UnityEngine;
 
 namespace Deck.UI.Currency

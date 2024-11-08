@@ -54,6 +54,11 @@ namespace Deck.Components.Building.Building
         public void Disappear()
         {
             OnDisappearStart();
+            
+            if (canvasGroup == null)
+            {
+                return;
+            }
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);

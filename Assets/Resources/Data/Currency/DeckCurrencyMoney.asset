@@ -16,4 +16,4 @@ MonoBehaviour:
   displaySprite: {fileID: 0}
   displayName: Money
   saveKey: currency.money
-  amount: 250
+  amount: 100000

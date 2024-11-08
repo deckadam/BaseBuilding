@@ -1,6 +1,7 @@
 ﻿using Deck.EventManager;
 using Deck.InputHandling.Events;
 using UnityEditor;
+using UnityEngine;
 
 namespace Deck.Utility.Editor
 {
@@ -13,6 +14,14 @@ namespace Deck.Utility.Editor
             DeckEventManager.ClearEvents<DeckEventOnLeftClickDown>();
             DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
             DeckEventManager.ClearEvents<DeckEventOnMouseMove>();
+        }
+        
+        
+        [MenuItem("Deck/Free resources")]
+        private static void FreeResources()
+        {
+            EditorUtility.UnloadUnusedAssetsImmediate();
+            Resources.UnloadUnusedAssets();
         }
     }
 }
