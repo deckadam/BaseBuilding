@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
+﻿using Deck.Utility;
+using UnityEngine;
 
 namespace Deck.Services.CameraService
 {
@@ -21,6 +21,20 @@ namespace Deck.Services.CameraService
             }
 
             return Vector3.zero;
+        }
+
+
+        public Vector2Int GetCursorCellIndex()
+        {
+            var screenPosition = Input.mousePosition;
+            var ray = _camera.ScreenPointToRay(screenPosition);
+
+            if (_groundPlane.Raycast(ray, out var distance))
+            {
+                return ray.GetPoint(distance).ToVector2Int();
+            }
+
+            return Vector2Int.zero;
         }
 
         public override void Initialize()

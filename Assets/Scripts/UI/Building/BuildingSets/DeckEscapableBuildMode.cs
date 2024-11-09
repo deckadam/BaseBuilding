@@ -1,10 +1,10 @@
 using System;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Services.CameraService;
-using Deck.Utility.Logger;
 using Deck.Services;
 using Deck.Services.Building;
+using Deck.Services.CameraService;
+using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.Components.Building.Building.BuildingSets
@@ -77,7 +77,8 @@ namespace Deck.Components.Building.Building.BuildingSets
 
         protected virtual void OnMouseMove(DeckEventOnMouseMove obj)
         {
-            BuildingService.UpdateSilhouetteInCell();
+            var cellIndex = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            BuildingService.UpdateSilhouetteInCell(cellIndex);
         }
     }
 }

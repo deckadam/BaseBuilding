@@ -1,6 +1,7 @@
 using Deck.Data.Buildable;
 using Deck.Utility;
 using Deck.Services.Building;
+using Deck.Services.CameraService;
 using Deck.Utility.Logger;
 using Deck.Services.Implementations.AreaController.Events;
 using Services.Implementations.Escapable;
@@ -19,6 +20,9 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         private DeckBuildable _selectedBuildable;
         private bool _isBuildModeActive;
         private bool _isBuildingWall;
+
+        private readonly Quaternion _horizontalRotation = Quaternion.Euler(0, 90, 0);
+        private readonly Quaternion _verticalRotation = Quaternion.Euler(0, 0, 0);
 
         protected override void OnInitialize()
         {
@@ -45,7 +49,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
 
             if (_selectedBuildable == wallBuildable)
             {
-                _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, OnBuildRequested, true);
+                _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, true);
                 _isBuildingWall = true;
                 BuildingService.StartSilhouetteRect(buildable);
             }
@@ -67,19 +71,15 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
                 return;
             }
 
-            if (_selectedBuildable == wallBuildable)
-            {
-                BuildingService.BuildInCellRect(positions);
-            }
-            else
+            if (_selectedBuildable != wallBuildable)
             {
                 if (positions.Length > 1)
                 {
                     DeckLogger.Error("OnBuildRequested: multiple positions not are supported for door");
                 }
 
-                var position = positions[0].ToVector2Int();
-                BuildingService.BuildInCell(position);
+                var position = positions[0];
+                BuildingService.BuildInCell(position.ToVector2Int());
             }
         }
 
@@ -89,7 +89,17 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
             {
                 if (!_isBuildingWall)
                 {
-                    BuildingService.UpdateSilhouetteInCell();
+                    var cellIndex = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
+                    var neighbourStatus = BuildingService.GetCellNeighbourStatus(cellIndex);
+
+                    if (neighbourStatus[2] && neighbourStatus[3])
+                    {
+                        BuildingService.UpdateSilhouetteInCell(cellIndex, _verticalRotation);
+                    }
+                    else
+                    {
+                        BuildingService.UpdateSilhouetteInCell(cellIndex, _horizontalRotation);
+                    }
                 }
             }
         }

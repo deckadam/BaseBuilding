@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Deck.Components.Building;
 using Deck.ItemVisualProviders;
-using Deck.Services.Building;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
@@ -26,10 +25,9 @@ namespace Deck.Components.Door
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
         }
 
-        protected override void InternalRequestDestroy()
+        protected override void OnBuildingDestroyed()
         {
             var cellPosition = transform.position.ToVector2Int();
-            Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
             _doorProvider.ReturnItemVisual(cellPosition, false);
             DeckEventOnDoorDestroyed.Create(cellPosition).Send();
         }

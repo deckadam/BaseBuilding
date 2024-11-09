@@ -64,6 +64,12 @@ namespace Services.Implementations.AreaController
         private void RecalculateAreas()
         {
             _areas.Clear();
+
+            if (_areaPositions.Count==0)
+            {
+                return;
+            }
+            
             _areas = GetClosedAreasFromPoints(_areaPositions);
         }
 

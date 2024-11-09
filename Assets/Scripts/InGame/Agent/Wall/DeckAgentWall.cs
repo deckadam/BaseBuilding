@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Components.Building;
 using Deck.ItemVisualProviders;
-using Deck.Services.Building;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
@@ -30,9 +29,8 @@ namespace Deck.Components.Wall
             DeckEventOnWallDestroyed.Create(transform.position.ToVector2Int()).Send();
         }
 
-        protected override void InternalRequestDestroy()
+        protected override void OnBuildingDestroyed()
         {
-            Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
             _wallProvider.ReturnItemVisual(transform.position.ToVector2Int(), true);
         }
     }

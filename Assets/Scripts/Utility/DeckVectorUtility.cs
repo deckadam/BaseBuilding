@@ -66,8 +66,40 @@ namespace Deck.Utility
             var direction = end - start;
             return Quaternion.LookRotation(direction.ToVector3(), Vector3.up);
         }
+        
+        
+        public static HashSet<Vector2Int> GetRectFromPoints(this Vector2Int[] points)
+        {
+            var firstPos = points[0];
+            var secondPos = points[1];
 
-        public static List<Vector2Int> GetRectFromPoints(this Vector3[] points)
+            var minX = Mathf.Min(firstPos.x, secondPos.x);
+            var maxX = Mathf.Max(firstPos.x, secondPos.x);
+
+            var minY = Mathf.Min(firstPos.y, secondPos.y);
+            var maxY = Mathf.Max(firstPos.y, secondPos.y);
+
+            var rectBuildPositions = new HashSet<Vector2Int>();
+            // Bottom edge
+            for (int x = minX; x <= maxX; x++)
+                rectBuildPositions.Add(new Vector2Int(x, minY));
+
+            // Top edge
+            for (int x = minX; x <= maxX; x++)
+                rectBuildPositions.Add(new Vector2Int(x, maxY));
+
+            // Left edge
+            for (int y = minY + 1; y < maxY; y++)
+                rectBuildPositions.Add(new Vector2Int(minX, y));
+
+            // Right edge
+            for (int y = minY + 1; y < maxY; y++)
+                rectBuildPositions.Add(new Vector2Int(maxX, y));
+
+            return rectBuildPositions;
+        }
+
+        public static HashSet<Vector2Int> GetRectFromPoints(this Vector3[] points)
         {
             var firstPos = points[0].ToVector2Int();
             var secondPos = points[1].ToVector2Int();
@@ -78,7 +110,7 @@ namespace Deck.Utility
             var minY = Mathf.Min(firstPos.y, secondPos.y);
             var maxY = Mathf.Max(firstPos.y, secondPos.y);
 
-            var rectBuildPositions = new List<Vector2Int>();
+            var rectBuildPositions = new HashSet<Vector2Int>();
             // Bottom edge
             for (int x = minX; x <= maxX; x++)
                 rectBuildPositions.Add(new Vector2Int(x, minY));

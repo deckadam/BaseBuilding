@@ -9,29 +9,29 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
 {
     public class DeckEscapableBuildModeWall : DeckEscapableBuildMode
     {
-        private Vector3 _initialCellPosition;
-        private Vector3 _currentCellPosition;
+        private Vector2Int _initialCellPosition;
+        private Vector2Int _currentCellPosition;
 
-        public DeckEscapableBuildModeWall(Action onEscape, Action<Vector3[]> onBuild, bool canMoveBuild = false) : base(onEscape, onBuild, canMoveBuild)
+        public DeckEscapableBuildModeWall(Action onEscape, bool canMoveBuild = false) : base(onEscape,null,canMoveBuild)
         {
         }
 
         protected override void OnLeftClickDown(DeckEventOnLeftClickDown obj)
         {
-            _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
+            _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
         }
 
         protected override void OnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
-            var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
+            var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
             Deck.GetService<DeckServiceBuilding>().BuildInCellRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
         protected override void OnMouseMove(DeckEventOnMouseMove obj)
         {
-            var currentCellPositions = Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition();
+            var currentCellPositions = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
-            if (_currentCellPosition.ToVector2Int() != currentCellPositions.ToVector2Int())
+            if (_currentCellPosition != currentCellPositions)
             {
                 _currentCellPosition = currentCellPositions;
                 return;

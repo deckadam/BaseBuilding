@@ -47,11 +47,6 @@ namespace Deck.Selection
 
         private void SetTarget(DeckAgent obj)
         {
-            if (_target)
-            {
-                _target.OnAgentSizeChanged -= OnTargetSizeChanged;
-            }
-
             _target = obj;
             var itemVisual = _target.GetItemVisual();
             var targetSize = 1f;
@@ -61,16 +56,10 @@ namespace Deck.Selection
             }
 
             transform.localScale = targetSize * Vector3.one;
-            _target.OnAgentSizeChanged += OnTargetSizeChanged;
         }
 
         private void ClearTarget(IDeckEvent obj)
         {
-            if (_target != null)
-            {
-                _target.OnAgentSizeChanged -= OnTargetSizeChanged;
-            }
-
             _target = null;
             transform.position = Vector3.down * 1000f;
         }

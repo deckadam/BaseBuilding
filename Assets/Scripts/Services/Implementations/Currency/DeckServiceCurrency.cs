@@ -40,12 +40,13 @@ namespace Deck.Services.Implementations.Currency
             }
         }
 
-        public void ChangeValueRelative(DeckPrice[] prices,bool add)
+        public void ChangeValueRelative(DeckPrice[] prices, bool add)
         {
+            var mul = add ? 1 : -1;
             foreach (var price in prices)
             {
                 var currency = _currentCurrencies.First(item => item.CurrencyType == price.CurrencyType);
-                currency.ChangeValueRelative(price.Amount);
+                currency.ChangeValueRelative(price.Amount * mul);
             }
         }
 

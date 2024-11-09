@@ -1,7 +1,8 @@
 using Deck.Data.Buildable;
 using Deck.ItemVisualProviders;
-using Deck.Utility;
 using Deck.Services.Building;
+using Deck.Services.Implementations.Currency;
+using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
@@ -22,22 +23,22 @@ namespace Deck.Components.Building
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out itemVisualInstance, selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position.ToVector2Int(), buildingData.Indices, this);
 
-            if (itemVisualInstance != null)
+            if (ItemVisualInstance != null)
             {
-                itemVisualInstance.transform.SetParent(transform, false);
-                itemVisualInstance.Agent = this;
+                ItemVisualInstance.transform.SetParent(transform, false);
+                ItemVisualInstance.Agent = this;
                 if (setVisualPosition)
                 {
-                    itemVisualInstance.transform.localPosition = Vector3.zero;
+                    ItemVisualInstance.transform.localPosition = Vector3.zero;
                 }
 
                 if (setVisualRotation)
                 {
-                    itemVisualInstance.transform.localRotation = Quaternion.identity;
+                    ItemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
             else
@@ -46,13 +47,20 @@ namespace Deck.Components.Building
             }
         }
 
-        protected override void InternalRequestDestroy()
+        protected sealed override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            if (itemVisualPrefab != null)
+            if (ItemVisualInstance != null)
             {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualPrefab);
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(ItemVisualInstance);
             }
+
+            Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
+            OnBuildingDestroyed();
+        }
+
+        protected virtual void OnBuildingDestroyed()
+        {
         }
 
         public DeckBuildable BuildingData => buildingData;

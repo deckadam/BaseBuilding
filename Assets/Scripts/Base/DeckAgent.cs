@@ -19,7 +19,6 @@ namespace Deck.Components
 {
     public class DeckAgent : DeckPoolable
     {
-        public event Action<float> OnAgentSizeChanged;
         public event Action OnItemVisualChanged;
 
         [SerializeField] protected Transform centerPosition;
@@ -34,7 +33,7 @@ namespace Deck.Components
 
         [HideInInspector] public Transform selfTransform;
 
-        protected DeckItemVisual itemVisualInstance;
+        protected DeckItemVisual ItemVisualInstance;
 
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
@@ -150,8 +149,8 @@ namespace Deck.Components
             }
 
             _hasSetComponents = true;
-            var components = GetComponents<DeckComponent>();
-            this.components = components;
+            var comps = GetComponents<DeckComponent>();
+            components = comps;
         }
 
         public void SetNewUniqueId()
@@ -368,7 +367,7 @@ namespace Deck.Components
 
         public DeckItemVisual GetItemVisual()
         {
-            return itemVisualInstance;
+            return ItemVisualInstance;
         }
     }
 }
