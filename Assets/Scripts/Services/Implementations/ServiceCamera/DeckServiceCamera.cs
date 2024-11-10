@@ -43,6 +43,11 @@ namespace Deck.Services.CameraService
             _groundPlane = new Plane(Vector3.up, Vector3.zero);
         }
 
+        public Ray GetRayFromCamera()
+        {
+            return _camera.ScreenPointToRay(Input.mousePosition);
+        }
+
         public Camera GetCamera()
         {
             return _camera;

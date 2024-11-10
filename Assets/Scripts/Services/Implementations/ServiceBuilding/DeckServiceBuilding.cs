@@ -478,7 +478,6 @@ namespace Deck.Services.Building
 
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
 
-
             if (_lastCheckedCellIndex == cellIndex)
             {
                 return;
@@ -594,6 +593,8 @@ namespace Deck.Services.Building
                 var temp = cellIndex + index;
                 _grid[temp] = null;
             }
+
+            _lastCheckedCellIndex = _defaultCellPosition;
         }
 
         private void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgent newAgent)

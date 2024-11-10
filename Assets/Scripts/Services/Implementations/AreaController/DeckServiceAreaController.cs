@@ -50,14 +50,12 @@ namespace Services.Implementations.AreaController
 
         private void OnWallBuild(DeckEventOnWallBuild obj)
         {
-            Debug.LogError("Wall build  " + obj.position);
             _areaPositions.Add(obj.position);
             RecalculateAreas();
         }
 
         private void OnWallDestroyed(DeckEventOnWallDestroyed obj)
         {
-            Debug.LogError("Wall destroyed  " + obj.position);
             _areaPositions.Remove(obj.position);
             RecalculateAreas();
         }
@@ -72,7 +70,6 @@ namespace Services.Implementations.AreaController
             }
 
             _areas = GetClosedAreasFromPoints(_areaPositions);
-            Debug.LogError("Area count " + _areas.Count);
         }
 
         protected override void DrawGizmos()

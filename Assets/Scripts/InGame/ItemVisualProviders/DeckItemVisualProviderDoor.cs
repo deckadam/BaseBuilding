@@ -16,7 +16,7 @@ namespace Deck.ItemVisualProviders
         private readonly Quaternion _verticalRotation = Quaternion.Euler(0, 0, 0);
 
         private HashSet<Vector2Int> _doorCheckSet;
-        private Dictionary<Vector2Int, DeckItemVisual> _activeWalls;
+        private Dictionary<Vector2Int, DeckItemVisual> _activeDoors;
 
         private DeckItemVisualProviderWall _wallProvider;
 
@@ -29,7 +29,7 @@ namespace Deck.ItemVisualProviders
         protected override void OnInitialize()
         {
             _doorCheckSet = new HashSet<Vector2Int>();
-            _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
+            _activeDoors = new Dictionary<Vector2Int, DeckItemVisual>();
         }
 
         public void ReturnItemVisual(Vector2Int cellIndex)
@@ -37,7 +37,7 @@ namespace Deck.ItemVisualProviders
             if (!_doorCheckSet.Contains(cellIndex)) return;
 
             _doorCheckSet.Remove(cellIndex);
-            ReturnIfHasItemVisual(_activeWalls[cellIndex]);
+            ReturnIfHasItemVisual(_activeDoors[cellIndex]);
             _wallProvider.OnDoorRemoved(cellIndex);
         }
 
@@ -50,7 +50,7 @@ namespace Deck.ItemVisualProviders
             ReturnIfHasItemVisual(itemVisual);
 
             _wallProvider.OnDoorRemoved(pos);
-            _activeWalls.Remove(pos);
+            _activeDoors.Remove(pos);
             return true;
         }
 
@@ -62,16 +62,15 @@ namespace Deck.ItemVisualProviders
                 return false;
             }
 
-            if (_doorCheckSet.Contains(cellIndex))
+            if (!_doorCheckSet.Add(cellIndex))
             {
-                itemVisual = null;
+                itemVisual = _activeDoors[cellIndex];
                 return true;
             }
 
-            _doorCheckSet.Add(cellIndex);
             itemVisual = null;
             RentIfHasItemVisual(prefabId, out itemVisual);
-            _activeWalls[cellIndex] = itemVisual;
+            _activeDoors[cellIndex] = itemVisual;
             itemVisual.transform.rotation = GetDoorRotation(cellIndex);
             itemVisual.transform.position = cellIndex.ToVector3();
 

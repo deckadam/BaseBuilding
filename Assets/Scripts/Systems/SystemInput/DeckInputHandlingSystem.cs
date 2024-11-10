@@ -71,20 +71,12 @@ namespace Deck.InputHandling
         {
             if (!Input.GetKeyDown(KeyCode.Delete)) return;
 
-            var dCam = Deck.GetService<DeckServiceCamera>().GetCamera();
-            var ray = dCam.ScreenPointToRay(Input.mousePosition);
+            var ray = Deck.GetService<DeckServiceCamera>().GetRayFromCamera();
             if (!Physics.Raycast(ray, out var hit)) return;
 
-            if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
-            {
-                agent.RequestDestroy();
-                return;
-            }
-
-            if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
-            {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
-            }
+            if (!hit.transform.TryGetComponentInParent<DeckAgent>(out var agent)) return;
+            
+            agent.RequestDestroy();
         }
 
         private void CheckForStatsPopUp()

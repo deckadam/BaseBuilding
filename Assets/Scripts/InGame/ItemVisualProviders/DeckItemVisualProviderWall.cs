@@ -63,11 +63,11 @@ namespace Deck.ItemVisualProviders
 
             ReturnIfHasItemVisual(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
-            
+
             _activeWalls.Remove(itemPos);
             _activeWallAgents.Remove(itemPos);
             _wallCheckSet.Remove(itemPos);
-            
+
             return true;
         }
 
@@ -241,6 +241,10 @@ namespace Deck.ItemVisualProviders
             var neighbours = cellIndex.GetNeighbours();
             foreach (var neighbour in neighbours)
             {
+                if (!_wallCheckSet.Contains(neighbour))
+                    continue;
+                
+                ReturnIfHasItemVisual(_activeWalls[neighbour]);
                 PlaceWallWithNeighbours(neighbour);
             }
         }

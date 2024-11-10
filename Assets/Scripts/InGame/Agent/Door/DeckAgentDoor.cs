@@ -1,23 +1,13 @@
 using Cysharp.Threading.Tasks;
 using Deck.Components.Building;
-using Deck.ItemVisualProviders;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
-using Zenject;
 
 namespace Deck.Components.Door
 {
     public class DeckAgentDoor : DeckBuilding
     {
-        private DeckItemVisualProviderDoor _doorProvider;
-
-        [Inject]
-        private void Inject(DeckItemVisualProviderDoor doorProvider)
-        {
-            _doorProvider = doorProvider;
-        }
-
         protected override async void AfterInitialize()
         {
             await UniTask.Yield();
