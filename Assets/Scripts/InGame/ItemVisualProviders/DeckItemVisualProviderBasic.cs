@@ -85,12 +85,16 @@ namespace Deck.ItemVisualProviders
         protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
         {
             if (!_supportedItemVisuals.Contains(itemVisual.PrefabId.ID)) return false;
-            
+
             _instanceProvider.ReturnItemVisual(itemVisual);
             Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
 
             return true;
+        }
 
+        public HashSet<int> GetSupportedItemVisuals()
+        {
+            return _supportedItemVisuals;
         }
     }
 }

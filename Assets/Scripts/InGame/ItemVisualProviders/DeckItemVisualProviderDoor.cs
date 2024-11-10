@@ -12,8 +12,8 @@ namespace Deck.ItemVisualProviders
     {
         [SerializeField] private DeckItemVisual doorPrefab;
 
-        private readonly Quaternion HorizontalRotation = Quaternion.Euler(0, 90, 0);
-        private readonly Quaternion VerticalRotation = Quaternion.Euler(0, 0, 0);
+        private readonly Quaternion _horizontalRotation = Quaternion.Euler(0, 90, 0);
+        private readonly Quaternion _verticalRotation = Quaternion.Euler(0, 0, 0);
 
         private HashSet<Vector2Int> _doorCheckSet;
         private Dictionary<Vector2Int, DeckItemVisual> _activeWalls;
@@ -32,14 +32,13 @@ namespace Deck.ItemVisualProviders
             _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
         }
 
-        public bool ReturnItemVisual(Vector2Int cellIndex, bool isInternal)
+        public void ReturnItemVisual(Vector2Int cellIndex)
         {
-            if (!_doorCheckSet.Contains(cellIndex)) return false;
+            if (!_doorCheckSet.Contains(cellIndex)) return;
 
             _doorCheckSet.Remove(cellIndex);
             ReturnIfHasItemVisual(_activeWalls[cellIndex]);
             _wallProvider.OnDoorRemoved(cellIndex);
-            return true;
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -86,15 +85,15 @@ namespace Deck.ItemVisualProviders
 
             if (neighbourSet[0] || neighbourSet[1])
             {
-                return HorizontalRotation;
+                return _horizontalRotation;
             }
 
             if (neighbourSet[2] || neighbourSet[3])
             {
-                return VerticalRotation;
+                return _verticalRotation;
             }
 
-            return HorizontalRotation;
+            return _horizontalRotation;
         }
     }
 }

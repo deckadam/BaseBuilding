@@ -4,7 +4,6 @@ using Deck.EventManager;
 using Deck.InGame.Area;
 using Deck.Services;
 using Deck.Services.Implementations.AreaController.Events;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Services.Implementations.AreaController
@@ -51,12 +50,14 @@ namespace Services.Implementations.AreaController
 
         private void OnWallBuild(DeckEventOnWallBuild obj)
         {
+            Debug.LogError("Wall build  " + obj.position);
             _areaPositions.Add(obj.position);
             RecalculateAreas();
         }
 
         private void OnWallDestroyed(DeckEventOnWallDestroyed obj)
         {
+            Debug.LogError("Wall destroyed  " + obj.position);
             _areaPositions.Remove(obj.position);
             RecalculateAreas();
         }
@@ -65,12 +66,13 @@ namespace Services.Implementations.AreaController
         {
             _areas.Clear();
 
-            if (_areaPositions.Count==0)
+            if (_areaPositions.Count == 0)
             {
                 return;
             }
-            
+
             _areas = GetClosedAreasFromPoints(_areaPositions);
+            Debug.LogError("Area count " + _areas.Count);
         }
 
         protected override void DrawGizmos()

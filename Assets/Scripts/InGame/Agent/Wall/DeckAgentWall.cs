@@ -3,15 +3,14 @@ using Deck.Components.Building;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Logger;
-using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace Deck.Components.Wall
 {
     public class DeckAgentWall : DeckBuilding
     {
-        protected override void AfterInitialize()
+        protected override async void AfterInitialize()
         {
+            await UniTask.Yield();
             DeckEventOnWallBuild.Create(transform.position.ToVector2Int()).Send();
         }
 

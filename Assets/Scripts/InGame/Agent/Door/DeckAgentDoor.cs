@@ -21,14 +21,12 @@ namespace Deck.Components.Door
         protected override async void AfterInitialize()
         {
             await UniTask.Yield();
-
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
         }
 
         protected override void OnBuildingDestroyed()
         {
             var cellPosition = transform.position.ToVector2Int();
-            _doorProvider.ReturnItemVisual(cellPosition, false);
             DeckEventOnDoorDestroyed.Create(cellPosition).Send();
         }
     }

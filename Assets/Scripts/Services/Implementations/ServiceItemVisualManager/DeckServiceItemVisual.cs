@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Deck.Base.Id;
 using Deck.Components;
 using Deck.Services;
-using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -12,55 +12,63 @@ namespace Deck.ItemVisualProviders
     {
         private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
+        private Dictionary<int, DeckItemVisualProviderBasic> _itemVisualProviderDictionary;
+
         [Inject]
         private void Inject(DeckItemVisualProviderBasic[] itemVisualProviders)
         {
             _itemVisualProviders = itemVisualProviders;
+        }
+
+        public override void Initialize()
+        {
+            _itemVisualProviderDictionary = new Dictionary<int, DeckItemVisualProviderBasic>();
 
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
                 deckItemVisualProvider.Initialize();
+                var supportedItemVisuals = deckItemVisualProvider.GetSupportedItemVisuals();
+                foreach (var supportedItemVisual in supportedItemVisuals)
+                {
+                    _itemVisualProviderDictionary[supportedItemVisual] = deckItemVisualProvider;
+                }
             }
         }
 
-        public bool RequestItemVisual(DeckAgent agent,DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default)
+        public bool RequestItemVisual(DeckAgent agent, DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default)
         {
-            foreach (var deckItemVisualProvider in _itemVisualProviders)
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
             {
-                if (deckItemVisualProvider.RequestItemVisual(agent,deckId, cellIndex, out itemVisual))
+                if (itemVisualProvider.RequestItemVisual(agent, deckId, cellIndex, out itemVisual))
                 {
                     return true;
                 }
             }
 
-            Debug.LogError("RequestItemVisual failed");
             itemVisual = null;
             return false;
         }
 
         public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual)
         {
-            foreach (var deckItemVisualProvider in _itemVisualProviders)
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, out itemVisual))
+                if (itemVisualProvider.RequestItemVisual(deckId, out itemVisual))
                 {
                     return true;
                 }
             }
 
-            Debug.LogError("RequestItemVisual failed");
             itemVisual = null;
             return false;
         }
 
         public void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            foreach (var deckItemVisualProvider in _itemVisualProviders)
+            if (_itemVisualProviderDictionary.TryGetValue(itemVisual.PrefabId.ID, out var itemVisualProvider))
             {
-                if (deckItemVisualProvider.ReturnItemVisual(itemVisual))
-                {
-                    return;
-                }
+                itemVisualProvider.ReturnItemVisual(itemVisual);
+                return;
             }
 
             DeckLogger.Error("No item visual found for id " + itemVisual.name);
