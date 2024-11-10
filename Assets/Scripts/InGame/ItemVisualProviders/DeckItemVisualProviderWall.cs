@@ -106,10 +106,10 @@ namespace Deck.ItemVisualProviders
             for (var index = 0; index < neighbours.Length; index++)
             {
                 var neighbour = neighbours[index];
-                var isWall = _wallCheckSet.Contains(neighbour);
-                checkList[index] = isWall;
+                var isWallOrDoor = _wallCheckSet.Contains(neighbour) || _doorCheckSet.Contains(neighbour);
+                checkList[index] = isWallOrDoor;
 
-                if (depth < 1 && isWall)
+                if (depth < 1 && isWallOrDoor)
                 {
                     ConnectWalls(neighbour, depth + 1);
                 }

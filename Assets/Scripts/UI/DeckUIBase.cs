@@ -4,6 +4,7 @@ using Deck.Components;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.Components.Building
@@ -15,11 +16,9 @@ namespace Deck.Components.Building
 
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
-
-        // [ShowInInspector, ReadOnly] internal bool _isAppeared;
-        [SerializeField] internal bool _isAppeared;
-        internal bool isAppearing;
-        internal bool isDisappearing;
+        [SerializeField] internal bool isAppeared;
+        internal bool IsAppearing;
+        internal bool IsDisappearing;
 
         [Inject]
         private void Inject(DeckBinderUI binderUI)
@@ -41,18 +40,18 @@ namespace Deck.Components.Building
 
         private void Awake()
         {
-            _isAppeared = isAppearedOnStartUp;
-            if (_isAppeared)
+            isAppeared = isAppearedOnStartUp;
+            if (isAppeared)
             {
                 canvasGroup.alpha = 1f;
-                _isAppeared = true;
+                isAppeared = true;
                 canvasGroup.blocksRaycasts = true;
                 canvasGroup.interactable = true;
             }
             else
             {
                 canvasGroup.alpha = 0f;
-                _isAppeared = false;
+                isAppeared = false;
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.interactable = false;
             }
@@ -60,7 +59,7 @@ namespace Deck.Components.Building
 
         public async void SwapAppearanceStatus()
         {
-            if (_isAppeared)
+            if (isAppeared)
             {
                 await Disappear();
             }
@@ -72,17 +71,17 @@ namespace Deck.Components.Building
 
         public async UniTask Appear()
         {
-            isAppearing = true;
+            IsAppearing = true;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
 
             OnPreAppear();
             await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
-            _isAppeared = true;
+            isAppeared = true;
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
-            isAppearing = false;
+            IsAppearing = false;
 
             OnPostAppear();
         }
@@ -94,15 +93,15 @@ namespace Deck.Components.Building
                 return;
             }
 
-            isDisappearing = true;
+            IsDisappearing = true;
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
             await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
-            _isAppeared = false;
+            isAppeared = false;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
-            isDisappearing = false;
+            IsDisappearing = false;
             OnPostDisappear();
         }
 

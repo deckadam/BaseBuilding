@@ -24,14 +24,14 @@ namespace Deck.Services
 
             await DisappearAllWindowsExceptRequired<T>(typeOfT);
 
-            if (temp._isAppeared || temp.isAppearing)
+            if (temp.isAppeared || temp.IsAppearing)
             {
-                await UniTask.WaitWhile(() => temp.isAppearing);
+                await UniTask.WaitWhile(() => temp.IsAppearing);
                 await temp.Disappear();
             }
-            else if (!temp._isAppeared || !temp.isDisappearing)
+            else if (!temp.isAppeared || !temp.IsDisappearing)
             {
-                await UniTask.WaitWhile(() => temp.isDisappearing);
+                await UniTask.WaitWhile(() => temp.IsDisappearing);
                 await temp.Appear();
             }
 
@@ -42,7 +42,7 @@ namespace Deck.Services
         {
             var typeOfT = typeof(T);
             var temp = _uiImplementations[typeOfT];
-            if (temp._isAppeared || temp.isAppearing)
+            if (temp.isAppeared || temp.IsAppearing)
             {
                 return;
             }

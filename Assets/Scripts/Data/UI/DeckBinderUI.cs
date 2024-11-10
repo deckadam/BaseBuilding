@@ -7,7 +7,7 @@ namespace Deck.Data.UI
     public class DeckBinderUI : ScriptableObjectInstaller
     {
         [SerializeField] private float canvasAppearDuration;
-        [SerializeField] private float canvasDisapearDuration;
+        [SerializeField] private float canvasDisappearDuration;
 
         public override void InstallBindings()
         {
@@ -15,6 +15,6 @@ namespace Deck.Data.UI
         }
 
         public float GetCanvasAppearDuration() => canvasAppearDuration;
-        public float GetCanvasDisappearDuration() => canvasDisapearDuration;
+        public float GetCanvasDisappearDuration() => canvasDisappearDuration;
     }
 }

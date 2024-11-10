@@ -48,15 +48,6 @@ namespace Deck.Components.Building
             }
         }
 
-        [Button]
-        public void Test()
-        {
-            if (itemVisualInstance.transform.position.ToVector2Int() != transform.position.ToVector2Int())
-            {
-                Debug.LogError("error", gameObject);
-            }
-        }
-
         protected sealed override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);

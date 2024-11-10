@@ -18,6 +18,8 @@ namespace Deck.Components.Building
         [SerializeField] private Button loadLastSaveButton;
         [SerializeField] private Button loadSavesButton;
 
+        private bool _loadingStarted;
+
         public override void Initialize()
         {
             DeckEventManager.Register<DeckEventOnLoadRequested>(OnLoadRequested);
@@ -50,6 +52,12 @@ namespace Deck.Components.Building
 
         public async void OnNewGame()
         {
+            if (_loadingStarted)
+            {
+                return;
+            }
+
+            _loadingStarted = true;
             DeckLogger.Inform("New game starting");
 
             Deck.GetService<DeckGameManager>().CreateNewGame();
@@ -58,17 +66,28 @@ namespace Deck.Components.Building
             await UniTask.NextFrame();
             await Disappear();
 
+            _loadingStarted = false;
+
             DeckLogger.Inform("New game started");
         }
 
         public async void OnLastSaveLoad()
         {
+            if (_loadingStarted)
+            {
+                return;
+            }
+
+            _loadingStarted = true;
+
             DeckSaveSystem.LoadLastSaveData();
             Deck.GetService<DeckGameManager>().LoadGame();
             DeckEventOnGameSceneLoaded.Create().Send();
 
             await UniTask.NextFrame();
             await Disappear();
+
+            _loadingStarted = false;
 
             DeckLogger.Inform("Last save file loaded");
         }
