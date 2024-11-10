@@ -120,7 +120,7 @@ namespace Deck.Services.Building
 
             var newPiece = GetSilhouettePiece();
 
-            var cellIndex = GetCurrentCellIndex();
+            var cellIndex = GetCursorCellIndex();
 
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
@@ -215,9 +215,8 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var worldPosition = _cameraService.GetCursorWorldPosition();
-            var cellIndex = _cameraService.GetCursorWorldPosition().ToVector2Int();
-            var isPlaceable = CheckIfAgentBuildableInCell(_activeBuildable, cellIndex);
+            var worldPosition = GetCursorWorldPosition();
+            var isPlaceable = CheckIfAgentBuildableInArea(_activeBuildable);
             var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -704,7 +703,7 @@ namespace Deck.Services.Building
 
         private bool CheckIfAgentBuildableInArea(DeckBuildable buildable)
         {
-            var count = Physics.OverlapBoxNonAlloc(_cameraService.GetCursorWorldPosition() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
+            var count = Physics.OverlapBoxNonAlloc(GetCursorWorldPosition() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore);
 
             return count == 0;
@@ -811,13 +810,18 @@ namespace Deck.Services.Building
             _pieceInPool[piece.filters.Length].Push(piece);
         }
 
-
-        private Vector3 GetCurrentCellIndexV3()
+        private Vector3 GetCursorWorldPosition()
         {
-            return GetCurrentCellIndex().ToVector3();
+            return _cameraService.GetCursorWorldPosition();
         }
 
-        private Vector2Int GetCurrentCellIndex()
+
+        private Vector3 GetCursorCellIndexV3()
+        {
+            return GetCursorCellIndex().ToVector3();
+        }
+
+        private Vector2Int GetCursorCellIndex()
         {
             return _cameraService.GetCursorCellIndex();
         }
