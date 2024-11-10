@@ -24,7 +24,7 @@ namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
         protected override void OnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            Deck.GetService<DeckServiceBuilding>().BuildInCellRect(new[] { _initialCellPosition, currentCellPosition });
+            Deck.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
         protected override void OnMouseMove(DeckEventOnMouseMove obj)

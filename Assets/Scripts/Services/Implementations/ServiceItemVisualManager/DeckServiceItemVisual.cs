@@ -22,11 +22,11 @@ namespace Deck.ItemVisualProviders
             }
         }
 
-        public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default, bool isInternal = true)
+        public bool RequestItemVisual(DeckAgent agent,DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default, bool isInternal = true)
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, cellIndex, out itemVisual, isInternal: isInternal))
+                if (deckItemVisualProvider.RequestItemVisual(agent,deckId, cellIndex, out itemVisual, isInternal: isInternal))
                 {
                     return true;
                 }

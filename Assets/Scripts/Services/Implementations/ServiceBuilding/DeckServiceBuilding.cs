@@ -388,7 +388,7 @@ namespace Deck.Services.Building
             newBuilding.InitializeBuilding();
         }
 
-        public void BuildInCellRect(Vector2Int[] positions)
+        public void BuildInRect(Vector2Int[] positions)
         {
             if (_activeBuildable == null)
             {
@@ -444,9 +444,9 @@ namespace Deck.Services.Building
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
                 newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
+                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
-                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
             }
 
             foreach (var silhouettePiece in _pieceInUse)
@@ -457,19 +457,19 @@ namespace Deck.Services.Building
             _pieceInUse.Clear();
         }
 
-        public bool BuildInCell(Vector2Int cellIndex)
+        public void BuildInCell(Vector2Int cellIndex)
         {
             if (_activeBuildable == null)
             {
                 DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
-                return false;
+                return;
             }
 
             if (!_currencyService.CanAfford(_activeBuildable.Prices))
             {
                 DeckEventNotificationRequested.Create("Cant afford").Send();
                 ReturnAllSilhouettePiecesToPool();
-                return false;
+                return;
             }
 
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
@@ -477,7 +477,7 @@ namespace Deck.Services.Building
 
             if (_lastCheckedCellIndex == cellIndex)
             {
-                return false;
+                return;
             }
 
             _lastCheckedCellIndex = cellIndex;
@@ -488,7 +488,7 @@ namespace Deck.Services.Building
                 {
                     if (encounteredAgent.PrefabId.Equals(_activeBuildable.Agent.PrefabId))
                     {
-                        return false;
+                        return;
                     }
 
                     encounteredAgent.RequestDestroy();
@@ -501,8 +501,6 @@ namespace Deck.Services.Building
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             SetCellOccupied(cellIndex, _activeBuildable.Indices, newBuilding);
-
-            return true;
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)

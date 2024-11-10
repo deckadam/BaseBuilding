@@ -55,7 +55,7 @@ namespace Deck.ItemVisualProviders
             return true;
         }
 
-        public override bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
+        public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
         {
             if (!prefabId.Equals(doorPrefab.PrefabId))
             {

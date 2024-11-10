@@ -4,6 +4,7 @@ using Deck.Services.Building;
 using Deck.Services.Implementations.Currency;
 using Deck.Utility;
 using Deck.Utility.Logger;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -23,22 +24,22 @@ namespace Deck.Components.Building
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(buildingData.ItemVisual.PrefabId, out ItemVisualInstance, selfTransform.position.ToVector2Int());
+            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
-            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(selfTransform.position.ToVector2Int(), buildingData.Indices, this);
+            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(SelfTransform.position.ToVector2Int(), buildingData.Indices, this);
 
-            if (ItemVisualInstance != null)
+            if (itemVisualInstance != null)
             {
-                ItemVisualInstance.transform.SetParent(transform, false);
-                ItemVisualInstance.Agent = this;
+                itemVisualInstance.transform.SetParent(transform, false);
+                itemVisualInstance.Agent = this;
                 if (setVisualPosition)
                 {
-                    ItemVisualInstance.transform.localPosition = Vector3.zero;
+                    itemVisualInstance.transform.localPosition = Vector3.zero;
                 }
 
                 if (setVisualRotation)
                 {
-                    ItemVisualInstance.transform.localRotation = Quaternion.identity;
+                    itemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
             else
@@ -47,12 +48,21 @@ namespace Deck.Components.Building
             }
         }
 
+        [Button]
+        public void Test()
+        {
+            if (itemVisualInstance.transform.position.ToVector2Int() != transform.position.ToVector2Int())
+            {
+                Debug.LogError("error", gameObject);
+            }
+        }
+
         protected sealed override void InternalRequestDestroy()
         {
             Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
-            if (ItemVisualInstance != null)
+            if (itemVisualInstance != null)
             {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(ItemVisualInstance);
+                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
             }
 
             Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);

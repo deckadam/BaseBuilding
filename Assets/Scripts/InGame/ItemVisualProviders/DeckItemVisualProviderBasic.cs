@@ -57,7 +57,7 @@ namespace Deck.ItemVisualProviders
             OnInitialize();
         }
 
-        public virtual bool RequestItemVisual(DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
+        public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
         }

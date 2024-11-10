@@ -9,6 +9,7 @@ using Deck.Save;
 using Deck.Services.MapService;
 using Deck.Utility.Logger;
 using Services.AgentFinder;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine.Serialization;
 #if UNITY_EDITOR
@@ -28,12 +29,9 @@ namespace Deck.Components
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
 
-        [FormerlySerializedAs("itemVisualInstance")] [FormerlySerializedAs("ItemVisualInstance")] [SerializeField]
-        protected DeckItemVisual itemVisualPrefab;
+        [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
 
-        [HideInInspector] public Transform selfTransform;
-
-        protected DeckItemVisual ItemVisualInstance;
+        protected Transform SelfTransform;
 
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
@@ -181,8 +179,8 @@ namespace Deck.Components
                 uniqueId = DeckId.CreateNew();
             }
 
-            selfTransform = transform;
-            selfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
+            SelfTransform = transform;
+            SelfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
 
             SetComponents();
 
@@ -360,14 +358,14 @@ namespace Deck.Components
         {
         }
 
-        public void SetItemVisual(DeckItemVisual itemVisualPrefab)
+        public void SetItemVisual(DeckItemVisual newInstance)
         {
-            this.itemVisualPrefab = itemVisualPrefab;
+            itemVisualInstance = newInstance;
         }
 
         public DeckItemVisual GetItemVisual()
         {
-            return ItemVisualInstance;
+            return itemVisualInstance;
         }
     }
 }
