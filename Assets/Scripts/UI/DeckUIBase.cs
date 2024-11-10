@@ -71,6 +71,7 @@ namespace Deck.Components.Building
 
         public async UniTask Appear()
         {
+            Debug.LogError("Appear");
             IsAppearing = true;
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;

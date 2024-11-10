@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Deck.Base.Id;
 using Deck.Components;
-using Deck.Save;
+using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Deck.ItemVisualProviders
@@ -37,26 +35,14 @@ namespace Deck.ItemVisualProviders
             }
         }
 
-        public void ReturnItemVisual(Vector2Int cellIndex)
-        {
-            ReturnItemVisual(_activeWalls[cellIndex]);
-            var neighbours = cellIndex.GetNeighbours();
-            foreach (var neighbour in neighbours)
-            {
-                if (!_wallCheckSet.Contains(neighbour)) continue;
-                ReturnIfHasItemVisual(_activeWalls[neighbour]);
-                PlaceItemVisual(neighbour);
-            }
-
-            _activeWalls.Remove(cellIndex);
-        }
-
         public void OnDoorPlaced(Vector2Int cellIndex)
         {
             if (_wallCheckSet.Contains(cellIndex))
             {
-                _wallCheckSet.Remove(cellIndex);
                 ReturnIfHasItemVisual(_activeWalls[cellIndex]);
+                _activeWalls.Remove(cellIndex);
+                _activeWallAgents.Remove(cellIndex);
+                _wallCheckSet.Remove(cellIndex);
             }
 
             _doorCheckSet.Add(cellIndex);
@@ -64,17 +50,24 @@ namespace Deck.ItemVisualProviders
             var neighbours = cellIndex.GetNeighbours();
             foreach (var neighbour in neighbours)
             {
-                if (!_wallCheckSet.Contains(neighbour)) continue;
-                
-                ReturnIfHasItemVisual(_activeWalls[neighbour]);
-                PlaceWallWithNeighbours(neighbour);
+                if (!_activeWalls.TryGetValue(neighbour, out var temp)) continue;
+
+                ReturnIfHasItemVisual(temp);
+                PlaceItemVisual(neighbour);
             }
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
         {
             if (!IsWall(itemVisual)) return false;
+
             ReturnIfHasItemVisual(itemVisual);
+            var itemPos = itemVisual.transform.position.ToVector2Int();
+            
+            _activeWalls.Remove(itemPos);
+            _activeWallAgents.Remove(itemPos);
+            _wallCheckSet.Remove(itemPos);
+            
             return true;
         }
 
@@ -123,34 +116,12 @@ namespace Deck.ItemVisualProviders
             var itemVisualPrefab = GetVisualToPlace(checkList);
             RentIfHasItemVisual(itemVisualPrefab.PrefabId, out var itemVisualInstance);
             agent.SetItemVisual(itemVisualInstance);
-            itemVisualInstance.transform.parent = agent.transform;
-            itemVisualInstance.transform.localPosition = Vector3.zero;
             itemVisualInstance.SetAgent(agent);
 
             _activeWalls[position] = itemVisualInstance;
 
             return itemVisualInstance;
         }
-
-        [Button]
-        public void DebugNeighbours(int x, int y)
-        {
-            var neighbours = new Vector2Int(x, y).GetNeighbours();
-            var checkList = new bool[4];
-            for (var index = 0; index < neighbours.Length; index++)
-            {
-                var neighbour = neighbours[index];
-                var isWall = _wallCheckSet.Contains(neighbour);
-
-                checkList[index] = isWall || _doorCheckSet.Contains(neighbour);
-                Debug.LogError(neighbours[index]);
-                Debug.LogError(checkList[index]);
-            }
-
-            var visualPrefab = GetVisualToPlace(checkList);
-            Debug.LogError(visualPrefab.name);
-        }
-
 
         private DeckItemVisual GetVisualToPlace(IReadOnlyList<bool> checkList)
         {
@@ -240,11 +211,6 @@ namespace Deck.ItemVisualProviders
         private bool IsWall(DeckId prefabId)
         {
             return wallItemVisualPrefabs.Any(item => item.wallVisual.PrefabId.Equals(prefabId));
-        }
-
-        public bool IsWall(Vector2Int cellIndex)
-        {
-            return _wallCheckSet.Contains(cellIndex);
         }
 
         private bool IsWall(DeckItemVisual itemVisual)

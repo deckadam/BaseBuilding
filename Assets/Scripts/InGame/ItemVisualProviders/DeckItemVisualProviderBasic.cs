@@ -15,7 +15,7 @@ namespace Deck.ItemVisualProviders
     {
         [SerializeField] protected List<DeckItemVisual> itemVisualSets;
 
-        private HashSet<int> _activeItemVisuals;
+        private HashSet<int> _supportedItemVisuals;
         private DeckInstanceProvider _instanceProvider;
 
         [Inject]
@@ -40,10 +40,10 @@ namespace Deck.ItemVisualProviders
 
         public void Initialize()
         {
-            _activeItemVisuals = new HashSet<int>();
+            _supportedItemVisuals = new HashSet<int>();
             foreach (var deckItemVisual in itemVisualSets)
             {
-                _activeItemVisuals.Add(deckItemVisual.PrefabId.ID);
+                _supportedItemVisuals.Add(deckItemVisual.PrefabId.ID);
             }
 
             OnInitialize();
@@ -70,7 +70,7 @@ namespace Deck.ItemVisualProviders
 
         protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
         {
-            if (_activeItemVisuals.Contains(prefabId.ID))
+            if (_supportedItemVisuals.Contains(prefabId.ID))
             {
                 itemVisual = _instanceProvider.RentItemVisual(prefabId);
                 itemVisual.gameObject.SetActive(true);
@@ -84,16 +84,13 @@ namespace Deck.ItemVisualProviders
 
         protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
         {
-            if (_activeItemVisuals.Contains(itemVisual.PrefabId.ID))
-            {
-                itemVisual.gameObject.SetActive(false);
-                _instanceProvider.ReturnItemVisual(itemVisual);
-                Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+            if (!_supportedItemVisuals.Contains(itemVisual.PrefabId.ID)) return false;
+            
+            _instanceProvider.ReturnItemVisual(itemVisual);
+            Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
 
-                return true;
-            }
+            return true;
 
-            return false;
         }
     }
 }

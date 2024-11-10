@@ -40,7 +40,7 @@ namespace Deck.Data.Buildable
         [Button]
         private void OnValidate()
         {
-            CollectSilouetteData();
+            CollectSilhouetteData();
             CollectExtentsData();
         }
 
@@ -74,7 +74,7 @@ namespace Deck.Data.Buildable
             extents = bounds.size;
         }
 
-        private void CollectSilouetteData()
+        private void CollectSilhouetteData()
         {
             if (agent == null)
             {
@@ -86,7 +86,8 @@ namespace Deck.Data.Buildable
                 DeckLogger.Error("Agent is not centered", agent.gameObject);
                 throw new Exception("Agent is not centered");
             }
-
+            
+            
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
             silouette = new SilouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)

@@ -324,7 +324,6 @@ namespace Deck.Save
 
             var itemVisualPrefab = GetItemVisualById(prefabId);
             var newInstance = _container.InstantiatePrefab(itemVisualPrefab).GetComponent<DeckItemVisual>();
-            newInstance.gameObject.SetActive(false);
             if (uniqueId == 0)
             {
                 newInstance.SetNewUniqueId();

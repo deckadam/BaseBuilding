@@ -14,7 +14,6 @@ using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -30,7 +29,6 @@ namespace Deck.Services.Building
         private const float YOffsetForBuildOnGround = 0.1f;
 
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
-        private readonly Vector3 _defaultCellPositionV3 = new(1000000, 0, 1000000);
         private readonly Dictionary<Vector2Int, DeckAgent> _grid = new();
         private readonly Collider[] _possibleColliders = new Collider[2];
         private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
@@ -598,7 +596,7 @@ namespace Deck.Services.Building
             }
         }
 
-        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgent newAgent)
+        private void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgent newAgent)
         {
             foreach (var index in indices)
             {
@@ -621,25 +619,6 @@ namespace Deck.Services.Building
             }
 
             return result;
-        }
-
-        private bool CheckIfAgentBuildableInCell(DeckBuildable buildable, Vector2Int cellIndex)
-        {
-            foreach (var index in buildable.Indices)
-            {
-                var temp = cellIndex + index;
-                if (!_grid.TryGetValue(temp, out var value))
-                {
-                    continue;
-                }
-
-                if (value != null)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private bool CheckIfAgentBuildableInCell(DeckBuildable buildable, Vector2Int cellIndex,
@@ -822,12 +801,6 @@ namespace Deck.Services.Building
         private Vector3 GetCursorWorldPosition()
         {
             return _cameraService.GetCursorWorldPosition();
-        }
-
-
-        private Vector3 GetCursorCellIndexV3()
-        {
-            return GetCursorCellIndex().ToVector3();
         }
 
         private Vector2Int GetCursorCellIndex()

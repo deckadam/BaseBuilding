@@ -10,9 +10,8 @@ namespace Deck.Components.Wall
 {
     public class DeckAgentWall : DeckBuilding
     {
-        protected override async void AfterInitialize()
+        protected override void AfterInitialize()
         {
-            await UniTask.Yield();
             DeckEventOnWallBuild.Create(transform.position.ToVector2Int()).Send();
         }
 
