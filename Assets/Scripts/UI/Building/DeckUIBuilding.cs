@@ -53,6 +53,7 @@ namespace Deck.Components.Building.Building
 
         private void OnEventAppear(IDeckEvent _)
         {
+            Debug.LogError("Trying to appear event");
             Appear().Forget();
             HasEscaped = false;
         }

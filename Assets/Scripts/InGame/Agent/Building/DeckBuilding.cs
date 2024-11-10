@@ -11,7 +11,6 @@ namespace Deck.Components.Building
     {
         [SerializeField] private DeckBuildable buildingData;
         [SerializeField] private bool setVisualPosition;
-        [SerializeField] private bool setVisualRotation;
 
         protected override void AfterLoad()
         {
@@ -22,6 +21,12 @@ namespace Deck.Components.Building
         {
             Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
+
+            if (!setVisualPosition) return;
+            
+            itemVisualInstance.transform.parent = SelfTransform;
+            itemVisualInstance.transform.localPosition = Vector3.zero;
+            itemVisualInstance.transform.localRotation = Quaternion.identity;
         }
 
         protected sealed override void InternalRequestDestroy()

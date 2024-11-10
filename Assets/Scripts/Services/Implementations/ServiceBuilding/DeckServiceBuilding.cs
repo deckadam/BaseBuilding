@@ -112,6 +112,11 @@ namespace Deck.Services.Building
             {
                 DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
             }
+
+            if (!_silhouetteParent.activeSelf)
+            {
+                _silhouetteParent.gameObject.SetActive(true);
+            }
         }
 
         public void StartSilhouetteRect(DeckBuildable buildable)

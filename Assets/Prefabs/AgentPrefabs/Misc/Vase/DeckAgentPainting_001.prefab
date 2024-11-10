@@ -46,7 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centerPosition: {fileID: 0}
   components: []
-  activeSize: 1
   collider: {fileID: 0}
   willSave: 1
   uniqueId:
@@ -55,8 +54,6 @@ MonoBehaviour:
   prefabId:
     _id: 39429655
     IdString: 
-  selfTransform: {fileID: 0}
+  itemVisualInstance: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
-  itemVisualPrefab: {fileID: 5825906728500267455, guid: b6b77ac6f5cb6594780c7535e4f901e5, type: 3}
-  setVisualPosition: 0
-  setVisualRotation: 0
+  setVisualPosition: 1

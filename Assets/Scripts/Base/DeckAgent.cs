@@ -52,7 +52,7 @@ namespace Deck.Components
         public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
-            collider = GetComponent<Collider>();
+            collider = GetComponentInChildren<Collider>();
 
 #if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
