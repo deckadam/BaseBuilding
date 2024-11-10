@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Deck.Base.Id;
 using Deck.Components;
+using Deck.Utility;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -34,6 +35,10 @@ namespace Deck.Save
         private Dictionary<Type, DeckId> _uiElementByType;
 
         private DiContainer _container;
+
+        private Transform _agentContainer;
+        private Transform _itemVisualContainer;
+        private Transform _uiContainer;
 
 #if UNITY_EDITOR
         [DidReloadScripts]
@@ -231,6 +236,23 @@ namespace Deck.Save
                 _uiElementPool[uielement.PrefabId.ID] = new Stack<DeckUIElement>();
                 _uiElementByType[uielement.GetType()] = uielement.PrefabId;
             }
+
+            _agentContainer = new GameObject()
+            {
+                name = "Agent Container"
+            }.transform;
+
+
+            _itemVisualContainer = new GameObject()
+            {
+                name = "Item Visual Container"
+            }.transform;
+
+
+            _uiContainer = new GameObject()
+            {
+                name = "UI Container"
+            }.transform;
         }
 
         public DeckAgent RentAgent(DeckId id, int uniqueId = 0)
@@ -275,6 +297,7 @@ namespace Deck.Save
             {
                 instance.gameObject.SetActive(false);
                 instance.OnDespawned();
+                instance.transform.parent = _agentContainer;
                 pool.Push(instance);
             }
         }
@@ -322,6 +345,7 @@ namespace Deck.Save
             {
                 instance.gameObject.SetActive(false);
                 instance.OnDespawned();
+                instance.transform.parent = _itemVisualContainer;
                 pool.Push(instance);
             }
         }
@@ -379,6 +403,7 @@ namespace Deck.Save
             {
                 instance.gameObject.SetActive(false);
                 instance.OnDespawned();
+                instance.transform.parent = _uiContainer;
                 pool.Push(instance);
             }
         }
@@ -389,6 +414,7 @@ namespace Deck.Save
             {
                 instance.gameObject.SetActive(false);
                 instance.OnDespawned();
+                instance.transform.parent = _uiContainer;
                 pool.Push(instance);
             }
         }

@@ -52,10 +52,10 @@ namespace Deck.Components.Building
 
         public async void OnNewGame()
         {
-            if (_loadingStarted)
-            {
-                return;
-            }
+            // if (_loadingStarted)
+            // {
+            //     return;
+            // }
 
             _loadingStarted = true;
             DeckLogger.Inform("New game starting");

@@ -11,7 +11,6 @@ using Deck.Utility.Logger;
 using Services.AgentFinder;
 using Sirenix.OdinInspector;
 using UnityEditor;
-using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEngine;
 #endif
@@ -260,9 +259,9 @@ namespace Deck.Components
 
         public void LoadData(DeckComponentHolderSaveData data)
         {
-            transform.position = data.position;
-            transform.eulerAngles = data.rotation;
-            transform.localScale = data.scale;
+            SelfTransform.position = data.position;
+            SelfTransform.eulerAngles = data.rotation;
+            SelfTransform.localScale = data.scale;
 
             Initialize();
             foreach (var saveData in data.componentDatas)
@@ -361,6 +360,8 @@ namespace Deck.Components
         public void SetItemVisual(DeckItemVisual newInstance)
         {
             itemVisualInstance = newInstance;
+            itemVisualInstance.transform.parent = SelfTransform;
+            itemVisualInstance.transform.localPosition = Vector3.zero;
         }
 
         public DeckItemVisual GetItemVisual()

@@ -3,11 +3,7 @@ using Deck.ItemVisualProviders;
 using Deck.Services.Building;
 using Deck.Services.Implementations.Currency;
 using Deck.Utility;
-using Deck.Utility.Logger;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 namespace Deck.Components.Building
 {
@@ -26,26 +22,6 @@ namespace Deck.Components.Building
         {
             Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
-            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(SelfTransform.position.ToVector2Int(), buildingData.Indices, this);
-
-            if (itemVisualInstance != null)
-            {
-                itemVisualInstance.transform.SetParent(transform, false);
-                itemVisualInstance.Agent = this;
-                if (setVisualPosition)
-                {
-                    itemVisualInstance.transform.localPosition = Vector3.zero;
-                }
-
-                if (setVisualRotation)
-                {
-                    itemVisualInstance.transform.localRotation = Quaternion.identity;
-                }
-            }
-            else
-            {
-                DeckLogger.Warning("No ItemVisualInstance assigned");
-            }
         }
 
         protected sealed override void InternalRequestDestroy()

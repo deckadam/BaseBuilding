@@ -19,7 +19,7 @@ namespace Deck.Save
             _itemVisualProviders = itemVisualProviders;
         }
 
-        public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas, DeckItemVisualSaveDatas itemVisualDatas)
+        public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas)
         {
             foreach (var deckComponentHolderSaveData in agentDatas.datas)
             {
@@ -37,20 +37,6 @@ namespace Deck.Save
 
                 var agentInstance = _instanceProvider.RentAgent(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
                 agentInstance.LoadData(deckComponentHolderSaveData);
-            }
-
-
-            foreach (var deckItemVisualSaveData in itemVisualDatas.saveDatas)
-            {
-                var provider = _itemVisualProviders.First(item => item.GetType().ToString() == deckItemVisualSaveData.typeName);
-
-                if (provider == null)
-                {
-                    DeckLogger.Error("No provider found for item visual data " + deckItemVisualSaveData.typeName);
-                    continue;
-                }
-
-                provider.LoadData(deckItemVisualSaveData.saveData);
             }
         }
     }

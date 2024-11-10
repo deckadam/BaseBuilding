@@ -55,7 +55,6 @@ MonoBehaviour:
   - {fileID: 6395205563783229675, guid: aaf04180043aa0e478a2ae7b7d54c363, type: 3}
   - {fileID: 6395205563783229675, guid: c283edfe2beb6b7488dfeab336a75cfe, type: 3}
   - {fileID: 6395205563783229675, guid: 667af216e8a0a7645a549f64834598aa, type: 3}
-  - {fileID: 7078490675339665953, guid: cd13d7c18916fc94a92b068402b6d5b4, type: 3}
   uiElements:
   - {fileID: 4610122870488080173, guid: 8dc7e0c4d823cba4bac4e2f37c124a52, type: 3}
   - {fileID: 7992348406185406158, guid: 524e3c986bd1ca447863e30d3c25459a, type: 3}

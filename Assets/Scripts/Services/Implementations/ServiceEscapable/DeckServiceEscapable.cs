@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using Deck.Services;
 using Deck.Components.Building;
-using Deck.Utility.Logger;
-using Unity.VisualScripting;
 
 namespace Services.Implementations.Escapable
 {

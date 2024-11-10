@@ -98,7 +98,7 @@ namespace Deck.Components
         private void EquipItem(DeckDataItem itemData, Transform target)
         {
             _currentlyEquippedItemData = itemData;
-            if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem, false))
+            if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
             {
                 DeckLogger.Error("Can't get item visual for " + itemData.Name);
                 return;

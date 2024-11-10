@@ -166,7 +166,6 @@ namespace Deck.Data.Item.Editor
         {
             newScriptableObject.SetAgent(agentPrefab);
             newScriptableObject.SetItemVisual(itemVisualPrefab);
-            agentPrefab.SetItemVisual(itemVisualPrefab);
 
             DestroyImmediate(agentInstance);
             DestroyImmediate(itemVisualInstance);

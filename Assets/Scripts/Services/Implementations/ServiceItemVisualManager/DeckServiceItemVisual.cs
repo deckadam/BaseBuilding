@@ -1,6 +1,7 @@
 using Deck.Base.Id;
 using Deck.Components;
 using Deck.Services;
+using Deck.Utility;
 using Deck.Utility.Logger;
 using UnityEngine;
 using Zenject;
@@ -22,11 +23,11 @@ namespace Deck.ItemVisualProviders
             }
         }
 
-        public bool RequestItemVisual(DeckAgent agent,DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default, bool isInternal = true)
+        public bool RequestItemVisual(DeckAgent agent,DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default)
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(agent,deckId, cellIndex, out itemVisual, isInternal: isInternal))
+                if (deckItemVisualProvider.RequestItemVisual(agent,deckId, cellIndex, out itemVisual))
                 {
                     return true;
                 }
@@ -37,11 +38,11 @@ namespace Deck.ItemVisualProviders
             return false;
         }
 
-        public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual, bool isInternal = true)
+        public bool RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual)
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.RequestItemVisual(deckId, out itemVisual, isInternal: isInternal))
+                if (deckItemVisualProvider.RequestItemVisual(deckId, out itemVisual))
                 {
                     return true;
                 }
@@ -56,7 +57,7 @@ namespace Deck.ItemVisualProviders
         {
             foreach (var deckItemVisualProvider in _itemVisualProviders)
             {
-                if (deckItemVisualProvider.ReturnItemVisual(itemVisual, false))
+                if (deckItemVisualProvider.ReturnItemVisual(itemVisual))
                 {
                     return;
                 }

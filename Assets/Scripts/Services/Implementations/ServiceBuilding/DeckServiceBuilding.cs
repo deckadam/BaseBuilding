@@ -14,6 +14,7 @@ using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -442,9 +443,9 @@ namespace Deck.Services.Building
             foreach (var rectBuildPosition in rectBuildPositions)
             {
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
                 newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
-                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
             }
@@ -804,6 +805,11 @@ namespace Deck.Services.Building
 
         private void ReturnSilhouettePieceToPool(SilhouettePiece piece)
         {
+            if (piece == null)
+            {
+                return;
+            }
+
             piece.gameObject.SetActive(false);
             _pieceInPool[piece.filters.Length].Push(piece);
         }

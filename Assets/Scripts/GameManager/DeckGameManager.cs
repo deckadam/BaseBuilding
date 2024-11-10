@@ -46,9 +46,8 @@ namespace Deck.Components.Building
         public async void LoadGame()
         {
             await Deck.GetService<DeckServiceScene>().LoadMap();
-            var agentDatas = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
-            var itemVisualDatas = DeckSaveSystem.GetData<DeckItemVisualSaveDatas>(nameof(DeckItemVisualSaveDatas));
-            _loadResolver.ResolveAndLoad(agentDatas, itemVisualDatas);
+            var agentsData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
+            _loadResolver.ResolveAndLoad(agentsData);
         }
 
         public void GatherSaveData()
@@ -75,25 +74,7 @@ namespace Deck.Components.Building
                 });
             }
 
-            var itemVisualDatas = new DeckItemVisualSaveDatas(new List<DeckItemVisualSaveDataPair>());
-
-            foreach (var itemVisualProvider in _itemVisualProviders)
-            {
-                var data = itemVisualProvider.GetSaveData();
-                if (data == null)
-                {
-                    continue;
-                }
-
-                itemVisualDatas.saveDatas.Add(new DeckItemVisualSaveDataPair()
-                {
-                    typeName = itemVisualProvider.GetType().ToString(),
-                    saveData = data
-                });
-            }
-
             DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), agentDatas);
-            DeckSaveSystem.SetData(nameof(DeckItemVisualSaveDatas), itemVisualDatas);
         }
     }
 }

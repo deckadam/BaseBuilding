@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Deck.Components.Building;
 using Deck.Utility.Class;
 using Deck.Utility.Logger;
+using UnityEngine;
 
 namespace Deck.Services
 {
@@ -100,7 +101,6 @@ namespace Deck.Services
 
         public override void AfterGameSessionInitialized()
         {
-            
             foreach (var keyValuePair in _uiImplementations)
             {
                 keyValuePair.Value.AfterGameSessionInitialized();

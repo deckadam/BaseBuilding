@@ -25,6 +25,7 @@ MonoBehaviour:
   - {fileID: 6395205563783229675, guid: c283edfe2beb6b7488dfeab336a75cfe, type: 3}
   - {fileID: 6395205563783229675, guid: 667af216e8a0a7645a549f64834598aa, type: 3}
   - {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
+  wallItemVisualPrefab: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
   wallItemVisualPrefabs:
   - wallStyle: 0
     wallVisual: {fileID: 6395205563783229675, guid: cd877f7acc901234b89a5ab3b3b46f50, type: 3}

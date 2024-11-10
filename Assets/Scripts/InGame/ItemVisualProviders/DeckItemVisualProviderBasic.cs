@@ -16,11 +16,9 @@ namespace Deck.ItemVisualProviders
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBasic", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBasic")]
     public class DeckItemVisualProviderBasic : ScriptableObject
     {
-        [SerializeField, InlineEditor] private List<DeckItemVisual> itemVisualSets;
+        [SerializeField] protected List<DeckItemVisual> itemVisualSets;
 
-        private Dictionary<int, Stack<DeckItemVisual>> _activeItemVisuals;
-
-        private Transform _poolParent;
+        private HashSet<int> _activeItemVisuals;
         private DeckInstanceProvider _instanceProvider;
 
         [Inject]
@@ -31,7 +29,6 @@ namespace Deck.ItemVisualProviders
 
         public void AddItemVisual(DeckItemVisual itemVisual)
         {
-            Debug.LogError("Add item visual");
             if (!itemVisualSets.Contains(itemVisual))
             {
                 itemVisualSets.Add(itemVisual);
@@ -46,181 +43,60 @@ namespace Deck.ItemVisualProviders
 
         public void Initialize()
         {
-            _activeItemVisuals = new Dictionary<int, Stack<DeckItemVisual>>();
-            _poolParent = new GameObject().transform;
-            _poolParent.name = name + "Pool";
-            foreach (var visualSet in itemVisualSets)
+            _activeItemVisuals = new HashSet<int>();
+            foreach (var deckItemVisual in itemVisualSets)
             {
-                _activeItemVisuals.Add(visualSet.PrefabId.ID, new Stack<DeckItemVisual>());
+                _activeItemVisuals.Add(deckItemVisual.PrefabId.ID);
             }
 
             OnInitialize();
-        }
-
-        public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
-        {
-            return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
-        }
-
-        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal)
-        {
-            return RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
-        }
-
-        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual, bool isInternal)
-        {
-            return ReturnIfHasItemVisual(itemVisual, isInternal);
-        }
-
-        protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual, bool isInternal)
-        {
-            itemVisual = null;
-            foreach (var visualSet in itemVisualSets)
-            {
-                if (Equals(visualSet.PrefabId, prefabId))
-                {
-                    if (!TryGetItemVisual(visualSet, out itemVisual))
-                        continue;
-
-                    itemVisual.gameObject.SetActive(true);
-                    Deck.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisual);
-                    if (isInternal)
-                    {
-                        OnSpawned(itemVisual);
-                    }
-
-                    return true;
-                }
-            }
-
-            itemVisual = default;
-            return false;
-        }
-
-        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual, bool isInternal)
-        {
-            if (_activeItemVisuals.TryGetValue(itemVisual.PrefabId.ID, out var stack))
-            {
-                stack.Push(itemVisual);
-                itemVisual.gameObject.SetActive(false);
-                itemVisual.transform.parent = _poolParent;
-                Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
-                if (!isInternal)
-                {
-                    OnDespawned(itemVisual);
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        protected virtual bool TryGetItemVisual(DeckItemVisual visual, out DeckItemVisual result)
-        {
-            if (_activeItemVisuals.TryGetValue(visual.PrefabId.ID, out var stack))
-            {
-                if (stack.Count > 0)
-                {
-                    result = stack.Pop();
-                    return true;
-                }
-
-                result = CreateItemVisual(visual.PrefabId.ID);
-                return true;
-            }
-
-            result = null;
-            return false;
-        }
-
-        private DeckItemVisual CreateItemVisual(int id)
-        {
-            var newObject = _instanceProvider.RentItemVisual(id);
-            newObject.transform.SetParent(_poolParent);
-            var temp = newObject.GetComponent<DeckItemVisual>();
-            temp.SetNewUniqueId();
-            return temp;
-        }
-
-        protected virtual void OnSpawned(DeckItemVisual itemVisual)
-        {
-        }
-
-        protected virtual void OnDespawned(DeckItemVisual itemVisual)
-        {
         }
 
         protected virtual void OnInitialize()
         {
         }
 
-        public string GetSaveData()
+        public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {
-            return OnSaveDataRequested();
+            return RentIfHasItemVisual(prefabId, out itemVisual);
         }
 
-        public void LoadData(string value)
+        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
         {
-            OnLoadDataRequested(value);
+            return RentIfHasItemVisual(prefabId, out itemVisual);
         }
 
-        protected virtual string OnSaveDataRequested()
+        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            var saveDataHolder = new SaveDataHolder
+            return ReturnIfHasItemVisual(itemVisual);
+        }
+
+        protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
+        {
+            if (_activeItemVisuals.Contains(prefabId.ID))
             {
-                saveData = new List<SaveData>()
-            };
-            var saveData = saveDataHolder.saveData;
-            foreach (var activeItemVisual in _activeItemVisuals)
-            {
-                var clone = activeItemVisual.Value.Clone();
-                foreach (var deckItemVisual in clone)
-                {
-                    saveData.Add(new SaveData
-                    {
-                        prefabId = deckItemVisual.PrefabId.ID.ToString(),
-                        uniqueId = deckItemVisual.UniqueId.ID.ToString(),
-                        position = deckItemVisual.transform.position,
-                        rotation = deckItemVisual.transform.eulerAngles,
-                        scale = deckItemVisual.transform.localScale
-                    });
-                }
+                itemVisual = _instanceProvider.RentItemVisual(prefabId);
+                itemVisual.gameObject.SetActive(true);
+                Deck.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisual);
+                return true;
             }
 
-            return DeckSaveUtility.GetSerializedData(saveDataHolder);
+            itemVisual = default;
+            return false;
         }
 
-        protected virtual void OnLoadDataRequested(string value)
+        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
         {
-            var saveDataHolder = DeckSaveUtility.GetDeserializedData<SaveDataHolder>(value);
-
-            foreach (var saveData in saveDataHolder.saveData)
+            if (_activeItemVisuals.Contains(itemVisual.PrefabId.ID))
             {
-                var id = new DeckId(saveData.prefabId);
-                RentIfHasItemVisual(id, out var itemVisual, false);
-                itemVisual.SetUniqueId(id);
-                itemVisual.transform.position = saveData.position;
-                itemVisual.transform.eulerAngles = saveData.rotation;
-                itemVisual.transform.localScale = saveData.scale;
-                _activeItemVisuals[itemVisual.PrefabId.ID].Push(itemVisual);
+                itemVisual.gameObject.SetActive(false);
+                _instanceProvider.ReturnItemVisual(itemVisual);
+                Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+
+                return true;
             }
-        }
 
-        [Serializable]
-        private struct SaveDataHolder
-        {
-            public List<SaveData> saveData;
-        }
-
-        [Serializable]
-        private struct SaveData
-        {
-            public string prefabId;
-            public string uniqueId;
-            public Vector3 position;
-            public Vector3 rotation;
-            public Vector3 scale;
+            return false;
         }
     }
 }

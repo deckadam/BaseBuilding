@@ -37,25 +37,25 @@ namespace Deck.ItemVisualProviders
             if (!_doorCheckSet.Contains(cellIndex)) return false;
 
             _doorCheckSet.Remove(cellIndex);
-            ReturnIfHasItemVisual(_activeWalls[cellIndex], isInternal);
+            ReturnIfHasItemVisual(_activeWalls[cellIndex]);
             _wallProvider.OnDoorRemoved(cellIndex);
             return true;
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual, bool isInternal)
+        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
         {
             if (!itemVisual.PrefabId.Equals(doorPrefab.PrefabId)) return false;
 
             var pos = itemVisual.transform.position.ToVector2Int();
             _doorCheckSet.Remove(pos);
-            ReturnIfHasItemVisual(itemVisual, isInternal);
+            ReturnIfHasItemVisual(itemVisual);
 
             _wallProvider.OnDoorRemoved(pos);
             _activeWalls.Remove(pos);
             return true;
         }
 
-        public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual, bool isInternal)
+        public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {
             if (!prefabId.Equals(doorPrefab.PrefabId))
             {
@@ -69,15 +69,9 @@ namespace Deck.ItemVisualProviders
                 return true;
             }
 
-            if (_wallProvider.IsWall(cellIndex))
-            {
-                _wallProvider.ReturnItemVisual(cellIndex, true);
-            }
-
-
             _doorCheckSet.Add(cellIndex);
             itemVisual = null;
-            RentIfHasItemVisual(prefabId, out itemVisual, isInternal);
+            RentIfHasItemVisual(prefabId, out itemVisual);
             _activeWalls[cellIndex] = itemVisual;
             itemVisual.transform.rotation = GetDoorRotation(cellIndex);
             itemVisual.transform.position = cellIndex.ToVector3();

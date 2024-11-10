@@ -33,8 +33,7 @@ namespace Deck.Components
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
         [SerializeField] private bool canBePlacedOnTop;
-        public DeckAgent Agent { get; set; }
-
+        
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
         private DeckBinderGeneral.DeckGeneralData _generalData;
@@ -46,6 +45,8 @@ namespace Deck.Components
         private bool _hasDropped;
         private bool _hasInitialized;
 
+        private DeckAgent _agent;
+        
         public DeckId PrefabId
         {
             get
@@ -213,7 +214,12 @@ namespace Deck.Components
 
         public void SetAgent(DeckAgent agent)
         {
-            Agent = agent;
+            _agent = agent;
+        }
+
+        public DeckAgent GetAgent()
+        {
+            return _agent;
         }
 
         public void OnEquip()
