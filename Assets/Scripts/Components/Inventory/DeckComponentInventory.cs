@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Deck.Data.Item;
 using Deck.Save;
-using Deck.Components;
-using UnityEngine;
 using Zenject;
 
 namespace Deck.Components
@@ -76,7 +73,7 @@ namespace Deck.Components
             {
                 items[valueTuple.Item1] -= valueTuple.Item2;
             }
-            
+
             _listeners?.Invoke(items);
             return true;
         }
@@ -90,8 +87,9 @@ namespace Deck.Components
         {
             if (!items.ContainsKey(data))
             {
-                items.Add(data,0);
+                items.Add(data, 0);
             }
+
             items[data] += amount;
             _listeners?.Invoke(items);
         }
@@ -121,7 +119,7 @@ namespace Deck.Components
 
             result = null;
             return false;
-        } 
+        }
 
         public override object GetData()
         {
@@ -148,17 +146,17 @@ namespace Deck.Components
             }
         }
 
-        public void AddListener(Action<Dictionary<DeckDataItem,int>> listenerToAdd)
+        public void AddListener(Action<Dictionary<DeckDataItem, int>> listenerToAdd)
         {
             _listeners += listenerToAdd;
         }
 
-        public void RemoveListener(Action<Dictionary<DeckDataItem,int>> listenerToRemove)
+        public void RemoveListener(Action<Dictionary<DeckDataItem, int>> listenerToRemove)
         {
             _listeners -= listenerToRemove;
         }
 
-        public Dictionary<DeckDataItem,int> GetItems()
+        public Dictionary<DeckDataItem, int> GetItems()
         {
             return items;
         }

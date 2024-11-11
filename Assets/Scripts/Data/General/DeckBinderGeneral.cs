@@ -1,8 +1,8 @@
 ﻿using System;
-using Deck.Animators;
 using Deck.Components.Core;
 using Deck.ItemVisualProviders;
 using Deck.Save;
+using Deck.Utility.Animators;
 using UnityEngine;
 using Zenject;
 

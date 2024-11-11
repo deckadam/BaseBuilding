@@ -1,7 +1,7 @@
 ﻿using System;
 using Deck.Components;
 using Deck.Data.Currency;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -86,8 +86,8 @@ namespace Deck.Data.Buildable
                 DeckLogger.Error("Agent is not centered", agent.gameObject);
                 throw new Exception("Agent is not centered");
             }
-            
-            
+
+
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
             silouette = new SilouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)

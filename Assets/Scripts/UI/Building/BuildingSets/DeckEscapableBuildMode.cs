@@ -4,7 +4,7 @@ using Deck.InputHandling.Events;
 using Deck.Services;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.UI.Building.BuildingSets

@@ -1,7 +1,6 @@
-﻿using Deck.Animators;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Deck.Animators
+namespace Deck.Utility.Animators
 {
     public class DeckRotationAnimationSwitcher : MonoBehaviour
     {

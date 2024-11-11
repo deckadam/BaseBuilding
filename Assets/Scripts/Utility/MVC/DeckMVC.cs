@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Deck.MVC
+namespace Deck.Utility.MVC
 {
     public static class DeckMVC<T, J> where T : class where J : class
     {

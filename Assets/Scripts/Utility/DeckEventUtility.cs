@@ -1,6 +1,6 @@
 ﻿using Deck.EventManager;
 
-namespace Deck.Utility.Logger
+namespace Deck.Utility
 {
     public static class DeckEventUtility
     {

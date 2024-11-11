@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
@@ -19,7 +19,7 @@ namespace Deck.Save
         {
             _activeSaveData = new SaveData();
         }
-        
+
         public static void LoadLastSaveData()
         {
             DeckLogger.Save("Trying to load last save file");
@@ -167,6 +167,7 @@ namespace Deck.Save
         {
             return _activeSaveData.ContainsKey(key);
         }
+
         public static T GetData<T>(string key)
         {
             if (!_activeSaveData.TryGetValue(key, out var value))
@@ -215,7 +216,9 @@ namespace Deck.Save
         #endregion
 
         [Serializable]
-        public class SaveData : Dictionary<string, object> { }
+        public class SaveData : Dictionary<string, object>
+        {
+        }
 
         public class SaveFile
         {

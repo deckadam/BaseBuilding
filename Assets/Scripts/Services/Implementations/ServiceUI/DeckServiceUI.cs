@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.UI;
-using Deck.Utility.Class;
-using Deck.Utility.Logger;
+using Deck.Utility;
 
 namespace Deck.Services
 {

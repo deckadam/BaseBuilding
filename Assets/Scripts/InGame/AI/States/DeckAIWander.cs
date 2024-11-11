@@ -2,7 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Components;
 using Deck.Data.Component;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.InGame.AI

@@ -7,7 +7,7 @@ using Deck.Base.Id;
 using Deck.Data.General;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using DG.Tweening;
 using Services.AgentFinder;
 using Sirenix.OdinInspector;
@@ -33,7 +33,7 @@ namespace Deck.Components
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
         [SerializeField] private bool canBePlacedOnTop;
-        
+
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
         private DeckBinderGeneral.DeckGeneralData _generalData;
@@ -46,7 +46,7 @@ namespace Deck.Components
         private bool _hasInitialized;
 
         private DeckAgent _agent;
-        
+
         public DeckId PrefabId
         {
             get

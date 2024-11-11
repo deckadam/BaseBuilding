@@ -3,7 +3,7 @@ using Deck.Components;
 using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.UI.Health;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.UI

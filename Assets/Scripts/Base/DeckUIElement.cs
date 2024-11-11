@@ -2,7 +2,7 @@ using System;
 using Deck.Base;
 using Deck.Base.Id;
 using Deck.Save;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 using Zenject;
 #if UNITY_EDITOR

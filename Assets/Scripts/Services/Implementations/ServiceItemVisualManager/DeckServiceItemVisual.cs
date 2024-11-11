@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Deck.Base.Id;
 using Deck.Components;
 using Deck.Services;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 using Zenject;
 

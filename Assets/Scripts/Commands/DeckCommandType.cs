@@ -2,7 +2,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommand
     {

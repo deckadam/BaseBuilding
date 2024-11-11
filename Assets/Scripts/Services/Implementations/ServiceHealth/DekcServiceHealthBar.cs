@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Components;
-using Deck.MVC;
-using Deck.Services;
+using Deck.Utility.MVC;
 
 namespace Deck.Services.HealthService
 {

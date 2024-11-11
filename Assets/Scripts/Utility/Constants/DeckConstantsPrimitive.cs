@@ -1,4 +1,4 @@
-﻿namespace Deck.Components.Building
+﻿namespace Deck.Utility.Constants
 {
     public static class DeckConstantsPrimitive
     {

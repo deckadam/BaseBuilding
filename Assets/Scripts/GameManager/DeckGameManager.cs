@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
+using Deck.Components;
 using Deck.Components.Core;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
-using Deck.MVC;
 using Deck.Save;
-using Deck.Components;
 using Deck.Services;
 using Deck.Services.MapService;
+using Deck.Utility.MVC;
 using Services.AgentFinder;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Components.Building
+namespace Deck.GameManager
 {
     public class DeckGameManager : DeckServiceBase
     {
@@ -53,7 +53,7 @@ namespace Deck.Components.Building
         public void GatherSaveData()
         {
             Deck.BeforeSaveRequest();
-            
+
             var agents = Deck.GetService<DeckServiceFinder>().GetAgents();
             var agentDatas = new DeckComponentHolderSaveDatas();
             foreach (var agent in agents)

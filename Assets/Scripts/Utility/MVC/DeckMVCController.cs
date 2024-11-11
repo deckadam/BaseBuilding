@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Deck.MVC
+namespace Deck.Utility.MVC
 {
     public class DeckMVCController<T, J> where T : class where J : class
     {

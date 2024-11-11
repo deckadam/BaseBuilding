@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using Deck.Components;
-using Zenject;
 
 namespace Deck.UI.Stats
 {

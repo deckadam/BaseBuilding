@@ -1,4 +1,4 @@
-﻿namespace Deck.Utility
+﻿namespace Deck.Utility.Contants
 {
     public class DeckConstantsAgents
     {

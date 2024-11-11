@@ -1,7 +1,6 @@
 ﻿using Deck.InputHandling.Events;
-using Deck.Components.Tree;
 using Deck.Services;
-using Deck.Utility.Logger;
+using Deck.Utility;
 
 namespace Deck.Components.Core
 {

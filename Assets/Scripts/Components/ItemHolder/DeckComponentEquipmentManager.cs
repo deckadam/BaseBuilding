@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
 using UnityEngine;
 using Zenject;

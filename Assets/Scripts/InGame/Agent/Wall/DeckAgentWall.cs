@@ -2,7 +2,6 @@
 using Deck.Components.Building;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
-using Deck.Utility.Logger;
 
 namespace Deck.Components.Wall
 {

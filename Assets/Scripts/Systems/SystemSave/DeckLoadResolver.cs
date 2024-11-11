@@ -1,8 +1,5 @@
-﻿using System.Linq;
-using Deck.ItemVisualProviders;
-using Deck.Save;
-using Deck.Utility.Logger;
-using UnityEngine;
+﻿using Deck.ItemVisualProviders;
+using Deck.Utility;
 using Zenject;
 
 namespace Deck.Save

@@ -1,5 +1,5 @@
 ﻿using System;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using TMPro;
 using UnityEngine;
 

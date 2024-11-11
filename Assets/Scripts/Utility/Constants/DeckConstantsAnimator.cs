@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Constants
+namespace Deck.Utility.Constants
 {
     public static class DeckConstantsAnimator
     {

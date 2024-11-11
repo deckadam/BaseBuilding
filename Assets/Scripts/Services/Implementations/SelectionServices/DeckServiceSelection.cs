@@ -1,8 +1,7 @@
 ﻿using Deck.Components;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Utility.Logger;
-using UnityEngine;
+using Deck.Utility;
 
 namespace Deck.Services.CellSelectionService
 {

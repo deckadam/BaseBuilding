@@ -1,5 +1,4 @@
-﻿using Deck.Utility.Logger;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Deck.Utility
 {

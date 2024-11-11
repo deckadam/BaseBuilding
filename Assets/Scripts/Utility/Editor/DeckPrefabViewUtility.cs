@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-namespace Deck.Utility.PrefabVıew
+namespace Deck.Utility.Editor
 {
     [InitializeOnLoad]
     public class DeckPrefabViewUtility

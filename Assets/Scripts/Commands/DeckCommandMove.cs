@@ -4,7 +4,7 @@ using Deck.Components;
 using Deck.Services.CellSelectionService;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommandMove : DeckCommand
     {

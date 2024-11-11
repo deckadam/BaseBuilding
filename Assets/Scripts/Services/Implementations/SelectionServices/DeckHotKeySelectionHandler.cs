@@ -3,7 +3,7 @@ using Deck.Components;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.UI.Hotkey.Events;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 
 namespace Deck.Services.CellSelectionService

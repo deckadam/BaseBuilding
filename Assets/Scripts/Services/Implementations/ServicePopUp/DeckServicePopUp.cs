@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Deck.Save;
 using Deck.UI;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;

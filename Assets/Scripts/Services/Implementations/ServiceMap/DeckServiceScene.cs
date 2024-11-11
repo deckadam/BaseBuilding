@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.Utility.Logger;
-using Services;
+using Deck.Utility;
 using UnityEngine.SceneManagement;
 
 namespace Deck.Services.MapService

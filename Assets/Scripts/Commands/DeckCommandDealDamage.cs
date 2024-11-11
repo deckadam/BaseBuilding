@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Components;
 using Deck.Save;
 using Deck.Utility;
-using Deck.Utility.Logger;
 using Services.AgentFinder;
-using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommandDealDamage : DeckCommand
     {

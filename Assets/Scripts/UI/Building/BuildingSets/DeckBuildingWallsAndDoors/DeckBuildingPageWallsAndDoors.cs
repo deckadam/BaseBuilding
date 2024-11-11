@@ -3,7 +3,6 @@ using Deck.Services.Building;
 using Deck.Services.CameraService;
 using Deck.UI.Building.BuildingWallsAndDoors;
 using Deck.Utility;
-using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 

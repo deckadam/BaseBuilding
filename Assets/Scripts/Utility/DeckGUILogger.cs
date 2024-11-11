@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Deck.Utility.Logger
+namespace Deck.Utility
 {
     public class DeckGUILogger : DeckSingleton<DeckGUILogger>
     {

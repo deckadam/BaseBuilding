@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Animators
+namespace Deck.Utility.Animators
 {
     [CreateAssetMenu(menuName = "Deck/Data/Animation/Deck Animation Parameters Float", fileName = "Deck Animation Parameters Float")]
     public class DeckAnimationParametersFloat : ScriptableObject

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Deck.InGame.Area;
 using Deck.Utility.Iterators;
 using UnityEngine;
 

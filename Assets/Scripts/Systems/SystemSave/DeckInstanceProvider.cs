@@ -4,7 +4,6 @@ using System.Linq;
 using Deck.Base.Id;
 using Deck.Components;
 using Deck.Utility;
-using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;

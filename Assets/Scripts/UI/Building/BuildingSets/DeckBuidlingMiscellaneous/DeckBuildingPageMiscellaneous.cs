@@ -1,6 +1,6 @@
 using Deck.Data.Buildable;
 using Deck.Services.Building;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Services.Implementations.Escapable;
 using UnityEngine;
 

@@ -5,7 +5,6 @@ using Deck.Base.Id;
 using Deck.Components;
 using Deck.Utility;
 using Deck.Utility.Iterators;
-using Deck.Utility.Logger;
 using UnityEngine;
 
 namespace Deck.ItemVisualProviders

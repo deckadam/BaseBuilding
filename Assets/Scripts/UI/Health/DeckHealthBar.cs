@@ -1,5 +1,4 @@
-﻿using Deck.Components.Building;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

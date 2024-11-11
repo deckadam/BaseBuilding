@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Services;
-using Deck.Utility.Class;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

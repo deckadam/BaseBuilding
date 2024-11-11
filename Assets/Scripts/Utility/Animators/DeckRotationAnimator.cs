@@ -1,7 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 
-namespace Deck.Animators
+namespace Deck.Utility.Animators
 {
     [Serializable]
     public class DeckRotationAnimator : DeckAnimator

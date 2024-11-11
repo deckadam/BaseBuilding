@@ -1,6 +1,6 @@
 ﻿using Deck.Data.Map;
 using Deck.Services.MapService;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;

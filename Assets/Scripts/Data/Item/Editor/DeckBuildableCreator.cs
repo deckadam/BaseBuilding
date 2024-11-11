@@ -10,7 +10,7 @@ using Deck.UI.Building.BuildingSets;
 using Deck.UI.Building.BuildingSets.BuildingMiscellaneous;
 using Deck.UI.Building.BuildingSets.BuildingWallsAndDoors;
 using Deck.UI.Building.BuildingSets.DeckBuildingFurniture;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEditor;
 using UnityEngine;
 

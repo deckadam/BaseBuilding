@@ -1,9 +1,10 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components.Building;
+using Deck.Commands;
 using Deck.Data.Item;
 using Deck.Services.CellSelectionService;
 using Deck.Utility;
+using Deck.Utility.Constants;
 
 namespace Deck.Components
 {
@@ -15,9 +16,9 @@ namespace Deck.Components
         private DeckComponentInventory _to;
         private DeckDataItem _itemOfInterest;
 
-        public DeckCommandTransferItem(DeckDataItem itemOfInterest,int amount, DeckComponentInventory from, DeckComponentInventory to)
+        public DeckCommandTransferItem(DeckDataItem itemOfInterest, int amount, DeckComponentInventory from, DeckComponentInventory to)
         {
-            _addCommand = new DeckCommandAddItem(itemOfInterest,amount, to);
+            _addCommand = new DeckCommandAddItem(itemOfInterest, amount, to);
             _removeCommand = new DeckCommandRemoveItem(itemOfInterest, from);
             _from = from;
             _to = to;
@@ -38,13 +39,13 @@ namespace Deck.Components
             {
                 return false;
             }
-            
+
             var hasRemoved = await _removeCommand.ProcessCommand(token);
             if (!hasRemoved)
             {
                 return false;
             }
-            
+
             await _addCommand.ProcessCommand(token);
 
             return default;

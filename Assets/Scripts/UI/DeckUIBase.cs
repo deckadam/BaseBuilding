@@ -4,7 +4,6 @@ using Deck.Components;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Deck.UI

@@ -1,6 +1,5 @@
 ﻿using System;
-using Deck.Constants;
-using Deck.Components;
+using Deck.Utility.Constants;
 using UnityEngine;
 
 namespace Deck.Components

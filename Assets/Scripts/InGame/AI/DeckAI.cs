@@ -1,7 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Components;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 using UnityEngine.Rendering;
 

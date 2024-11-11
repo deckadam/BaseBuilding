@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Deck.Animators;
 using Deck.Utility;
-using Deck.Utility.Logger;
+using Deck.Utility.Animators;
+using Deck.Utility.Contants;
 
 namespace Deck.Components
 {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Utility.Logger
+namespace Deck.Utility
 {
     public static class DeckLogger
     {

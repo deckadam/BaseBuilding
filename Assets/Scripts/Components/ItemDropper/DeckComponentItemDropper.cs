@@ -1,6 +1,6 @@
 ﻿using Deck.Data.ItemDrop;
 using Deck.ItemVisualProviders;
-using Deck.Utility.Logger;
+using Deck.Utility;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
