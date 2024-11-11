@@ -1,5 +1,5 @@
 ﻿using System;
-using Deck.Components.Building.Stats;
+using Deck.UI.Stats;
 using UnityEngine;
 
 namespace Deck.Components

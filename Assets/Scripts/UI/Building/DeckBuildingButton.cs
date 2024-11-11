@@ -5,7 +5,7 @@ using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.Components.Building.Building
+namespace Deck.UI.Building
 {
     public class DeckBuildingButton : DeckUIElement, IDeckEscapable
     {

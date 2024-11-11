@@ -10,6 +10,7 @@ using Deck.Save;
 using Deck.Services.CameraService;
 using Deck.Services.Implementations.Currency;
 using Deck.Services.MapService;
+using Deck.UI.Notification;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.Logger;

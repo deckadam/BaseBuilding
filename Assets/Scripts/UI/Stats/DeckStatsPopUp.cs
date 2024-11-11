@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Deck.Components;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Components.Building.Stats
+namespace Deck.UI.Stats
 {
     public class DeckStatsPopUp : DeckPopUpBase
     {

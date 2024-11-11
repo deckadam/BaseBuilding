@@ -1,6 +1,6 @@
 using Deck.Components;
 
-namespace Deck.Components.Building.Stats
+namespace Deck.UI.Stats
 {
     public struct DeckStatGroup
     {

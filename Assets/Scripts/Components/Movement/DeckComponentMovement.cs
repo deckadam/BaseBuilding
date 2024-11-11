@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components.Building.Stats;
 using Deck.Data.Component;
 using Deck.Save;
+using Deck.UI.Stats;
 using UnityEngine;
 using UnityEngine.AI;
 

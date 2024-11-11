@@ -1,6 +1,6 @@
 using Deck.EventManager;
 
-namespace Deck.Components.Building
+namespace Deck.UI.MainMenu.Events
 {
     public class DeckEventOnMainMenuDisappear : IDeckEvent
     {

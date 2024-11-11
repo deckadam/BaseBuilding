@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using Deck.SaveListingMenu.Events;
 using Deck.Components.Building;
-using Deck.Components.Building.Inventory;
 using Deck.Save;
+using Deck.SaveListingMenu.Events;
 using Deck.Services;
+using Deck.UI.Confirmation;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.SaveListingMenu
+namespace Deck.UI.Saves
 {
     public class DeckUISaveListing : DeckUIBase
     {
@@ -39,7 +39,7 @@ namespace Deck.SaveListingMenu
             for (var index = 0; index < saveFiles.Length; index++)
             {
                 var newDisplayer = InstanceProvider.RentUIElement<DeckSaveDisplayer>();
-                newDisplayer.SetData(saveFiles[index],this);
+                newDisplayer.SetData(saveFiles[index], this);
                 newDisplayer.transform.SetParent(scrollParent, false);
                 newDisplayer.transform.localPosition = Vector2.zero;
                 _activeDisplayers.Add(newDisplayer);
@@ -73,8 +73,8 @@ namespace Deck.SaveListingMenu
                 return;
             }
 
-            var newConfirmationPopUp = global::Deck.Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
-            var parent = global::Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
+            var newConfirmationPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
+            var parent = Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.deleteSaveFileDialogue, () =>

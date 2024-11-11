@@ -2,9 +2,8 @@
 using Deck.Utility.Logger;
 using TMPro;
 using UnityEngine;
-using Zenject;
 
-namespace Deck.Components.Building.Inventory
+namespace Deck.UI.Confirmation
 {
     public class DeckConfirmationPopUp : DeckPopUpBase
     {

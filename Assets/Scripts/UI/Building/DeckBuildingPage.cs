@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using Deck.Components;
 using Deck.Data.Buildable;
 using Deck.Services.Building;
 using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
-using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building
+namespace Deck.UI.Building
 {
     public class DeckBuildingPage : DeckUIElement
     {
@@ -54,11 +54,12 @@ namespace Deck.Components.Building.Building
         public void Disappear()
         {
             OnDisappearStart();
-            
+
             if (canvasGroup == null)
             {
                 return;
             }
+
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);

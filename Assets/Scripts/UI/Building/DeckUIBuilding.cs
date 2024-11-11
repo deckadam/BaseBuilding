@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.EventManager;
 using Deck.Services;
+using Deck.UI.MainMenu.Events;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building
+namespace Deck.UI.Building
 {
     public class DeckUIBuilding : DeckUIBase, IDeckEscapable
     {

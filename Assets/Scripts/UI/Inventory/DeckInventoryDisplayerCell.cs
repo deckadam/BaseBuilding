@@ -1,19 +1,17 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components.Building.GamePlay;
+using Deck.Components;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders.Implementations.Inventory;
-using Deck.Components;
 using Deck.Services;
 using Deck.Services.CellSelectionService;
+using Deck.UI.GamePlay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Zenject;
 
-namespace Deck.Components.Building.Inventory
+namespace Deck.UI.Inventory
 {
     public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -28,7 +26,7 @@ namespace Deck.Components.Building.Inventory
         private bool _isHovering;
         private int _amount;
 
-        public void Initialize(DeckDataItem dataItem,int amount, DeckInventoryPopUp popup)
+        public void Initialize(DeckDataItem dataItem, int amount, DeckInventoryPopUp popup)
         {
             _item = dataItem;
             image.sprite = _item.Icon;

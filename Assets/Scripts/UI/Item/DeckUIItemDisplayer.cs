@@ -1,10 +1,10 @@
 ﻿using System;
+using Deck.Components.Building;
 using Deck.Data.Item;
 using TMPro;
 using UnityEngine;
-using Zenject;
 
-namespace Deck.Components.Building.Item
+namespace Deck.UI.Item
 {
     public class DeckUIItemDisplayer : DeckUIWorldDisplay
     {

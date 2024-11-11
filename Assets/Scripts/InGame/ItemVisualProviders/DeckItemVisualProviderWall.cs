@@ -13,26 +13,32 @@ namespace Deck.ItemVisualProviders
     [CreateAssetMenu(fileName = "DeckItemVisualProviderWall", menuName = "Service/ItemVisualManager/DeckItemVisualProviderWall")]
     public class DeckItemVisualProviderWall : DeckItemVisualProviderBasic
     {
-        [SerializeField] private WallVisual[] wallItemVisualPrefabs;
+        [SerializeField] private DeckItemVisual horizontalPrefab;
+        [SerializeField] private DeckItemVisual verticalPrefab;
+        [SerializeField] private DeckItemVisual twoCornerUpperLeftPrefab;
+        [SerializeField] private DeckItemVisual twoCornerUpperRightPrefab;
+        [SerializeField] private DeckItemVisual twoCornerLowerLeftPrefab;
+        [SerializeField] private DeckItemVisual twoCornerLowerRightPrefab;
+        [SerializeField] private DeckItemVisual threeCornerUpperPrefab;
+        [SerializeField] private DeckItemVisual threeCornerLowerPrefab;
+        [SerializeField] private DeckItemVisual threeCornerLeftPrefab;
+        [SerializeField] private DeckItemVisual threeCornerRightPrefab;
+        [SerializeField] private DeckItemVisual fourCornerPrefab;
+        [SerializeField] private DeckItemVisual emptyPrefab;
 
-        private Dictionary<WallStyle, DeckItemVisual> _visualDictionary;
         private Dictionary<Vector2Int, DeckItemVisual> _activeWalls;
         private Dictionary<Vector2Int, DeckAgent> _activeWallAgents;
         private HashSet<Vector2Int> _wallCheckSet;
         private HashSet<Vector2Int> _doorCheckSet;
 
+        private HashSet<int> _supportedPrefabIds;
+
         protected override void OnInitialize()
         {
-            _visualDictionary = new Dictionary<WallStyle, DeckItemVisual>();
             _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
             _activeWallAgents = new Dictionary<Vector2Int, DeckAgent>();
             _wallCheckSet = new HashSet<Vector2Int>();
             _doorCheckSet = new HashSet<Vector2Int>();
-
-            foreach (var wallVisual in wallItemVisualPrefabs)
-            {
-                _visualDictionary[wallVisual.wallStyle] = wallVisual.wallVisual;
-            }
         }
 
         public void OnDoorPlaced(Vector2Int cellIndex)
@@ -59,7 +65,7 @@ namespace Deck.ItemVisualProviders
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            if (!IsWall(itemVisual)) return false;
+            if (!IsSupportedItemVisual(itemVisual)) return false;
 
             ReturnIfHasItemVisual(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
@@ -73,7 +79,7 @@ namespace Deck.ItemVisualProviders
 
         public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {
-            if (!IsWall(prefabId))
+            if (!IsSupportedItemVisual(prefabId))
             {
                 itemVisual = null;
                 return false;
@@ -129,29 +135,29 @@ namespace Deck.ItemVisualProviders
 
             if (trueCount == 4)
             {
-                return _visualDictionary[WallStyle.FourCorner];
+                return fourCornerPrefab;
             }
 
             if (trueCount == 3)
             {
                 if (!checkList[0])
                 {
-                    return _visualDictionary[WallStyle.ThreeCornerLeft];
+                    return threeCornerLeftPrefab;
                 }
 
                 if (!checkList[1])
                 {
-                    return _visualDictionary[WallStyle.ThreeCornerRight];
+                    return threeCornerRightPrefab;
                 }
 
                 if (!checkList[2])
                 {
-                    return _visualDictionary[WallStyle.ThreeCornerLower];
+                    return threeCornerLowerPrefab;
                 }
 
                 if (!checkList[3])
                 {
-                    return _visualDictionary[WallStyle.ThreeCornerUpper];
+                    return threeCornerUpperPrefab;
                 }
 
                 DeckLogger.Error("Huh!!!!");
@@ -161,32 +167,32 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] && checkList[2])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerUpperRight];
+                    return twoCornerUpperRightPrefab;
                 }
 
                 if (checkList[0] && checkList[3])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerLowerRight];
+                    return twoCornerLowerRightPrefab;
                 }
 
                 if (checkList[1] && checkList[2])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerUpperLeft];
+                    return twoCornerUpperLeftPrefab;
                 }
 
                 if (checkList[1] && checkList[3])
                 {
-                    return _visualDictionary[WallStyle.TwoCornerLowerLeft];
+                    return twoCornerLowerLeftPrefab;
                 }
 
                 if (checkList[0] && checkList[1])
                 {
-                    return _visualDictionary[WallStyle.Vertical];
+                    return verticalPrefab;
                 }
 
                 if (checkList[2] && checkList[3])
                 {
-                    return _visualDictionary[WallStyle.Horizontal];
+                    return horizontalPrefab;
                 }
 
                 DeckLogger.Error("Huh!!!!");
@@ -196,26 +202,16 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] || checkList[1])
                 {
-                    return _visualDictionary[WallStyle.Vertical];
+                    return verticalPrefab;
                 }
 
                 if (checkList[2] || checkList[3])
                 {
-                    return _visualDictionary[WallStyle.Horizontal];
+                    return horizontalPrefab;
                 }
             }
 
-            return _visualDictionary[WallStyle.Empty];
-        }
-
-        private bool IsWall(DeckId prefabId)
-        {
-            return wallItemVisualPrefabs.Any(item => item.wallVisual.PrefabId.Equals(prefabId));
-        }
-
-        private bool IsWall(DeckItemVisual itemVisual)
-        {
-            return wallItemVisualPrefabs.Any(item => item.wallVisual.PrefabId.Equals(itemVisual.PrefabId));
+            return emptyPrefab;
         }
 
         public bool[] GetNeighbourSet(Vector2Int cellIndex)
@@ -243,44 +239,10 @@ namespace Deck.ItemVisualProviders
             {
                 if (!_wallCheckSet.Contains(neighbour))
                     continue;
-                
+
                 ReturnIfHasItemVisual(_activeWalls[neighbour]);
                 PlaceWallWithNeighbours(neighbour);
             }
-        }
-
-        [Serializable]
-        private struct SaveData
-        {
-            public Vector2Int[] wallPositions;
-        }
-
-        [Serializable]
-        private struct WallVisual
-        {
-            public WallStyle wallStyle;
-            public DeckItemVisual wallVisual;
-        }
-
-        [Serializable]
-        private enum WallStyle
-        {
-            Horizontal,
-            Vertical,
-
-            TwoCornerUpperLeft,
-            TwoCornerUpperRight,
-            TwoCornerLowerLeft,
-            TwoCornerLowerRight,
-
-            ThreeCornerUpper,
-            ThreeCornerLower,
-            ThreeCornerLeft,
-            ThreeCornerRight,
-
-            FourCorner,
-
-            Empty
         }
     }
 }

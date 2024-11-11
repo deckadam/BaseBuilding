@@ -4,7 +4,7 @@ using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
+namespace Deck.UI.Building.BuildingSets.DeckBuildingFurniture
 {
     public class DeckBuildingPageFurniture : DeckBuildingPage
     {
@@ -72,7 +72,7 @@ namespace Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture
         private void OnEscapeRequested()
         {
             _isBuildModeActive = false;
-            
+
             if (!_escapableBuildMode.HasEscaped)
             {
                 EscapableService.CloseEscapable();

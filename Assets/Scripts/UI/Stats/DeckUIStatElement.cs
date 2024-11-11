@@ -3,7 +3,7 @@ using UnityEngine;
 using Deck.Components;
 using Zenject;
 
-namespace Deck.Components.Building.Stats
+namespace Deck.UI.Stats
 {
     public class DeckUIStatElement : DeckUIElement
     {

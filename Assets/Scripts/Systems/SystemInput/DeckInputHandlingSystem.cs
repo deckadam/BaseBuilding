@@ -1,16 +1,15 @@
 ﻿using Deck.Components;
 using Deck.Components.Building;
-using Deck.Components.Building.Inventory;
 using Deck.Components.Core;
 using Deck.Data.Currency;
 using Deck.Data.Item;
 using Deck.InputHandling.Events;
-using Deck.ItemVisualProviders;
 using Deck.Save;
 using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.Services.CellSelectionService;
 using Deck.Services.Implementations.Currency;
+using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.Logger;
 using Deck.Utility.MonoBehaviours;
@@ -75,7 +74,7 @@ namespace Deck.InputHandling
             if (!Physics.Raycast(ray, out var hit)) return;
 
             if (!hit.transform.TryGetComponentInParent<DeckAgent>(out var agent)) return;
-            
+
             agent.RequestDestroy();
         }
 

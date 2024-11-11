@@ -1,9 +1,10 @@
-namespace Deck.Components.Building.Building.BuildingSets
+namespace Deck.UI.Building.BuildingSets
 {
     public enum DeckBuildableType
     {
         WallsAndDoors,
         Furniture,
         Miscellaneous,
+        BarTable
     }
 }

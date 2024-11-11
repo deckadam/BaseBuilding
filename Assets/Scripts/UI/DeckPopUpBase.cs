@@ -1,9 +1,10 @@
-﻿using Deck.Components.Building.GamePlay;
+﻿using Deck.Components;
 using Deck.Services;
+using Deck.UI.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Deck.Components.Building
+namespace Deck.UI
 {
     [RequireComponent(typeof(EventTrigger))]
     public abstract class DeckPopUpBase : DeckUIElement

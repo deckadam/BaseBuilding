@@ -1,7 +1,8 @@
-﻿using Deck.Components.Building.Hotkey.Events;
+﻿using Deck.Components.Building;
 using Deck.EventManager;
+using Deck.UI.Hotkey.Events;
 
-namespace Deck.Components.Building.Hotkey
+namespace Deck.UI.Hotkey
 {
     public class DeckHotkeyUI : DeckUIBase
     {
@@ -23,12 +24,12 @@ namespace Deck.Components.Building.Hotkey
         {
             // for (var i = 0; i < obj.count; i++)
             // {
-                // hotkeyObjects[i].gameObject.SetActive(true);
+            // hotkeyObjects[i].gameObject.SetActive(true);
             // }
 
             // for (var i = obj.count; i < 10; i++)
             // {
-                // hotkeyObjects[i].gameObject.SetActive(false);
+            // hotkeyObjects[i].gameObject.SetActive(false);
             // }
         }
 
@@ -36,7 +37,7 @@ namespace Deck.Components.Building.Hotkey
         {
             // foreach (var deckHotKeyPiece in hotkeyObjects)
             // {
-                // deckHotKeyPiece.Normalize();
+            // deckHotKeyPiece.Normalize();
             // }
 
             // hotkeyObjects[obj.index].Highlight();

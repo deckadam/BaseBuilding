@@ -1,16 +1,17 @@
 ﻿using Cysharp.Threading.Tasks;
+using Deck.Components.Building;
 using Deck.EventManager;
 using Deck.Save;
 using Deck.SaveListingMenu;
 using Deck.SaveListingMenu.Events;
 using Deck.Services;
+using Deck.UI.MainMenu.Events;
+using Deck.UI.Saves;
 using Deck.Utility.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
-#pragma warning disable 4014
-
-namespace Deck.Components.Building
+namespace Deck.UI.MainMenu
 {
     public class DeckUIMainMenu : DeckUIBase
     {
@@ -34,7 +35,7 @@ namespace Deck.Components.Building
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
             Deck.GetService<DeckGameManager>().LoadGame();
-            Disappear();
+            Disappear().Forget();
         }
 
         protected override void OnPreAppear()
@@ -94,7 +95,7 @@ namespace Deck.Components.Building
 
         public void OnLoadGame()
         {
-            Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().Appear();
+            Deck.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().Appear().Forget();
         }
     }
 }

@@ -96,5 +96,15 @@ namespace Deck.ItemVisualProviders
         {
             return _supportedItemVisuals;
         }
+
+        protected bool IsSupportedItemVisual(DeckId prefabId)
+        {
+            return _supportedItemVisuals.Contains(prefabId.ID);
+        }
+
+        protected bool IsSupportedItemVisual(DeckItemVisual itemVisual)
+        {
+            return _supportedItemVisuals.Contains(itemVisual.PrefabId.ID);
+        }
     }
 }

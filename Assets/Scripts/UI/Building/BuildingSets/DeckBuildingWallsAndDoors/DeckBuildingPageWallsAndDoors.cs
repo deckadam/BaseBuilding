@@ -1,13 +1,13 @@
 using Deck.Data.Buildable;
-using Deck.Utility;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
+using Deck.UI.Building.BuildingWallsAndDoors;
+using Deck.Utility;
 using Deck.Utility.Logger;
-using Deck.Services.Implementations.AreaController.Events;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
+namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
 {
     public class DeckBuildingPageWallsAndDoors : DeckBuildingPage
     {

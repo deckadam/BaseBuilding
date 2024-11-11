@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.Utility.Health
+namespace Deck.UI.Health
 {
     public class DeckHealthBar : DeckUIWorldDisplay
     {

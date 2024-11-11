@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
 
-namespace Deck.Components.Building
+namespace Deck.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : DeckUIElement

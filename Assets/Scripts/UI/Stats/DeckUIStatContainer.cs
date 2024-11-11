@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using Deck.Components;
 
-namespace Deck.Components.Building.Stats
+namespace Deck.UI.Stats
 {
     public class DeckUIStatContainer : DeckUIElement
     {
@@ -22,7 +23,7 @@ namespace Deck.Components.Building.Stats
         private void ClearStatElements()
         {
             if (_activeElements.Count <= 0) return;
-            
+
             InstanceProvider.ReturnUIElement(_activeElements);
             _activeElements.Clear();
         }

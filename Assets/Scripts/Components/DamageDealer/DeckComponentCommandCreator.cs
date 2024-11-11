@@ -1,8 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Deck.Components.Building;
 using Deck.Data.Damage;
-using Deck.Components;
+using Deck.UI.Notification;
 using Deck.Utility.Logger;
 using UnityEngine;
 

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4ca6660c204574866b272696623a27, type: 3}
+  m_Name: DeckItemVisualProviderBarTable
+  m_EditorClassIdentifier: 
+  itemVisualSets: []
+  horizontalPrefab: {fileID: 0}
+  verticalPrefab: {fileID: 0}
+  twoCornerUpperLeftPrefab: {fileID: 0}
+  twoCornerUpperRightPrefab: {fileID: 0}
+  twoCornerLowerLeftPrefab: {fileID: 0}
+  twoCornerLowerRightPrefab: {fileID: 0}
+  threeCornerUpperPrefab: {fileID: 0}
+  threeCornerLowerPrefab: {fileID: 0}
+  threeCornerLeftPrefab: {fileID: 0}
+  threeCornerRightPrefab: {fileID: 0}
+  fourCornerPrefab: {fileID: 0}
+  emptyPrefab: {fileID: 0}

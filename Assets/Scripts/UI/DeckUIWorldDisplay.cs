@@ -1,11 +1,12 @@
 ﻿using System;
-using Deck.Components.Building.Health;
-using UnityEngine;
+using Deck.Components;
 using Deck.Services;
 using Deck.Services.CameraService;
+using Deck.UI.Health;
 using Deck.Utility.Logger;
+using UnityEngine;
 
-namespace Deck.Components.Building
+namespace Deck.UI
 {
     public class DeckUIWorldDisplay : DeckUIElement
     {

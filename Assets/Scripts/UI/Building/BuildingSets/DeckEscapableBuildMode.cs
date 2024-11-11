@@ -7,7 +7,7 @@ using Deck.Services.CameraService;
 using Deck.Utility.Logger;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building.BuildingSets
+namespace Deck.UI.Building.BuildingSets
 {
     public class DeckEscapableBuildMode : IDeckEscapable
     {

@@ -1,7 +1,6 @@
 ﻿using Deck.EventManager;
-using UnityEngine;
 
-namespace Deck.Components.Building
+namespace Deck.UI.Notification
 {
     public class DeckEventNotificationRequested : IDeckEvent
     {

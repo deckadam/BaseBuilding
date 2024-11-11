@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Components.Building.Stats;
 using Deck.Data.Component;
 using Deck.MVC;
 using Deck.Save;
-using Deck.Utility.Health;
+using Deck.UI.Health;
+using Deck.UI.Stats;
 using Deck.Utility.Logger;
 using Sirenix.OdinInspector;
 using UnityEngine;

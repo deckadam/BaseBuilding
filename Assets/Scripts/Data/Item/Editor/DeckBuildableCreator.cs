@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using Deck.Components;
 using Deck.Components.Building;
-using Deck.Components.Building.Building;
-using Deck.Components.Building.Building.BuildingSets;
-using Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous;
-using Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors;
-using Deck.Components.Building.Building.BuildingSets.DeckBuildingFurniture;
 using Deck.Data.Buildable;
 using Deck.ItemVisualProviders;
 using Deck.Save;
+using Deck.UI.Building;
+using Deck.UI.Building.BuildingSets;
+using Deck.UI.Building.BuildingSets.BuildingMiscellaneous;
+using Deck.UI.Building.BuildingSets.BuildingWallsAndDoors;
+using Deck.UI.Building.BuildingSets.DeckBuildingFurniture;
 using Deck.Utility.Logger;
 using UnityEditor;
 using UnityEngine;
@@ -97,6 +97,11 @@ namespace Deck.Data.Item.Editor
                     break;
 
                 case DeckBuildableType.Miscellaneous:
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageMiscellaneous>()[0];
+                    suffix = "Misc";
+                    break;
+
+                case DeckBuildableType.BarTable:
                     page = Resources.FindObjectsOfTypeAll<DeckBuildingPageMiscellaneous>()[0];
                     suffix = "Misc";
                     break;

@@ -4,7 +4,7 @@ using Deck.Utility.Logger;
 using Services.Implementations.Escapable;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building.BuildingSets.BuildingMiscellaneous
+namespace Deck.UI.Building.BuildingSets.BuildingMiscellaneous
 {
     public class DeckBuildingPageMiscellaneous : DeckBuildingPage
     {

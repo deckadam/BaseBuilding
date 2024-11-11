@@ -1,18 +1,18 @@
 using System;
 using Deck.InputHandling.Events;
-using Deck.Utility;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
+using Deck.UI.Building.BuildingSets;
 using UnityEngine;
 
-namespace Deck.Components.Building.Building.BuildingSets.BuildingWallsAndDoors
+namespace Deck.UI.Building.BuildingWallsAndDoors
 {
     public class DeckEscapableBuildModeWall : DeckEscapableBuildMode
     {
         private Vector2Int _initialCellPosition;
         private Vector2Int _currentCellPosition;
 
-        public DeckEscapableBuildModeWall(Action onEscape, bool canMoveBuild = false) : base(onEscape,null,canMoveBuild)
+        public DeckEscapableBuildModeWall(Action onEscape, bool canMoveBuild = false) : base(onEscape, null, canMoveBuild)
         {
         }
 
