@@ -91,7 +91,7 @@ namespace Deck.Components
             _isSpawned = false;
             transform.SetParent(_parent);
             gameObject.SetActive(false);
-            InternalOnDespawned();
+            InternalOnDeSpawned();
         }
 
 
@@ -118,7 +118,7 @@ namespace Deck.Components
         {
         }
 
-        protected virtual void InternalOnDespawned()
+        protected virtual void InternalOnDeSpawned()
         {
         }
     }

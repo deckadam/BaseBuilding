@@ -9,10 +9,12 @@ using Deck.UI.Building;
 using Deck.UI.Building.BuildingSets;
 using Deck.UI.Building.BuildingSets.BuildingMiscellaneous;
 using Deck.UI.Building.BuildingSets.BuildingWallsAndDoors;
+using Deck.UI.Building.BuildingSets.DeckBuildingBarTable;
 using Deck.UI.Building.BuildingSets.DeckBuildingFurniture;
 using Deck.Utility;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Deck.Data.Item.Editor
 {
@@ -21,13 +23,13 @@ namespace Deck.Data.Item.Editor
         private List<DeckActionTag> _tags = new();
         private GameObject _itemVisual;
         private GameObject _model;
-        private bool _isBoxCollider;
+        private bool _isBoxCollider = true;
         private Sprite _icon;
         private int _amount;
         private bool _rotatable = true;
         private bool _canBeHangedToWall;
         private bool _isBasicItem = true;
-
+        private string _nameSuffix;
         private DeckBuildableType _selectedType;
 
 
@@ -51,6 +53,7 @@ namespace Deck.Data.Item.Editor
             _rotatable = EditorGUILayout.Toggle("Is rotatable: ", _rotatable);
             _canBeHangedToWall = EditorGUILayout.Toggle("Can be hanged to wall: ", _canBeHangedToWall);
             _isBasicItem = EditorGUILayout.Toggle("Is basic item: ", _isBasicItem);
+            _nameSuffix = EditorGUILayout.TextField("Name suffix: ", _nameSuffix);
             _model = (GameObject)EditorGUILayout.ObjectField("Item model: ", _model, typeof(GameObject), false);
             _selectedType = (DeckBuildableType)EditorGUILayout.EnumPopup("Buildable type: ", _selectedType);
 
@@ -102,8 +105,8 @@ namespace Deck.Data.Item.Editor
                     break;
 
                 case DeckBuildableType.BarTable:
-                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageMiscellaneous>()[0];
-                    suffix = "Misc";
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageBarTable>()[0];
+                    suffix = "BarTable";
                     break;
 
                 default:
@@ -111,9 +114,9 @@ namespace Deck.Data.Item.Editor
             }
 
 
-            var itemVisualPrefabName = "Assets/Prefabs/ItemVisualPrefabs/DeckItemVisual" + suffix + _model.name + ".prefab";
-            var agentPrefabName = "Assets/Prefabs/AgentPrefabs/DeckAgent" + suffix + _model.name + ".prefab";
-            var assetName = "Assets/Resources/Data/Items/DeckBuildable" + suffix + _model.name + ".asset";
+            var itemVisualPrefabName = "Assets/Prefabs/ItemVisualPrefabs/DeckItemVisual" + suffix + _nameSuffix + ".prefab";
+            var agentPrefabName = "Assets/Prefabs/AgentPrefabs/DeckAgent" + suffix + _nameSuffix + ".prefab";
+            var assetName = "Assets/Resources/Data/Items/DeckBuildable" + suffix + _nameSuffix + ".asset";
 
             var itemVisualInstance = CreateItemVisualInstance();
             var itemVisualPrefab = PrefabUtility.SaveAsPrefabAsset(itemVisualInstance.gameObject, itemVisualPrefabName).GetComponent<DeckItemVisual>();
@@ -123,7 +126,7 @@ namespace Deck.Data.Item.Editor
             var agentPrefab = PrefabUtility.SaveAsPrefabAsset(agentInstance, agentPrefabName).GetComponent<DeckBuilding>();
             agentPrefab.SetNewUniqueId();
 
-            var buildingData = DeckBuildable.Create(_model.name, _icon, itemVisualPrefab, agentPrefab, _rotatable, _canBeHangedToWall);
+            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, agentPrefab, _rotatable, _canBeHangedToWall);
             AssetDatabase.CreateAsset(buildingData, assetName);
 
             agentPrefab.SetBuildingData(buildingData);
@@ -158,7 +161,7 @@ namespace Deck.Data.Item.Editor
 
             UpdateEditor();
 
-            DeckLogger.Success(_model.name + "  item and prefab successfully created");
+            DeckLogger.Success(_nameSuffix + "  item and prefab successfully created");
         }
 
         private static void UpdateEditor()
@@ -179,7 +182,7 @@ namespace Deck.Data.Item.Editor
         private GameObject CreateAgentInstance()
         {
             var newObject = new GameObject();
-            newObject.name = _model.name;
+            newObject.name = _nameSuffix;
 
             var agentInstance = newObject.AddComponent<DeckBuilding>();
             agentInstance.OnValidate();
@@ -190,9 +193,11 @@ namespace Deck.Data.Item.Editor
         private GameObject CreateItemVisualInstance()
         {
             var newObject = new GameObject();
-            newObject.name = _model.name;
+            newObject.name = _nameSuffix;
+
             var itemVisualInstance = newObject.AddComponent<DeckItemVisual>();
-            var modelInstance = Instantiate(_model, newObject.transform);
+            var modelInstance = (GameObject)PrefabUtility.InstantiatePrefab(_model);
+            modelInstance.transform.parent = newObject.transform;
             if (newObject == null)
             {
                 return null;
@@ -201,6 +206,7 @@ namespace Deck.Data.Item.Editor
             if (_isBoxCollider)
             {
                 modelInstance.AddComponent<BoxCollider>();
+                modelInstance.AddComponent<NavMeshObstacle>().carving = true;
             }
             else
             {

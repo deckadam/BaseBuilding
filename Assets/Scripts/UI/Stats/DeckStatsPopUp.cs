@@ -40,7 +40,7 @@ namespace Deck.UI.Stats
             }
         }
 
-        protected override void InternalOnDespawned()
+        protected override void InternalOnDeSpawned()
         {
             foreach (var stat in _activeStats)
             {

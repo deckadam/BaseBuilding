@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61d0fd57e920407484de03a9b44a8502, type: 3}
-  m_Name: Deck General Data
+  m_Name: Deck Binder General Data
   m_EditorClassIdentifier: 
   itemVisualProviders:
   - {fileID: 11400000, guid: 3ca7721443fcec543a468f3e322649de, type: 2}
   - {fileID: 11400000, guid: 2f3dfdff3650c9b4c9d860e5059e2d18, type: 2}
   - {fileID: 11400000, guid: 1a0bda4a77760d74a972462831dab50f, type: 2}
+  - {fileID: 11400000, guid: 028557b5dddb0744ba4da176d67949ed, type: 2}
   wallProvider: {fileID: 11400000, guid: 2f3dfdff3650c9b4c9d860e5059e2d18, type: 2}
   doorProvider: {fileID: 11400000, guid: 1a0bda4a77760d74a972462831dab50f, type: 2}
   agentCorePrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}

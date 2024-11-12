@@ -3,11 +3,10 @@ using Deck.EventManager;
 using Deck.InputHandling.Events;
 using Deck.Services;
 using Deck.Services.Building;
-using Deck.Services.CameraService;
 using Deck.Utility;
 using UnityEngine;
 
-namespace Deck.UI.Building.BuildingSets
+namespace Deck.UI.Building.BuildingSets.BuildMode
 {
     public class DeckEscapableBuildMode : IDeckEscapable
     {
@@ -40,7 +39,7 @@ namespace Deck.UI.Building.BuildingSets
             DeckEventOnBuildModeStarted.Create().Send();
         }
 
-        public void OnCloseRequested()
+        public void OnEscapeRequested()
         {
             if (_isClosed)
             {
@@ -77,8 +76,7 @@ namespace Deck.UI.Building.BuildingSets
 
         protected virtual void OnMouseMove(DeckEventOnMouseMove obj)
         {
-            var cellIndex = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            BuildingService.UpdateSilhouetteInCell(cellIndex);
+            BuildingService.UpdateSilhouetteInCell();
         }
     }
 }

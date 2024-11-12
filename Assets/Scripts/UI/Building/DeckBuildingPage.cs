@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Deck.Components;
 using Deck.Data.Buildable;
 using Deck.Services.Building;
+using Deck.UI.Building.BuildingSets.BuildMode;
 using Deck.Utility;
 using Services.Implementations.Escapable;
 using UnityEngine;
@@ -16,10 +17,12 @@ namespace Deck.UI.Building
 
         [SerializeField] protected CanvasGroup canvasGroup;
 
-        protected DeckServiceEscapable EscapableService;
-        protected DeckServiceBuilding BuildingService;
-        protected DeckBuildingButton Button;
-        protected DeckUIBuilding UIBuilding;
+        protected DeckEscapableBuildMode escapableBuildMode;
+        protected DeckServiceEscapable escapableService;
+        protected DeckServiceBuilding buildingService;
+        protected DeckBuildingButton button;
+        protected DeckUIBuilding uIBuilding;
+        protected bool isBuildModeActive;
 
         protected override void InternalOnValidate()
         {
@@ -28,20 +31,16 @@ namespace Deck.UI.Building
 
         public void Initialize(DeckUIBuilding uiBuilding, DeckBuildingButton button)
         {
-            UIBuilding = uiBuilding;
-            Button = button;
+            uIBuilding = uiBuilding;
+            this.button = button;
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
 
-            EscapableService = Deck.GetService<DeckServiceEscapable>();
-            BuildingService = Deck.GetService<DeckServiceBuilding>();
+            escapableService = Deck.GetService<DeckServiceEscapable>();
+            buildingService = Deck.GetService<DeckServiceBuilding>();
 
-            OnInitialize();
-        }
-
-        protected virtual void OnInitialize()
-        {
+            InternalOnInitialize();
         }
 
         public void Appear()
@@ -53,8 +52,6 @@ namespace Deck.UI.Building
 
         public void Disappear()
         {
-            OnDisappearStart();
-
             if (canvasGroup == null)
             {
                 return;
@@ -63,16 +60,6 @@ namespace Deck.UI.Building
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
-            OnDisappearEnd();
-        }
-
-        protected virtual void OnDisappearStart()
-        {
-        }
-
-
-        protected virtual void OnDisappearEnd()
-        {
         }
 
         public void AddBuildable(DeckBuildable buildingData)
@@ -81,6 +68,22 @@ namespace Deck.UI.Building
             buildables.Add(buildingData);
 
             DeckLogger.Inform("Buildable :" + buildingData.Name + "  is added to building list.  " + GetType());
+        }
+
+        protected void OnEscapeRequested()
+        {
+            isBuildModeActive = false;
+            escapableBuildMode = null;
+            buildingService.Clear();
+            InternalOnEscapeRequested();
+        }
+
+        protected virtual void InternalOnInitialize()
+        {
+        }
+
+        protected virtual void InternalOnEscapeRequested()
+        {
         }
     }
 }

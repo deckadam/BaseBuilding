@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Base.Id;
@@ -186,12 +185,12 @@ namespace Deck.ItemVisualProviders
 
                 if (checkList[0] && checkList[1])
                 {
-                    return verticalPrefab;
+                    return horizontalPrefab;
                 }
 
                 if (checkList[2] && checkList[3])
                 {
-                    return horizontalPrefab;
+                    return verticalPrefab;
                 }
 
                 DeckLogger.Error("Huh!!!!");
@@ -201,12 +200,12 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] || checkList[1])
                 {
-                    return verticalPrefab;
+                    return horizontalPrefab;
                 }
 
                 if (checkList[2] || checkList[3])
                 {
-                    return horizontalPrefab;
+                    return verticalPrefab;
                 }
             }
 

@@ -81,7 +81,7 @@ namespace Deck.UI.Building
         }
 
 
-        public void OnCloseRequested()
+        public void OnEscapeRequested()
         {
             Disappear();
             page.Disappear();

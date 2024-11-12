@@ -3,6 +3,6 @@ namespace Deck.Services
     public interface IDeckEscapable
     {
         bool HasEscaped { get; }
-        void OnCloseRequested();
+        void OnEscapeRequested();
     }
 }

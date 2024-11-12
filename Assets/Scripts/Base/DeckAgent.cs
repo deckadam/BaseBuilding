@@ -24,7 +24,6 @@ namespace Deck.Components
 
         [SerializeField] protected Transform centerPosition;
         [SerializeField] private DeckComponent[] components;
-        [SerializeField] private new Collider collider;
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
@@ -53,7 +52,6 @@ namespace Deck.Components
         public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
-            collider = GetComponentInChildren<Collider>();
 
 #if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
@@ -298,11 +296,6 @@ namespace Deck.Components
 
         public void RequestDestroy()
         {
-            if (collider)
-            {
-                collider.enabled = false;
-            }
-
             foreach (var deckComponent in components)
             {
                 deckComponent.OnDestroy();

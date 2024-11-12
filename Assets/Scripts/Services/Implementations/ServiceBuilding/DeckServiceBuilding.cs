@@ -139,26 +139,36 @@ namespace Deck.Services.Building
             UpdateSilhouetteInCellRect(new[] { cellIndex, cellIndex });
         }
 
-        public void UpdateSilhouetteInCell(Vector2Int cellIndex)
+        public void UpdateSilhouetteInCell()
         {
             if (!_activeBuildable)
             {
                 return;
             }
 
-            ApplyMaterialToSilhouette(_buildingData.GetAvailableMaterial());
+            var cellIndex = GetCursorCellIndex();
+            
+            var isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value != null);
+            var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+            
+            ApplyMaterialToSilhouette(material);
 
             _silhouetteParent.transform.position = cellIndex.ToVector3();
         }
 
-        public void UpdateSilhouetteInCell(Vector2Int cellIndex, Quaternion rotation)
+        public void UpdateSilhouetteInCell(Quaternion rotation)
         {
             if (!_activeBuildable)
             {
                 return;
             }
 
-            ApplyMaterialToSilhouette(_buildingData.GetAvailableMaterial());
+            var cellIndex = GetCursorCellIndex();
+
+            var isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value != null);
+            var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+
+            ApplyMaterialToSilhouette(material);
 
             _silhouetteParent.transform.position = cellIndex.ToVector3();
             _silhouetteParent.transform.rotation = rotation;
@@ -718,7 +728,7 @@ namespace Deck.Services.Building
 
         private SilhouettePiece GetSilhouettePiece()
         {
-            var silhouetteData = _activeBuildable.Silouette;
+            var silhouetteData = _activeBuildable.Silhouette;
 
             if (!_pieceInPool.TryGetValue(silhouetteData.Length, out var pool))
             {

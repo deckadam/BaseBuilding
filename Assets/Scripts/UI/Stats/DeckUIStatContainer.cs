@@ -28,7 +28,7 @@ namespace Deck.UI.Stats
             _activeElements.Clear();
         }
 
-        protected override void InternalOnDespawned()
+        protected override void InternalOnDeSpawned()
         {
             ClearStatElements();
         }

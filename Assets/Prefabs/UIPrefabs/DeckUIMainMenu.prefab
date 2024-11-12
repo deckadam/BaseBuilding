@@ -1455,7 +1455,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2723310244387402592}
         m_TargetAssemblyTypeName: Deck.UI.DeckUIBase, Assembly-CSharp
-        m_MethodName: OnCloseRequested
+        m_MethodName: OnEscapeRequested
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

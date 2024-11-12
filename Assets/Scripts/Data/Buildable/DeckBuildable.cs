@@ -14,7 +14,7 @@ namespace Deck.Data.Buildable
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
         [SerializeField] private string visibleName;
-        [SerializeField] private SilouetteData[] silouette;
+        [SerializeField] private SilhouetteData[] silhouette;
         [SerializeField] private Vector2Int[] indices;
         [SerializeField] private bool rotatable;
         [SerializeField] private Sprite icon;
@@ -23,7 +23,7 @@ namespace Deck.Data.Buildable
         [SerializeField] private bool canBeHangedToWall;
         [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
 
-        public SilouetteData[] Silouette => silouette;
+        public SilhouetteData[] Silhouette => silhouette;
         public int materialCount;
         public Vector2Int[] Indices => indices;
         public bool Rotatable => rotatable;
@@ -55,6 +55,13 @@ namespace Deck.Data.Buildable
             newItem.rotatable = rotatable;
             newItem.canBeHangedToWall = canBeHangedToWall;
             newItem.OnValidate();
+            newItem.indices = new[] { Vector2Int.zero };
+            newItem.CollectExtentsData();
+            newItem.CollectSilhouetteData();
+            newItem.prices = new DeckPrice[]
+            {
+                new DeckPrice(0, DeckCurrencyType.Money)
+            };
             return newItem;
         }
 
@@ -89,22 +96,22 @@ namespace Deck.Data.Buildable
 
 
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
-            silouette = new SilouetteData[filters.Length];
+            silhouette = new SilhouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];
-                silouette[i] = new SilouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
+                silhouette[i] = new SilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
             }
         }
 
         [Serializable]
-        public struct SilouetteData
+        public struct SilhouetteData
         {
             [SerializeField] private Mesh mesh;
             [SerializeField] private Vector3 position;
             [SerializeField] private Vector3 rotation;
 
-            public SilouetteData(Mesh mesh, Vector3 position, Vector3 rotation)
+            public SilhouetteData(Mesh mesh, Vector3 position, Vector3 rotation)
             {
                 this.mesh = mesh;
                 this.position = position;

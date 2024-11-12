@@ -17,8 +17,8 @@ namespace Deck.ItemVisualProviders
         [SerializeField] private DeckItemVisual twoCornerUpperRightPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerLeftPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerRightPrefab;
-        [SerializeField] private DeckItemVisual threeCornerUpperPrefab;
-        [SerializeField] private DeckItemVisual threeCornerLowerPrefab;
+        [SerializeField] private DeckItemVisual threeCornerUpPrefab;
+        [SerializeField] private DeckItemVisual threeCornerDownPrefab;
         [SerializeField] private DeckItemVisual threeCornerLeftPrefab;
         [SerializeField] private DeckItemVisual threeCornerRightPrefab;
         [SerializeField] private DeckItemVisual fourCornerPrefab;
@@ -113,22 +113,28 @@ namespace Deck.ItemVisualProviders
             {
                 if (!checkList[0])
                 {
+                    Debug.LogError("1");
                     return threeCornerLeftPrefab;
                 }
 
                 if (!checkList[1])
                 {
+                    Debug.LogError("2");
                     return threeCornerRightPrefab;
                 }
 
                 if (!checkList[2])
                 {
-                    return threeCornerLowerPrefab;
+                    Debug.LogError("3");
+
+                    return threeCornerDownPrefab;
                 }
 
                 if (!checkList[3])
                 {
-                    return threeCornerUpperPrefab;
+                    Debug.LogError("4");
+
+                    return threeCornerUpPrefab;
                 }
 
                 DeckLogger.Error("Huh!!!!");
@@ -138,32 +144,42 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] && checkList[2])
                 {
+                    Debug.LogError("5");
+
                     return twoCornerUpperRightPrefab;
                 }
 
                 if (checkList[0] && checkList[3])
                 {
+                    Debug.LogError("6");
+
                     return twoCornerLowerRightPrefab;
                 }
 
                 if (checkList[1] && checkList[2])
                 {
+                    Debug.LogError("7");
+
                     return twoCornerUpperLeftPrefab;
                 }
 
                 if (checkList[1] && checkList[3])
                 {
+                    Debug.LogError("8");
+
                     return twoCornerLowerLeftPrefab;
                 }
 
                 if (checkList[0] && checkList[1])
                 {
-                    return verticalPrefab;
+                    Debug.LogError("horizontal");
+                    return horizontalPrefab;
                 }
 
                 if (checkList[2] && checkList[3])
                 {
-                    return horizontalPrefab;
+                    Debug.LogError("vertical");
+                    return verticalPrefab;
                 }
 
                 DeckLogger.Error("Huh!!!!");
@@ -173,12 +189,12 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] || checkList[1])
                 {
-                    return verticalPrefab;
+                    return horizontalPrefab;
                 }
 
                 if (checkList[2] || checkList[3])
                 {
-                    return horizontalPrefab;
+                    return verticalPrefab;
                 }
             }
 

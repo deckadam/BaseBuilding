@@ -35,7 +35,7 @@ namespace Deck.UI.Inventory
             _popup = popup;
         }
 
-        protected override void InternalOnDespawned()
+        protected override void InternalOnDeSpawned()
         {
             _source?.Cancel();
             _source?.Dispose();

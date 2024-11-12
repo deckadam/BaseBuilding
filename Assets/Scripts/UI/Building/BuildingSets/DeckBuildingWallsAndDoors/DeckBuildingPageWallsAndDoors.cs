@@ -1,7 +1,7 @@
 using Deck.Data.Buildable;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
-using Deck.UI.Building.BuildingWallsAndDoors;
+using Deck.UI.Building.BuildingSets.BuildMode;
 using Deck.Utility;
 using Services.Implementations.Escapable;
 using UnityEngine;
@@ -13,20 +13,18 @@ namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
         [SerializeField] private DeckBuildable wallBuildable;
         [SerializeField] private DeckBuildable doorBuildable;
 
-        private DeckEscapableBuildMode _escapableBuildMode;
         private DeckBuildableButton _wallButton;
         private DeckBuildableButton _doorButton;
         private DeckBuildable _selectedBuildable;
-        private bool _isBuildModeActive;
         private bool _isBuildingWall;
 
         private readonly Quaternion _horizontalRotation = Quaternion.Euler(0, 90, 0);
         private readonly Quaternion _verticalRotation = Quaternion.Euler(0, 0, 0);
 
-        protected override void OnInitialize()
+        protected override void InternalOnInitialize()
         {
-            EscapableService = Deck.GetService<DeckServiceEscapable>();
-            BuildingService = Deck.GetService<DeckServiceBuilding>();
+            escapableService = Deck.GetService<DeckServiceEscapable>();
+            buildingService = Deck.GetService<DeckServiceBuilding>();
 
             _wallButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
             _wallButton.Initialize(OnBuildableSelected, wallBuildable);
@@ -41,31 +39,31 @@ namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
         {
             _selectedBuildable = buildable;
 
-            if (_escapableBuildMode != null && !_escapableBuildMode.HasEscaped)
+            if (escapableBuildMode != null)
             {
-                EscapableService.CloseEscapable();
+                escapableService.RemoveEscapable(escapableBuildMode);
             }
 
             if (_selectedBuildable == wallBuildable)
             {
-                _escapableBuildMode = new DeckEscapableBuildModeWall(OnBuildModeClosed, true);
+                escapableBuildMode = new DeckEscapableBuildModeWall(OnEscapeRequested, true);
                 _isBuildingWall = true;
-                BuildingService.StartSilhouetteRect(buildable);
+                buildingService.StartSilhouetteRect(buildable);
             }
             else
             {
-                _escapableBuildMode = new DeckEscapableBuildMode(OnBuildModeClosed, OnBuildRequested, true);
+                escapableBuildMode = new DeckEscapableBuildMode(OnEscapeRequested, OnBuildRequested, true);
                 _isBuildingWall = false;
-                BuildingService.StartSilhouette(buildable);
+                buildingService.StartSilhouette(buildable);
             }
 
-            EscapableService.RegisterEscapable(_escapableBuildMode);
-            _isBuildModeActive = true;
+            escapableService.RegisterEscapable(escapableBuildMode);
+            isBuildModeActive = true;
         }
 
         private void OnBuildRequested(Vector3[] positions)
         {
-            if (!_isBuildModeActive)
+            if (!isBuildModeActive)
             {
                 return;
             }
@@ -78,41 +76,29 @@ namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
                 }
 
                 var position = positions[0];
-                BuildingService.BuildInCell(position.ToVector2Int());
+                buildingService.BuildInCell(position.ToVector2Int());
             }
         }
 
         private void Update()
         {
-            if (_isBuildModeActive)
+            if (isBuildModeActive)
             {
                 if (!_isBuildingWall)
                 {
                     var cellIndex = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-                    var neighbourStatus = BuildingService.GetCellNeighbourStatus(cellIndex);
+                    var neighbourStatus = buildingService.GetCellNeighbourStatus(cellIndex);
 
                     if (neighbourStatus[2] && neighbourStatus[3])
                     {
-                        BuildingService.UpdateSilhouetteInCell(cellIndex, _verticalRotation);
+                        buildingService.UpdateSilhouetteInCell(_verticalRotation);
                     }
                     else
                     {
-                        BuildingService.UpdateSilhouetteInCell(cellIndex, _horizontalRotation);
+                        buildingService.UpdateSilhouetteInCell(_horizontalRotation);
                     }
                 }
             }
-        }
-
-        private void OnBuildModeClosed()
-        {
-            _isBuildModeActive = false;
-            if (!_escapableBuildMode.HasEscaped)
-            {
-                _escapableBuildMode.OnCloseRequested();
-                _escapableBuildMode = null;
-            }
-
-            BuildingService.Clear();
         }
     }
 }

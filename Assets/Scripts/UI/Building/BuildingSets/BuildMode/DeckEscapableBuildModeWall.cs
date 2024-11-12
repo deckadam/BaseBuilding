@@ -2,10 +2,9 @@ using System;
 using Deck.InputHandling.Events;
 using Deck.Services.Building;
 using Deck.Services.CameraService;
-using Deck.UI.Building.BuildingSets;
 using UnityEngine;
 
-namespace Deck.UI.Building.BuildingWallsAndDoors
+namespace Deck.UI.Building.BuildingSets.BuildMode
 {
     public class DeckEscapableBuildModeWall : DeckEscapableBuildMode
     {

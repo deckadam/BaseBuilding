@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using Deck.Services;
 using Deck.UI.MainMenu;
+using UnityEngine;
 
 namespace Services.Implementations.Escapable
 {
     public class DeckServiceEscapable : DeckServiceBase
     {
-        private Stack<IDeckEscapable> _escapables;
+        private List<IDeckEscapable> _escapables;
 
         public override void Initialize()
         {
-            _escapables = new Stack<IDeckEscapable>();
+            _escapables = new List<IDeckEscapable>();
         }
 
         public override void DeInitialize()
@@ -20,16 +21,31 @@ namespace Services.Implementations.Escapable
 
         public void RegisterEscapable(IDeckEscapable escapable)
         {
-            _escapables.Push(escapable);
+            _escapables.Add(escapable);
         }
-
 
         public void CloseEscapable()
         {
             if (_escapables.Count > 0)
             {
-                var escapable = _escapables.Pop();
-                escapable.OnCloseRequested();
+                var hasEscaped = false;
+                do
+                {
+                    if (_escapables.Count == 0)
+                    {
+                        Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                        return;
+                    }
+
+                    var escapable = _escapables[^1];
+                    if (!escapable.HasEscaped)
+                    {
+                        hasEscaped = true;
+                        escapable.OnEscapeRequested();
+                    }
+
+                    _escapables.Remove(escapable);
+                } while (!hasEscaped);
             }
             else
             {
@@ -37,11 +53,24 @@ namespace Services.Implementations.Escapable
             }
         }
 
+        public void RemoveEscapable(IDeckEscapable escapable)
+        {
+            if (_escapables.Contains(escapable))
+            {
+                _escapables.Remove(escapable);
+                escapable.OnEscapeRequested();
+            }
+            else if (_escapables.Count == 0)
+            {
+                Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+            }
+        }
+
         public void ClearEscapables()
         {
-            while (_escapables.TryPop(out var escapable))
+            foreach (var deckEscapable in _escapables)
             {
-                escapable.OnCloseRequested();
+                deckEscapable.OnEscapeRequested();
             }
 
             _escapables.Clear();

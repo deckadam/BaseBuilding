@@ -1,5 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,7 +15,7 @@ namespace Deck.Base.Id
 
         [SerializeField, HideInInspector] private int _id;
 
-        public string IdString;
+        [OdinSerialize] public string IdString => _id.ToString();
         public bool IsValid => _id != 0;
         public int ID => _id;
 
@@ -22,7 +23,6 @@ namespace Deck.Base.Id
         private DeckId(bool justShupUp = false)
         {
             _id = Random.Range(10000000, 99999999);
-            IdString = _id.ToString();
         }
 
         public DeckId(string id)
@@ -33,13 +33,11 @@ namespace Deck.Base.Id
             }
 
             _id = intId;
-            IdString = intId.ToString();
         }
 
         public DeckId(int id)
         {
             _id = id;
-            IdString = _id.ToString();
         }
 
         public static DeckId CreateNew()

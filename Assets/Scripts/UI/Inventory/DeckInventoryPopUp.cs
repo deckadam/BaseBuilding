@@ -52,7 +52,7 @@ namespace Deck.UI.Inventory
             _cells.Clear();
         }
 
-        protected override void InternalOnDespawned()
+        protected override void InternalOnDeSpawned()
         {
             ClearCurrentCells();
             _componentInventory.RemoveListener(CreateNewCells);

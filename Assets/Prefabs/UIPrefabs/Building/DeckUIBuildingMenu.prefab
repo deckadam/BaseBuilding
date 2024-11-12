@@ -266,11 +266,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId:
     _id: 62394364
-    IdString: 
   rectTransform: {fileID: 8158672690522780418}
   canvasGroup: {fileID: 8158672690522780416}
   isAppearedOnStartUp: 0
-  _isAppeared: 0
+  isAppeared: 0
   buildingSets:
   - button: {fileID: 8432023853462673980, guid: 4b4364fd2e761404f849778b37b8a497, type: 3}
     page: {fileID: 6560618859166587799, guid: 42829b76db044e0409950f054d191447, type: 3}
@@ -278,5 +277,7 @@ MonoBehaviour:
     page: {fileID: 2743536138830366345, guid: f47bf7688728b2e4280e3dd47e91e980, type: 3}
   - button: {fileID: 1603869472940069730, guid: 0946697eac1887f4e9432ddd08b66285, type: 3}
     page: {fileID: 429786604705594565, guid: 1bf0cddb387380a40ae02170baaa811f, type: 3}
+  - button: {fileID: 4902240436691805134, guid: a78c2ba81073e314d9cc566a0670029e, type: 3}
+    page: {fileID: 429786604705594565, guid: 1afdac9b72a092246b48cae55d3c3020, type: 3}
   buttonsContainer: {fileID: 8158672689194224392}
   pagesContainer: {fileID: 4922600709843253251}

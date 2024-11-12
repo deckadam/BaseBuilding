@@ -36,7 +36,7 @@ namespace Deck.UI
             positionOffset = offset;
         }
 
-        protected override void InternalOnDespawned()
+        protected override void InternalOnDeSpawned()
         {
             Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
         }
