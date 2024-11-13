@@ -2,37 +2,145 @@ using System.Collections.Generic;
 using System.Linq;
 using Deck.Base.Id;
 using Deck.Components;
+using Deck.EventManager;
+using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using UnityEngine;
+using Zenject;
 
 namespace Deck.ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBarTable", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBarTable")]
     public class DeckItemVisualProviderBarTable : DeckItemVisualProviderBasic
     {
+        [SerializeField] private DeckItemVisual emptyPrefab;
+
         [SerializeField] private DeckItemVisual horizontalPrefab;
         [SerializeField] private DeckItemVisual verticalPrefab;
+
         [SerializeField] private DeckItemVisual twoCornerUpperLeftPrefab;
         [SerializeField] private DeckItemVisual twoCornerUpperRightPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerLeftPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerRightPrefab;
+
         [SerializeField] private DeckItemVisual threeCornerUpPrefab;
         [SerializeField] private DeckItemVisual threeCornerDownPrefab;
         [SerializeField] private DeckItemVisual threeCornerLeftPrefab;
         [SerializeField] private DeckItemVisual threeCornerRightPrefab;
+
         [SerializeField] private DeckItemVisual fourCornerPrefab;
-        [SerializeField] private DeckItemVisual emptyPrefab;
+
+        [SerializeField] private DeckItemVisual rightWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual leftWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual upWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual downWallConnectionPrefab;
 
         private Dictionary<Vector2Int, DeckItemVisual> _activeBarTables;
         private Dictionary<Vector2Int, DeckAgent> _activeBarTableAgents;
+        private Dictionary<Vector2Int, DeckItemVisual> _activeWallConnections;
         private HashSet<Vector2Int> _barTableCheckSet;
 
-        protected override void OnInitialize()
+        private DeckItemVisualProviderWall _itemVisualProviderWall;
+
+        [Inject]
+        private void Inject(DeckItemVisualProviderWall itemVisualProviderWall)
+        {
+            _itemVisualProviderWall = itemVisualProviderWall;
+        }
+
+        protected override void InternalOnInitialize()
         {
             _activeBarTables = new Dictionary<Vector2Int, DeckItemVisual>();
             _activeBarTableAgents = new Dictionary<Vector2Int, DeckAgent>();
+            _activeWallConnections = new Dictionary<Vector2Int, DeckItemVisual>();
             _barTableCheckSet = new HashSet<Vector2Int>();
+
+            DeckEventManager.Register<DeckEventOnWallBuild>(OnWallCreated);
+            DeckEventManager.Register<DeckEventOnWallDestroyed>(OnWallDestroyed);
+        }
+
+        protected override void InternalOnDeInitialize()
+        {
+            DeckEventManager.Unregister<DeckEventOnWallBuild>(OnWallCreated);
+            DeckEventManager.Unregister<DeckEventOnWallDestroyed>(OnWallDestroyed);
+        }
+
+        private void OnWallCreated(DeckEventOnWallBuild obj)
+        {
+            AdjustWallConnections(obj.position, true);
+        }
+
+
+        private void OnWallDestroyed(DeckEventOnWallDestroyed obj)
+        {
+            AdjustWallConnections(obj.position, false);
+        }
+
+        private void AdjustWallConnections(Vector2Int cellIndex, bool isPlaced)
+        {
+            if (isPlaced)
+            {
+                var neighbours = cellIndex.GetNeighbours();
+                if (_activeWallConnections.TryGetValue(cellIndex, out var connection))
+                {
+                    ReturnIfHasItemVisual(connection);
+                }
+
+                if (_barTableCheckSet.Contains(neighbours[0]))
+                {
+                    RentIfHasItemVisual(leftWallConnectionPrefab.PrefabId, out var itemVisualInstance);
+                    itemVisualInstance.transform.position = cellIndex.ToVector3();
+                    _activeWallConnections[cellIndex] = itemVisualInstance;
+                }
+
+                if (_barTableCheckSet.Contains(neighbours[1]))
+                {
+                    RentIfHasItemVisual(rightWallConnectionPrefab.PrefabId, out var itemVisualInstance);
+                    itemVisualInstance.transform.position = cellIndex.ToVector3();
+                    _activeWallConnections[cellIndex] = itemVisualInstance;
+                }
+
+                if (_barTableCheckSet.Contains(neighbours[2]))
+                {
+                    RentIfHasItemVisual(downWallConnectionPrefab.PrefabId, out var itemVisualInstance);
+                    itemVisualInstance.transform.position = cellIndex.ToVector3();
+                    _activeWallConnections[cellIndex] = itemVisualInstance;
+                }
+
+                if (_barTableCheckSet.Contains(neighbours[3]))
+                {
+                    RentIfHasItemVisual(upWallConnectionPrefab.PrefabId, out var itemVisualInstance);
+                    itemVisualInstance.transform.position = cellIndex.ToVector3();
+                    _activeWallConnections[cellIndex] = itemVisualInstance;
+                }
+
+                foreach (var neighbour in neighbours)
+                {
+                    ReplaceItemVisualForWallConnection(neighbour);
+                }
+            }
+            else
+            {
+                if (_activeWallConnections.TryGetValue(cellIndex, out var connection))
+                {
+                    ReturnIfHasItemVisual(connection);
+                    _activeWallConnections.Remove(cellIndex);
+                    ReplaceItemVisualForWallConnection(cellIndex);
+                }
+            }
+        }
+
+        private void ReplaceItemVisualForWallConnection(Vector2Int cellIndex)
+        {
+            if (!_barTableCheckSet.Contains(cellIndex))
+            {
+                return;
+            }
+
+            var itemVisualToReplace = _activeBarTables[cellIndex];
+            ReturnIfHasItemVisual(itemVisualToReplace);
+            PlaceItemVisual(cellIndex);
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -69,9 +177,16 @@ namespace Deck.ItemVisualProviders
 
             foreach (var neighbour in neighbours)
             {
-                if (!_barTableCheckSet.Contains(neighbour)) continue;
-                ReturnIfHasItemVisual(_activeBarTables[neighbour]);
-                PlaceItemVisual(neighbour);
+                if (_barTableCheckSet.Contains(neighbour))
+                {
+                    ReturnIfHasItemVisual(_activeBarTables[neighbour]);
+                    PlaceItemVisual(neighbour);
+                }
+
+                if (_itemVisualProviderWall.HasWallOnPosition(neighbour))
+                {
+                    AdjustWallConnections(neighbour, true);
+                }
             }
 
             return PlaceItemVisual(position);
@@ -85,7 +200,7 @@ namespace Deck.ItemVisualProviders
             for (var index = 0; index < neighbours.Length; index++)
             {
                 var neighbour = neighbours[index];
-                var isBarTable = _barTableCheckSet.Contains(neighbour);
+                var isBarTable = _barTableCheckSet.Contains(neighbour) || _activeWallConnections.ContainsKey(neighbour);
                 checkList[index] = isBarTable;
             }
 
@@ -113,27 +228,21 @@ namespace Deck.ItemVisualProviders
             {
                 if (!checkList[0])
                 {
-                    Debug.LogError("1");
                     return threeCornerLeftPrefab;
                 }
 
                 if (!checkList[1])
                 {
-                    Debug.LogError("2");
                     return threeCornerRightPrefab;
                 }
 
                 if (!checkList[2])
                 {
-                    Debug.LogError("3");
-
                     return threeCornerDownPrefab;
                 }
 
                 if (!checkList[3])
                 {
-                    Debug.LogError("4");
-
                     return threeCornerUpPrefab;
                 }
 
@@ -144,41 +253,31 @@ namespace Deck.ItemVisualProviders
             {
                 if (checkList[0] && checkList[2])
                 {
-                    Debug.LogError("5");
-
                     return twoCornerUpperRightPrefab;
                 }
 
                 if (checkList[0] && checkList[3])
                 {
-                    Debug.LogError("6");
-
                     return twoCornerLowerRightPrefab;
                 }
 
                 if (checkList[1] && checkList[2])
                 {
-                    Debug.LogError("7");
-
                     return twoCornerUpperLeftPrefab;
                 }
 
                 if (checkList[1] && checkList[3])
                 {
-                    Debug.LogError("8");
-
                     return twoCornerLowerLeftPrefab;
                 }
 
                 if (checkList[0] && checkList[1])
                 {
-                    Debug.LogError("horizontal");
                     return horizontalPrefab;
                 }
 
                 if (checkList[2] && checkList[3])
                 {
-                    Debug.LogError("vertical");
                     return verticalPrefab;
                 }
 

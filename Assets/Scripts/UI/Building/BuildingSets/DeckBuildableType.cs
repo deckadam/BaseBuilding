@@ -5,6 +5,7 @@ namespace Deck.UI.Building.BuildingSets
         WallsAndDoors,
         Furniture,
         Miscellaneous,
-        BarTable
+        BarTable,
+        Error = 9999
     }
 }

@@ -35,6 +35,14 @@ namespace Deck.ItemVisualProviders
             }
         }
 
+        public override void DeInitialize()
+        {
+            foreach (var deckItemVisualProvider in _itemVisualProviders)
+            {
+                deckItemVisualProvider.OnDeInitialize();
+            }
+        }
+
         public bool RequestItemVisual(DeckAgent agent, DeckId deckId, out DeckItemVisual itemVisual, Vector2Int cellIndex = default)
         {
             if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))

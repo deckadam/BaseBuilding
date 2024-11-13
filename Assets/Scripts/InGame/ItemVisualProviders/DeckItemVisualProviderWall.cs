@@ -31,7 +31,7 @@ namespace Deck.ItemVisualProviders
 
         private HashSet<int> _supportedPrefabIds;
 
-        protected override void OnInitialize()
+        protected override void InternalOnInitialize()
         {
             _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
             _activeWallAgents = new Dictionary<Vector2Int, DeckAgent>();
@@ -241,6 +241,11 @@ namespace Deck.ItemVisualProviders
                 ReturnIfHasItemVisual(_activeWalls[neighbour]);
                 PlaceWallWithNeighbours(neighbour);
             }
+        }
+
+        public bool HasWallOnPosition(Vector2Int cellIndex)
+        {
+            return _wallCheckSet.Contains(cellIndex);
         }
     }
 }

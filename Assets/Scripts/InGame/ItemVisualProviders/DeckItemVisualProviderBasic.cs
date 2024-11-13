@@ -46,12 +46,22 @@ namespace Deck.ItemVisualProviders
                 _supportedItemVisuals.Add(deckItemVisual.PrefabId.ID);
             }
 
-            OnInitialize();
+            InternalOnInitialize();
         }
 
-        protected virtual void OnInitialize()
+        protected virtual void InternalOnInitialize()
         {
         }
+
+        public void OnDeInitialize()
+        {
+            InternalOnDeInitialize();
+        }
+
+        protected virtual void InternalOnDeInitialize()
+        {
+        }
+
 
         public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {

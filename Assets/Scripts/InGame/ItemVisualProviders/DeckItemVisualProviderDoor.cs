@@ -26,7 +26,7 @@ namespace Deck.ItemVisualProviders
             _wallProvider = wallProvider;
         }
 
-        protected override void OnInitialize()
+        protected override void InternalOnInitialize()
         {
             _doorCheckSet = new HashSet<Vector2Int>();
             _activeDoors = new Dictionary<Vector2Int, DeckItemVisual>();

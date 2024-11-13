@@ -206,6 +206,7 @@ namespace Deck.Save
 
         private void Initialize()
         {
+            Debug.LogError("initialize");
             _agentDictionary = new Dictionary<int, DeckAgent>();
             _agentPool = new Dictionary<int, Stack<DeckAgent>>();
             _agentByType = new Dictionary<Type, DeckId>();

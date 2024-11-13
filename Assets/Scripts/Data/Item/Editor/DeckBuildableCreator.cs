@@ -30,7 +30,7 @@ namespace Deck.Data.Item.Editor
         private bool _canBeHangedToWall;
         private bool _isBasicItem = true;
         private string _nameSuffix;
-        private DeckBuildableType _selectedType;
+        private DeckBuildableType _selectedType = DeckBuildableType.Error;
 
 
         [MenuItem("Deck/Item Creator")]
@@ -89,6 +89,8 @@ namespace Deck.Data.Item.Editor
             DeckBuildingPage page = null;
             switch (_selectedType)
             {
+                case DeckBuildableType.Error:
+                    throw new Exception("Dont forget to select the page");
                 case DeckBuildableType.WallsAndDoors:
                     page = Resources.FindObjectsOfTypeAll<DeckBuildingPageWallsAndDoors>()[0];
                     suffix = "Wall";
