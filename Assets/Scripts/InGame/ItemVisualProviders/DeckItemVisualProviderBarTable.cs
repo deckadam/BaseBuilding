@@ -7,6 +7,7 @@ using Deck.EventManager;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Iterators;
+using Sirenix.Utilities;
 using UnityEngine;
 using Zenject;
 
@@ -80,105 +81,68 @@ namespace Deck.ItemVisualProviders
 
         private void OnWallCreated(DeckEventOnWallBuild obj)
         {
-            AdjustWallConnections(obj.position, true);
+            AdjustWallConnections(obj.position);
         }
 
         private void OnWallDestroyed(DeckEventOnWallDestroyed obj)
         {
-            AdjustWallConnections(obj.position, false);
+            AdjustWallConnections(obj.position);
         }
 
-        private void AdjustWallConnections(Vector2Int cellIndex, bool isPlaced)
+        private void AdjustWallConnections(Vector2Int cellIndex)
         {
-            if (isPlaced)
+            var neighbours = cellIndex.GetRectNeighbours();
+            foreach (var barTablePosition in neighbours)
             {
-                var neighbours = cellIndex.GetRectNeighbours();
-                foreach (var barTablePosition in neighbours)
+                if (!_barTableCheckSet.Contains(barTablePosition))
                 {
-                    if (!_barTableCheckSet.Contains(barTablePosition))
+                    continue;
+                }
+
+                var prefabSets = GetWallConnectionPrefab(barTablePosition);
+
+                var positionsToRemove = new HashSet<Vector2Int>();
+                if (_activeWallConnections.TryGetValue(barTablePosition, out var existingValues))
+                {
+                    foreach (var deckItemVisual in existingValues)
                     {
-                        continue;
+                        positionsToRemove.Add(deckItemVisual.Key);
+                    }
+                }
+
+                foreach (var prefabSet in prefabSets)
+                {
+                    if (!_activeWallConnections.ContainsKey(barTablePosition))
+                    {
+                        _activeWallConnections[barTablePosition] = new Dictionary<Vector2Int, DeckItemVisual>();
                     }
 
-                    var prefabSets = GetWallConnectionPrefab(barTablePosition);
-                    foreach (var prefabSet in prefabSets)
+                    if (_activeWallConnections[barTablePosition].TryGetValue(prefabSet.Item2, out var currentlyPlaced))
                     {
-                        if (!_activeWallConnections.ContainsKey(barTablePosition))
+                        if (currentlyPlaced.PrefabId.Equals(prefabSet.Item1.PrefabId))
                         {
-                            _activeWallConnections[barTablePosition] = new Dictionary<Vector2Int, DeckItemVisual>();
+                            positionsToRemove.Remove(prefabSet.Item2);
+                            continue;
                         }
 
-                        if (_activeWallConnections[barTablePosition].TryGetValue(prefabSet.Item2, out var currentlyPlaced))
-                        {
-                            if (currentlyPlaced.PrefabId.Equals(prefabSet.Item1.PrefabId))
-                            {
-                                continue;
-                            }
-
-                            ReturnItemVisual(currentlyPlaced);
-                        }
-
-
-                        RentIfHasItemVisual(prefabSet.Item1.PrefabId, out var itemVisualInstance);
-                        itemVisualInstance.transform.position = prefabSet.Item2.ToVector3();
-                        _activeWallConnections[barTablePosition][prefabSet.Item2] = itemVisualInstance;
+                        ReturnItemVisual(currentlyPlaced);
                     }
 
-                    // ReplaceItemVisualForWallConnection(barTablePosition);
+                    positionsToRemove.Remove(prefabSet.Item2);
+
+                    RentIfHasItemVisual(prefabSet.Item1.PrefabId, out var itemVisualInstance);
+                    itemVisualInstance.transform.position = prefabSet.Item2.ToVector3();
+                    _activeWallConnections[barTablePosition][prefabSet.Item2] = itemVisualInstance;
                 }
+
+                foreach (var positionToRemove in positionsToRemove)
+                {
+                    ReturnIfHasItemVisual(existingValues[positionToRemove]);
+                    existingValues.Remove(positionToRemove);
+                }
+
+                // ReplaceItemVisualForWallConnection(barTablePosition);
             }
-        }
-
-        private void ReplaceItemVisualForWallConnection(Vector2Int cellIndex)
-        {
-            if (!_barTableCheckSet.Contains(cellIndex))
-            {
-                return;
-            }
-
-            var itemVisualToReplace = _activeBarTables[cellIndex];
-            ReturnIfHasItemVisual(itemVisualToReplace);
-            PlaceItemVisual(cellIndex);
-        }
-
-        private bool TryGetWallDiagonalConnectionPrefab(Vector2Int wallCell, out DeckItemVisual connectionPrefab)
-        {
-            var neighbourCount = _itemVisualProviderWall.GetNeighbourCount(wallCell);
-
-            if (neighbourCount == 2)
-            {
-                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(1, 1)))
-                {
-                    Debug.LogError("4 upper right");
-                    connectionPrefab = fourCornerWallConnectionUpperRightSinglePrefab;
-                    return true;
-                }
-
-                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(1, -1)))
-                {
-                    Debug.LogError("4 lower right");
-                    connectionPrefab = fourCornerWallConnectionLowerRightSinglePrefab;
-                    return true;
-                }
-
-                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(-1, 1)))
-                {
-                    Debug.LogError("4 upper left");
-                    connectionPrefab = fourCornerWallConnectionUpperLeftSinglePrefab;
-                    return true;
-                }
-
-                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(-1, -1)))
-                {
-                    Debug.LogError("4 lower left");
-                    connectionPrefab = fourCornerWallConnectionLowerLeftSinglePrefab;
-                    return true;
-                }
-            }
-
-            Debug.LogError("Undef");
-            connectionPrefab = null;
-            return false;
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -223,7 +187,7 @@ namespace Deck.ItemVisualProviders
 
                 if (_itemVisualProviderWall.HasWallOnPosition(neighbour))
                 {
-                    AdjustWallConnections(neighbour, true);
+                    AdjustWallConnections(neighbour);
                 }
             }
 
