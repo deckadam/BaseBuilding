@@ -50,7 +50,7 @@ MonoBehaviour:
   uniqueId:
     _id: 0
   prefabId:
-    _id: 35682364
+    _id: 99820533
   itemVisualInstance: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 5fda9e4350c38154b9b618b7acd76548, type: 2}
   setVisualPosition: 0

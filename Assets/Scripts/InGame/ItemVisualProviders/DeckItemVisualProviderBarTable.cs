@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Base.Id;
@@ -36,9 +37,20 @@ namespace Deck.ItemVisualProviders
         [SerializeField] private DeckItemVisual upWallConnectionPrefab;
         [SerializeField] private DeckItemVisual downWallConnectionPrefab;
 
+        [SerializeField] private DeckItemVisual upperRightWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual upperLeftWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual lowerRightWallConnectionPrefab;
+        [SerializeField] private DeckItemVisual lowerLeftWallConnectionPrefab;
+
+        [SerializeField] private DeckItemVisual fourCornerWallConnectionUpperLeftSinglePrefab;
+        [SerializeField] private DeckItemVisual fourCornerWallConnectionUpperRightSinglePrefab;
+        [SerializeField] private DeckItemVisual fourCornerWallConnectionLowerLeftSinglePrefab;
+        [SerializeField] private DeckItemVisual fourCornerWallConnectionLowerRightSinglePrefab;
+
+
         private Dictionary<Vector2Int, DeckItemVisual> _activeBarTables;
         private Dictionary<Vector2Int, DeckAgent> _activeBarTableAgents;
-        private Dictionary<Vector2Int, DeckItemVisual> _activeWallConnections;
+        private Dictionary<Vector2Int, Dictionary<Vector2Int, DeckItemVisual>> _activeWallConnections;
         private HashSet<Vector2Int> _barTableCheckSet;
 
         private DeckItemVisualProviderWall _itemVisualProviderWall;
@@ -53,7 +65,7 @@ namespace Deck.ItemVisualProviders
         {
             _activeBarTables = new Dictionary<Vector2Int, DeckItemVisual>();
             _activeBarTableAgents = new Dictionary<Vector2Int, DeckAgent>();
-            _activeWallConnections = new Dictionary<Vector2Int, DeckItemVisual>();
+            _activeWallConnections = new Dictionary<Vector2Int, Dictionary<Vector2Int, DeckItemVisual>>();
             _barTableCheckSet = new HashSet<Vector2Int>();
 
             DeckEventManager.Register<DeckEventOnWallBuild>(OnWallCreated);
@@ -71,7 +83,6 @@ namespace Deck.ItemVisualProviders
             AdjustWallConnections(obj.position, true);
         }
 
-
         private void OnWallDestroyed(DeckEventOnWallDestroyed obj)
         {
             AdjustWallConnections(obj.position, false);
@@ -81,52 +92,39 @@ namespace Deck.ItemVisualProviders
         {
             if (isPlaced)
             {
-                var neighbours = cellIndex.GetNeighbours();
-                if (_activeWallConnections.TryGetValue(cellIndex, out var connection))
+                var neighbours = cellIndex.GetRectNeighbours();
+                foreach (var barTablePosition in neighbours)
                 {
-                    ReturnIfHasItemVisual(connection);
-                }
+                    if (!_barTableCheckSet.Contains(barTablePosition))
+                    {
+                        continue;
+                    }
 
-                if (_barTableCheckSet.Contains(neighbours[0]))
-                {
-                    RentIfHasItemVisual(leftWallConnectionPrefab.PrefabId, out var itemVisualInstance);
-                    itemVisualInstance.transform.position = cellIndex.ToVector3();
-                    _activeWallConnections[cellIndex] = itemVisualInstance;
-                }
+                    var prefabSets = GetWallConnectionPrefab(barTablePosition);
+                    foreach (var prefabSet in prefabSets)
+                    {
+                        if (!_activeWallConnections.ContainsKey(barTablePosition))
+                        {
+                            _activeWallConnections[barTablePosition] = new Dictionary<Vector2Int, DeckItemVisual>();
+                        }
 
-                if (_barTableCheckSet.Contains(neighbours[1]))
-                {
-                    RentIfHasItemVisual(rightWallConnectionPrefab.PrefabId, out var itemVisualInstance);
-                    itemVisualInstance.transform.position = cellIndex.ToVector3();
-                    _activeWallConnections[cellIndex] = itemVisualInstance;
-                }
+                        if (_activeWallConnections[barTablePosition].TryGetValue(prefabSet.Item2, out var currentlyPlaced))
+                        {
+                            if (currentlyPlaced.PrefabId.Equals(prefabSet.Item1.PrefabId))
+                            {
+                                continue;
+                            }
 
-                if (_barTableCheckSet.Contains(neighbours[2]))
-                {
-                    RentIfHasItemVisual(downWallConnectionPrefab.PrefabId, out var itemVisualInstance);
-                    itemVisualInstance.transform.position = cellIndex.ToVector3();
-                    _activeWallConnections[cellIndex] = itemVisualInstance;
-                }
+                            ReturnItemVisual(currentlyPlaced);
+                        }
 
-                if (_barTableCheckSet.Contains(neighbours[3]))
-                {
-                    RentIfHasItemVisual(upWallConnectionPrefab.PrefabId, out var itemVisualInstance);
-                    itemVisualInstance.transform.position = cellIndex.ToVector3();
-                    _activeWallConnections[cellIndex] = itemVisualInstance;
-                }
 
-                foreach (var neighbour in neighbours)
-                {
-                    ReplaceItemVisualForWallConnection(neighbour);
-                }
-            }
-            else
-            {
-                if (_activeWallConnections.TryGetValue(cellIndex, out var connection))
-                {
-                    ReturnIfHasItemVisual(connection);
-                    _activeWallConnections.Remove(cellIndex);
-                    ReplaceItemVisualForWallConnection(cellIndex);
+                        RentIfHasItemVisual(prefabSet.Item1.PrefabId, out var itemVisualInstance);
+                        itemVisualInstance.transform.position = prefabSet.Item2.ToVector3();
+                        _activeWallConnections[barTablePosition][prefabSet.Item2] = itemVisualInstance;
+                    }
+
+                    // ReplaceItemVisualForWallConnection(barTablePosition);
                 }
             }
         }
@@ -141,6 +139,46 @@ namespace Deck.ItemVisualProviders
             var itemVisualToReplace = _activeBarTables[cellIndex];
             ReturnIfHasItemVisual(itemVisualToReplace);
             PlaceItemVisual(cellIndex);
+        }
+
+        private bool TryGetWallDiagonalConnectionPrefab(Vector2Int wallCell, out DeckItemVisual connectionPrefab)
+        {
+            var neighbourCount = _itemVisualProviderWall.GetNeighbourCount(wallCell);
+
+            if (neighbourCount == 2)
+            {
+                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(1, 1)))
+                {
+                    Debug.LogError("4 upper right");
+                    connectionPrefab = fourCornerWallConnectionUpperRightSinglePrefab;
+                    return true;
+                }
+
+                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(1, -1)))
+                {
+                    Debug.LogError("4 lower right");
+                    connectionPrefab = fourCornerWallConnectionLowerRightSinglePrefab;
+                    return true;
+                }
+
+                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(-1, 1)))
+                {
+                    Debug.LogError("4 upper left");
+                    connectionPrefab = fourCornerWallConnectionUpperLeftSinglePrefab;
+                    return true;
+                }
+
+                if (_barTableCheckSet.Contains(wallCell - new Vector2Int(-1, -1)))
+                {
+                    Debug.LogError("4 lower left");
+                    connectionPrefab = fourCornerWallConnectionLowerLeftSinglePrefab;
+                    return true;
+                }
+            }
+
+            Debug.LogError("Undef");
+            connectionPrefab = null;
+            return false;
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -298,6 +336,61 @@ namespace Deck.ItemVisualProviders
             }
 
             return emptyPrefab;
+        }
+
+        private List<(DeckItemVisual, Vector2Int)> GetWallConnectionPrefab(Vector2Int cellIndex)
+        {
+            var wallNeighbourSet = _itemVisualProviderWall.GetNeighbourWallSet(cellIndex);
+
+            var connectionPrefab = new List<(DeckItemVisual, Vector2Int)>();
+
+            if (wallNeighbourSet[0].Item2)
+            {
+                if (wallNeighbourSet[4].Item2 || wallNeighbourSet[6].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(rightWallConnectionPrefab, wallNeighbourSet[0].Item1));
+                }
+
+                if (wallNeighbourSet[3].Item2 && wallNeighbourSet[6].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(fourCornerWallConnectionLowerRightSinglePrefab, wallNeighbourSet[6].Item1));
+                }
+
+                if (wallNeighbourSet[4].Item2 && wallNeighbourSet[2].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(fourCornerWallConnectionUpperRightSinglePrefab, wallNeighbourSet[4].Item1));
+                }
+            }
+
+            if (wallNeighbourSet[1].Item2)
+            {
+                if (wallNeighbourSet[5].Item2 || wallNeighbourSet[7].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(leftWallConnectionPrefab, wallNeighbourSet[1].Item1));
+                }
+
+                if (wallNeighbourSet[2].Item2 && wallNeighbourSet[5].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(fourCornerWallConnectionUpperLeftSinglePrefab, wallNeighbourSet[5].Item1));
+                }
+
+                if (wallNeighbourSet[3].Item2 && wallNeighbourSet[7].Item2)
+                {
+                    connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(fourCornerWallConnectionLowerLeftSinglePrefab, wallNeighbourSet[7].Item1));
+                }
+            }
+
+            if (wallNeighbourSet[2].Item2 && (wallNeighbourSet[4].Item2 || wallNeighbourSet[5].Item2))
+            {
+                connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(upWallConnectionPrefab, wallNeighbourSet[2].Item1));
+            }
+
+            if (wallNeighbourSet[3].Item2 && (wallNeighbourSet[7].Item2 || wallNeighbourSet[6].Item2))
+            {
+                connectionPrefab.Add(new ValueTuple<DeckItemVisual, Vector2Int>(downWallConnectionPrefab, wallNeighbourSet[3].Item1));
+            }
+
+            return connectionPrefab;
         }
     }
 }

@@ -72,7 +72,6 @@ namespace Deck.CameraController
             }
 
             var deltaPosition = movement * (Time.deltaTime * _binderCamera.GetCameraMovementSpeed());
-            // if (_collider.bounds.Contains(transform.position + deltaPosition))
             transform.position += deltaPosition;
         }
     }

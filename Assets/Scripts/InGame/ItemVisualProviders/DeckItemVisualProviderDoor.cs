@@ -80,14 +80,14 @@ namespace Deck.ItemVisualProviders
 
         private Quaternion GetDoorRotation(Vector2Int cellIndex)
         {
-            var neighbourSet = _wallProvider.GetNeighbourSet(cellIndex);
+            var neighbourSet = _wallProvider.GetNeighbourWallSet(cellIndex);
 
-            if (neighbourSet[0] || neighbourSet[1])
+            if (neighbourSet[0].Item2 || neighbourSet[1].Item2)
             {
                 return _horizontalRotation;
             }
 
-            if (neighbourSet[2] || neighbourSet[3])
+            if (neighbourSet[2].Item2 || neighbourSet[3].Item2)
             {
                 return _verticalRotation;
             }

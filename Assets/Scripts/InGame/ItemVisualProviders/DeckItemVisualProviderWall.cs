@@ -212,10 +212,43 @@ namespace Deck.ItemVisualProviders
             return emptyPrefab;
         }
 
-        public bool[] GetNeighbourSet(Vector2Int cellIndex)
+        public (Vector2Int, bool)[] GetNeighbourWallSet(Vector2Int cellIndex)
+        {
+            var result = new (Vector2Int, bool)[8];
+            var neighbours = cellIndex.GetRectNeighbours();
+            for (var index = 0; index < neighbours.Length; index++)
+            {
+                var pos = neighbours[index];
+                if (_wallCheckSet.Contains(pos))
+                {
+                    result[index] = (pos, true);
+                }
+            }
+
+            return result;
+        }
+
+
+        public int GetNeighbourCount(Vector2Int cellIndex)
+        {
+            var count = 0;
+            var neighbours = cellIndex.GetNeighbours();
+            for (var index = 0; index < neighbours.Length; index++)
+            {
+                var pos = neighbours[index];
+                if (_wallCheckSet.Contains(pos))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public bool[] GetNeighbourSetRect(Vector2Int cellIndex)
         {
             var result = new bool[4];
-            var neighbours = cellIndex.GetNeighbours();
+            var neighbours = cellIndex.GetRectNeighbours();
             for (var index = 0; index < neighbours.Length; index++)
             {
                 var pos = neighbours[index];
@@ -246,6 +279,11 @@ namespace Deck.ItemVisualProviders
         public bool HasWallOnPosition(Vector2Int cellIndex)
         {
             return _wallCheckSet.Contains(cellIndex);
+        }
+
+        public bool IsWall(Vector2Int neighbour)
+        {
+            return _wallCheckSet.Contains(neighbour);
         }
     }
 }

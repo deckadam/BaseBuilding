@@ -75,7 +75,8 @@ namespace Deck.UI
             canvasGroup.interactable = false;
 
             OnPreAppear();
-            await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
+            canvasGroup.alpha = 1f;
+            // await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
             isAppeared = true;
             canvasGroup.blocksRaycasts = true;
@@ -96,7 +97,8 @@ namespace Deck.UI
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
-            await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
+            canvasGroup.alpha = 0f;
+            // await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
             isAppeared = false;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;

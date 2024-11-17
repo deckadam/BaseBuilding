@@ -25,6 +25,18 @@ MonoBehaviour:
   - {fileID: 955973170357726054, guid: ba56cb73258c2a64386d24a7aa8ae745, type: 3}
   - {fileID: 496562107975649248, guid: 12f9cf57d736518438b997178a32dd15, type: 3}
   - {fileID: 4521831339985474466, guid: b180ccf6399588c42a8059002f5a91a4, type: 3}
+  - {fileID: 4347336297822648076, guid: 21272f0e70cbb0b41a47953db23ddb3e, type: 3}
+  - {fileID: 4347336297822648076, guid: 9ca294205ce9f3a48bff7670636f8840, type: 3}
+  - {fileID: 4347336297822648076, guid: 1919b607153ed2e4fa47515bee90f574, type: 3}
+  - {fileID: 4347336297822648076, guid: 702e796caa18b8e44a9d3a39d2c206bc, type: 3}
+  - {fileID: 4347336297822648076, guid: 4dbbb9725f389854bb5dcae28c7ae351, type: 3}
+  - {fileID: 4347336297822648076, guid: b32184941de9e5048b4be0288497ecad, type: 3}
+  - {fileID: 4347336297822648076, guid: b091a2a6c7a717c4281933b27dd42059, type: 3}
+  - {fileID: 4347336297822648076, guid: 293fa354cf6d620439f5cefa0b84a22e, type: 3}
+  - {fileID: 4347336297822648076, guid: 1694413e013abe547ac7f442a3b12cb5, type: 3}
+  - {fileID: 4347336297822648076, guid: ba9e1e62a6741a241a6ea157d85857e0, type: 3}
+  - {fileID: 4347336297822648076, guid: 496aeee92d183c14688acbe95e41819a, type: 3}
+  - {fileID: 4347336297822648076, guid: 1a1b9fe3c75d8ca48a5ec71d79e2e737, type: 3}
   emptyPrefab: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
   horizontalPrefab: {fileID: 9185795233703571077, guid: b8fd3fb8c68404941af2792cfadfed11, type: 3}
   verticalPrefab: {fileID: 3053402516165522819, guid: 96a077f05f835184eabbf6d68f2e419a, type: 3}
@@ -37,7 +49,15 @@ MonoBehaviour:
   threeCornerLeftPrefab: {fileID: 955973170357726054, guid: ba56cb73258c2a64386d24a7aa8ae745, type: 3}
   threeCornerRightPrefab: {fileID: 496562107975649248, guid: 12f9cf57d736518438b997178a32dd15, type: 3}
   fourCornerPrefab: {fileID: 5120739874047558305, guid: 5af0a14d91b7a374a887138f63712f17, type: 3}
-  rightWallConnectionPrefab: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
-  leftWallConnectionPrefab: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
-  upWallConnectionPrefab: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
-  downWallConnectionPrefab: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
+  rightWallConnectionPrefab: {fileID: 4347336297822648076, guid: 1919b607153ed2e4fa47515bee90f574, type: 3}
+  leftWallConnectionPrefab: {fileID: 4347336297822648076, guid: 9ca294205ce9f3a48bff7670636f8840, type: 3}
+  upWallConnectionPrefab: {fileID: 4347336297822648076, guid: 702e796caa18b8e44a9d3a39d2c206bc, type: 3}
+  downWallConnectionPrefab: {fileID: 4347336297822648076, guid: 21272f0e70cbb0b41a47953db23ddb3e, type: 3}
+  upperRightWallConnectionPrefab: {fileID: 4347336297822648076, guid: 293fa354cf6d620439f5cefa0b84a22e, type: 3}
+  upperLeftWallConnectionPrefab: {fileID: 4347336297822648076, guid: b091a2a6c7a717c4281933b27dd42059, type: 3}
+  lowerRightWallConnectionPrefab: {fileID: 4347336297822648076, guid: b32184941de9e5048b4be0288497ecad, type: 3}
+  lowerLeftWallConnectionPrefab: {fileID: 4347336297822648076, guid: 4dbbb9725f389854bb5dcae28c7ae351, type: 3}
+  fourCornerWallConnectionUpperLeftSinglePrefab: {fileID: 4347336297822648076, guid: 496aeee92d183c14688acbe95e41819a, type: 3}
+  fourCornerWallConnectionUpperRightSinglePrefab: {fileID: 4347336297822648076, guid: 1a1b9fe3c75d8ca48a5ec71d79e2e737, type: 3}
+  fourCornerWallConnectionLowerLeftSinglePrefab: {fileID: 4347336297822648076, guid: 1694413e013abe547ac7f442a3b12cb5, type: 3}
+  fourCornerWallConnectionLowerRightSinglePrefab: {fileID: 4347336297822648076, guid: ba9e1e62a6741a241a6ea157d85857e0, type: 3}
