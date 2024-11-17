@@ -7,7 +7,6 @@ using Deck.EventManager;
 using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Iterators;
-using Sirenix.Utilities;
 using UnityEngine;
 using Zenject;
 
@@ -125,7 +124,7 @@ namespace Deck.ItemVisualProviders
                             continue;
                         }
 
-                        ReturnItemVisual(currentlyPlaced);
+                        ReturnIfHasItemVisual(currentlyPlaced);
                     }
 
                     positionsToRemove.Remove(prefabSet.Item2);
@@ -151,6 +150,16 @@ namespace Deck.ItemVisualProviders
 
             ReturnIfHasItemVisual(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
+
+            if (_activeWallConnections.TryGetValue(itemPos, out var existingValues))
+            {
+                foreach (var deckItemVisual in existingValues)
+                {
+                    ReturnIfHasItemVisual(deckItemVisual.Value);
+                }
+
+                _activeBarTables.Remove(itemPos);
+            }
 
             _activeBarTables.Remove(itemPos);
             _activeBarTableAgents.Remove(itemPos);
