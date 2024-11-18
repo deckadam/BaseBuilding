@@ -18,12 +18,14 @@ namespace Deck.UI.Building.BuildMode
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
             Deck.GetService<DeckServiceBuilding>().BuildInCell();
-            BuildingService.UpdateSilhouetteInCell(Quaternion.identity);
+            var rotation = BuildingPage.GetBuildableRotation(Buildable);
+            BuildingService.UpdateSilhouetteInCell(rotation);
         }
 
         protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
         {
-            BuildingService.UpdateSilhouetteInCell(Quaternion.identity);
+            var rotation = BuildingPage.GetBuildableRotation(Buildable);
+            BuildingService.UpdateSilhouetteInCell(rotation);
         }
     }
 }

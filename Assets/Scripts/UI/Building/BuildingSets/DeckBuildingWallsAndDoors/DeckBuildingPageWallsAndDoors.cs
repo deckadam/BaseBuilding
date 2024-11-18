@@ -1,6 +1,48 @@
+using Deck.Data.Buildable;
+using Deck.Services.CameraService;
+using UnityEngine;
+
 namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
 {
     public class DeckBuildingPageWallsAndDoors : DeckBuildingPage
     {
+        public DeckBuildable doorBuildable;
+
+        private readonly Quaternion horizontalDoorRotation = Quaternion.Euler(0, 90, 0);
+
+        private DeckServiceCamera _serviceCamera;
+
+        protected override void InternalInitialize()
+        {
+            _serviceCamera = Deck.GetService<DeckServiceCamera>();
+        }
+
+        public override Quaternion GetBuildableRotation(DeckBuildable buildable)
+        {
+            if (buildable != doorBuildable)
+            {
+                return Quaternion.identity;
+            }
+
+            var cursorCellIndex = _serviceCamera.GetCursorCellIndex();
+            var neighbourStatus = BuildingService.GetCellNeighbourStatus(cursorCellIndex);
+
+            if (neighbourStatus[0] && neighbourStatus[1])
+            {
+                return horizontalDoorRotation;
+            }
+
+            if (neighbourStatus[2] && neighbourStatus[3])
+            {
+                return Quaternion.identity;
+            }
+
+            if (neighbourStatus[0] || neighbourStatus[1])
+            {
+                return horizontalDoorRotation;
+            }
+
+            return Quaternion.identity;
+        }
     }
 }

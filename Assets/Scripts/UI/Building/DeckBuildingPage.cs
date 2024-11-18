@@ -16,9 +16,10 @@ namespace Deck.UI.Building
         [SerializeField] protected RectTransform container;
         [SerializeField] protected CanvasGroup canvasGroup;
 
+        protected DeckServiceBuilding BuildingService;
+        
         private DeckEscapableBuildMode escapableBuildMode;
         private DeckServiceEscapable escapableService;
-        private DeckServiceBuilding buildingService;
 
         private void OnDestroy()
         {
@@ -37,7 +38,7 @@ namespace Deck.UI.Building
             gameObject.SetActive(false);
 
             escapableService = Deck.GetService<DeckServiceEscapable>();
-            buildingService = Deck.GetService<DeckServiceBuilding>();
+            BuildingService = Deck.GetService<DeckServiceBuilding>();
 
             foreach (var buildable in buildables)
             {
@@ -45,6 +46,8 @@ namespace Deck.UI.Building
                 buildableButton.Initialize(this, buildable);
                 buildableButton.rectTransform.SetParent(container, false);
             }
+            
+            InternalInitialize();
         }
 
         public void Appear()
@@ -85,10 +88,20 @@ namespace Deck.UI.Building
             escapableBuildMode.Initialize(OnEscapeRequested, buildable, this);
         }
 
+        public virtual Quaternion GetBuildableRotation(DeckBuildable buildable)
+        {
+            return Quaternion.identity;
+        }
+
         private void OnEscapeRequested()
         {
             escapableBuildMode = null;
-            buildingService.Clear();
+            BuildingService.Clear();
+        }
+
+        protected virtual void InternalInitialize()
+        {
+            
         }
     }
 }

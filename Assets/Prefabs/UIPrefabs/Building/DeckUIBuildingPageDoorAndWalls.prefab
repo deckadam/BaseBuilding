@@ -134,6 +134,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
   container: {fileID: 5521687508262923315}
   canvasGroup: {fileID: 552943370939757156}
+  doorBuildable: {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
 --- !u!225 &552943370939757156
 CanvasGroup:
   m_ObjectHideFlags: 0

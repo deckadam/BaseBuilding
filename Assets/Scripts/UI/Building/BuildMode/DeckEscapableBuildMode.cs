@@ -16,14 +16,17 @@ namespace Deck.UI.Building.BuildMode
 
         protected DeckServiceBuilding BuildingService;
         protected DeckBuildable Buildable;
-
+        protected DeckBuildingPage BuildingPage;
         private Action _onEscape;
         private bool _canMoveBuild;
 
-        public void Initialize(Action onEscape, DeckBuildable buildable, DeckBuildingPage deckBuildingPage)
+        public void Initialize(Action onEscape, DeckBuildable buildable, DeckBuildingPage buildingPage)
         {
             Buildable = buildable;
+            BuildingPage = buildingPage;
+            
             _onEscape = onEscape;
+
             DeckEventManager.Register<DeckEventOnLeftClickDown>(InternalOnLeftClickDown);
             DeckEventManager.Register<DeckEventOnLeftClickUp>(InternalOnLeftClickUp);
             DeckEventManager.Register<DeckEventOnMouseMove>(InternalOnMouseMove);
