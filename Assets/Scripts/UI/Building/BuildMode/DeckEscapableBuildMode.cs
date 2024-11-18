@@ -22,9 +22,14 @@ namespace Deck.UI.Building.BuildMode
 
         public void Initialize(Action onEscape, DeckBuildable buildable, DeckBuildingPage buildingPage)
         {
+            if (Buildable == buildable)
+            {
+                return;
+            }
+
             Buildable = buildable;
             BuildingPage = buildingPage;
-            
+
             _onEscape = onEscape;
 
             DeckEventManager.Register<DeckEventOnLeftClickDown>(InternalOnLeftClickDown);
@@ -38,7 +43,7 @@ namespace Deck.UI.Building.BuildMode
 
             InternalOnInitialize();
 
-            Debug.LogError(GetType() + "  initialized");
+            Debug.LogError(GetType() +"  initialized");
         }
 
         public void OnEscapeRequested()
