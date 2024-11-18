@@ -92,21 +92,18 @@ namespace Deck.Services.Building
             _rotation = _silhouetteParent.transform.rotation;
         }
 
-        private void SetActiveBuildable(DeckBuildable buildable)
-        {
-            _activeBuildable = buildable;
-        }
-
         public void StartSilhouette(DeckBuildable buildable)
         {
             _isDirty = true;
-            SetActiveBuildable(buildable);
+            _activeBuildable = buildable;
+            _rotation = Quaternion.identity;
 
             var newPiece = GetSilhouettePiece();
 
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = Vector3.zero;
             newPiece.gameObject.transform.localRotation = _rotation;
+
             if (buildable.Rotatable)
             {
                 DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
@@ -121,7 +118,7 @@ namespace Deck.Services.Building
         public void StartSilhouetteRect(DeckBuildable buildable)
         {
             _isDirty = true;
-            SetActiveBuildable(buildable);
+            _activeBuildable = buildable;
 
             var newPiece = GetSilhouettePiece();
 
@@ -130,30 +127,22 @@ namespace Deck.Services.Building
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
 
-
             if (buildable.Rotatable)
             {
                 DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
             }
 
+            if (!_silhouetteParent.activeSelf)
+            {
+                _silhouetteParent.gameObject.SetActive(true);
+            }
+            
             UpdateSilhouetteInCellRect(new[] { cellIndex, cellIndex });
         }
 
-        public void UpdateSilhouetteInCell()
+        public void SetSilhouetteStatus(bool status)
         {
-            if (!_activeBuildable)
-            {
-                return;
-            }
-
-            var cellIndex = GetCursorCellIndex();
-            
-            var isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value != null);
-            var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-            
-            ApplyMaterialToSilhouette(material);
-
-            _silhouetteParent.transform.position = cellIndex.ToVector3();
+            _silhouetteParent.SetActive(status);
         }
 
         public void UpdateSilhouetteInCell(Quaternion rotation)
@@ -231,7 +220,7 @@ namespace Deck.Services.Building
             }
 
             var worldPosition = GetCursorWorldPosition();
-            var isPlaceable = CheckIfAgentBuildableInArea(_activeBuildable);
+            var isPlaceable = CheckIfAgentBuildableInArea(_activeBuildable, worldPosition);
             var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -372,7 +361,7 @@ namespace Deck.Services.Building
             newBuilding.InitializeBuilding();
         }
 
-        public void BuildFree(Vector3 position)
+        public void BuildFree()
         {
             if (_activeBuildable == null)
             {
@@ -387,17 +376,19 @@ namespace Deck.Services.Building
                 return;
             }
 
-            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+            var worldPosition = GetCursorWorldPosition();
 
-            if (!CheckIfAgentBuildableInArea(_activeBuildable))
+            if (!CheckIfAgentBuildableInArea(_activeBuildable, worldPosition))
             {
                 DeckEventNotificationRequested.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
                 return;
             }
 
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
-            newBuilding.transform.position = position;
+            newBuilding.transform.position = worldPosition;
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
@@ -472,7 +463,7 @@ namespace Deck.Services.Building
             _pieceInUse.Clear();
         }
 
-        public void BuildInCell(Vector2Int cellIndex)
+        public void BuildInCell()
         {
             if (_activeBuildable == null)
             {
@@ -487,16 +478,20 @@ namespace Deck.Services.Building
                 return;
             }
 
-            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+            var worldPosition = GetCursorCellIndex();
 
-            if (_lastCheckedCellIndex == cellIndex)
+
+            if (_lastCheckedCellIndex == worldPosition)
             {
                 return;
             }
 
-            _lastCheckedCellIndex = cellIndex;
+            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
 
-            if (!CheckIfAgentBuildableInCell(_activeBuildable, cellIndex, out var encounteredAgents))
+
+            _lastCheckedCellIndex = worldPosition;
+
+            if (!CheckIfAgentBuildableInCell(_activeBuildable, worldPosition, out var encounteredAgents))
             {
                 foreach (var encounteredAgent in encounteredAgents)
                 {
@@ -511,10 +506,10 @@ namespace Deck.Services.Building
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
-            newBuilding.transform.position = cellIndex.ToVector3();
+            newBuilding.transform.position = worldPosition.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            SetCellOccupied(cellIndex, _activeBuildable.Indices, newBuilding);
+            SetCellOccupied(worldPosition, _activeBuildable.Indices, newBuilding);
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)
@@ -696,9 +691,9 @@ namespace Deck.Services.Building
             return false;
         }
 
-        private bool CheckIfAgentBuildableInArea(DeckBuildable buildable)
+        private bool CheckIfAgentBuildableInArea(DeckBuildable buildable, Vector3 worldPosition)
         {
-            var count = Physics.OverlapBoxNonAlloc(GetCursorWorldPosition() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
+            var count = Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore);
 
             return count == 0;

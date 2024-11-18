@@ -1,4 +1,3 @@
-using System;
 using Deck.Components;
 using Deck.Data.Buildable;
 using TMPro;
@@ -14,11 +13,11 @@ namespace Deck.UI.Building
         [SerializeField] private TextMeshProUGUI priceText;
 
         private DeckBuildable _buildable;
-        private Action<DeckBuildable> _onClick;
+        private DeckBuildingPage _buildingPage;
 
-        public void Initialize(Action<DeckBuildable> onClick, DeckBuildable buildable)
+        public void Initialize(DeckBuildingPage buildingPage, DeckBuildable buildable)
         {
-            _onClick = onClick;
+            _buildingPage = buildingPage;
             _buildable = buildable;
             icon.sprite = _buildable.Icon;
             nameText.text = buildable.VisibleName;
@@ -28,7 +27,7 @@ namespace Deck.UI.Building
 
         public void OnClick()
         {
-            _onClick?.Invoke(_buildable);
+            _buildingPage.OnBuildableSelected(_buildable);
         }
     }
 }

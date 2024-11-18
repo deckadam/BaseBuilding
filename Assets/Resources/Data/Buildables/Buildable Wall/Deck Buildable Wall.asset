@@ -16,7 +16,7 @@ MonoBehaviour:
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
   name: Wall
   visibleName: Wall
-  silouette:
+  silhouette:
   - mesh: {fileID: -5495902117074765545, guid: fd693bc5e37ab9840bb65ab5fbc7d303, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
@@ -24,10 +24,11 @@ MonoBehaviour:
   - {x: 0, y: 0}
   rotatable: 0
   icon: {fileID: 0}
-  extents: {x: 0.3, y: 1.5, z: 0.3}
+  extents: {x: 0.3, y: 1.5, z: 0.30000013}
   prices:
   - currencyType: 0
     amount: 25
   canBeHangedToWall: 0
   canBePlacedOnTopOfAnotherObject: 0
+  buildMode: 4
   materialCount: 1

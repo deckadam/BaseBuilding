@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8239013316661955243}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -109,7 +108,6 @@ RectTransform:
   - {fileID: 7561963266382068630}
   - {fileID: 5521687508262923315}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -130,14 +128,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId:
     _id: 82783885
-    IdString: 83437205
   rectTransform: {fileID: 8239013316661955243}
-  canvasGroup: {fileID: 552943370939757156}
-  appearDuration: 0.2
-  ease: 27
-  wallBuildable: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
-  doorBuildable: {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
+  buildables:
+  - {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  - {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
   container: {fileID: 5521687508262923315}
+  canvasGroup: {fileID: 552943370939757156}
 --- !u!225 &552943370939757156
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -180,7 +176,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8239013316661955243}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

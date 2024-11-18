@@ -12,6 +12,7 @@ using Deck.UI.Building.BuildingSets.BuildingWallsAndDoors;
 using Deck.UI.Building.BuildingSets.DeckBuildingBarTable;
 using Deck.UI.Building.BuildingSets.DeckBuildingFurniture;
 using Deck.Utility;
+using UI.Building.BuildMode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,6 +32,7 @@ namespace Deck.Data.Item.Editor
         private bool _isBasicItem = true;
         private string _nameSuffix;
         private DeckBuildableType _selectedType = DeckBuildableType.Error;
+        private DeckBuildMode _selectedBuildMode = DeckBuildMode.Free;
 
 
         [MenuItem("Deck/Item Creator")]
@@ -56,6 +58,7 @@ namespace Deck.Data.Item.Editor
             _nameSuffix = EditorGUILayout.TextField("Name suffix: ", _nameSuffix);
             _model = (GameObject)EditorGUILayout.ObjectField("Item model: ", _model, typeof(GameObject), false);
             _selectedType = (DeckBuildableType)EditorGUILayout.EnumPopup("Buildable type: ", _selectedType);
+            _selectedBuildMode = (DeckBuildMode)EditorGUILayout.EnumPopup("Build mode: ", _selectedBuildMode);
 
             for (var i = 0; i < _tags.Count; i++)
             {

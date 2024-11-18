@@ -3,6 +3,7 @@ using Deck.Components;
 using Deck.Data.Currency;
 using Deck.Utility;
 using Sirenix.OdinInspector;
+using UI.Building.BuildMode;
 using UnityEngine;
 
 namespace Deck.Data.Buildable
@@ -22,6 +23,8 @@ namespace Deck.Data.Buildable
         [SerializeField] private DeckPrice[] prices;
         [SerializeField] private bool canBeHangedToWall;
         [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
+        [SerializeField] private DeckBuildMode buildMode;
+
 
         public SilhouetteData[] Silhouette => silhouette;
         public int materialCount;
@@ -36,6 +39,7 @@ namespace Deck.Data.Buildable
         public DeckPrice[] Prices => prices;
         public bool CanBeHangedToWall => canBeHangedToWall;
         public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
+        public DeckBuildMode BuildMode => buildMode;
 
         [Button]
         private void OnValidate()

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using Deck.Services;
+using Deck.UI.Building;
 using Deck.UI.MainMenu;
 using UnityEngine;
 
-namespace Services.Implementations.Escapable
+namespace Deck.Services.Implementations.Escapable
 {
     public class DeckServiceEscapable : DeckServiceBase
     {
@@ -33,7 +34,7 @@ namespace Services.Implementations.Escapable
                 {
                     if (_escapables.Count == 0)
                     {
-                        Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                        Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
                         return;
                     }
 
@@ -49,7 +50,7 @@ namespace Services.Implementations.Escapable
             }
             else
             {
-                Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
             }
         }
 
@@ -62,7 +63,7 @@ namespace Services.Implementations.Escapable
             }
             else if (_escapables.Count == 0)
             {
-                Deck.Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
             }
         }
 

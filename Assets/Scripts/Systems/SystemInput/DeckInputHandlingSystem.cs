@@ -10,10 +10,10 @@ using Deck.Services;
 using Deck.Services.CameraService;
 using Deck.Services.CellSelectionService;
 using Deck.Services.Implementations.Currency;
+using Deck.Services.Implementations.Escapable;
 using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
-using Services.Implementations.Escapable;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -253,23 +253,6 @@ namespace Deck.InputHandling
                     DeckEventOnLeftClickDown.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
                 }
             }
-            else if (Input.GetMouseButton(0))
-            {
-                if (_isInputStartedOnUI)
-                {
-                    return;
-                }
-
-                var currentInputPosition = Input.mousePosition.ToVector2Int();
-
-                if (_lastInputPosition == currentInputPosition)
-                {
-                    return;
-                }
-
-                _lastInputPosition = currentInputPosition;
-                DeckEventOnMouseMove.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
-            }
             else if (Input.GetMouseButtonUp(0))
             {
                 if (_isInputStartedOnUI)
@@ -284,6 +267,16 @@ namespace Deck.InputHandling
             {
                 DeckEventMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
             }
+
+            var currentInputPosition = Input.mousePosition.ToVector2Int();
+
+            if (_lastInputPosition == currentInputPosition)
+            {
+                return;
+            }
+
+            _lastInputPosition = currentInputPosition;
+            DeckEventOnMouseMove.Create(Deck.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
         }
 
         private bool IsOnUI()

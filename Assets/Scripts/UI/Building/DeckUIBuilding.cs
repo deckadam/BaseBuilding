@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.EventManager;
 using Deck.Services;
+using Deck.Services.Implementations.Escapable;
 using Deck.UI.MainMenu.Events;
-using Services.Implementations.Escapable;
 using UnityEngine;
 
 namespace Deck.UI.Building
@@ -28,7 +28,7 @@ namespace Deck.UI.Building
                 var button = InstanceProvider.RentUIElement(buildingSet.button.GetType()).GetComponent<DeckBuildingButton>();
                 button.rectTransform.SetParent(buttonsContainer, false);
 
-                page.Initialize(this, buildingSet.button);
+                page.Initialize();
                 button.Initialize(this, page);
             }
 

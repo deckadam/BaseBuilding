@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using Deck.Components;
 using Deck.Data.Buildable;
 using Deck.Services.Building;
-using Deck.UI.Building.BuildingSets.BuildMode;
+using Deck.Services.Implementations.Escapable;
+using Deck.UI.Building.BuildMode;
 using Deck.Utility;
-using Services.Implementations.Escapable;
+using UI.Building.BuildMode;
 using UnityEngine;
 
 namespace Deck.UI.Building
@@ -12,27 +13,25 @@ namespace Deck.UI.Building
     public class DeckBuildingPage : DeckUIElement
     {
         [SerializeField] protected List<DeckBuildable> buildables;
-
         [SerializeField] protected RectTransform container;
-
         [SerializeField] protected CanvasGroup canvasGroup;
 
-        protected DeckEscapableBuildMode escapableBuildMode;
-        protected DeckServiceEscapable escapableService;
-        protected DeckServiceBuilding buildingService;
-        protected DeckBuildingButton button;
-        protected DeckUIBuilding uIBuilding;
-        protected bool isBuildModeActive;
+        private DeckEscapableBuildMode escapableBuildMode;
+        private DeckServiceEscapable escapableService;
+        private DeckServiceBuilding buildingService;
 
-        protected override void InternalOnValidate()
+        private void OnDestroy()
+        {
+            escapableBuildMode?.OnEscapeRequested();
+        }
+
+        protected sealed override void InternalOnValidate()
         {
             canvasGroup ??= GetComponent<CanvasGroup>();
         }
 
-        public void Initialize(DeckUIBuilding uiBuilding, DeckBuildingButton button)
+        public void Initialize()
         {
-            uIBuilding = uiBuilding;
-            this.button = button;
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
@@ -40,7 +39,12 @@ namespace Deck.UI.Building
             escapableService = Deck.GetService<DeckServiceEscapable>();
             buildingService = Deck.GetService<DeckServiceBuilding>();
 
-            InternalOnInitialize();
+            foreach (var buildable in buildables)
+            {
+                var buildableButton = InstanceProvider.RentUIElement<DeckBuildableButton>();
+                buildableButton.Initialize(this, buildable);
+                buildableButton.rectTransform.SetParent(container, false);
+            }
         }
 
         public void Appear()
@@ -70,20 +74,21 @@ namespace Deck.UI.Building
             DeckLogger.Inform("Buildable :" + buildingData.Name + "  is added to building list.  " + GetType());
         }
 
-        protected void OnEscapeRequested()
+        public void OnBuildableSelected(DeckBuildable buildable)
         {
-            isBuildModeActive = false;
+            if (escapableBuildMode != null)
+            {
+                escapableService.RemoveEscapable(escapableBuildMode);
+            }
+
+            escapableBuildMode = DeckEscapableBuildModeProvider.GetEscapableBuildMode(buildable.BuildMode);
+            escapableBuildMode.Initialize(OnEscapeRequested, buildable, this);
+        }
+
+        private void OnEscapeRequested()
+        {
             escapableBuildMode = null;
             buildingService.Clear();
-            InternalOnEscapeRequested();
-        }
-
-        protected virtual void InternalOnInitialize()
-        {
-        }
-
-        protected virtual void InternalOnEscapeRequested()
-        {
         }
     }
 }
