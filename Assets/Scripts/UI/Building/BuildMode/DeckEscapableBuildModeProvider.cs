@@ -15,6 +15,7 @@ namespace UI.Building.BuildMode
                 DeckBuildMode.InCell => new DeckEscapableBuildModeInCell(),
                 DeckBuildMode.OnTop => new DeckEscapableBuildModeOnTop(),
                 DeckBuildMode.OnWall => new DeckEscapableBuildModeOnWall(),
+                DeckBuildMode.ItemWithAccessArea => new DeckEscapableBuildModeBuildingWithAccessArea(),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
         }
@@ -27,6 +28,7 @@ namespace UI.Building.BuildMode
         OnWall,
         OnTop,
         Rect,
-        Line
+        Line,
+        ItemWithAccessArea,
     }
 }

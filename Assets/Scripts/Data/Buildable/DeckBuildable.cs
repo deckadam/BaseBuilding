@@ -17,6 +17,7 @@ namespace Deck.Data.Buildable
         [SerializeField] private string visibleName;
         [SerializeField] private SilhouetteData[] silhouette;
         [SerializeField] private Vector2Int[] indices;
+        [SerializeField] private Vector2Int[] accessIndices;
         [SerializeField] private bool rotatable;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
@@ -24,11 +25,12 @@ namespace Deck.Data.Buildable
         [SerializeField] private bool canBeHangedToWall;
         [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
         [SerializeField] private DeckBuildMode buildMode;
-
+        [SerializeField] private DeckBuildable buildableToPlaceOnTop;
 
         public SilhouetteData[] Silhouette => silhouette;
         public int materialCount;
         public Vector2Int[] Indices => indices;
+        public Vector2Int[] AccessIndices => accessIndices;
         public bool Rotatable => rotatable;
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
@@ -40,6 +42,7 @@ namespace Deck.Data.Buildable
         public bool CanBeHangedToWall => canBeHangedToWall;
         public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
         public DeckBuildMode BuildMode => buildMode;
+        public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
 
         [Button]
         private void OnValidate()
@@ -48,7 +51,7 @@ namespace Deck.Data.Buildable
             CollectExtentsData();
         }
 
-        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall)
+        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall, DeckBuildMode buildMode)
         {
             var newItem = CreateInstance<DeckBuildable>();
             newItem.name = name;
@@ -62,7 +65,8 @@ namespace Deck.Data.Buildable
             newItem.indices = new[] { Vector2Int.zero };
             newItem.CollectExtentsData();
             newItem.CollectSilhouetteData();
-            newItem.prices = new DeckPrice[]
+            newItem.buildMode = buildMode;
+            newItem.prices = new[]
             {
                 new DeckPrice(0, DeckCurrencyType.Money)
             };

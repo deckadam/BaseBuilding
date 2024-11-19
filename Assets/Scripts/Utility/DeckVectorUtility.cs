@@ -64,8 +64,8 @@ namespace Deck.Utility
             var direction = end - start;
             return Quaternion.LookRotation(direction.ToVector3(), Vector3.up);
         }
-        
-        
+
+
         public static HashSet<Vector2Int> GetRectFromPoints(this Vector2Int[] points)
         {
             var firstPos = points[0];

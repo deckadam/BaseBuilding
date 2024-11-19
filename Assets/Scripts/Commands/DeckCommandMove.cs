@@ -17,12 +17,14 @@ namespace Deck.Commands
             _agent = agent;
         }
 
-        public override UniTask<bool> ProcessCommand(CancellationToken token)
+        public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
             DeckServiceSelection.ResetSelectionToPossession();
             var componentMovement = _agent.GetDeckComponent<DeckComponentMovement>();
             componentMovement.SetDestination(_targetPosition);
-            return default;
+            await UniTask.NextFrame(token);
+            await UniTask.WaitUntil(() => componentMovement.ReachedToDestination(), cancellationToken: token);
+            return true;
         }
     }
 }

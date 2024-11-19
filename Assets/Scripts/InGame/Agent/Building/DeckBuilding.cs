@@ -21,11 +21,11 @@ namespace Deck.Components.Building
         {
             Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
             RaiseItemVisualChanged();
-            
+
             itemVisualInstance.transform.parent = SelfTransform;
 
             if (!setVisualPosition) return;
-            
+
             itemVisualInstance.transform.localPosition = Vector3.zero;
             itemVisualInstance.transform.localRotation = Quaternion.identity;
         }

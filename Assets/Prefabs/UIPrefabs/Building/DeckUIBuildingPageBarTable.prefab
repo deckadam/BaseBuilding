@@ -68,6 +68,7 @@ MonoBehaviour:
   rectTransform: {fileID: 5327040660684750421}
   buildables:
   - {fileID: 11400000, guid: dfdfaa63580cc4045b2a6e6958ef7733, type: 2}
+  - {fileID: 11400000, guid: 66c476e740cc1074f85df9b49824bd37, type: 2}
   container: {fileID: 8582541736764332237}
   canvasGroup: {fileID: 4330169967580350106}
 --- !u!1 &683066293051858034

@@ -114,7 +114,6 @@ namespace Deck.Services.Implementations.Currency
             foreach (var currency in _currentCurrencies)
             {
                 DeckSaveSystem.SetData(currency.SaveKey, currency.Amount);
-                Debug.LogError(currency.SaveKey + "  " + currency.Amount);
             }
         }
     }

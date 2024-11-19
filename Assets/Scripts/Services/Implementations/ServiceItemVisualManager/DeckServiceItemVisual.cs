@@ -53,6 +53,7 @@ namespace Deck.ItemVisualProviders
                 }
             }
 
+            DeckLogger.Error("Item visual not found");
             itemVisual = null;
             return false;
         }

@@ -15,7 +15,6 @@ using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using Zenject;
 
@@ -23,32 +22,23 @@ namespace Deck.InputHandling
 {
     public class DeckInputHandlingSystem : MonoBehaviour
     {
-        public static bool IsInterruptingCommandModeActive;
         private float _lastPressTime;
         private DeckBinderItem _binderItem;
-        private DeckAgentCore _coreAgentPrefab;
-        private DiContainer _container;
 
         [Inject]
-        private void Inject(DiContainer container, DeckBinderItem tempBinderItem, DeckAgentCore coreAgentPrefab)
+        private void Inject(DeckBinderItem tempBinderItem)
         {
-            _container = container;
-            _coreAgentPrefab = coreAgentPrefab;
             _binderItem = tempBinderItem;
         }
 
         private void Update()
         {
-            CheckForNavMeshHit();
             CheckForSelectable();
             RaycastToGround();
-            CheckForPlayerCreation();
             CheckForTestInventoryEntry();
             OpenInventoryPopUpForSelectable();
-            CheckForAttack();
             CheckForEscapeMenu();
             SaveCheck();
-            CheckForCommandStackStatus();
             CheckForStatsPopUp();
             CheckForDestroyBuilding();
             CheckForCurrency();
@@ -88,45 +78,12 @@ namespace Deck.InputHandling
             // }
         }
 
-        private void CheckForCommandStackStatus()
-        {
-            IsInterruptingCommandModeActive = !Input.GetKey(KeyCode.LeftShift);
-        }
-
         private void SaveCheck()
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
                 Deck.GetService<DeckGameManager>().GatherSaveData();
                 DeckSaveSystem.Save();
-            }
-        }
-
-        private void CheckForAttack()
-        {
-            if (!Input.GetMouseButtonDown(1))
-            {
-                return;
-            }
-
-            if (DeckServiceSelection.currentPossession == null)
-            {
-                return;
-            }
-
-            var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out var hit, 100f))
-            {
-                return;
-            }
-
-            if (hit.transform.TryGetComponentInParent<DeckAgent>(out var result))
-            {
-                var damageDealer = DeckServiceSelection.currentPossession.GetDeckComponent<DeckComponentCommandCreator>();
-                if (damageDealer)
-                {
-                    damageDealer.DealDamage(result);
-                }
             }
         }
 
@@ -168,15 +125,6 @@ namespace Deck.InputHandling
             }
         }
 
-        private void CheckForPlayerCreation()
-        {
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                var newAgent = _container.InstantiatePrefab(_coreAgentPrefab);
-                newAgent.GetComponent<DeckAgent>().Initialize();
-            }
-        }
-
         private void CheckForSelectable()
         {
             if (!Input.GetMouseButtonDown(0))
@@ -210,29 +158,6 @@ namespace Deck.InputHandling
             {
                 Deck.GetService<DeckServiceSelection>().OnSelection(componentHolder);
             }
-        }
-
-        private void CheckForNavMeshHit()
-        {
-            if (!Input.GetMouseButtonDown(1))
-            {
-                return;
-            }
-
-            if (DeckServiceSelection.currentPossession == null)
-            {
-                return;
-            }
-
-            var screenPosition = Input.mousePosition;
-            var ray = Deck.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(screenPosition);
-            var positionOnGroundPlane = ray.origin - ray.direction / ray.direction.y * ray.origin.y; //collide with plane at y=0
-            if (!NavMesh.SamplePosition(positionOnGroundPlane, out var navMeshHit, 100, 1))
-            {
-                return;
-            }
-
-            DeckServiceSelection.currentPossession.AddCommand(new DeckCommandMove(navMeshHit.position, DeckServiceSelection.currentPossession));
         }
 
         private bool _isInputStartedOnUI;

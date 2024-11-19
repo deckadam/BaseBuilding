@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Deck.Commands;
 using Deck.Save;
 using Deck.Utility;
+using UnityEngine;
 
 namespace Deck.Components
 {
@@ -33,6 +34,7 @@ namespace Deck.Components
                     _activeCommand = _waitingCommands.Dequeue();
                     var status = await _activeCommand.ProcessCommand(_taskExecutionTokenSource.Token).SuppressCancellationThrow();
                     _activeCommand = null;
+
                     if (status.IsCanceled)
                     {
                         DeckLogger.Command("Canceled");

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Deck.Components;
 using Deck.Services;
+using UnityEngine;
 
 namespace Services.AgentFinder
 {
@@ -8,6 +10,15 @@ namespace Services.AgentFinder
     {
         private Dictionary<int, DeckAgent> _agents = new();
         private Dictionary<int, DeckItemVisual> _itemVisuals = new();
+        private Dictionary<DeckActionTag, HashSet<DeckAgent>> _agentsWithActions = new();
+
+        public override void Initialize()
+        {
+            foreach (var suit in (DeckActionTag[])Enum.GetValues(typeof(DeckActionTag)))
+            {
+                _agentsWithActions.Add(suit, new HashSet<DeckAgent>());
+            }
+        }
 
         public void RegisterItemVisual(DeckItemVisual itemVisual)
         {
@@ -32,16 +43,32 @@ namespace Services.AgentFinder
         public void RegisterAgent(DeckAgent agent)
         {
             _agents[agent.GetUniqueId().ID] = agent;
+            var tags = agent.GetTags();
+            foreach (var deckActionTag in tags)
+            {
+                _agentsWithActions[deckActionTag].Add(agent);
+            }
         }
 
         public void RemoveAgent(DeckAgent agent)
         {
             _agents.Remove(agent.GetUniqueId().ID);
+
+            var tags = agent.GetTags();
+            foreach (var deckActionTag in tags)
+            {
+                _agentsWithActions[deckActionTag].Remove(agent);
+            }
         }
 
         public DeckAgent GetAgent(int uniqueId)
         {
             return _agents[uniqueId];
+        }
+
+        public HashSet<DeckAgent> TryGetAgentsWithTag(DeckActionTag tag)
+        {
+            return _agentsWithActions[tag];
         }
 
         public IEnumerable<DeckAgent> GetAgents()

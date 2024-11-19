@@ -89,7 +89,7 @@ namespace Deck.Data.Item.Editor
         {
             string suffix;
 
-            DeckBuildingPage page = null;
+            DeckBuildingPage page;
             switch (_selectedType)
             {
                 case DeckBuildableType.Error:
@@ -127,16 +127,17 @@ namespace Deck.Data.Item.Editor
             var itemVisualPrefab = PrefabUtility.SaveAsPrefabAsset(itemVisualInstance.gameObject, itemVisualPrefabName).GetComponent<DeckItemVisual>();
             itemVisualPrefab.SetNewUniqueId();
 
-            var agentInstance = CreateAgentInstance();
-            var agentPrefab = PrefabUtility.SaveAsPrefabAsset(agentInstance, agentPrefabName).GetComponent<DeckBuilding>();
-            agentPrefab.SetNewUniqueId();
+            var buildingInstance = CreateBuildingInstance();
+            var buildingPrefab = PrefabUtility.SaveAsPrefabAsset(buildingInstance, agentPrefabName).GetComponent<DeckBuilding>();
+            buildingPrefab.SetTags(_tags.ToArray());
+            buildingPrefab.SetNewUniqueId();
 
-            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, agentPrefab, _rotatable, _canBeHangedToWall);
+            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab, _rotatable, _canBeHangedToWall, _selectedBuildMode);
             AssetDatabase.CreateAsset(buildingData, assetName);
 
-            agentPrefab.SetBuildingData(buildingData);
+            buildingPrefab.SetBuildingData(buildingData);
 
-            UpdatePrefabData(itemVisualPrefab, agentPrefab, buildingData, itemVisualInstance, agentInstance);
+            UpdatePrefabData(itemVisualPrefab, buildingPrefab, buildingData, itemVisualInstance, buildingInstance);
 
             if (_isBasicItem)
             {
@@ -152,13 +153,11 @@ namespace Deck.Data.Item.Editor
             }
             else
             {
-                Debug.LogError("Please add item to proper item visual provider!!!");
+                DeckLogger.Warning("Please add item to proper item visual provider!!!");
             }
 
-            // visualProvider.AddItemVisual(itemVisualPrefab);
-
             var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
-            instanceProvider.AddAgent(agentPrefab);
+            instanceProvider.AddAgent(buildingPrefab);
             instanceProvider.AddItemVisual(itemVisualPrefab);
 
             page.AddBuildable(buildingData);
@@ -184,7 +183,7 @@ namespace Deck.Data.Item.Editor
             DestroyImmediate(itemVisualInstance);
         }
 
-        private GameObject CreateAgentInstance()
+        private GameObject CreateBuildingInstance()
         {
             var newObject = new GameObject();
             newObject.name = _nameSuffix;

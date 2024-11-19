@@ -1,5 +1,4 @@
 using Deck.InputHandling.Events;
-using Deck.Services.Building;
 using Deck.Services.CameraService;
 using UnityEngine;
 
@@ -33,10 +32,10 @@ namespace Deck.UI.Building.BuildMode
 
             _isDown = false;
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            
+
             var delta = currentCellPosition - _initialCellPosition;
 
-            if (delta.x> delta.y)
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
             {
                 currentCellPosition.y = _initialCellPosition.y;
             }
@@ -44,8 +43,8 @@ namespace Deck.UI.Building.BuildMode
             {
                 currentCellPosition.x = _initialCellPosition.x;
             }
-            
-            Deck.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
+
+            BuildingService.BuildInRect(new[] { _initialCellPosition, currentCellPosition });
             BuildingService.SetSilhouetteStatus(false);
         }
 
@@ -65,7 +64,7 @@ namespace Deck.UI.Building.BuildMode
             }
 
             var delta = currentCellPosition - _initialCellPosition;
-            if (delta.x> delta.y)
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
             {
                 currentCellPosition.y = _initialCellPosition.y;
             }
@@ -73,7 +72,7 @@ namespace Deck.UI.Building.BuildMode
             {
                 currentCellPosition.x = _initialCellPosition.x;
             }
-            
+
             _currentCellPosition = currentCellPosition;
             BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
         }

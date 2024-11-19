@@ -95,7 +95,7 @@ namespace Deck.Save
             {
                 if (!agentHashSet.Add(agent.PrefabId.ID))
                 {
-                    Debug.LogError("Multiple id " + agent.name);
+                    DeckLogger.Error("Multiple id " + agent.name);
                 }
             }
 
@@ -104,7 +104,7 @@ namespace Deck.Save
             {
                 if (!itemVisualHashSet.Add(itemVisual.PrefabId.ID))
                 {
-                    Debug.LogError("Multiple id " + itemVisual.name);
+                    DeckLogger.Error("Multiple id " + itemVisual.name);
                 }
             }
 
@@ -113,7 +113,7 @@ namespace Deck.Save
             {
                 if (!uiElements.Add(uiElement.PrefabId.ID))
                 {
-                    Debug.LogError("Multiple id " + uiElement.name);
+                    DeckLogger.Error("Multiple id " + uiElement.name);
                 }
             }
         }

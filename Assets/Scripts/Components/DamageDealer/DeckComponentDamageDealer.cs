@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Deck.Components
 {
     [Serializable]
-    public class DeckComponentCommandCreator : DeckComponent
+    public class DeckComponentDamageDealer : DeckComponent
     {
         [SerializeField] private DeckDataDamage dataDamage;
         public Action<int> OnDamageDealRequested;
@@ -55,7 +55,8 @@ namespace Deck.Components
                 dataDamage.GetAttackRange(),
                 this,
                 healthComponent,
-                continuous: true));
+                continuous: true),
+                true);
         }
 
         public void OnAttackStart()

@@ -1,7 +1,5 @@
 public enum DeckActionTag
 {
-    Invalid,
-    SwordAttack,
-    AxeCut,
-    PickaxeMine
+    CoffeeMachine = 1000,
+    Invalid = 99999,
 }

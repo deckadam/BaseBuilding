@@ -11,7 +11,7 @@ namespace Deck.Commands
     public class DeckCommandDealDamage : DeckCommand
     {
         private bool _canKill;
-        private DeckComponentCommandCreator _from;
+        private DeckComponentDamageDealer _from;
         private DeckComponentHealth _to;
         private int _damage;
         private float _baseAttackRange;
@@ -21,7 +21,7 @@ namespace Deck.Commands
         {
         }
 
-        public DeckCommandDealDamage(int damage, float baseAttackRange, DeckComponentCommandCreator from, DeckComponentHealth to, bool canKill = true, bool continuous = true)
+        public DeckCommandDealDamage(int damage, float baseAttackRange, DeckComponentDamageDealer from, DeckComponentHealth to, bool canKill = true, bool continuous = true)
         {
             _damage = damage;
             _baseAttackRange = baseAttackRange;
@@ -108,7 +108,7 @@ namespace Deck.Commands
             var loadData = DeckSaveUtility.GetDeserializedData<SaveData>(saveData);
             _canKill = loadData.canKill;
             var test = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.fromAgent);
-            _from = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.fromAgent).GetDeckComponent<DeckComponentCommandCreator>();
+            _from = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.fromAgent).GetDeckComponent<DeckComponentDamageDealer>();
             _to = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.toAgent).GetDeckComponent<DeckComponentHealth>();
             _damage = loadData.damage;
             _baseAttackRange = loadData.baseAttackRange;

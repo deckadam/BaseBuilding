@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 5957074271239690439}
   - component: {fileID: 1639060732385380541}
   - component: {fileID: 4865002525916824786}
-  - component: {fileID: 1341977300541919600}
+  - component: {fileID: 799818750214161502}
+  - component: {fileID: 4515380510344824528}
   m_Layer: 0
   m_Name: BarTableHorizontal(Clone)
   m_TagString: Untagged
@@ -84,8 +85,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &1341977300541919600
-CapsuleCollider:
+--- !u!208 &799818750214161502
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673373938525140569}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!65 &4515380510344824528
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -102,11 +119,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000002
-  m_Height: 1.0000002
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.5000001, z: 0.00000011920929}
+  serializedVersion: 3
+  m_Size: {x: 1.0000002, y: 1.0000002, z: 1.0000006}
+  m_Center: {x: 0, y: 0.5000001, z: 0.00000011920932}
 --- !u!1 &5164057490673739777
 GameObject:
   m_ObjectHideFlags: 0

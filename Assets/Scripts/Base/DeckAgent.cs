@@ -23,6 +23,7 @@ namespace Deck.Components
         public event Action OnItemVisualChanged;
 
         [SerializeField] protected Transform centerPosition;
+        [SerializeField] protected DeckActionTag[] tags;
         [SerializeField] private DeckComponent[] components;
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
@@ -87,7 +88,6 @@ namespace Deck.Components
 
             if (int.TryParse(name[..1], out _))
             {
-                Debug.LogError("Resetting id " + name + " " + prefabId.ID);
                 prefabId.ResetId();
                 return;
             }
@@ -278,11 +278,11 @@ namespace Deck.Components
             AfterLoad();
         }
 
-        public void AddCommand(DeckCommand command)
+        public void AddCommand(DeckCommand command,bool isInterruptingCommand)
         {
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
-                commandProcessor.AddCommand(command, DeckInputHandlingSystem.IsInterruptingCommandModeActive);
+                commandProcessor.AddCommand(command, isInterruptingCommand);
             }
         }
 
@@ -361,6 +361,16 @@ namespace Deck.Components
         public DeckItemVisual GetItemVisual()
         {
             return itemVisualInstance;
+        }
+
+        public void SetTags(DeckActionTag[] tags)
+        {
+            this.tags = tags;
+        }
+
+        public DeckActionTag[] GetTags()
+        {
+            return tags;
         }
     }
 }

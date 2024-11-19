@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Deck.Data.Component;
 using Deck.Save;
@@ -170,6 +171,11 @@ namespace Deck.Components
             {
                 new DeckStat(MOVEMENT_SPEED_STAT_NAME, movementData.MovementSpeed.ToString(), MOVEMENT_SPEED_STAT_DESCRIPTION)
             }, this);
+        }
+
+        public bool ReachedToDestination()
+        {
+            return _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
         }
 
         [Serializable]
