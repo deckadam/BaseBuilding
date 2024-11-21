@@ -35,6 +35,7 @@ namespace Deck.Services.Building
         private readonly Vector3 _cellHalfExtents = Vector3.one / 2.001f;
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private readonly Dictionary<Vector2Int, DeckBuilding> _grid = new();
+        private readonly Dictionary<Vector2Int, int> _accessCells = new();
         private readonly Collider[] _possibleColliders = new Collider[5];
         private readonly List<SilhouettePiece> _piecesInUse = new();
         private DeckInstanceProvider _instanceProvider;
@@ -78,9 +79,9 @@ namespace Deck.Services.Building
                 return;
             }
 
-            foreach (var kvp in _grid)
+            foreach (var kvp in _accessCells)
             {
-                Gizmos.color = kvp.Value == null ? Color.red : Color.green;
+                Gizmos.color = kvp.Value > 0 ? Color.red : Color.green;
                 Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
             }
         }
@@ -259,7 +260,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            if (isAvailable && !IsAreaClear(_activeBuildable.AccessIndices, currentCellIndex))
+            if (isAvailable && !IsCellClear(_activeBuildable.AccessIndices, currentCellIndex))
             {
                 isAvailable = false;
             }
@@ -312,7 +313,7 @@ namespace Deck.Services.Building
 
                 _piecesInUse[index].gameObject.transform.position = cellIndex.ToVector3();
 
-                if (isAllCellsFree && !IsAreaClear(_activeBuildable.Indices, cellIndex))
+                if (isAllCellsFree && !IsCellClear(_activeBuildable.Indices, cellIndex))
                 {
                     isAllCellsFree = false;
                 }
@@ -508,7 +509,7 @@ namespace Deck.Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                if (!IsAreaClear(_activeBuildable.Indices, rectBuildPosition))
+                if (!IsCellClear(_activeBuildable.Indices, rectBuildPosition))
                 {
                     isAllCellsAvailable = false;
                 }
@@ -565,7 +566,7 @@ namespace Deck.Services.Building
 
             _lastCheckedCellIndex = worldPosition;
 
-            if (!IsAreaClear(_activeBuildable.Indices, worldPosition))
+            if (!IsCellClear(_activeBuildable.Indices, worldPosition))
             {
                 return;
             }
@@ -583,62 +584,43 @@ namespace Deck.Services.Building
         public void BuildWithAccess()
         {
             var currentCellIndex = GetCursorCellIndex();
-            var isAvailable = true;
             DeckBuilding buildingToBuildOnTop = null;
             foreach (var mainCell in _activeBuildable.Indices)
             {
                 if (!_grid.TryGetValue(currentCellIndex + mainCell, out buildingToBuildOnTop))
                 {
+                    Debug.LogError("1");
                     return;
                 }
 
                 if (!buildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                 {
-                    Debug.LogError("Not equal");
+                    Debug.LogError("2");
                     return;
                 }
             }
 
             if (buildingToBuildOnTop == null)
             {
-                Debug.LogError("1");
-                return;
-            }
-
-            if (!IsAreaClear(_activeBuildable.Indices, currentCellIndex, false))
-            {
-                Debug.LogError("2");
-                return;
-            }
-
-            if (!IsAreaClear(_activeBuildable.AccessIndices, currentCellIndex))
-            {
                 Debug.LogError("3");
-
                 return;
             }
 
-            foreach (var accessCellIndex in _activeBuildable.AccessIndices)
-            {
-                var indexToSearch = accessCellIndex + currentCellIndex;
-                if (!_grid.ContainsKey(indexToSearch)) continue;
-
-
-                isAvailable = false;
-                break;
-            }
-
-            if (!isAvailable)
+            if (!IsCellClear(_activeBuildable.Indices, currentCellIndex, false))
             {
                 Debug.LogError("4");
+                return;
+            }
 
+            if (!IsViableAccessCell(_activeBuildable.AccessIndices, currentCellIndex))
+            {
+                Debug.LogError("Access cell not available");
                 return;
             }
 
             if (!PayIfCanAfford())
             {
-                Debug.LogError("5");
-
+                Debug.LogError("7");
                 return;
             }
 
@@ -652,7 +634,7 @@ namespace Deck.Services.Building
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
 
             var rotatedIndices = GetRotatedIndices(_activeBuildable.AccessIndices, _ninetyDegreeRotationAmount);
-            SetCellOccupied(currentCellIndex, rotatedIndices, newBuilding);
+            AddAccessCell(currentCellIndex, rotatedIndices);
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)
@@ -736,22 +718,20 @@ namespace Deck.Services.Building
             _isDirty = false;
         }
 
-        public void OnBuildingDestroyed(DeckBuilding buildable)
+        public void OnBuildingDestroyed(DeckBuilding building)
         {
-            var cellIndex = buildable.transform.position.ToVector2Int();
+            var cellIndex = building.transform.position.ToVector2Int();
 
-            if (buildable.BuildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
+            if (building.BuildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
             {
-                foreach (var index in buildable.BuildingData.AccessIndices)
-                {
-                    var temp = cellIndex + index;
-                    _grid.Remove(temp);
-                }
+                var rotCount = Mathf.RoundToInt(building.transform.rotation.eulerAngles.y / 90f);
+                var indices = GetRotatedIndices(building.BuildingData.AccessIndices, rotCount);
+                RemoveAccessCell(cellIndex, indices);
             }
 
-            if (buildable.BuildingData.BuildMode == DeckBuildMode.InCell)
+            if (building.BuildingData.BuildMode == DeckBuildMode.InCell)
             {
-                foreach (var index in buildable.BuildingData.Indices)
+                foreach (var index in building.BuildingData.Indices)
                 {
                     var temp = cellIndex + index;
                     _grid.Remove(temp);
@@ -767,6 +747,27 @@ namespace Deck.Services.Building
             {
                 var temp = cellIndex + index;
                 _grid[temp] = agentToSet;
+            }
+        }
+
+        private void AddAccessCell(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        {
+            foreach (var index in indices)
+            {
+                var temp = cellIndex + index;
+                _accessCells.TryAdd(temp, 0);
+                _accessCells[temp]++;
+            }
+        }
+
+
+        private void RemoveAccessCell(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        {
+            foreach (var index in indices)
+            {
+                var temp = cellIndex + index;
+                _accessCells.TryAdd(temp, 0);
+                _accessCells[temp]--;
             }
         }
 
@@ -786,12 +787,30 @@ namespace Deck.Services.Building
             return result;
         }
 
-        private bool IsAreaClear(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
+        private bool IsCellClear(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
         {
             var rotatedIndices = GetRotatedIndices(indices, _ninetyDegreeRotationAmount);
             foreach (var index in rotatedIndices)
             {
                 var temp = cellIndex + index;
+
+                if (_accessCells.TryGetValue(temp, out var accessCount) && accessCount > 0)
+                {
+                    return false;
+                }
+
+                if (checkIfGridClear)
+                {
+                    if (!_grid.TryGetValue(temp, out var value))
+                    {
+                        continue;
+                    }
+
+                    if (value != null)
+                    {
+                        return false;
+                    }
+                }
 
                 var collisionCount = Physics.OverlapBoxNonAlloc(temp.ToVector3(), _cellHalfExtents, _possibleColliders, Quaternion.identity, LAYER_MASK);
 
@@ -810,18 +829,34 @@ namespace Deck.Services.Building
                         }
                     }
                 }
+            }
 
-                if (checkIfGridClear)
+            return true;
+        }
+
+
+        private bool IsViableAccessCell(Vector2Int[] indices, Vector2Int cellIndex)
+        {
+            var rotatedIndices = GetRotatedIndices(indices, _ninetyDegreeRotationAmount);
+            foreach (var index in rotatedIndices)
+            {
+                var temp = cellIndex + index;
+
+                var collisionCount = Physics.OverlapBoxNonAlloc(temp.ToVector3(), _cellHalfExtents, _possibleColliders, Quaternion.identity, LAYER_MASK);
+
+                if (collisionCount > 0)
                 {
-                    if (!_grid.TryGetValue(temp, out var value))
-                    {
-                        continue;
-                    }
+                    return false;
+                }
 
-                    if (value != null)
-                    {
-                        return false;
-                    }
+                if (!_grid.TryGetValue(temp, out var value))
+                {
+                    continue;
+                }
+
+                if (value != null)
+                {
+                    return false;
                 }
             }
 
