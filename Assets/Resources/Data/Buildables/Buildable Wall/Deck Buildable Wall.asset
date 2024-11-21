@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Wall
   m_EditorClassIdentifier: 
+  isCellBased: 1
   agent: {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
   name: Wall
@@ -22,6 +23,7 @@ MonoBehaviour:
     rotation: {x: -0, y: 0, z: 0}
   indices:
   - {x: 0, y: 0}
+  accessIndices: []
   rotatable: 0
   icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5, z: 0.30000013}
@@ -31,4 +33,5 @@ MonoBehaviour:
   canBeHangedToWall: 0
   canBePlacedOnTopOfAnotherObject: 0
   buildMode: 4
+  buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1

@@ -11,6 +11,7 @@ namespace Deck.Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
+        [SerializeField] private bool isCellBased;
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private new string name;
@@ -19,6 +20,7 @@ namespace Deck.Data.Buildable
         [SerializeField] private Vector2Int[] indices;
         [SerializeField] private Vector2Int[] accessIndices;
         [SerializeField] private bool rotatable;
+        [SerializeField] private DeckRotationMode rotationMode;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
         [SerializeField] private DeckPrice[] prices;
@@ -27,6 +29,8 @@ namespace Deck.Data.Buildable
         [SerializeField] private DeckBuildMode buildMode;
         [SerializeField] private DeckBuildable buildableToPlaceOnTop;
 
+        public DeckRotationMode RotationMode => rotationMode;
+        public bool IsCellBased => isCellBased;
         public SilhouetteData[] Silhouette => silhouette;
         public int materialCount;
         public Vector2Int[] Indices => indices;
@@ -51,9 +55,10 @@ namespace Deck.Data.Buildable
             CollectExtentsData();
         }
 
-        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall, DeckBuildMode buildMode)
+        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall, DeckBuildMode buildMode, bool isCellBased)
         {
             var newItem = CreateInstance<DeckBuildable>();
+            newItem.isCellBased = isCellBased;
             newItem.name = name;
             newItem.icon = icon;
             newItem.itemVisual = representation;

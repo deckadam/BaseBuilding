@@ -15,6 +15,7 @@ using Deck.Utility;
 using Deck.Utility.Constants;
 using Deck.Utility.Iterators;
 using Deck.Utility.MonoBehaviours;
+using UI.Building.BuildMode;
 using UnityEngine;
 using Zenject;
 
@@ -25,14 +26,16 @@ namespace Deck.Services.Building
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private LayerMask onWallLayerMask;
 
-        private const string WallTag = "Wall";
-        private const float YOffsetForBuildOnTop = 0.1f;
+        private const int LAYER_MASK = 0b_0011_1111_1_1111_1_1111_1111_1111;
         private const float YOffsetForBuildOnGround = 0.1f;
+        private const float YOffsetForBuildOnTop = 0.1f;
+        private const string WallTag = "Wall";
 
+        private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
+        private readonly Vector3 _cellHalfExtents = Vector3.one / 2.001f;
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private readonly Dictionary<Vector2Int, DeckBuilding> _grid = new();
-        private readonly Collider[] _possibleColliders = new Collider[2];
-        private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
+        private readonly Collider[] _possibleColliders = new Collider[5];
         private readonly List<SilhouettePiece> _piecesInUse = new();
         private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
@@ -43,6 +46,7 @@ namespace Deck.Services.Building
         private GameObject _silhouetteParent;
         private Quaternion _rotation;
         private bool _isDirty;
+        private int _ninetyDegreeRotationAmount;
 
         [Inject]
         private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData,
@@ -81,14 +85,58 @@ namespace Deck.Services.Building
             }
         }
 
-        private void OnMiddleScroll(DeckEventMiddleScroll obj)
+        public Vector2Int[] GetRotatedIndices(Vector2Int[] points, int numOf90DegreeRotations)
+        {
+            Vector2Int[] rotatedPoints = new Vector2Int[points.Length];
+            int effectiveRotations = numOf90DegreeRotations % 4; // Get the effective rotations (0, 1, 2, or 3)
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                switch (effectiveRotations)
+                {
+                    case 0: // 0 degrees
+                        rotatedPoints[i] = points[i];
+                        break;
+                    case 1: // 90 degrees clockwise
+                        rotatedPoints[i] = new Vector2Int(points[i].y, -points[i].x);
+                        break;
+                    case 2: // 180 degrees
+                        rotatedPoints[i] = new Vector2Int(-points[i].x, -points[i].y);
+                        break;
+                    case 3: // 270 degrees clockwise (or 90 degrees counter-clockwise)
+                        rotatedPoints[i] = new Vector2Int(-points[i].y, points[i].x);
+                        break;
+                }
+            }
+
+            return rotatedPoints;
+        }
+
+        private void OnMiddleScroll(DeckEventMiddleScroll evt)
         {
             if (!_activeBuildable)
             {
                 return;
             }
 
-            _silhouetteParent.transform.Rotate(0, obj.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
+            if (_activeBuildable.RotationMode == DeckRotationMode.Continuous)
+            {
+                _silhouetteParent.transform.Rotate(0, evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
+            }
+            else if (_activeBuildable.RotationMode == DeckRotationMode.NinetyDegree)
+            {
+                if (evt.scrollValue > 0)
+                {
+                    _ninetyDegreeRotationAmount--;
+                }
+                else
+                {
+                    _ninetyDegreeRotationAmount++;
+                }
+
+                _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
+            }
+
             _rotation = _silhouetteParent.transform.rotation;
         }
 
@@ -98,21 +146,39 @@ namespace Deck.Services.Building
             _activeBuildable = buildable;
             _rotation = Quaternion.identity;
 
-            foreach (var buildableIndex in buildable.Indices)
+            var hasIndices = false;
+            if (buildable.Indices != null)
             {
-                var newPiece = GetSilhouettePiece();
+                foreach (var buildableIndex in buildable.Indices)
+                {
+                    hasIndices = true;
+                    var newPiece = GetSilhouettePiece();
 
-                newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
-                newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
-                newPiece.gameObject.transform.localRotation = _rotation;
+                    newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+                    newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
+                    newPiece.gameObject.transform.localRotation = _rotation;
+                }
             }
 
-            foreach (var buildableIndex in buildable.AccessIndices)
+            if (buildable.AccessIndices != null)
+            {
+                foreach (var buildableIndex in buildable.AccessIndices)
+                {
+                    hasIndices = true;
+                    var newPiece = GetSilhouettePiece();
+
+                    newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+                    newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
+                    newPiece.gameObject.transform.localRotation = _rotation;
+                }
+            }
+
+            if (!hasIndices)
             {
                 var newPiece = GetSilhouettePiece();
 
                 newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
-                newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
+                newPiece.gameObject.transform.localPosition = Vector3.zero;
                 newPiece.gameObject.transform.localRotation = _rotation;
             }
 
@@ -175,7 +241,6 @@ namespace Deck.Services.Building
             _silhouetteParent.transform.rotation = rotation;
         }
 
-
         public void UpdateSilhouetteWithAccess()
         {
             if (!_activeBuildable)
@@ -187,7 +252,7 @@ namespace Deck.Services.Building
             var isAvailable = true;
             foreach (var mainCell in _activeBuildable.Indices)
             {
-                if (!_grid.TryGetValue(currentCellIndex + mainCell, out DeckBuilding value))
+                if (!_grid.TryGetValue(currentCellIndex + mainCell, out var value))
                 {
                     isAvailable = false;
                     break;
@@ -200,14 +265,9 @@ namespace Deck.Services.Building
                 }
             }
 
-            foreach (var accessCellIndex in _activeBuildable.AccessIndices)
+            if (isAvailable && !IsAreaClear(_activeBuildable.AccessIndices, currentCellIndex))
             {
-                var indexToSearch = accessCellIndex + currentCellIndex;
-                if (_grid.ContainsKey(indexToSearch))
-                {
-                    isAvailable = false;
-                    break;
-                }
+                isAvailable = false;
             }
 
             var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
@@ -215,6 +275,7 @@ namespace Deck.Services.Building
             ApplyMaterialToSilhouette(material);
 
             _silhouetteParent.transform.position = currentCellIndex.ToVector3();
+            _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
         }
 
         public void UpdateSilhouetteInCellRect(Vector2Int[] cells)
@@ -245,18 +306,19 @@ namespace Deck.Services.Building
 
             var isAllCellsFree = true;
             var rectArray = rectFromPoints.ToArray();
-            for (var index = 0; index < rectArray.Length; index++)
+            var length = rectArray.Length;
+            for (var index = 0; index < length; index++)
             {
-                var rectFromPoint = rectArray[index];
+                var cellIndex = rectArray[index];
 
                 if (!_piecesInUse[index].gameObject.activeSelf)
                 {
                     _piecesInUse[index].gameObject.SetActive(true);
                 }
 
-                _piecesInUse[index].gameObject.transform.position = rectFromPoint.ToVector3();
+                _piecesInUse[index].gameObject.transform.position = cellIndex.ToVector3();
 
-                if (isAllCellsFree && _grid.ContainsKey(rectFromPoint) && _grid[rectFromPoint] != null)
+                if (isAllCellsFree && !IsAreaClear(_activeBuildable.Indices, cellIndex))
                 {
                     isAllCellsFree = false;
                 }
@@ -289,7 +351,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (!TryGetWallCollision(out _, out var buildPosition, out var buildRotation))
+            if (!IsCollidingWithAnotherObjectOnWall(out var buildPosition, out var buildRotation))
             {
                 if (_silhouetteParent.activeSelf)
                 {
@@ -351,7 +413,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (!TryGetWallCollision(out _, out var buildPosition, out var buildRotation))
+            if (!IsCollidingWithAnotherObjectOnWall(out var buildPosition, out var buildRotation))
             {
                 return;
             }
@@ -381,7 +443,7 @@ namespace Deck.Services.Building
             }
 
 
-            if (!TryGetCollidedItemVisualOnTop(out _, out var buildPosition))
+            if (!TryGetCollidedItemVisualOnTop(out var buildingToBuildOnTop, out var buildPosition))
             {
                 return;
             }
@@ -400,6 +462,7 @@ namespace Deck.Services.Building
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
+            buildingToBuildOnTop.AddBuildingToTop(newBuilding);
         }
 
         public void BuildFree()
@@ -451,7 +514,7 @@ namespace Deck.Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                if (!CheckIfAgentBuildableInCell(_activeBuildable, rectBuildPosition, out _))
+                if (!IsAreaClear(_activeBuildable.Indices, rectBuildPosition))
                 {
                     isAllCellsAvailable = false;
                 }
@@ -508,17 +571,9 @@ namespace Deck.Services.Building
 
             _lastCheckedCellIndex = worldPosition;
 
-            if (!CheckIfAgentBuildableInCell(_activeBuildable, worldPosition, out var encounteredAgents))
+            if (!IsAreaClear(_activeBuildable.Indices, worldPosition))
             {
-                foreach (var encounteredAgent in encounteredAgents)
-                {
-                    if (encounteredAgent.PrefabId.Equals(_activeBuildable.Agent.PrefabId))
-                    {
-                        return;
-                    }
-
-                    encounteredAgent.RequestDestroy();
-                }
+                return;
             }
 
             if (!PayIfCanAfford()) return;
@@ -535,26 +590,41 @@ namespace Deck.Services.Building
         {
             var currentCellIndex = GetCursorCellIndex();
             var isAvailable = true;
+            DeckBuilding buildingToBuildOnTop = null;
             foreach (var mainCell in _activeBuildable.Indices)
             {
-                if (!_grid.TryGetValue(currentCellIndex + mainCell, out DeckBuilding value))
+                if (!_grid.TryGetValue(currentCellIndex + mainCell, out buildingToBuildOnTop))
                 {
-                    isAvailable = false;
-                    break;
+                    return;
                 }
 
-                if (!value.BuildingData.ItemVisual.PrefabId.Equals(_activeBuildable.BuildableToPlaceOnTop.ItemVisual.PrefabId))
+                if (!buildingToBuildOnTop.BuildingData.ItemVisual.PrefabId.Equals(_activeBuildable.BuildableToPlaceOnTop.ItemVisual.PrefabId))
                 {
-                    isAvailable = false;
-                    break;
+                    return;
                 }
+            }
+
+            if (buildingToBuildOnTop == null)
+            {
+                return;
+            }
+
+            if (!IsAreaClear(_activeBuildable.Indices, currentCellIndex, false))
+            {
+                return;
+            }
+
+            if (!IsAreaClear(_activeBuildable.AccessIndices, currentCellIndex))
+            {
+                return;
             }
 
             foreach (var accessCellIndex in _activeBuildable.AccessIndices)
             {
                 var indexToSearch = accessCellIndex + currentCellIndex;
                 if (!_grid.ContainsKey(indexToSearch)) continue;
-                
+
+
                 isAvailable = false;
                 break;
             }
@@ -572,10 +642,14 @@ namespace Deck.Services.Building
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = currentCellIndex.ToVector3();
+            newBuilding.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            SetCellOccupied(currentCellIndex, _activeBuildable.Indices, newBuilding);
-            SetCellOccupied(currentCellIndex, _activeBuildable.AccessIndices, newBuilding);
+
+            buildingToBuildOnTop.AddBuildingToTop(newBuilding);
+
+            var rotatedIndices = GetRotatedIndices(_activeBuildable.AccessIndices, _ninetyDegreeRotationAmount);
+            SetCellOccupied(currentCellIndex, rotatedIndices, newBuilding);
         }
 
         private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)
@@ -632,7 +706,7 @@ namespace Deck.Services.Building
             return true;
         }
 
-        public void Clear()
+        public void ClearAll()
         {
             _lastCheckedCellIndex = _defaultCellPosition;
             if (!_isDirty)
@@ -654,6 +728,8 @@ namespace Deck.Services.Building
 
             _piecesInUse.Clear();
             _rotation = Quaternion.identity;
+            _silhouetteParent.transform.rotation = Quaternion.identity;
+            _ninetyDegreeRotationAmount = 0;
             _isDirty = false;
         }
 
@@ -661,27 +737,33 @@ namespace Deck.Services.Building
         {
             var cellIndex = buildable.transform.position.ToVector2Int();
 
-            foreach (var index in buildable.BuildingData.Indices)
+            if (buildable.BuildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
             {
-                var temp = cellIndex + index;
-                _grid.Remove(temp);
+                foreach (var index in buildable.BuildingData.AccessIndices)
+                {
+                    var temp = cellIndex + index;
+                    _grid.Remove(temp);
+                }
             }
 
-            foreach (var index in buildable.BuildingData.AccessIndices)
+            if (buildable.BuildingData.BuildMode == DeckBuildMode.InCell)
             {
-                var temp = cellIndex + index;
-                _grid.Remove(temp);
+                foreach (var index in buildable.BuildingData.Indices)
+                {
+                    var temp = cellIndex + index;
+                    _grid.Remove(temp);
+                }
             }
 
             _lastCheckedCellIndex = _defaultCellPosition;
         }
 
-        private void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckBuilding newAgent)
+        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckBuilding agentToSet)
         {
             foreach (var index in indices)
             {
                 var temp = cellIndex + index;
-                _grid[temp] = newAgent;
+                _grid[temp] = agentToSet;
             }
         }
 
@@ -701,34 +783,53 @@ namespace Deck.Services.Building
             return result;
         }
 
-        private bool CheckIfAgentBuildableInCell(DeckBuildable buildable, Vector2Int cellIndex,
-            out HashSet<DeckAgent> encounteredAgents)
+        private bool IsAreaClear(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
         {
-            encounteredAgents = new HashSet<DeckAgent>();
-            foreach (var index in buildable.Indices)
+            var rotatedIndices = GetRotatedIndices(indices, _ninetyDegreeRotationAmount);
+            foreach (var index in rotatedIndices)
             {
                 var temp = cellIndex + index;
-                if (!_grid.ContainsKey(temp))
+
+                var collisionCount = Physics.OverlapBoxNonAlloc(temp.ToVector3(), _cellHalfExtents, _possibleColliders, Quaternion.identity, LAYER_MASK);
+
+                if (collisionCount > 0)
                 {
-                    continue;
+                    if (collisionCount > 1)
+                    {
+                        return false;
+                    }
+
+                    Debug.LogError(_possibleColliders[0].gameObject.name);
+                    if (_possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building) && building.BuildingData != _activeBuildable.BuildableToPlaceOnTop)
+                    {
+                        return false;
+                    }
                 }
 
-                if (_grid[temp] != null)
+                if (checkIfGridClear)
                 {
-                    encounteredAgents.Add(_grid[temp]);
+                    if (!_grid.TryGetValue(temp, out var value))
+                    {
+                        continue;
+                    }
+
+                    if (value != null)
+                    {
+                        return false;
+                    }
                 }
             }
 
-            return encounteredAgents.Count <= 0;
+            return true;
         }
 
-        private bool TryGetCollidedItemVisualOnTop(out DeckItemVisual itemVisual, out Vector3 position)
+        private bool TryGetCollidedItemVisualOnTop(out DeckBuilding building, out Vector3 position)
         {
             if (Physics.Raycast(GetRayFromCamera(), out var hit))
             {
-                if (hit.transform.TryGetComponentInParent(out itemVisual))
+                if (hit.transform.TryGetComponentInParent(out building))
                 {
-                    if (itemVisual.CanBePlacedOnTop)
+                    if (building.GetItemVisual().CanBePlacedOnTop)
                     {
                         position = hit.point;
                         return true;
@@ -736,17 +837,16 @@ namespace Deck.Services.Building
                 }
             }
 
-            itemVisual = null;
+            building = null;
             position = hit.point;
             return false;
         }
 
-
-        private bool TryGetWallCollision(out DeckItemVisual itemVisual, out Vector3 position, out Vector3 rotation)
+        private bool IsCollidingWithAnotherObjectOnWall(out Vector3 position, out Vector3 rotation)
         {
             if (Physics.Raycast(GetRayFromCamera(), out var hit, 1000f, layerMask, QueryTriggerInteraction.Ignore))
             {
-                if (hit.transform.TryGetComponentInParent(out itemVisual))
+                if (hit.transform.TryGetComponentInParent(out DeckItemVisual itemVisual))
                 {
                     if (itemVisual.CompareTag(WallTag))
                     {
@@ -758,7 +858,6 @@ namespace Deck.Services.Building
                 }
             }
 
-            itemVisual = null;
             position = Vector3.zero;
             rotation = Vector3.zero;
             return false;
@@ -903,7 +1002,6 @@ namespace Deck.Services.Building
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
             return true;
         }
-
 
         private class SilhouettePiece
         {

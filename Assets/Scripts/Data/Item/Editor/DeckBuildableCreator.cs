@@ -27,6 +27,7 @@ namespace Deck.Data.Item.Editor
         private bool _isBoxCollider = true;
         private Sprite _icon;
         private int _amount;
+        private bool _isCellBased;
         private bool _rotatable = true;
         private bool _canBeHangedToWall;
         private bool _isBasicItem = true;
@@ -55,6 +56,7 @@ namespace Deck.Data.Item.Editor
             _rotatable = EditorGUILayout.Toggle("Is rotatable: ", _rotatable);
             _canBeHangedToWall = EditorGUILayout.Toggle("Can be hanged to wall: ", _canBeHangedToWall);
             _isBasicItem = EditorGUILayout.Toggle("Is basic item: ", _isBasicItem);
+            _isCellBased = EditorGUILayout.Toggle("Is cell based: ", _isCellBased);
             _nameSuffix = EditorGUILayout.TextField("Name suffix: ", _nameSuffix);
             _model = (GameObject)EditorGUILayout.ObjectField("Item model: ", _model, typeof(GameObject), false);
             _selectedType = (DeckBuildableType)EditorGUILayout.EnumPopup("Buildable type: ", _selectedType);
@@ -132,7 +134,7 @@ namespace Deck.Data.Item.Editor
             buildingPrefab.SetTags(_tags.ToArray());
             buildingPrefab.SetNewUniqueId();
 
-            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab, _rotatable, _canBeHangedToWall, _selectedBuildMode);
+            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab, _rotatable, _canBeHangedToWall, _selectedBuildMode,_isCellBased);
             AssetDatabase.CreateAsset(buildingData, assetName);
 
             buildingPrefab.SetBuildingData(buildingData);

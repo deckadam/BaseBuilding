@@ -1,4 +1,5 @@
-﻿using Deck.ItemVisualProviders;
+﻿using System.Collections.Generic;
+using Deck.Components;
 using Deck.Utility;
 using Zenject;
 
@@ -7,17 +8,16 @@ namespace Deck.Save
     public class DeckLoadResolver
     {
         private DeckInstanceProvider _instanceProvider;
-        private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
         [Inject]
-        private void Inject(DeckInstanceProvider instanceProvider, DeckItemVisualProviderBasic[] itemVisualProviders)
+        private void Inject(DeckInstanceProvider instanceProvider)
         {
             _instanceProvider = instanceProvider;
-            _itemVisualProviders = itemVisualProviders;
         }
 
         public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas)
         {
+            var resolvedData = new List<(DeckAgent, DeckComponentHolderSaveData)>();
             foreach (var deckComponentHolderSaveData in agentDatas.datas)
             {
                 if (deckComponentHolderSaveData.prefabId == 0)
@@ -33,7 +33,17 @@ namespace Deck.Save
                 }
 
                 var agentInstance = _instanceProvider.RentAgent(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
-                agentInstance.LoadData(deckComponentHolderSaveData);
+                resolvedData.Add((agentInstance, deckComponentHolderSaveData));
+            }
+
+            foreach (var tuple in resolvedData)
+            {
+                tuple.Item1.LoadData(tuple.Item2);
+            }
+
+            foreach (var tuple in resolvedData)
+            {
+                tuple.Item1.AfterLoadingFinished();
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Deck.Components.Door
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
         }
 
-        protected override void OnBuildingDestroyed()
+        protected override void OnAgentDestroyed()
         {
             var cellPosition = transform.position.ToVector2Int();
             DeckEventOnDoorDestroyed.Create(cellPosition).Send();

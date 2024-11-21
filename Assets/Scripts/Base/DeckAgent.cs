@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Base.Id;
 using Deck.Commands;
-using Deck.InputHandling;
 using Deck.Save;
 using Deck.Services.MapService;
 using Deck.UI.Stats;
@@ -274,11 +273,17 @@ namespace Deck.Components
                 }
             }
 
+            LoadAdditionalData(data.additionalData);
             uniqueId = new DeckId(data.uniqueId);
             AfterLoad();
         }
 
-        public void AddCommand(DeckCommand command,bool isInterruptingCommand)
+        public virtual void AfterLoadingFinished()
+        {
+            
+        }
+
+        public void AddCommand(DeckCommand command, bool isInterruptingCommand)
         {
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
@@ -301,11 +306,12 @@ namespace Deck.Components
                 deckComponent.OnDestroy();
             }
 
-            InternalRequestDestroy();
 
             Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
 
             OnAgentDestroyed();
+
+            InternalRequestDestroy();
         }
 
         protected virtual void InternalRequestDestroy()
@@ -343,11 +349,15 @@ namespace Deck.Components
         {
         }
 
-        protected virtual void AfterLoad()
+        public virtual void AfterLoad()
         {
         }
 
         protected virtual void OnAgentDestroyed()
+        {
+        }
+
+        protected virtual void LoadAdditionalData(string data)
         {
         }
 
@@ -371,6 +381,11 @@ namespace Deck.Components
         public DeckActionTag[] GetTags()
         {
             return tags;
+        }
+
+        public virtual string GetAdditionalData()
+        {
+            return string.Empty;
         }
     }
 }

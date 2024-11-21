@@ -31,4 +31,10 @@ namespace UI.Building.BuildMode
         Line,
         ItemWithAccessArea,
     }
+
+    public enum DeckRotationMode
+    {
+        Continuous,
+        NinetyDegree,
+    }
 }

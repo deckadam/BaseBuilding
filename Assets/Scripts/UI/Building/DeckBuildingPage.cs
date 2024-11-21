@@ -96,7 +96,7 @@ namespace Deck.UI.Building
         private void OnEscapeRequested()
         {
             escapableBuildMode = null;
-            BuildingService.Clear();
+            BuildingService.ClearAll();
         }
 
         protected virtual void InternalInitialize()

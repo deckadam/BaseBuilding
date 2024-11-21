@@ -70,7 +70,8 @@ namespace Deck.GameManager
                     prefabId = agent.PrefabId.ID,
                     position = agent.transform.position,
                     rotation = agent.transform.eulerAngles,
-                    scale = agent.transform.localScale
+                    scale = agent.transform.localScale,
+                    additionalData = agent.GetAdditionalData()
                 });
             }
 

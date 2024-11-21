@@ -20,7 +20,6 @@ namespace Deck.UI.Building.BuildMode
         {
             _isDown = true;
             _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            BuildingService.SetSilhouetteStatus(true);
         }
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
@@ -45,16 +44,10 @@ namespace Deck.UI.Building.BuildMode
             }
 
             BuildingService.BuildInRect(new[] { _initialCellPosition, currentCellPosition });
-            BuildingService.SetSilhouetteStatus(false);
         }
 
         protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
         {
-            if (!_isDown)
-            {
-                return;
-            }
-
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
             if (_currentCellPosition != currentCellPosition)
@@ -63,18 +56,26 @@ namespace Deck.UI.Building.BuildMode
                 return;
             }
 
-            var delta = currentCellPosition - _initialCellPosition;
-            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+
+            if (_isDown)
             {
-                currentCellPosition.y = _initialCellPosition.y;
+                var delta = currentCellPosition - _initialCellPosition;
+                if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+                {
+                    currentCellPosition.y = _initialCellPosition.y;
+                }
+                else
+                {
+                    currentCellPosition.x = _initialCellPosition.x;
+                }
+
+                _currentCellPosition = currentCellPosition;
+                BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
             }
             else
             {
-                currentCellPosition.x = _initialCellPosition.x;
+                BuildingService.UpdateSilhouetteInCellRect(new[] { currentCellPosition, currentCellPosition });
             }
-
-            _currentCellPosition = currentCellPosition;
-            BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
         }
     }
 }

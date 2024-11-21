@@ -12,25 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Door
   m_EditorClassIdentifier: 
+  isCellBased: 1
   agent: {fileID: -7197348414825284670, guid: c32ff13636e69064cab335d07b740c8f, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
   name: Door
   visibleName: Door
-  silouette:
+  silhouette:
   - mesh: {fileID: 8013014795085914972, guid: 63c56a19a10f8c047ac758590bc0d7c1, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
   - mesh: {fileID: 4493585093827132993, guid: 63c56a19a10f8c047ac758590bc0d7c1, type: 3}
-    position: {x: 0, y: 0.75, z: -0.35}
+    position: {x: 0, y: 0.75, z: 0.35}
     rotation: {x: -0, y: 0, z: 0}
   indices:
   - {x: 0, y: 0}
+  accessIndices: []
   rotatable: 0
   icon: {fileID: 0}
-  extents: {x: 0.3, y: 1.5000001, z: 1.0000001}
+  extents: {x: 0.3, y: 1.5000004, z: 1}
   prices:
   - currencyType: 0
     amount: 50
   canBeHangedToWall: 0
   canBePlacedOnTopOfAnotherObject: 0
+  buildMode: 0
+  buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1
