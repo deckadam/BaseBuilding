@@ -594,22 +594,27 @@ namespace Deck.Services.Building
 
                 if (!buildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                 {
+                    Debug.LogError("Not equal");
                     return;
                 }
             }
 
             if (buildingToBuildOnTop == null)
             {
+                Debug.LogError("1");
                 return;
             }
 
             if (!IsAreaClear(_activeBuildable.Indices, currentCellIndex, false))
             {
+                Debug.LogError("2");
                 return;
             }
 
             if (!IsAreaClear(_activeBuildable.AccessIndices, currentCellIndex))
             {
+                Debug.LogError("3");
+
                 return;
             }
 
@@ -625,11 +630,15 @@ namespace Deck.Services.Building
 
             if (!isAvailable)
             {
+                Debug.LogError("4");
+
                 return;
             }
 
             if (!PayIfCanAfford())
             {
+                Debug.LogError("5");
+
                 return;
             }
 
@@ -793,9 +802,12 @@ namespace Deck.Services.Building
                         return false;
                     }
 
-                    if (_possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building) && building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
+                    if (_activeBuildable.BuildMode == DeckBuildMode.ItemWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building))
                     {
-                        return false;
+                        if (!building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
+                        {
+                            return false;
+                        }
                     }
                 }
 
