@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscPainting_002
   m_EditorClassIdentifier: 
-  isCellBased: 0
+  buildingId:
+    _id: 75137969
   agent: {fileID: 8560112403335899720, guid: dae428684df5f124582b8a01b6b434c5, type: 3}
   itemVisual: {fileID: 5825906728500267455, guid: 5ccd89d355c1ea94085c6355b1e9fa40, type: 3}
-  name: MiscPainting_002
   visibleName: Painting
   silhouette:
   - mesh: {fileID: -1139142266002862943, guid: 314a3553a6c638c4c8b78f0bf2cfe4ca, type: 3}
@@ -23,15 +23,12 @@ MonoBehaviour:
     rotation: {x: -0, y: 0, z: 0}
   indices: []
   accessIndices: []
-  rotatable: 1
   rotationMode: 0
   icon: {fileID: 0}
   extents: {x: 0.7, y: 1, z: 0.07490201}
   prices:
   - currencyType: 0
     amount: 70
-  canBeHangedToWall: 1
-  canBePlacedOnTopOfAnotherObject: 0
   buildMode: 2
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 2

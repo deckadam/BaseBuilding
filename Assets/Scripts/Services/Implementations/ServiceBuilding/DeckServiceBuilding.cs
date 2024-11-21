@@ -182,10 +182,7 @@ namespace Deck.Services.Building
                 newPiece.gameObject.transform.localRotation = _rotation;
             }
 
-            if (buildable.Rotatable)
-            {
-                DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
-            }
+            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
 
             if (!_silhouetteParent.activeSelf)
             {
@@ -205,10 +202,7 @@ namespace Deck.Services.Building
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
 
-            if (buildable.Rotatable)
-            {
-                DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
-            }
+            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
 
             if (!_silhouetteParent.activeSelf)
             {
@@ -598,7 +592,7 @@ namespace Deck.Services.Building
                     return;
                 }
 
-                if (!buildingToBuildOnTop.BuildingData.ItemVisual.PrefabId.Equals(_activeBuildable.BuildableToPlaceOnTop.ItemVisual.PrefabId))
+                if (!buildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                 {
                     return;
                 }
@@ -714,7 +708,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (_activeBuildable && _activeBuildable.Rotatable)
+            if (_activeBuildable)
             {
                 DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
             }
@@ -799,7 +793,7 @@ namespace Deck.Services.Building
                         return false;
                     }
 
-                    if (_possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building) && building.BuildingData != _activeBuildable.BuildableToPlaceOnTop)
+                    if (_possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building) && building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                     {
                         return false;
                     }

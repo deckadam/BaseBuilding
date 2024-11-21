@@ -25,17 +25,21 @@ namespace Deck.Components.Building
         {
             InitializeBuilding();
 
-            if (buildingData.IsCellBased)
+            switch (buildingData.BuildMode)
             {
-                var buildingService = Deck.GetService<DeckServiceBuilding>();
-                buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.Indices, this);
-                buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
-            }
-
-            if (buildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
-            {
-                var buildingService = Deck.GetService<DeckServiceBuilding>();
-                buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
+                case DeckBuildMode.Rect or DeckBuildMode.InCell or DeckBuildMode.Line:
+                {
+                    var buildingService = Deck.GetService<DeckServiceBuilding>();
+                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.Indices, this);
+                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
+                    break;
+                }
+                case DeckBuildMode.ItemWithAccessArea:
+                {
+                    var buildingService = Deck.GetService<DeckServiceBuilding>();
+                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
+                    break;
+                }
             }
         }
 

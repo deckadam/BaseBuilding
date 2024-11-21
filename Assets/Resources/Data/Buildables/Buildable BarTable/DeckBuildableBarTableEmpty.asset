@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableBarTableEmpty
   m_EditorClassIdentifier: 
-  isCellBased: 1
+  buildingId:
+    _id: 31009739
   agent: {fileID: 5416249728217735771, guid: c787730401ece2c48b9aa3519ba610ff, type: 3}
   itemVisual: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
-  name: BarTableEmpty
   visibleName: BarTableEmpty
   silhouette:
   - mesh: {fileID: -5051245163629413203, guid: 5dc742f3c786b504faae1575116a8d1e, type: 3}
@@ -24,14 +24,12 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
-  rotatable: 1
+  rotationMode: 0
   icon: {fileID: 0}
   extents: {x: 1, y: 1, z: 1}
   prices:
   - currencyType: 0
     amount: 25
-  canBeHangedToWall: 0
-  canBePlacedOnTopOfAnotherObject: 0
   buildMode: 5
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1

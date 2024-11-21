@@ -1,6 +1,8 @@
 ﻿using System;
+using Deck.Base.Id;
 using Deck.Components;
 using Deck.Data.Currency;
+using Deck.Services.Building;
 using Deck.Utility;
 using Sirenix.OdinInspector;
 using UI.Building.BuildMode;
@@ -11,43 +13,34 @@ namespace Deck.Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeField] private bool isCellBased;
+        [SerializeField] private DeckId buildingId;
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
-        [SerializeField] private new string name;
         [SerializeField] private string visibleName;
-        [SerializeField] private SilhouetteData[] silhouette;
+        [SerializeField] private DeckSilhouetteData[] silhouette;
         [SerializeField] private Vector2Int[] indices;
         [SerializeField] private Vector2Int[] accessIndices;
-        [SerializeField] private bool rotatable;
         [SerializeField] private DeckRotationMode rotationMode;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
         [SerializeField] private DeckPrice[] prices;
-        [SerializeField] private bool canBeHangedToWall;
-        [SerializeField] private bool canBePlacedOnTopOfAnotherObject;
         [SerializeField] private DeckBuildMode buildMode;
         [SerializeField] private DeckBuildable buildableToPlaceOnTop;
 
         public DeckRotationMode RotationMode => rotationMode;
-        public bool IsCellBased => isCellBased;
-        public SilhouetteData[] Silhouette => silhouette;
+        public DeckSilhouetteData[] Silhouette => silhouette;
         public int materialCount;
         public Vector2Int[] Indices => indices;
         public Vector2Int[] AccessIndices => accessIndices;
-        public bool Rotatable => rotatable;
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
-        public string Name => name;
         public string VisibleName => visibleName;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
         public DeckPrice[] Prices => prices;
-        public bool CanBeHangedToWall => canBeHangedToWall;
-        public bool CanBePlacedOnTopOfAnotherObject => canBePlacedOnTopOfAnotherObject;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
-
+        public DeckId BuildingId => buildingId;
         [Button]
         private void OnValidate()
         {
@@ -55,22 +48,20 @@ namespace Deck.Data.Buildable
             CollectExtentsData();
         }
 
-        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, bool rotatable, bool canBeHangedToWall, DeckBuildMode buildMode, bool isCellBased)
+        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, DeckBuildMode buildMode)
         {
             var newItem = CreateInstance<DeckBuildable>();
-            newItem.isCellBased = isCellBased;
             newItem.name = name;
             newItem.icon = icon;
             newItem.itemVisual = representation;
             newItem.agent = agent;
             newItem.visibleName = name;
-            newItem.rotatable = rotatable;
-            newItem.canBeHangedToWall = canBeHangedToWall;
             newItem.OnValidate();
             newItem.indices = new[] { Vector2Int.zero };
             newItem.CollectExtentsData();
             newItem.CollectSilhouetteData();
             newItem.buildMode = buildMode;
+            newItem.buildingId = DeckId.CreateNew();
             newItem.prices = new[]
             {
                 new DeckPrice(0, DeckCurrencyType.Money)
@@ -109,31 +100,12 @@ namespace Deck.Data.Buildable
 
 
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
-            silhouette = new SilhouetteData[filters.Length];
+            silhouette = new DeckSilhouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];
-                silhouette[i] = new SilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
+                silhouette[i] = new DeckSilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
             }
-        }
-
-        [Serializable]
-        public struct SilhouetteData
-        {
-            [SerializeField] private Mesh mesh;
-            [SerializeField] private Vector3 position;
-            [SerializeField] private Vector3 rotation;
-
-            public SilhouetteData(Mesh mesh, Vector3 position, Vector3 rotation)
-            {
-                this.mesh = mesh;
-                this.position = position;
-                this.rotation = rotation;
-            }
-
-            public Mesh GetMesh() => mesh;
-            public Vector3 GetPosition() => position;
-            public Vector3 GetRotation() => rotation;
         }
 
         public void SetAgent(DeckAgent agentPrefab)
@@ -144,6 +116,12 @@ namespace Deck.Data.Buildable
         public void SetItemVisual(DeckItemVisual itemVisualPrefab)
         {
             itemVisual = itemVisualPrefab;
+        }
+
+        public override bool Equals(object other)
+        {
+            var otherBuildable = other as DeckBuildable;
+            return buildingId.Equals(otherBuildable.buildingId);
         }
     }
 }

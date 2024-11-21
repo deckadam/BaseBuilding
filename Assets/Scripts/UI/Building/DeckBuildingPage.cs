@@ -74,7 +74,7 @@ namespace Deck.UI.Building
             buildables.RemoveAll(item => item == null);
             buildables.Add(buildingData);
 
-            DeckLogger.Inform("Buildable :" + buildingData.Name + "  is added to building list.  " + GetType());
+            DeckLogger.Inform("Buildable :" + buildingData.VisibleName + "  is added to building list.  " + GetType());
         }
 
         public void OnBuildableSelected(DeckBuildable buildable)

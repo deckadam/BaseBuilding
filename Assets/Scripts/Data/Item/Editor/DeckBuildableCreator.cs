@@ -134,7 +134,7 @@ namespace Deck.Data.Item.Editor
             buildingPrefab.SetTags(_tags.ToArray());
             buildingPrefab.SetNewUniqueId();
 
-            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab, _rotatable, _canBeHangedToWall, _selectedBuildMode,_isCellBased);
+            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab, _selectedBuildMode);
             AssetDatabase.CreateAsset(buildingData, assetName);
 
             buildingPrefab.SetBuildingData(buildingData);

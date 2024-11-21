@@ -19,7 +19,7 @@ namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
 
         public override Quaternion GetBuildableRotation(DeckBuildable buildable)
         {
-            if (buildable != doorBuildable)
+            if (buildable.Equals(doorBuildable))
             {
                 return Quaternion.identity;
             }

@@ -36,5 +36,6 @@ namespace UI.Building.BuildMode
     {
         Continuous,
         NinetyDegree,
+        None= 100
     }
 }
