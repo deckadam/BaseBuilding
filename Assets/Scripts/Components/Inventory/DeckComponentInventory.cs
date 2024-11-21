@@ -11,15 +11,7 @@ namespace Deck.Components
         private Dictionary<DeckDataItem, int> items;
         private Action<Dictionary<DeckDataItem, int>> _listeners;
 
-        private DeckBinderItem _binderItem;
-
         public Action<bool> OnInventoryViewingChanged;
-
-        [Inject]
-        private void Inject(DeckBinderItem binderItem)
-        {
-            _binderItem = binderItem;
-        }
 
         public bool HasItems(DeckItemRequirement[] itemArray)
         {
@@ -136,14 +128,14 @@ namespace Deck.Components
 
         public override void LoadData(string value)
         {
-            var deserializedData = DeckSaveUtility.GetDeserializedData<SaveData>(value);
-
-            foreach (var itemData in deserializedData.itemData)
-            {
-                var newItem = _binderItem.GetItemWithName(itemData.name);
-                newItem.SetToAmount(itemData.amount);
-                items.Add(newItem, itemData.amount);
-            }
+            // var deserializedData = DeckSaveUtility.GetDeserializedData<SaveData>(value);
+            //
+            // foreach (var itemData in deserializedData.itemData)
+            // {
+            //     var newItem = _binderItem.GetItemWithName(itemData.name);
+            //     newItem.SetToAmount(itemData.amount);
+            //     items.Add(newItem, itemData.amount);
+            // }
         }
 
         public void AddListener(Action<Dictionary<DeckDataItem, int>> listenerToAdd)

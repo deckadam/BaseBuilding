@@ -40,7 +40,6 @@ namespace Deck.Components
 
                 createdItem.transform.position = agent.transform.position;
                 createdItem.transform.rotation = Random.rotation;
-                createdItem.OnDroppped();
                 createdItem.ThrowInRandomDirection();
             }
         }

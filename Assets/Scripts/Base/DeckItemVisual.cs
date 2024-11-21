@@ -36,8 +36,6 @@ namespace Deck.Components
 
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
-        private DeckBinderGeneral.DeckGeneralData _generalData;
-        public void SetItem(DeckDataItem item) => bindedItem = item;
         public DeckDataItem GetBoundItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
         public Collider Collider => collider;
@@ -60,11 +58,6 @@ namespace Deck.Components
             }
         }
 
-        [Inject]
-        private void Inject(DeckBinderGeneral.DeckGeneralData generalDataData)
-        {
-            _generalData = generalDataData;
-        }
 
         public void SetNewUniqueId()
         {
@@ -89,17 +82,6 @@ namespace Deck.Components
             }
 
             _hasInitialized = true;
-            if (isOnTheGround)
-            {
-                if (!uniqueId.IsValid)
-                {
-                    uniqueId = DeckId.CreateNew();
-                }
-
-                Deck.GetService<DeckServiceFinder>().RegisterItemVisual(this);
-
-                OnDroppped();
-            }
         }
 
         [Button]
@@ -166,50 +148,6 @@ namespace Deck.Components
             {
                 prefabId = DeckId.CreateNew();
             }
-        }
-
-        public async void OnPickUp(Transform targetPosition)
-        {
-            if (!isOnTheGround)
-            {
-                return;
-            }
-
-            isOnTheGround = false;
-
-            if (!isStatic)
-            {
-                rigidbody.isKinematic = true;
-            }
-
-            collider.enabled = false;
-            await DOVirtual.Float(0f, 1f, _generalData.ItemCollectingFlyAnimation.Duration, val =>
-            {
-                var temp = Vector3.Lerp(transform.position, targetPosition.position, val);
-                temp.y = _generalData.ItemCollectingFlyAnimation.Value.Evaluate(val);
-                transform.position = temp;
-            }).SetEase(_generalData.ItemCollectingFlyAnimation.Ease).AsyncWaitForCompletion();
-
-            Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(this);
-            _hasDropped = false;
-        }
-
-        public void OnDroppped()
-        {
-            if (isStatic)
-            {
-                DeckLogger.Error("Trying to drop a static item");
-                return;
-            }
-
-            if (_hasDropped)
-            {
-                return;
-            }
-
-            _hasDropped = true;
-            isOnTheGround = true;
-            collider.enabled = true;
         }
 
         public void SetAgent(DeckAgent agent)

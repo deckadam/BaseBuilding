@@ -1,8 +1,6 @@
-﻿using System;
-using Deck.Components.Core;
+﻿using Deck.Components.Core;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.Utility.Animators;
 using UnityEngine;
 using Zenject;
 
@@ -16,13 +14,13 @@ namespace Deck.Data.General
         [SerializeField] private DeckItemVisualProviderDoor doorProvider;
 
         [SerializeField] private DeckAgentCore agentCorePrefab;
-        [SerializeField] private DeckGeneralData deckGeneralData;
         [SerializeField] private DeckInstanceProvider instanceProvider;
 
         public override void InstallBindings()
         {
+            Container.Bind<DeckLoadResolver>().AsSingle();
+
             Container.BindInstance(agentCorePrefab);
-            Container.BindInstance(deckGeneralData);
             Container.BindInstance(itemVisualProviders);
             Container.BindInstance(wallProvider);
             Container.BindInstance(doorProvider);
@@ -34,16 +32,6 @@ namespace Deck.Data.General
             }
 
             Container.QueueForInject(instanceProvider);
-        }
-
-        [Serializable]
-        public class DeckGeneralData
-        {
-            [SerializeField] private DeckAnimationParametersAnimationCurve itemCollectingFlyAnimation;
-            [SerializeField] private Material atlasMaterial;
-
-            public DeckAnimationParametersAnimationCurve ItemCollectingFlyAnimation => itemCollectingFlyAnimation;
-            public Material AtlasMaterial => atlasMaterial;
         }
     }
 }

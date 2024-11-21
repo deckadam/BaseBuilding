@@ -23,19 +23,11 @@ namespace Deck.InputHandling
     public class DeckInputHandlingSystem : MonoBehaviour
     {
         private float _lastPressTime;
-        private DeckBinderItem _binderItem;
-
-        [Inject]
-        private void Inject(DeckBinderItem tempBinderItem)
-        {
-            _binderItem = tempBinderItem;
-        }
 
         private void Update()
         {
             CheckForSelectable();
             RaycastToGround();
-            CheckForTestInventoryEntry();
             OpenInventoryPopUpForSelectable();
             CheckForEscapeMenu();
             SaveCheck();
@@ -111,19 +103,6 @@ namespace Deck.InputHandling
             }
         }
 
-        private void CheckForTestInventoryEntry()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                if (DeckServiceSelection.currentSelection == null) return;
-                var items = _binderItem.GetItems();
-                foreach (var deckDataItem in items)
-                {
-                    DeckServiceSelection.currentSelection.EnqueueCommand(new DeckCommandAddItem(deckDataItem, 100, DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>()));
-                    DeckLogger.Inform(deckDataItem.name + " add to inventory of last selected agent");
-                }
-            }
-        }
 
         private void CheckForSelectable()
         {

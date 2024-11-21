@@ -16,13 +16,6 @@ namespace Deck.Components
         private DeckItemVisual _currentlyEquippedItem;
         private DeckDataItem _currentlyEquippedItemData;
         private string _currentlyEquippedItemState;
-        private DeckBinderItem _binderItem;
-
-        [Inject]
-        private void Inject(DeckBinderItem binderItem)
-        {
-            _binderItem = binderItem;
-        }
 
         protected override void InternalPostInitialize()
         {
@@ -129,9 +122,9 @@ namespace Deck.Components
 
         public override void LoadData(string value)
         {
-            var data = DeckSaveUtility.GetDeserializedData<SaveData>(value);
-            var itemData = _binderItem.GetItemWithName(data.equippedItemName);
-            SetItemToHold(itemData);
+            // var data = DeckSaveUtility.GetDeserializedData<SaveData>(value);
+            // var itemData = _binderItem.GetItemWithName(data.equippedItemName);
+            // SetItemToHold(itemData);
         }
 
         [Serializable]

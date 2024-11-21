@@ -29,7 +29,6 @@ namespace Deck.Commands
                 return false;
             }
 
-            _itemVisual.OnPickUp(_movement.GetAgent().GetCenter());
             _inventory.AddItem(_itemVisual.GetBoundItem());
             return true;
         }

@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81053cb758e04282a9481cb8f595eed2, type: 3}
-  m_Name: Deck Gizmo Data
+  m_Script: {fileID: 11500000, guid: 25fed2b741494a2f919f542f322b81f0, type: 3}
+  m_Name: Deck UI Animation Data
   m_EditorClassIdentifier: 
-  drawGizmos: 0
+  canvasAppearDuration: 0.25
+  canvasDisappearDuration: 0.25
