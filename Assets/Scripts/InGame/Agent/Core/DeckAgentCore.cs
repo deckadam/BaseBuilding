@@ -1,4 +1,4 @@
-﻿using Deck.Commands;
+﻿using Commands.Fetch;
 using Deck.InputHandling.Events;
 using Deck.Services;
 using Deck.Utility;
@@ -10,12 +10,13 @@ namespace Deck.Components.Core
     public class DeckAgentCore : DeckAgent
     {
         [Button]
-        private void Test()
+        private void Test(DeckAgent target)
         {
             var coffeeMachines = Deck.GetService<DeckServiceFinder>().TryGetAgentsWithTag(DeckActionTag.CoffeeMachine);
             foreach (var coffeeMachine in coffeeMachines)
             {
-                EnqueueCommand(new DeckCommandMove(coffeeMachine.transform.position, this));
+                EnqueueCommand(new DeckCommandFetchItem(this, coffeeMachine, target));
+                break;
             }
         }
 

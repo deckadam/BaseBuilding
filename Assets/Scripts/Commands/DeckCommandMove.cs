@@ -19,7 +19,6 @@ namespace Deck.Commands
 
         public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            DeckServiceSelection.ResetSelectionToPossession();
             var componentMovement = _agent.GetDeckComponent<DeckComponentMovement>();
             componentMovement.SetDestination(_targetPosition);
             await UniTask.NextFrame(token);

@@ -799,7 +799,6 @@ namespace Deck.Services.Building
                         return false;
                     }
 
-                    Debug.LogError(_possibleColliders[0].gameObject.name);
                     if (_possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building) && building.BuildingData != _activeBuildable.BuildableToPlaceOnTop)
                     {
                         return false;
