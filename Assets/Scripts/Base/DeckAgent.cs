@@ -21,7 +21,6 @@ namespace Deck.Components
     {
         public event Action OnItemVisualChanged;
 
-        [SerializeField] protected Transform centerPosition;
         [SerializeField] protected DeckActionTag[] tags;
         [SerializeField] private DeckComponent[] components;
         [SerializeField] private bool willSave = true;
@@ -45,7 +44,7 @@ namespace Deck.Components
                     return prefabId;
                 }
 
-                throw new Exception("No valid prefab id");
+                throw new Exception("No valid prefab id " + name);
             }
         }
 
@@ -280,7 +279,6 @@ namespace Deck.Components
 
         public virtual void AfterLoadingFinished()
         {
-            
         }
 
         public void AddCommand(DeckCommand command, bool isInterruptingCommand)
@@ -341,7 +339,6 @@ namespace Deck.Components
 
         public DeckId GetUniqueId() => uniqueId;
         public DeckComponent[] GetDeckComponents() => components;
-        public Transform GetCenter() => centerPosition;
         public bool WillSave() => willSave;
         public string GetPrefabId() => prefabId.ID.ToString();
 

@@ -40,7 +40,21 @@ namespace Deck.Data.Buildable
         public DeckPrice[] Prices => prices;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
-        public DeckId BuildingId => buildingId;
+        
+        
+        public DeckId BuildingId
+        {
+            get
+            {
+                if (buildingId.IsValid)
+                {
+                    return buildingId;
+                }
+
+                throw new Exception("No valid prefab id " + name);
+            }
+        }
+        
         [Button]
         private void OnValidate()
         {

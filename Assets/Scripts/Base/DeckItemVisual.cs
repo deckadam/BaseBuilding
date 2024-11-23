@@ -54,7 +54,7 @@ namespace Deck.Components
                     return prefabId;
                 }
 
-                throw new Exception("No valid prefab id " + name + " " + prefabId.ID);
+                throw new Exception("No valid prefab id " + name);
             }
         }
 

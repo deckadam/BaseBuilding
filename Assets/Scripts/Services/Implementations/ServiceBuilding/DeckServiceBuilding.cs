@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Deck.Components;
 using Deck.Components.Building;
@@ -25,19 +26,18 @@ namespace Deck.Services.Building
     {
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private LayerMask onWallLayerMask;
-
+        [SerializeField] private Mesh accessCellMesh;
         private const int LAYER_MASK = 0b_0011_1111_1_1111_1_1111_1111_1111;
         private const float YOffsetForBuildOnGround = 0.1f;
         private const float YOffsetForBuildOnTop = 0.1f;
         private const string WallTag = "Wall";
 
-        private readonly Dictionary<int, Stack<SilhouettePiece>> _pieceInPool = new();
         private readonly Vector3 _cellHalfExtents = Vector3.one / 2.001f;
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
         private readonly Dictionary<Vector2Int, DeckBuilding> _grid = new();
+        private readonly List<DeckSilhouettePiece> _piecesInUse = new();
         private readonly Dictionary<Vector2Int, int> _accessCells = new();
         private readonly Collider[] _possibleColliders = new Collider[5];
-        private readonly List<SilhouettePiece> _piecesInUse = new();
         private DeckInstanceProvider _instanceProvider;
         private Vector2Int _lastCheckedCellIndex;
         private DeckServiceCamera _cameraService;
@@ -48,13 +48,14 @@ namespace Deck.Services.Building
         private Quaternion _rotation;
         private bool _isDirty;
         private int _ninetyDegreeRotationAmount;
+        private DeckSilhouetteProvider _silhouetteProvider;
 
         [Inject]
-        private void Inject(DeckBuildable[] buildables, DeckDataBuilding buildingData,
-            DeckDataBuilding buildableRotationSpeed, DeckInstanceProvider instanceProvider)
+        private void Inject(DeckDataBuilding buildingData, DeckInstanceProvider instanceProvider, DeckSilhouetteProvider silhouetteProvider)
         {
             _buildingData = buildingData;
             _instanceProvider = instanceProvider;
+            _silhouetteProvider = silhouetteProvider;
         }
 
         public override void Initialize()
@@ -86,28 +87,25 @@ namespace Deck.Services.Building
             }
         }
 
-        public Vector2Int[] GetRotatedIndices(Vector2Int[] points, int numOf90DegreeRotations)
+        private Vector2Int[] GetRotatedIndices(Vector2Int[] points, int numOf90DegreeRotations)
         {
-            Vector2Int[] rotatedPoints = new Vector2Int[points.Length];
-            int effectiveRotations = numOf90DegreeRotations % 4; // Get the effective rotations (0, 1, 2, or 3)
+            var rotatedPoints = new Vector2Int[points.Length];
+            var effectiveRotations = numOf90DegreeRotations % 4; // Get the effective rotations (0, 1, 2, or 3)
 
-            for (int i = 0; i < points.Length; i++)
+            for (var i = 0; i < points.Length; i++)
             {
-                switch (effectiveRotations)
+                rotatedPoints[i] = effectiveRotations switch
                 {
-                    case 0: // 0 degrees
-                        rotatedPoints[i] = points[i];
-                        break;
-                    case 1: // 90 degrees clockwise
-                        rotatedPoints[i] = new Vector2Int(points[i].y, -points[i].x);
-                        break;
-                    case 2: // 180 degrees
-                        rotatedPoints[i] = new Vector2Int(-points[i].x, -points[i].y);
-                        break;
-                    case 3: // 270 degrees clockwise (or 90 degrees counter-clockwise)
-                        rotatedPoints[i] = new Vector2Int(-points[i].y, points[i].x);
-                        break;
-                }
+                    0 => // 0 degrees
+                        points[i],
+                    1 => // 90 degrees clockwise
+                        new Vector2Int(points[i].y, -points[i].x),
+                    2 => // 180 degrees
+                        new Vector2Int(-points[i].x, -points[i].y),
+                    3 => // 270 degrees clockwise (or 90 degrees counter-clockwise)
+                        new Vector2Int(-points[i].y, points[i].x),
+                    _ => throw new Exception("Huh!")
+                };
             }
 
             return rotatedPoints;
@@ -153,7 +151,8 @@ namespace Deck.Services.Building
                 foreach (var buildableIndex in buildable.Indices)
                 {
                     hasIndices = true;
-                    var newPiece = GetSilhouettePiece();
+                    var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
+                    _piecesInUse.Add(newPiece);
 
                     newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
                     newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
@@ -166,7 +165,8 @@ namespace Deck.Services.Building
                 foreach (var buildableIndex in buildable.AccessIndices)
                 {
                     hasIndices = true;
-                    var newPiece = GetSilhouettePiece();
+                    var newPiece = _silhouetteProvider.GetAccessAreaSilhouettePiece();
+                    _piecesInUse.Add(newPiece);
 
                     newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
                     newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
@@ -176,7 +176,8 @@ namespace Deck.Services.Building
 
             if (!hasIndices)
             {
-                var newPiece = GetSilhouettePiece();
+                var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
+                _piecesInUse.Add(newPiece);
 
                 newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
                 newPiece.gameObject.transform.localPosition = Vector3.zero;
@@ -195,8 +196,10 @@ namespace Deck.Services.Building
         {
             _isDirty = true;
             _activeBuildable = buildable;
+            _rotation = Quaternion.identity;
 
-            var newPiece = GetSilhouettePiece();
+            var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
+            _piecesInUse.Add(newPiece);
 
             var cellIndex = GetCursorCellIndex();
 
@@ -289,13 +292,14 @@ namespace Deck.Services.Building
                 {
                     var lastPiece = _piecesInUse.Last();
                     _piecesInUse.RemoveAt(_piecesInUse.Count - 1);
-                    ReturnSilhouettePieceToPool(lastPiece);
+                    _silhouetteProvider.ReturnSilhouettePieceToPool(lastPiece);
                 }
             }
 
             for (var i = 0; i < necessaryCount; i++)
             {
-                var newPiece = GetSilhouettePiece();
+                var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
+                _piecesInUse.Add(newPiece);
                 newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             }
 
@@ -521,7 +525,7 @@ namespace Deck.Services.Building
 
                 foreach (var piece in _piecesInUse)
                 {
-                    ReturnSilhouettePieceToPool(piece);
+                    _silhouetteProvider.ReturnSilhouettePieceToPool(piece);
                 }
 
                 _piecesInUse.Clear();
@@ -542,7 +546,7 @@ namespace Deck.Services.Building
 
             foreach (var silhouettePiece in _piecesInUse)
             {
-                ReturnSilhouettePieceToPool(silhouettePiece);
+                _silhouetteProvider.ReturnSilhouettePieceToPool(silhouettePiece);
             }
 
             _piecesInUse.Clear();
@@ -708,7 +712,7 @@ namespace Deck.Services.Building
 
             foreach (var piece in _piecesInUse)
             {
-                ReturnSilhouettePieceToPool(piece);
+                _silhouetteProvider.ReturnSilhouettePieceToPool(piece);
             }
 
             _piecesInUse.Clear();
@@ -933,91 +937,14 @@ namespace Deck.Services.Building
             }
         }
 
-        private SilhouettePiece GetSilhouettePiece()
-        {
-            var silhouetteData = _activeBuildable.Silhouette;
-
-            if (!_pieceInPool.TryGetValue(silhouetteData.Length, out var pool))
-            {
-                pool = new Stack<SilhouettePiece>();
-                _pieceInPool[silhouetteData.Length] = pool;
-            }
-
-            var stack = _pieceInPool[silhouetteData.Length];
-            if (stack.Count > 0)
-            {
-                var piece = stack.Pop();
-
-                for (var i = 0; i < silhouetteData.Length; i++)
-                {
-                    var data = silhouetteData[i];
-                    piece.filters[i].mesh = data.GetMesh();
-                    piece.gameObject.transform.localPosition = data.GetPosition();
-                }
-
-                piece.gameObject.SetActive(true);
-                _piecesInUse.Add(piece);
-                return piece;
-            }
-
-            var newGameObject = new GameObject();
-            newGameObject.name = silhouetteData.Length.ToString();
-            var newPiece = new SilhouettePiece();
-            newPiece.gameObject = newGameObject;
-            newPiece.renderers = new MeshRenderer[silhouetteData.Length];
-            newPiece.filters = new MeshFilter[silhouetteData.Length];
-
-            for (var index = 0; index < silhouetteData.Length; index++)
-            {
-                var data = silhouetteData[index];
-                var newObject = new GameObject();
-                newObject.transform.SetParent(newGameObject.transform);
-                newObject.transform.localPosition = data.GetPosition();
-                var newFilter = newObject.AddComponent<MeshFilter>();
-
-                newPiece.filters[index] = newFilter;
-
-                newFilter.mesh = data.GetMesh();
-                var newRenderer = newObject.AddComponent<MeshRenderer>();
-                var materials = new Material[_activeBuildable.materialCount];
-
-                newPiece.renderers[index] = newRenderer;
-
-                for (int i = 0; i < _activeBuildable.materialCount; i++)
-                {
-                    materials[i] = _buildingData.GetAvailableMaterial();
-                }
-
-                newRenderer.sharedMaterials = materials;
-            }
-
-            _piecesInUse.Add(newPiece);
-
-            return newPiece;
-        }
-
         private void ReturnAllSilhouettePiecesToPool()
         {
             foreach (var silhouettePiece in _piecesInUse)
             {
-                ReturnSilhouettePieceToPool(silhouettePiece);
+                _silhouetteProvider.ReturnSilhouettePieceToPool(silhouettePiece);
             }
 
             _piecesInUse.Clear();
-        }
-
-        private void ReturnSilhouettePieceToPool(SilhouettePiece piece)
-        {
-            if (piece == null)
-            {
-                return;
-            }
-
-            if (piece.gameObject)
-            {
-                piece.gameObject.SetActive(false);
-                _pieceInPool[piece.filters.Length].Push(piece);
-            }
         }
 
         private Vector3 GetCursorWorldPosition()
@@ -1041,13 +968,6 @@ namespace Deck.Services.Building
 
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
             return true;
-        }
-
-        private class SilhouettePiece
-        {
-            public GameObject gameObject;
-            public MeshRenderer[] renderers;
-            public MeshFilter[] filters;
         }
     }
 }

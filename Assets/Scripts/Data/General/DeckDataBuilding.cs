@@ -9,6 +9,7 @@ namespace Deck.Data.General
         [SerializeField] private float buildableRotationSpeed;
         [SerializeField] private Material availableMaterial;
         [SerializeField] private Material unavailableMaterial;
+        [SerializeField] private Mesh accessCellMesh;
 
         public override void InstallBindings()
         {
@@ -18,5 +19,6 @@ namespace Deck.Data.General
         public Material GetAvailableMaterial() => availableMaterial;
         public Material GetUnavailableMaterial() => unavailableMaterial;
         public float GetBuildableRotationSpeed() => buildableRotationSpeed;
+        public Mesh GetAccessCellMesh() => accessCellMesh;
     }
 }

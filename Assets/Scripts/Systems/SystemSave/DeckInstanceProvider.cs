@@ -85,39 +85,6 @@ namespace Deck.Save
             agents.RemoveAll(item => item == null);
         }
 
-        [MenuItem("Deck/Check Uniqueness")]
-        private static void CheckUniqueness()
-        {
-            var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
-
-            var agentHashSet = new HashSet<int>();
-            foreach (var agent in instanceProvider.agents)
-            {
-                if (!agentHashSet.Add(agent.PrefabId.ID))
-                {
-                    DeckLogger.Error("Multiple id " + agent.name);
-                }
-            }
-
-            var itemVisualHashSet = new HashSet<int>();
-            foreach (var itemVisual in instanceProvider.itemVisuals)
-            {
-                if (!itemVisualHashSet.Add(itemVisual.PrefabId.ID))
-                {
-                    DeckLogger.Error("Multiple id " + itemVisual.name);
-                }
-            }
-
-            var uiElements = new HashSet<int>();
-            foreach (var uiElement in instanceProvider.uiElements)
-            {
-                if (!uiElements.Add(uiElement.PrefabId.ID))
-                {
-                    DeckLogger.Error("Multiple id " + uiElement.name);
-                }
-            }
-        }
-
         [MenuItem("Deck/Collect Instances")]
         private static void EditorInitialize()
         {
@@ -430,6 +397,21 @@ namespace Deck.Save
         private DeckUIElement GetUIElementById(int id)
         {
             return _uiElementDictionary[id];
+        }
+
+        public List<DeckItemVisual> GetItemVisuals()
+        {
+            return itemVisuals;
+        }
+
+        public List<DeckAgent> GetAgents()
+        {
+            return agents;
+        }
+
+        public List<DeckUIElement> GetUIElements()
+        {
+            return uiElements;
         }
     }
 }

@@ -29,7 +29,17 @@ namespace Deck.Utility
             Debug.Log("#UI#" + log, obj);
         }
 
+        public static void Error(string log)
+        {
+            Debug.Log("#Error#" + log);
+        }
+        
         public static void Error(string log, GameObject obj = null)
+        {
+            Debug.Log("#Error#" + log, obj);
+        }
+        
+        public static void Error(string log, ScriptableObject obj = null)
         {
             Debug.Log("#Error#" + log, obj);
         }

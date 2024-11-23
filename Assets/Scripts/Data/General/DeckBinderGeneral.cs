@@ -1,6 +1,7 @@
 ﻿using Deck.Components.Core;
 using Deck.ItemVisualProviders;
 using Deck.Save;
+using Deck.Services.Building;
 using UnityEngine;
 using Zenject;
 
@@ -19,6 +20,7 @@ namespace Deck.Data.General
         public override void InstallBindings()
         {
             Container.Bind<DeckLoadResolver>().AsSingle();
+            Container.Bind<DeckSilhouetteProvider>().AsSingle();
 
             Container.BindInstance(agentCorePrefab);
             Container.BindInstance(itemVisualProviders);

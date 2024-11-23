@@ -50,12 +50,12 @@ namespace Deck.UI.Building.BuildMode
         {
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
-            if (_currentCellPosition != currentCellPosition)
+            if (_currentCellPosition == currentCellPosition)
             {
-                _currentCellPosition = currentCellPosition;
                 return;
             }
 
+            _currentCellPosition = currentCellPosition;
 
             if (_isDown)
             {
