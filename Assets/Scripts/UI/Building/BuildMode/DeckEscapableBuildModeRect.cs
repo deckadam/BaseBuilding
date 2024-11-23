@@ -21,7 +21,6 @@ namespace Deck.UI.Building.BuildMode
         {
             _isDown = true;
             _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            BuildingService.SetSilhouetteStatus(true);
         }
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
@@ -34,7 +33,6 @@ namespace Deck.UI.Building.BuildMode
             _isDown = false;
             var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
             Deck.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
-            BuildingService.SetSilhouetteStatus(false);
         }
 
         protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)

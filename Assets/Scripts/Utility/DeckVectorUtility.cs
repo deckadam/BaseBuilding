@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Deck.Utility.Iterators;
 using UnityEngine;
@@ -142,6 +143,31 @@ namespace Deck.Utility
             }
 
             return count;
+        }
+
+
+        public static Vector2Int[] GetRotatedIndices(this Vector2Int[] points, int numOf90DegreeRotations)
+        {
+            var rotatedPoints = new Vector2Int[points.Length];
+            var effectiveRotations = numOf90DegreeRotations % 4; // Get the effective rotations (0, 1, 2, or 3)
+
+            for (var i = 0; i < points.Length; i++)
+            {
+                rotatedPoints[i] = effectiveRotations switch
+                {
+                    0 => // 0 degrees
+                        points[i],
+                    1 => // 90 degrees clockwise
+                        new Vector2Int(points[i].y, -points[i].x),
+                    2 => // 180 degrees
+                        new Vector2Int(-points[i].x, -points[i].y),
+                    3 => // 270 degrees clockwise (or 90 degrees counter-clockwise)
+                        new Vector2Int(-points[i].y, points[i].x),
+                    _ => throw new Exception("Huh!")
+                };
+            }
+
+            return rotatedPoints;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Deck.Components;
 using Deck.Components.Building;
@@ -63,10 +62,6 @@ namespace Deck.Services.Building
             _cameraService = Deck.GetService<DeckServiceCamera>();
             _currencyService = Deck.GetService<DeckServiceCurrency>();
             _lastCheckedCellIndex = _defaultCellPosition;
-        }
-
-        private void Awake()
-        {
             _silhouetteParent = new GameObject()
             {
                 name = "SilhouetteParent"
@@ -85,30 +80,6 @@ namespace Deck.Services.Building
                 Gizmos.color = kvp.Value > 0 ? Color.red : Color.green;
                 Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
             }
-        }
-
-        private Vector2Int[] GetRotatedIndices(Vector2Int[] points, int numOf90DegreeRotations)
-        {
-            var rotatedPoints = new Vector2Int[points.Length];
-            var effectiveRotations = numOf90DegreeRotations % 4; // Get the effective rotations (0, 1, 2, or 3)
-
-            for (var i = 0; i < points.Length; i++)
-            {
-                rotatedPoints[i] = effectiveRotations switch
-                {
-                    0 => // 0 degrees
-                        points[i],
-                    1 => // 90 degrees clockwise
-                        new Vector2Int(points[i].y, -points[i].x),
-                    2 => // 180 degrees
-                        new Vector2Int(-points[i].x, -points[i].y),
-                    3 => // 270 degrees clockwise (or 90 degrees counter-clockwise)
-                        new Vector2Int(-points[i].y, points[i].x),
-                    _ => throw new Exception("Huh!")
-                };
-            }
-
-            return rotatedPoints;
         }
 
         private void OnMiddleScroll(DeckEventMiddleScroll evt)
@@ -201,7 +172,7 @@ namespace Deck.Services.Building
             var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
             _piecesInUse.Add(newPiece);
 
-            var cellIndex = GetCursorCellIndex();
+            var cellIndex = _cameraService.GetCursorCellIndex();
 
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
@@ -216,11 +187,6 @@ namespace Deck.Services.Building
             UpdateSilhouetteInCellRect(new[] { cellIndex, cellIndex });
         }
 
-        public void SetSilhouetteStatus(bool status)
-        {
-            _silhouetteParent.SetActive(status);
-        }
-
         public void UpdateSilhouetteInCell(Quaternion rotation)
         {
             if (!_activeBuildable)
@@ -228,7 +194,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var cellIndex = GetCursorCellIndex();
+            var cellIndex = _cameraService.GetCursorCellIndex();
 
             var isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value);
             var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
@@ -246,7 +212,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var currentCellIndex = GetCursorCellIndex();
+            var currentCellIndex = _cameraService.GetCursorCellIndex();
             var isAvailable = true;
             foreach (var mainCell in _activeBuildable.Indices)
             {
@@ -263,7 +229,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            if (isAvailable && !IsCellClear(_activeBuildable.AccessIndices, currentCellIndex))
+            if (isAvailable && !IsViableBuildCell(_activeBuildable.AccessIndices, currentCellIndex))
             {
                 isAvailable = false;
             }
@@ -317,7 +283,7 @@ namespace Deck.Services.Building
 
                 _piecesInUse[index].gameObject.transform.position = cellIndex.ToVector3();
 
-                if (isAllCellsFree && !IsCellClear(_activeBuildable.Indices, cellIndex))
+                if (isAllCellsFree && !IsViableBuildCell(_activeBuildable.Indices, cellIndex))
                 {
                     isAllCellsFree = false;
                 }
@@ -334,8 +300,8 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var worldPosition = GetCursorWorldPosition();
-            var isPlaceable = CheckIfAgentBuildableInArea(_activeBuildable, worldPosition);
+            var worldPosition = _cameraService.GetCursorWorldPosition();
+            var isPlaceable = IsCollidingWithAnotherObject(_activeBuildable, worldPosition);
             var material = isPlaceable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -350,7 +316,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (!IsCollidingWithAnotherObjectOnWall(out var buildPosition, out var buildRotation))
+            if (!IsTargetPointWall(out var buildPosition, out var buildRotation))
             {
                 if (_silhouetteParent.activeSelf)
                 {
@@ -365,7 +331,7 @@ namespace Deck.Services.Building
                 _silhouetteParent.gameObject.SetActive(true);
             }
 
-            var material = !CollidesWithOtherItemsOnWall(buildPosition, out _) ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+            var material = IsViableToBuildOnWall(buildPosition, out _) ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
 
@@ -380,7 +346,7 @@ namespace Deck.Services.Building
                 return;
             }
 
-            if (!TryGetCollidedItemVisualOnTop(out _, out var buildPosition))
+            if (!IsViableToPlaceOnTop(out _, out var buildPosition))
             {
                 if (_silhouetteParent.activeSelf)
                 {
@@ -393,7 +359,6 @@ namespace Deck.Services.Building
             if (!_silhouetteParent.activeSelf)
             {
                 _silhouetteParent.SetActive(true);
-                return;
             }
 
             var isPlaceable = !CollidesWithOtherItemsOnTop(buildPosition);
@@ -408,16 +373,15 @@ namespace Deck.Services.Building
         {
             if (_activeBuildable == null)
             {
-                DeckLogger.Warning("Active buildable is null");
                 return;
             }
 
-            if (!IsCollidingWithAnotherObjectOnWall(out var buildPosition, out var buildRotation))
+            if (!IsTargetPointWall(out var buildPosition, out var buildRotation))
             {
                 return;
             }
 
-            if (CollidesWithOtherItemsOnWall(buildPosition, out var collidedObject))
+            if (!IsViableToBuildOnWall(buildPosition, out var collidedObject))
             {
                 DeckLogger.Inform("Collides with object", collidedObject);
                 return;
@@ -437,19 +401,16 @@ namespace Deck.Services.Building
         {
             if (!_activeBuildable)
             {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
                 return;
             }
 
-
-            if (!TryGetCollidedItemVisualOnTop(out var buildingToBuildOnTop, out var buildPosition))
+            if (!IsViableToPlaceOnTop(out var buildingToBuildOnTop, out var buildPosition))
             {
                 return;
             }
 
             if (CollidesWithOtherItemsOnTop(buildPosition))
             {
-                DeckLogger.Inform("Can't build on position");
                 return;
             }
 
@@ -468,15 +429,13 @@ namespace Deck.Services.Building
         {
             if (_activeBuildable == null)
             {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
                 return;
             }
 
-            var worldPosition = GetCursorWorldPosition();
+            var worldPosition = _cameraService.GetCursorWorldPosition();
 
-            if (!CheckIfAgentBuildableInArea(_activeBuildable, worldPosition))
+            if (!IsCollidingWithAnotherObject(_activeBuildable, worldPosition))
             {
-                DeckEventNotificationRequested.Create(DeckConstantsNotification.OnBuildingAreaIsNotClear).Send();
                 return;
             }
 
@@ -494,18 +453,7 @@ namespace Deck.Services.Building
         {
             if (_activeBuildable == null)
             {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
                 return;
-            }
-
-            if (positions.Length < 2)
-            {
-                DeckLogger.Error("Not enough positions provided: " + positions.Length);
-            }
-
-            if (positions.Length > 2)
-            {
-                DeckLogger.Error("Too much positions provided: " + positions.Length);
             }
 
             var rectBuildPositions = positions.GetRectFromPoints();
@@ -513,7 +461,7 @@ namespace Deck.Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                if (!IsCellClear(_activeBuildable.Indices, rectBuildPosition))
+                if (!IsViableBuildCell(_activeBuildable.Indices, rectBuildPosition))
                 {
                     isAllCellsAvailable = false;
                 }
@@ -521,8 +469,6 @@ namespace Deck.Services.Building
 
             if (!isAllCellsAvailable)
             {
-                DeckLogger.Inform("Not all cells are free");
-
                 foreach (var piece in _piecesInUse)
                 {
                     _silhouetteProvider.ReturnSilhouettePieceToPool(piece);
@@ -560,17 +506,16 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var worldPosition = GetCursorCellIndex();
+            var worldPosition = _cameraService.GetCursorCellIndex();
 
             if (_lastCheckedCellIndex == worldPosition)
             {
                 return;
             }
 
-
             _lastCheckedCellIndex = worldPosition;
 
-            if (!IsCellClear(_activeBuildable.Indices, worldPosition))
+            if (!IsViableBuildCell(_activeBuildable.Indices, worldPosition))
             {
                 return;
             }
@@ -587,44 +532,38 @@ namespace Deck.Services.Building
 
         public void BuildWithAccess()
         {
-            var currentCellIndex = GetCursorCellIndex();
+            var currentCellIndex = _cameraService.GetCursorCellIndex();
             DeckBuilding buildingToBuildOnTop = null;
             foreach (var mainCell in _activeBuildable.Indices)
             {
                 if (!_grid.TryGetValue(currentCellIndex + mainCell, out buildingToBuildOnTop))
                 {
-                    Debug.LogError("1");
                     return;
                 }
 
                 if (!buildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                 {
-                    Debug.LogError("2");
                     return;
                 }
             }
 
             if (buildingToBuildOnTop == null)
             {
-                Debug.LogError("3");
                 return;
             }
 
-            if (!IsCellClear(_activeBuildable.Indices, currentCellIndex, false))
+            if (!IsViableBuildCell(_activeBuildable.Indices, currentCellIndex, false))
             {
-                Debug.LogError("4");
                 return;
             }
 
             if (!IsViableAccessCell(_activeBuildable.AccessIndices, currentCellIndex))
             {
-                Debug.LogError("Access cell not available");
                 return;
             }
 
             if (!PayIfCanAfford())
             {
-                Debug.LogError("7");
                 return;
             }
 
@@ -637,28 +576,28 @@ namespace Deck.Services.Building
 
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
 
-            var rotatedIndices = GetRotatedIndices(_activeBuildable.AccessIndices, _ninetyDegreeRotationAmount);
-            AddAccessCell(currentCellIndex, rotatedIndices);
+            var rotatedIndices = _activeBuildable.AccessIndices.GetRotatedIndices(_ninetyDegreeRotationAmount);
+            AddAccessCellReference(currentCellIndex, rotatedIndices);
         }
 
-        private bool CollidesWithOtherItemsOnWall(Vector3 position, out GameObject collidedObject)
+        private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
         {
             var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
             if (!boxCollider)
             {
                 DeckLogger.Warning("Collider is not BoxCollider");
                 collidedObject = null;
-                return true;
+                return false;
             }
 
-            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) > 0)
+            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) != 0)
             {
-                collidedObject = _possibleColliders[0].gameObject;
-                return true;
+                collidedObject = null;
+                return false;
             }
 
-            collidedObject = null;
-            return false;
+            collidedObject = _possibleColliders[0].gameObject;
+            return true;
         }
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
@@ -729,8 +668,8 @@ namespace Deck.Services.Building
             if (building.BuildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
             {
                 var rotCount = Mathf.RoundToInt(building.transform.rotation.eulerAngles.y / 90f);
-                var indices = GetRotatedIndices(building.BuildingData.AccessIndices, rotCount);
-                RemoveAccessCell(cellIndex, indices);
+                var indices = building.BuildingData.AccessIndices.GetRotatedIndices(rotCount);
+                RemoveAccessCellReference(cellIndex, indices);
             }
 
             if (building.BuildingData.BuildMode == DeckBuildMode.InCell)
@@ -754,7 +693,7 @@ namespace Deck.Services.Building
             }
         }
 
-        private void AddAccessCell(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        private void AddAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
         {
             foreach (var index in indices)
             {
@@ -764,8 +703,7 @@ namespace Deck.Services.Building
             }
         }
 
-
-        private void RemoveAccessCell(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        private void RemoveAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
         {
             foreach (var index in indices)
             {
@@ -791,9 +729,9 @@ namespace Deck.Services.Building
             return result;
         }
 
-        private bool IsCellClear(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
+        private bool IsViableBuildCell(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
         {
-            var rotatedIndices = GetRotatedIndices(indices, _ninetyDegreeRotationAmount);
+            var rotatedIndices = indices.GetRotatedIndices(_ninetyDegreeRotationAmount);
             foreach (var index in rotatedIndices)
             {
                 var temp = cellIndex + index;
@@ -838,10 +776,9 @@ namespace Deck.Services.Building
             return true;
         }
 
-
         private bool IsViableAccessCell(Vector2Int[] indices, Vector2Int cellIndex)
         {
-            var rotatedIndices = GetRotatedIndices(indices, _ninetyDegreeRotationAmount);
+            var rotatedIndices = indices.GetRotatedIndices(_ninetyDegreeRotationAmount);
             foreach (var index in rotatedIndices)
             {
                 var temp = cellIndex + index;
@@ -867,9 +804,9 @@ namespace Deck.Services.Building
             return true;
         }
 
-        private bool TryGetCollidedItemVisualOnTop(out DeckBuilding building, out Vector3 position)
+        private bool IsViableToPlaceOnTop(out DeckBuilding building, out Vector3 position)
         {
-            if (Physics.Raycast(GetRayFromCamera(), out var hit))
+            if (Physics.Raycast(_cameraService.GetRayFromCamera(), out var hit))
             {
                 if (hit.transform.TryGetComponentInParent(out building))
                 {
@@ -886,9 +823,9 @@ namespace Deck.Services.Building
             return false;
         }
 
-        private bool IsCollidingWithAnotherObjectOnWall(out Vector3 position, out Vector3 rotation)
+        private bool IsTargetPointWall(out Vector3 position, out Vector3 rotation)
         {
-            if (Physics.Raycast(GetRayFromCamera(), out var hit, 1000f, layerMask, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(_cameraService.GetRayFromCamera(), out var hit, 1000f, layerMask, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.TryGetComponentInParent(out DeckItemVisual itemVisual))
                 {
@@ -907,17 +844,10 @@ namespace Deck.Services.Building
             return false;
         }
 
-        private bool CheckIfAgentBuildableInArea(DeckBuildable buildable, Vector3 worldPosition)
+        private bool IsCollidingWithAnotherObject(DeckBuildable buildable, Vector3 worldPosition)
         {
-            var count = Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
-                _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore);
-
-            return count == 0;
-        }
-
-        private Ray GetRayFromCamera()
-        {
-            return _cameraService.GetCamera().ScreenPointToRay(Input.mousePosition);
+            return Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
+                _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
         }
 
         private void ApplyMaterialToSilhouette(Material material)
@@ -945,16 +875,6 @@ namespace Deck.Services.Building
             }
 
             _piecesInUse.Clear();
-        }
-
-        private Vector3 GetCursorWorldPosition()
-        {
-            return _cameraService.GetCursorWorldPosition();
-        }
-
-        private Vector2Int GetCursorCellIndex()
-        {
-            return _cameraService.GetCursorCellIndex();
         }
 
         private bool PayIfCanAfford()

@@ -12,18 +12,12 @@ namespace Deck.Services.Building
 
         private DeckDataBuilding _buildingData;
 
-        private GameObject _silhouetteParent = new()
-        {
-            name = "SilhouetteParent"
-        };
-
         [Inject]
         private void Inject(DeckDataBuilding buildingData)
         {
             _buildingData = buildingData;
         }
-
-
+        
         public DeckSilhouettePiece GetSilhouettePiece(DeckBuildable activeBuildable)
         {
             var silhouetteData = activeBuildable.Silhouette;
