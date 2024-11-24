@@ -24,12 +24,12 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
-  rotationMode: 0
+  rotationMode: 100
   icon: {fileID: 0}
   extents: {x: 1, y: 1, z: 1}
   prices:
   - currencyType: 0
     amount: 25
-  buildMode: 5
+  buildMode: 500
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1

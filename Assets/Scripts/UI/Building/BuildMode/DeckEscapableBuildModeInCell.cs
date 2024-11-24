@@ -6,6 +6,13 @@ namespace Deck.UI.Building.BuildMode
 {
     public class DeckEscapableBuildModeInCell : DeckEscapableBuildMode
     {
+        private bool _canReplace;
+
+        public DeckEscapableBuildModeInCell(bool canReplace)
+        {
+            _canReplace = canReplace;
+        }
+
         protected override void InternalOnInitialize()
         {
             BuildingService.StartSilhouette(Buildable);
@@ -17,15 +24,15 @@ namespace Deck.UI.Building.BuildMode
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
-            Deck.GetService<DeckServiceBuilding>().BuildInCell();
+            Deck.GetService<DeckServiceBuilding>().BuildInCell(_canReplace);
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
-            BuildingService.UpdateSilhouetteInCell(rotation);
+            BuildingService.UpdateSilhouetteInCell(rotation, _canReplace);
         }
 
         protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
         {
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
-            BuildingService.UpdateSilhouetteInCell(rotation);
+            BuildingService.UpdateSilhouetteInCell(rotation, _canReplace);
         }
     }
 }

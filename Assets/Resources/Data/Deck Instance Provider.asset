@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Deck Instance Provider
   m_EditorClassIdentifier: 
   agents:
+  - {fileID: 5264583260750542700, guid: 7813107e8a66e5a479504a190aec807d, type: 3}
   - {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   - {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   - {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
@@ -28,8 +29,7 @@ MonoBehaviour:
   - {fileID: -4123667621523898490, guid: 8a73920817637764e8e56772168c1475, type: 3}
   - {fileID: 5134706524527623977, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
   - {fileID: 5416249728217735771, guid: c787730401ece2c48b9aa3519ba610ff, type: 3}
-  - {fileID: 2129989830776383882, guid: 07e07d540c9e5804493f884eb1e4d30c, type: 3}
-  - {fileID: 9181512677676657932, guid: a88c45296ccf9ad44b9a43fba8abf9a4, type: 3}
+  - {fileID: 573691419038765338, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
   itemVisuals:
   - {fileID: 4521831339985474466, guid: b180ccf6399588c42a8059002f5a91a4, type: 3}
   - {fileID: 9032209925360883485, guid: 18bf077b66d7d254d8ef277154b2edbe, type: 3}
@@ -82,6 +82,7 @@ MonoBehaviour:
   - {fileID: 4347336297822648076, guid: ba9e1e62a6741a241a6ea157d85857e0, type: 3}
   - {fileID: 4347336297822648076, guid: 496aeee92d183c14688acbe95e41819a, type: 3}
   - {fileID: 4347336297822648076, guid: 1a1b9fe3c75d8ca48a5ec71d79e2e737, type: 3}
+  - {fileID: 1953440713801673427, guid: 34ff637d1da956249881fc8d381f81ce, type: 3}
   uiElements:
   - {fileID: 8432023853462673980, guid: 4b4364fd2e761404f849778b37b8a497, type: 3}
   - {fileID: 6560618859166587799, guid: 42829b76db044e0409950f054d191447, type: 3}

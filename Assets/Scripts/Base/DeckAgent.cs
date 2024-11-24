@@ -29,11 +29,14 @@ namespace Deck.Components
 
         [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
 
+        public DeckId UniqueId => uniqueId;
+        public DeckComponent[] Components => components;
+        public bool WillSave => willSave;
+
         protected Transform SelfTransform;
 
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
-        private bool _hasSetComponents;
 
         public DeckId PrefabId
         {
@@ -135,18 +138,6 @@ namespace Deck.Components
             return null;
         }
 
-        private void SetComponents()
-        {
-            if (_hasSetComponents)
-            {
-                return;
-            }
-
-            _hasSetComponents = true;
-            var comps = GetComponents<DeckComponent>();
-            components = comps;
-        }
-
         public void SetNewUniqueId()
         {
             uniqueId = DeckId.CreateNew();
@@ -178,13 +169,6 @@ namespace Deck.Components
             SelfTransform = transform;
             SelfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
 
-            SetComponents();
-
-            if (!_hasSetComponents)
-            {
-                throw new Exception("Components hasn't been set");
-            }
-
             _hasBeenInitialized = true;
 
             foreach (var deckComponent in components)
@@ -196,27 +180,21 @@ namespace Deck.Components
             {
                 deckComponent.PostInitialize();
             }
-
-            AfterInitialize();
-
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
                 commandProcessor.StartProcessCommands();
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
+            
+            AfterInitialize();
         }
 
-        protected void DeInitialize()
+        private void DeInitialize()
         {
             if (_alreadyDeinitialized)
             {
                 return;
-            }
-
-            if (!_hasSetComponents)
-            {
-                throw new Exception($"Components hasn't been set {name}");
             }
 
             _alreadyDeinitialized = true;
@@ -337,16 +315,11 @@ namespace Deck.Components
             return stats;
         }
 
-        public DeckId GetUniqueId() => uniqueId;
-        public DeckComponent[] GetDeckComponents() => components;
-        public bool WillSave() => willSave;
-        public string GetPrefabId() => prefabId.ID.ToString();
-
         protected virtual void AfterInitialize()
         {
         }
 
-        public virtual void AfterLoad()
+        protected virtual void AfterLoad()
         {
         }
 

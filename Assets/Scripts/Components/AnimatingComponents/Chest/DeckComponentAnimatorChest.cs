@@ -41,7 +41,7 @@ namespace Deck.Components
 
         public void Animate(string name)
         {
-            DeckLogger.Inform(agent.GetPrefabId() + " can not be animated with with this method");
+            DeckLogger.Inform(agent.PrefabId + " can not be animated with with this method");
         }
     }
 }

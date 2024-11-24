@@ -6,13 +6,13 @@ using Deck.Data.Buildable;
 using Deck.Data.General;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
+using Deck.Instancing;
 using Deck.Save;
 using Deck.Services.CameraService;
 using Deck.Services.Implementations.Currency;
 using Deck.Services.MapService;
 using Deck.UI.Notification;
 using Deck.Utility;
-using Deck.Utility.Constants;
 using Deck.Utility.Iterators;
 using Deck.Utility.MonoBehaviours;
 using UI.Building.BuildMode;
@@ -75,9 +75,9 @@ namespace Deck.Services.Building
                 return;
             }
 
-            foreach (var kvp in _accessCells)
+            foreach (var kvp in _grid)
             {
-                Gizmos.color = kvp.Value > 0 ? Color.red : Color.green;
+                Gizmos.color = Color.green;
                 Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
             }
         }
@@ -187,7 +187,7 @@ namespace Deck.Services.Building
             UpdateSilhouetteInCellRect(new[] { cellIndex, cellIndex });
         }
 
-        public void UpdateSilhouetteInCell(Quaternion rotation)
+        public void UpdateSilhouetteInCell(Quaternion rotation, bool canReplace)
         {
             if (!_activeBuildable)
             {
@@ -195,8 +195,12 @@ namespace Deck.Services.Building
             }
 
             var cellIndex = _cameraService.GetCursorCellIndex();
+            var isAvailable = true;
+            if (!canReplace)
+            {
+                isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value);
+            }
 
-            var isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value);
             var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -483,7 +487,6 @@ namespace Deck.Services.Building
             foreach (var rectBuildPosition in rectBuildPositions)
             {
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
-                SetCellOccupied(rectBuildPosition, _activeBuildable.Indices, newBuilding);
                 newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
@@ -498,7 +501,7 @@ namespace Deck.Services.Building
             _piecesInUse.Clear();
         }
 
-        public void BuildInCell()
+        public void BuildInCell(bool canReplace)
         {
             if (_activeBuildable == null)
             {
@@ -506,16 +509,21 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var worldPosition = _cameraService.GetCursorCellIndex();
+            var cellIndex = _cameraService.GetCursorCellIndex();
 
-            if (_lastCheckedCellIndex == worldPosition)
+            if (_lastCheckedCellIndex == cellIndex)
             {
                 return;
             }
 
-            _lastCheckedCellIndex = worldPosition;
+            _lastCheckedCellIndex = cellIndex;
 
-            if (!IsViableBuildCell(_activeBuildable.Indices, worldPosition))
+            if (canReplace && _grid.TryGetValue(cellIndex, out var building))
+            {
+                building.RequestDestroy();
+            }
+
+            if (!IsViableBuildCell(_activeBuildable.Indices, cellIndex))
             {
                 return;
             }
@@ -524,10 +532,9 @@ namespace Deck.Services.Building
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
-            newBuilding.transform.position = worldPosition.ToVector3();
+            newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            SetCellOccupied(worldPosition, _activeBuildable.Indices, newBuilding);
         }
 
         public void BuildWithAccess()
@@ -575,9 +582,6 @@ namespace Deck.Services.Building
             newBuilding.InitializeBuilding();
 
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
-
-            var rotatedIndices = _activeBuildable.AccessIndices.GetRotatedIndices(_ninetyDegreeRotationAmount);
-            AddAccessCellReference(currentCellIndex, rotatedIndices);
         }
 
         private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
@@ -661,27 +665,12 @@ namespace Deck.Services.Building
             _isDirty = false;
         }
 
-        public void OnBuildingDestroyed(DeckBuilding building)
+        public void SetCellsUnoccupied(Vector2Int cellIndex, Vector2Int[] cells)
         {
-            var cellIndex = building.transform.position.ToVector2Int();
-
-            if (building.BuildingData.BuildMode == DeckBuildMode.ItemWithAccessArea)
+            foreach (var cell in cells)
             {
-                var rotCount = Mathf.RoundToInt(building.transform.rotation.eulerAngles.y / 90f);
-                var indices = building.BuildingData.AccessIndices.GetRotatedIndices(rotCount);
-                RemoveAccessCellReference(cellIndex, indices);
+                _grid.Remove(cell + cellIndex);
             }
-
-            if (building.BuildingData.BuildMode == DeckBuildMode.InCell)
-            {
-                foreach (var index in building.BuildingData.Indices)
-                {
-                    var temp = cellIndex + index;
-                    _grid.Remove(temp);
-                }
-            }
-
-            _lastCheckedCellIndex = _defaultCellPosition;
         }
 
         public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckBuilding agentToSet)
@@ -693,7 +682,7 @@ namespace Deck.Services.Building
             }
         }
 
-        private void AddAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        public void AddAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
         {
             foreach (var index in indices)
             {
@@ -703,7 +692,7 @@ namespace Deck.Services.Building
             }
         }
 
-        private void RemoveAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
+        public void RemoveAccessCellReference(Vector2Int cellIndex, IEnumerable<Vector2Int> indices)
         {
             foreach (var index in indices)
             {
@@ -763,7 +752,7 @@ namespace Deck.Services.Building
                         return false;
                     }
 
-                    if (_activeBuildable.BuildMode == DeckBuildMode.ItemWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building))
+                    if (_activeBuildable.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building))
                     {
                         if (!building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                         {

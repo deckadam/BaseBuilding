@@ -29,6 +29,6 @@ MonoBehaviour:
   prices:
   - currencyType: 0
     amount: 70
-  buildMode: 2
+  buildMode: 200
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 2

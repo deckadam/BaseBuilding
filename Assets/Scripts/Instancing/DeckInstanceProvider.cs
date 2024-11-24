@@ -12,7 +12,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 #endif
 
-namespace Deck.Save
+namespace Deck.Instancing
 {
     [CreateAssetMenu(menuName = "Deck/Data/Resolver/Instance creator", fileName = "Instance creator")]
     public class DeckInstanceProvider : ScriptableObject
@@ -226,7 +226,7 @@ namespace Deck.Save
             return RentAgent(id.ID, uniqueId);
         }
 
-        public DeckAgent RentAgent<T>(int uniqueId = 0) where T : DeckUIElement
+        public DeckAgent RentAgent<T>(int uniqueId = 0) where T : DeckAgent
         {
             return RentAgent(_agentByType[typeof(T)], uniqueId);
         }

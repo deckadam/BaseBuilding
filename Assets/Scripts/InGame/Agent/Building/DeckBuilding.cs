@@ -21,7 +21,7 @@ namespace Deck.Components.Building
 
         public DeckBuildable BuildingData => buildingData;
 
-        public override void AfterLoad()
+        protected override void AfterLoad()
         {
             InitializeBuilding();
 
@@ -29,12 +29,9 @@ namespace Deck.Components.Building
             {
                 case DeckBuildMode.Rect or DeckBuildMode.InCell or DeckBuildMode.Line:
                 {
-                    var buildingService = Deck.GetService<DeckServiceBuilding>();
-                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.Indices, this);
-                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
                     break;
                 }
-                case DeckBuildMode.ItemWithAccessArea:
+                case DeckBuildMode.BuildOnTopWithAccessArea:
                 {
                     var buildingService = Deck.GetService<DeckServiceBuilding>();
                     buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
@@ -70,7 +67,6 @@ namespace Deck.Components.Building
                 onTopOf.RemoveBuildingFromTop(this);
             }
 
-            Deck.GetService<DeckServiceBuilding>().OnBuildingDestroyed(this);
             if (itemVisualInstance != null)
             {
                 Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
@@ -98,7 +94,7 @@ namespace Deck.Components.Building
             for (var index = 0; index < buildingsOnTop.Count; index++)
             {
                 var deckBuilding = buildingsOnTop[index];
-                buildingsOnTopIds[index] = deckBuilding.GetUniqueId().ID;
+                buildingsOnTopIds[index] = deckBuilding.UniqueId.ID;
             }
 
             var layerData = new LayerData()

@@ -15,7 +15,7 @@ namespace Deck.Components
 
         public override UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            foreach (var deckComponent in _target.GetDeckComponents())
+            foreach (var deckComponent in _target.Components)
             {
                 deckComponent.Release();
             }

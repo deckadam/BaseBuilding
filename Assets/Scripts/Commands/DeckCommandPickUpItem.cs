@@ -56,7 +56,7 @@ namespace Deck.Commands
 
             public SaveData(DeckComponentInventory target, DeckItemVisual itemVisual)
             {
-                targetAgentId = target.GetAgent().GetUniqueId().ID;
+                targetAgentId = target.GetAgent().UniqueId.ID;
                 prefabId = itemVisual.UniqueId.ID;
             }
         }

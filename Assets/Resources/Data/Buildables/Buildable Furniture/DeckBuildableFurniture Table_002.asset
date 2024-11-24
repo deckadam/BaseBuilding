@@ -25,7 +25,7 @@ MonoBehaviour:
   accessIndices: []
   rotationMode: 0
   icon: {fileID: 0}
-  extents: {x: 0.61832714, y: 0.5998423, z: 0.61832714}
+  extents: {x: 1.68185, y: 1, z: 1.68185}
   prices:
   - currencyType: 0
     amount: 80

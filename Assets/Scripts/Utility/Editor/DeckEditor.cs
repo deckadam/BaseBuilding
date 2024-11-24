@@ -2,7 +2,7 @@
 using Deck.Data.Buildable;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Save;
+using Deck.Instancing;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,15 +18,15 @@ namespace Deck.Utility.Editor
             DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
             DeckEventManager.ClearEvents<DeckEventOnMouseMove>();
         }
-        
-        
+
+
         [MenuItem("Deck/Free resources")]
         private static void FreeResources()
         {
             EditorUtility.UnloadUnusedAssetsImmediate();
             Resources.UnloadUnusedAssets();
         }
-        
+
         [MenuItem("Deck/Check Uniqueness")]
         private static void CheckUniqueness()
         {
@@ -58,14 +58,14 @@ namespace Deck.Utility.Editor
                     DeckLogger.Error("Multiple id " + uiElement.name);
                 }
             }
-            
-            var buildables =Resources.FindObjectsOfTypeAll<DeckBuildable>();
+
+            var buildables = Resources.FindObjectsOfTypeAll<DeckBuildable>();
             var buildableIds = new HashSet<int>();
             foreach (var deckBuildable in buildables)
             {
                 if (!buildableIds.Add(deckBuildable.BuildingId.ID))
                 {
-                    DeckLogger.Error("Multiple id " + deckBuildable.name,deckBuildable);
+                    DeckLogger.Error("Multiple id " + deckBuildable.name, deckBuildable);
                 }
             }
         }

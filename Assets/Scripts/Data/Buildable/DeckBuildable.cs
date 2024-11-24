@@ -41,7 +41,6 @@ namespace Deck.Data.Buildable
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
         
-        
         public DeckId BuildingId
         {
             get

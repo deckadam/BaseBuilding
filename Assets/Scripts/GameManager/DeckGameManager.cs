@@ -58,14 +58,14 @@ namespace Deck.GameManager
             var agentDatas = new DeckComponentHolderSaveDatas();
             foreach (var agent in agents)
             {
-                if (!agent.WillSave())
+                if (!agent.WillSave)
                 {
                     continue;
                 }
 
                 agentDatas.datas.Add(new DeckComponentHolderSaveData
                 {
-                    uniqueId = agent.GetUniqueId().ID,
+                    uniqueId = agent.UniqueId.ID,
                     componentDatas = agent.GetSaveData(),
                     prefabId = agent.PrefabId.ID,
                     position = agent.transform.position,

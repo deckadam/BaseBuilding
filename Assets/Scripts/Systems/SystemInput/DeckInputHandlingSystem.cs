@@ -5,6 +5,7 @@ using Deck.Data.Currency;
 using Deck.Data.Item;
 using Deck.GameManager;
 using Deck.InputHandling.Events;
+using Deck.Instancing;
 using Deck.Save;
 using Deck.Services;
 using Deck.Services.CameraService;
@@ -14,6 +15,7 @@ using Deck.Services.Implementations.Escapable;
 using Deck.UI.Inventory;
 using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
+using InGame.Agent.Customer;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
@@ -23,6 +25,15 @@ namespace Deck.InputHandling
     public class DeckInputHandlingSystem : MonoBehaviour
     {
         private float _lastPressTime;
+        private DeckInstanceProvider _instanceProvider;
+
+        [SerializeField] private DeckAgentCustomer _customerAgentPrefab;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            _instanceProvider = instanceProvider;
+        }
 
         private void Update()
         {
@@ -34,6 +45,17 @@ namespace Deck.InputHandling
             CheckForStatsPopUp();
             CheckForDestroyBuilding();
             CheckForCurrency();
+            CheckForSpawnCustomer();
+        }
+
+        private void CheckForSpawnCustomer()
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                var newCustomer = _instanceProvider.RentAgent(_customerAgentPrefab.PrefabId);
+                newCustomer.transform.position = new Vector3(20, 0, 20);
+                newCustomer.Initialize();
+            }
         }
 
         private void CheckForCurrency()

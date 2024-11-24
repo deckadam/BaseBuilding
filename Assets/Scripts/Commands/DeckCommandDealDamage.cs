@@ -99,7 +99,7 @@ namespace Deck.Commands
 
         public override string GetSaveData()
         {
-            var saveData = new SaveData(_canKill, _from.GetAgent().GetUniqueId().ID, _to.GetAgent().GetUniqueId().ID, _damage, _baseAttackRange, _continous);
+            var saveData = new SaveData(_canKill, _from.GetAgent().UniqueId.ID, _to.GetAgent().UniqueId.ID, _damage, _baseAttackRange, _continous);
             return DeckSaveUtility.GetSerializedData(saveData);
         }
 

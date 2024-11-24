@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4739102597033409343}
-  - component: {fileID: 573691419038765338}
+  - component: {fileID: 4801856471697237134}
   m_Layer: 0
   m_Name: DeckAgentBarTableCoffeeMachine
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &573691419038765338
+--- !u!114 &4801856471697237134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,17 +41,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2955934857986381191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10e458080b0a4ae4a49a179be0bad487, type: 3}
+  m_Script: {fileID: 11500000, guid: f2fefb7fed21435faccf667c1a00a077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPosition: {fileID: 0}
   tags: e8030000
   components: []
   willSave: 1
   uniqueId:
-    _id: 12535001
+    _id: 0
   prefabId:
-    _id: 54679313
+    _id: 87371035
   itemVisualInstance: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 66c476e740cc1074f85df9b49824bd37, type: 2}
   setVisualPosition: 1
+  buildingsOnTop: []
+  onTopOf: {fileID: 0}

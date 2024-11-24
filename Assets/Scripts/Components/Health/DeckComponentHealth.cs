@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Deck.Data.Component;
+using Deck.Instancing;
 using Deck.Save;
 using Deck.UI.Health;
 using Deck.UI.Stats;
@@ -67,7 +68,7 @@ namespace Deck.Components
             {
                 if (canKill)
                 {
-                    DeckLogger.Component("Requesting death on " + agent.GetUniqueId().ID);
+                    DeckLogger.Component("Requesting death on " + agent.UniqueId.ID);
                     ReleaseHealthBar();
                     _currentHealth = 0;
                     agent.RequestDestroy();

@@ -3,7 +3,7 @@ using Deck.UI.Building.BuildMode;
 
 namespace UI.Building.BuildMode
 {
-    public class DeckEscapableBuildModeBuildingWithAccessArea : DeckEscapableBuildMode
+    public class DeckEscapableBuildModeBuildOnTopWithAccessArea : DeckEscapableBuildMode
     {
         protected override void InternalOnInitialize()
         {

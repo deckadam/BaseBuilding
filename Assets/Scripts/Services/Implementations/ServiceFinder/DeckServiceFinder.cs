@@ -42,7 +42,7 @@ namespace Services.AgentFinder
 
         public void RegisterAgent(DeckAgent agent)
         {
-            _agents[agent.GetUniqueId().ID] = agent;
+            _agents[agent.UniqueId.ID] = agent;
             var tags = agent.GetTags();
             foreach (var deckActionTag in tags)
             {
@@ -52,7 +52,7 @@ namespace Services.AgentFinder
 
         public void RemoveAgent(DeckAgent agent)
         {
-            _agents.Remove(agent.GetUniqueId().ID);
+            _agents.Remove(agent.UniqueId.ID);
 
             var tags = agent.GetTags();
             foreach (var deckActionTag in tags)

@@ -10,7 +10,6 @@ namespace Services.Implementations.AreaController
 {
     public class DeckServiceAreaController : DeckServiceBase
     {
-        private Vector2Int _defaultPos = new Vector2Int(-1000, -1000);
         private List<DeckInGameArea> _areas;
         private HashSet<Vector2Int> _areaPositions;
 

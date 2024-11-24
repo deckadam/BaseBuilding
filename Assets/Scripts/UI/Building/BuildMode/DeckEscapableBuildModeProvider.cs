@@ -12,10 +12,11 @@ namespace UI.Building.BuildMode
                 DeckBuildMode.Free => new DeckEscapableBuildModeFree(),
                 DeckBuildMode.Line => new DeckEscapableBuildModeLine(),
                 DeckBuildMode.Rect => new DeckEscapableBuildModeRect(),
-                DeckBuildMode.InCell => new DeckEscapableBuildModeInCell(),
+                DeckBuildMode.InCell => new DeckEscapableBuildModeInCell(false),
+                DeckBuildMode.InCellCanReplace => new DeckEscapableBuildModeInCell(true),
                 DeckBuildMode.OnTop => new DeckEscapableBuildModeOnTop(),
                 DeckBuildMode.OnWall => new DeckEscapableBuildModeOnWall(),
-                DeckBuildMode.ItemWithAccessArea => new DeckEscapableBuildModeBuildingWithAccessArea(),
+                DeckBuildMode.BuildOnTopWithAccessArea => new DeckEscapableBuildModeBuildOnTopWithAccessArea(),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
         }
@@ -23,19 +24,20 @@ namespace UI.Building.BuildMode
 
     public enum DeckBuildMode
     {
-        Free,
-        InCell,
-        OnWall,
-        OnTop,
-        Rect,
-        Line,
-        ItemWithAccessArea,
+        Free = 0,
+        InCell = 100,
+        InCellCanReplace = 101,
+        OnWall = 200,
+        OnTop = 300,
+        Rect = 400,
+        Line = 500,
+        BuildOnTopWithAccessArea = 600,
     }
 
     public enum DeckRotationMode
     {
         Continuous,
         NinetyDegree,
-        None= 100
+        None = 100
     }
 }
