@@ -1,6 +1,6 @@
+using Deck.Base;
 using TMPro;
 using UnityEngine;
-using Deck.Components;
 
 namespace Deck.UI.Stats
 {

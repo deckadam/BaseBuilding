@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Deck.Components;
+using Deck.Base;
 using Deck.Data.Buildable;
 using Deck.Services.Building;
-using Deck.Services.Implementations.Escapable;
+using Deck.Services.Escapable;
 using Deck.UI.Building.BuildMode;
 using Deck.Utility;
 using UI.Building.BuildMode;
@@ -17,7 +17,7 @@ namespace Deck.UI.Building
         [SerializeField] protected CanvasGroup canvasGroup;
 
         protected DeckServiceBuilding BuildingService;
-        
+
         private DeckEscapableBuildMode escapableBuildMode;
         private DeckServiceEscapable escapableService;
 
@@ -46,7 +46,7 @@ namespace Deck.UI.Building
                 buildableButton.Initialize(this, buildable);
                 buildableButton.rectTransform.SetParent(container, false);
             }
-            
+
             InternalInitialize();
         }
 
@@ -101,7 +101,6 @@ namespace Deck.UI.Building
 
         protected virtual void InternalInitialize()
         {
-            
         }
     }
 }

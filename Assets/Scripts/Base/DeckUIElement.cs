@@ -1,6 +1,4 @@
 using System;
-using Deck.Base;
-using Deck.Base.Id;
 using Deck.Instancing;
 using Deck.Utility;
 using UnityEngine;
@@ -9,7 +7,7 @@ using Zenject;
 using UnityEditor;
 #endif
 
-namespace Deck.Components
+namespace Deck.Base
 {
     public class DeckUIElement : DeckPoolable
     {

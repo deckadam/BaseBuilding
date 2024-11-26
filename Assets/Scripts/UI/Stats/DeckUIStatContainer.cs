@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Deck.Components;
+using Deck.Base;
 
 namespace Deck.UI.Stats
 {

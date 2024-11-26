@@ -1,4 +1,4 @@
-﻿using Deck.Components;
+﻿using Deck.Base;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;

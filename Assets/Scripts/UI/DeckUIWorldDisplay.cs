@@ -1,7 +1,7 @@
 ﻿using System;
-using Deck.Components;
-using Deck.Services;
-using Deck.Services.CameraService;
+using Deck.Base;
+using Deck.Services.Cam;
+using Deck.Services.UI;
 using Deck.UI.Health;
 using Deck.Utility;
 using UnityEngine;

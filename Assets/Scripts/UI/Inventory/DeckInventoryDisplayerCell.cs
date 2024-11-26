@@ -1,10 +1,11 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Components;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders.Implementations.Inventory;
-using Deck.Services;
-using Deck.Services.CellSelectionService;
+using Deck.ItemVisualProviders.Inventory;
+using Deck.Services.Selection;
+using Deck.Services.UI;
 using Deck.UI.GamePlay;
 using TMPro;
 using UnityEngine;

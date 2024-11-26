@@ -1,11 +1,19 @@
 using Deck.Components.Building;
+using Deck.Services.Tables.Events;
+using Deck.Utility;
 
-namespace Deck.Components.Furniture
+namespace Deck.InGame.Agent.Furniture
 {
-    public class DeckAgentTable:DeckBuilding
+    public class DeckAgentTable : DeckBuilding
     {
         protected override void AfterInitialize()
         {
+            DeckEventOnTablePlaced.Create(this).Send();
+        }
+
+        protected override void OnAgentDestroyed()
+        {
+            DeckEventOnTableDestroyed.Create(this).Send();
         }
     }
 }

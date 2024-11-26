@@ -1,8 +1,8 @@
-using Deck.Components.Door;
+using Deck.Base;
 
-namespace InGame.Agent.Customer
+namespace Deck.InGame.Agent.Customer
 {
-    public class DeckAgentCustomer : DeckAgentDoor
+    public class DeckAgentCustomer : DeckAgentHumanoid
     {
     }
 }

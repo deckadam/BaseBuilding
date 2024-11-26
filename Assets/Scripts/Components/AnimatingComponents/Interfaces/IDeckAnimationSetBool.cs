@@ -1,4 +1,6 @@
-﻿namespace Deck.Components
+﻿using Deck.Base;
+
+namespace Deck.Components
 {
     public interface IDeckAnimationSetBool : IDeckComponent
     {

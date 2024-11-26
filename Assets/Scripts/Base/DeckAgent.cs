@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Base.Id;
 using Deck.Commands;
+using Deck.Components;
 using Deck.Save;
-using Deck.Services.MapService;
+using Deck.Services.AgentFinder;
+using Deck.Services.Map;
 using Deck.UI.Stats;
 using Deck.Utility;
-using Services.AgentFinder;
 using Sirenix.OdinInspector;
 using UnityEditor;
 #if UNITY_EDITOR
 using UnityEngine;
 #endif
 
-namespace Deck.Components
+namespace Deck.Base
 {
     public class DeckAgent : DeckPoolable
     {
@@ -180,13 +179,14 @@ namespace Deck.Components
             {
                 deckComponent.PostInitialize();
             }
+
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
                 commandProcessor.StartProcessCommands();
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
-            
+
             AfterInitialize();
         }
 

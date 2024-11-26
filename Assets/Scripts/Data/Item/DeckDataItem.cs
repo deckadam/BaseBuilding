@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Components;
+using Deck.Base;
 using UnityEngine;
 
 namespace Deck.Data.Item
@@ -35,6 +35,7 @@ namespace Deck.Data.Item
 
             return false;
         }
+
         public bool HasTag(List<DeckActionTag> tag)
         {
             foreach (var t in tag)

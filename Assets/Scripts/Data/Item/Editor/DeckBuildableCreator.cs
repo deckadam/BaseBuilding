@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deck.Base;
 using Deck.Components;
 using Deck.Components.Building;
 using Deck.Data.Buildable;

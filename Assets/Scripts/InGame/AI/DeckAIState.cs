@@ -1,6 +1,6 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
+using Deck.Base;
 
 namespace Deck.InGame.AI
 {

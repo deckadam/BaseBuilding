@@ -1,8 +1,9 @@
 ﻿using System;
+using Deck.Components;
 using Deck.UI.Stats;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Deck.Base
 {
     public abstract class DeckComponent : MonoBehaviour, IDeckComponent
     {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Deck.Base;
 using Deck.Components;
 using UnityEngine;
 using Zenject;

@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Data.UI;
-using Deck.Components;
-using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;

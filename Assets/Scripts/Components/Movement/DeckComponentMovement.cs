@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Data.Component;
 using Deck.Save;
 using Deck.UI.Stats;
@@ -17,20 +17,20 @@ namespace Deck.Components
         private const string MOVEMENT_SPEED_STAT_DESCRIPTION = "The speed at which the agent moves";
 
         [SerializeField] private DeckDataMovement movementData;
-        private NavMeshAgent _navMeshAgent;
-        private bool _static;
+        
         private CancellationTokenSource _interruptCancellation;
-
-        private bool _hasInitiailized;
+        private NavMeshAgent _navMeshAgent;
+        private bool _hasInitialized;
+        private bool _static;
 
         protected override void InternalPreInitialize()
         {
-            if (_hasInitiailized)
+            if (_hasInitialized)
             {
                 return;
             }
 
-            _hasInitiailized = true;
+            _hasInitialized = true;
 
             if (!agent.TryGetComponent<NavMeshAgent>(out var result))
             {
@@ -185,6 +185,11 @@ namespace Deck.Components
             public Quaternion rotation;
             public Vector3 targetPosition;
             public Vector3 velocity;
+        }
+
+        public void SetRotation(Quaternion rotation)
+        {
+            _navMeshAgent.transform.rotation = rotation;
         }
     }
 }

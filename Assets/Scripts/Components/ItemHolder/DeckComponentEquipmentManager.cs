@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deck.Base;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders;
-using Deck.Save;
+using Deck.Services.ItemVisual;
 using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
 using UnityEngine;
-using Zenject;
 
 namespace Deck.Components
 {

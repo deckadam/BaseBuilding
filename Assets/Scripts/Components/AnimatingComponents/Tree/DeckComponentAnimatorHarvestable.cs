@@ -1,5 +1,5 @@
-﻿using Deck.Data.Component.Tree;
-using Deck.Components;
+﻿using Deck.Base;
+using Deck.Data.Component.Tree;
 using DG.Tweening;
 using UnityEngine;
 

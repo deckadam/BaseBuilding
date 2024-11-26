@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Components;
-using Deck.Services.CellSelectionService;
 using UnityEngine;
 
 namespace Deck.Commands

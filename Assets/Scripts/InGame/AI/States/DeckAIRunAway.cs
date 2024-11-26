@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Triggers;
+using Deck.Base;
 using Deck.Components;
 using Deck.Data.Component;
 using Deck.Utility;

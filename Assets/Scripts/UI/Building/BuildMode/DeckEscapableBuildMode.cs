@@ -2,9 +2,10 @@ using System;
 using Deck.Data.Buildable;
 using Deck.EventManager;
 using Deck.InputHandling.Events;
-using Deck.Services;
 using Deck.Services.Building;
-using Deck.Services.Implementations.Escapable;
+using Deck.Services.Building.Events;
+using Deck.Services.Escapable;
+using Deck.Services.UI;
 using Deck.Utility;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace Deck.UI.Building.BuildMode
 
             InternalOnInitialize();
 
-            Debug.LogError(GetType() +"  initialized");
+            Debug.LogError(GetType() + "  initialized");
         }
 
         public void OnEscapeRequested()

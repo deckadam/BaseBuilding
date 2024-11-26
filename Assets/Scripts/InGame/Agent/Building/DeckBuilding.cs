@@ -1,14 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Deck.Base;
 using Deck.Data.Buildable;
-using Deck.ItemVisualProviders;
+using Deck.Instancing;
 using Deck.Save;
+using Deck.Services.AgentFinder;
 using Deck.Services.Building;
-using Deck.Services.Implementations.Currency;
+using Deck.Services.Currency;
+using Deck.Services.ItemVisual;
 using Deck.Utility;
-using Services.AgentFinder;
 using UI.Building.BuildMode;
 using UnityEngine;
+using Zenject;
 
 namespace Deck.Components.Building
 {
@@ -20,6 +23,14 @@ namespace Deck.Components.Building
         [SerializeField] private DeckBuilding onTopOf;
 
         public DeckBuildable BuildingData => buildingData;
+
+        private DeckInstanceProvider _instanceProvider;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            _instanceProvider = instanceProvider;
+        }
 
         protected override void AfterLoad()
         {
@@ -73,6 +84,8 @@ namespace Deck.Components.Building
             }
 
             Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
+
+            _instanceProvider.ReturnAgent(this);
         }
 
         public void AddBuildingToTop(DeckBuilding building)

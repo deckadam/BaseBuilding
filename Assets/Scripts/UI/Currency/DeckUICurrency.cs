@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Deck.Data.Currency;
-using Deck.Services.Implementations.Currency;
+using Deck.Services.Currency;
 using UnityEngine;
 
 namespace Deck.UI.Currency

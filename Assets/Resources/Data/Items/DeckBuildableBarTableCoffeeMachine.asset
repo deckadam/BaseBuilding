@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingId:
     _id: 56538382
-  agent: {fileID: 573691419038765338, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
+  agent: {fileID: 4801856471697237134, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
   itemVisual: {fileID: 1953440713801673427, guid: 34ff637d1da956249881fc8d381f81ce, type: 3}
   visibleName: CoffeeMachine
   silhouette:

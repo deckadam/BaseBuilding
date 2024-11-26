@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Deck.Base;
 using Deck.Data.Item;
-using Deck.Save;
-using Zenject;
 
 namespace Deck.Components
 {

@@ -1,6 +1,5 @@
 ﻿using System;
-using Deck.Base.Id;
-using Deck.Components;
+using Deck.Base;
 using Deck.Data.Currency;
 using Deck.Services.Building;
 using Deck.Utility;
@@ -40,7 +39,7 @@ namespace Deck.Data.Buildable
         public DeckPrice[] Prices => prices;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
-        
+
         public DeckId BuildingId
         {
             get
@@ -53,7 +52,7 @@ namespace Deck.Data.Buildable
                 throw new Exception("No valid prefab id " + name);
             }
         }
-        
+
         [Button]
         private void OnValidate()
         {

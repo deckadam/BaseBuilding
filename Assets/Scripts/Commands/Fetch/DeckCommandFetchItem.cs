@@ -1,7 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Commands;
-using Deck.Components;
 
 namespace Commands.Fetch
 {

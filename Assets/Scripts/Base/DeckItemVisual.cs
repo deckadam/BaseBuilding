@@ -3,19 +3,13 @@ using UnityEditor;
 #endif
 using System;
 using Deck.Base;
-using Deck.Base.Id;
-using Deck.Data.General;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders;
 using Deck.Utility;
-using DG.Tweening;
-using Services.AgentFinder;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Zenject;
 using Random = UnityEngine.Random;
 
-namespace Deck.Components
+namespace Deck.Base
 {
     public class DeckItemVisual : DeckPoolable
     {

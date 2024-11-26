@@ -1,7 +1,7 @@
 ﻿using Cinemachine;
 using Deck.Data.Camera;
 using Deck.EventManager;
-using Deck.Services.Building;
+using Deck.Services.Building.Events;
 using UnityEngine;
 using Zenject;
 

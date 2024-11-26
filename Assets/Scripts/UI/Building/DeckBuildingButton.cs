@@ -1,6 +1,6 @@
-using Deck.Components;
-using Deck.Services;
-using Deck.Services.Implementations.Escapable;
+using Deck.Base;
+using Deck.Services.Escapable;
+using Deck.Services.UI;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

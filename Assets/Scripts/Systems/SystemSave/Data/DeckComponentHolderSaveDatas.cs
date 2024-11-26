@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Components;
+using Deck.Base;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Deck.Save
 {

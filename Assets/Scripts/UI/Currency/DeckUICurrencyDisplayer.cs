@@ -1,4 +1,4 @@
-using Deck.Components;
+using Deck.Base;
 using Deck.Data.Currency;
 using TMPro;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace Deck.UI.Currency
         [SerializeField] private Image displayImage;
 
         private DeckCurrency _currency;
-        
+
         public void SetCurrency(DeckCurrency currency)
         {
             _currency = currency;

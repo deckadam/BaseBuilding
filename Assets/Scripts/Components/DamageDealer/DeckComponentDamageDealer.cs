@@ -1,5 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using Deck.Base;
 using Deck.Commands;
 using Deck.Data.Damage;
 using Deck.UI.Notification;
@@ -52,10 +53,10 @@ namespace Deck.Components
             equipmentManager.SetItemToHold(requiredItem);
 
             agent.AddCommand(new DeckCommandDealDamage(GetFinalDamageValue(),
-                dataDamage.GetAttackRange(),
-                this,
-                healthComponent,
-                continuous: true),
+                    dataDamage.GetAttackRange(),
+                    this,
+                    healthComponent,
+                    continuous: true),
                 true);
         }
 

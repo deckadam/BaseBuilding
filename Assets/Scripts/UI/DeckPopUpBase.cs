@@ -1,5 +1,5 @@
-﻿using Deck.Components;
-using Deck.Services;
+﻿using Deck.Base;
+using Deck.Services.UI;
 using Deck.UI.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;

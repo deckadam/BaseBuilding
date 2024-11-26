@@ -1,4 +1,4 @@
-using Deck.Components;
+using Deck.Base;
 using Deck.Data.Buildable;
 using TMPro;
 using UnityEngine;

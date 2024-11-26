@@ -4,10 +4,9 @@ using Deck.Components.Core;
 using Deck.Data.Item;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.Services;
-using Deck.Services.MapService;
+using Deck.Services.AgentFinder;
+using Deck.Services.Map;
 using Deck.Utility.MVC;
-using Services.AgentFinder;
 using UnityEngine;
 using Zenject;
 

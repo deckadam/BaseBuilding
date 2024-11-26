@@ -1,4 +1,4 @@
-using Deck.Components;
+using Deck.Base;
 using UnityEngine;
 
 namespace Deck.Data.Component.Tree

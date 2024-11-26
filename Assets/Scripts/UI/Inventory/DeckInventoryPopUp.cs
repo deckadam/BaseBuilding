@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
-using Deck.Components.Building;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders.Implementations.Inventory;
+using Deck.ItemVisualProviders.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

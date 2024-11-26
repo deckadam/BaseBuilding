@@ -1,4 +1,4 @@
-﻿namespace Deck.Components
+﻿namespace Deck.Base
 {
     public interface IDeckComponent
     {

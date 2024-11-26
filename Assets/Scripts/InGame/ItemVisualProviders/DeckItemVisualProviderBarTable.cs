@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Base.Id;
-using Deck.Components;
+using Deck.Base;
 using Deck.EventManager;
-using Deck.Services.Implementations.AreaController.Events;
+using Deck.Services.AreaController.Events;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using UnityEngine;

@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using Deck.Components.Building;
+using Deck.Services.AreaController.Events;
 using Deck.Services.Building;
-using Deck.Services.Implementations.AreaController.Events;
 using Deck.Utility;
 
 namespace Deck.Components.Wall

@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Deck.Services
+namespace Deck
 {
     public class DeckServiceBase : MonoBehaviour
     {

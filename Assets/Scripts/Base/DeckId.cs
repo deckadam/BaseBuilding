@@ -4,7 +4,7 @@ using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Deck.Base.Id
+namespace Deck.Base
 {
     [Serializable]
     public struct DeckId

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Deck.Base.Id;
-using Deck.Components;
+using Deck.Base;
 using Deck.Utility;
 using UnityEngine;
 using Zenject;
