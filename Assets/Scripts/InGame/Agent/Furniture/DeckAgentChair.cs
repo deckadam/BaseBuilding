@@ -7,12 +7,11 @@ namespace Deck.Components.Furniture
 {
     public class DeckAgentChair : DeckBuilding
     {
-        private DeckAgentHumanoid _humanoid;
-        private bool _isAvailable;
-        
-        public bool IsAvailable => _humanoid == null;
+        public bool IsAvailable { get; private set; } = true;
 
-        protected override void AfterInitialize()
+        private DeckAgentHumanoid _humanoid;
+
+        protected override void InternalAfterBuildingInitialized()
         {
             DeckEventOnChairPlaced.Create(this).Send();
         }
@@ -22,25 +21,26 @@ namespace Deck.Components.Furniture
             DeckEventOnChairDestroyed.Create(this).Send();
         }
 
-        public void SetOccupied()
+        public void SetOccupied(DeckAgentHumanoid humanoid)
         {
-            _isAvailable = false;
+            IsAvailable = false;
+            _humanoid = humanoid;
         }
 
         public void SetUnoccupied()
         {
-            _isAvailable = true;
+            IsAvailable = true;
+            _humanoid = null;
         }
 
         public void OnTableDestroyed()
         {
-            if (_isAvailable)
+            if (IsAvailable)
             {
                 return;
             }
 
             _humanoid.GetUp();
         }
-
     }
 }

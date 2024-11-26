@@ -6,7 +6,7 @@ namespace Deck.InGame.Agent.Furniture
 {
     public class DeckAgentTable : DeckBuilding
     {
-        protected override void AfterInitialize()
+        protected override void InternalAfterBuildingInitialized()
         {
             DeckEventOnTablePlaced.Create(this).Send();
         }

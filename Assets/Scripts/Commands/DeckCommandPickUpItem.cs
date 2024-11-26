@@ -24,13 +24,13 @@ namespace Deck.Commands
 
         public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(_movement, _itemVisual.transform, 2f, token);
-            if (isCanceled)
-            {
-                return false;
-            }
-
-            _inventory.AddItem(_itemVisual.GetBoundItem());
+            // var isCanceled = await DeckCommandUtility.AwaitTillDestinationIsReached(_movement, _itemVisual.transform, 2f, token);
+            // if (isCanceled)
+            // {
+            //     return false;
+            // }
+            //
+            // _inventory.AddItem(_itemVisual.GetBoundItem());
             return true;
         }
 

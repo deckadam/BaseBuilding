@@ -82,13 +82,11 @@ MonoBehaviour:
   rigidbody: {fileID: 5844733810402982544}
   isOnTheGround: 0
   collider: {fileID: 2983861979323150076}
-  size: 0.9
+  size: 0
   uniqueId:
     _id: 0
-    IdString: 
   prefabId:
     _id: 14028960
-    IdString: 
   canBePlacedOnTop: 0
 --- !u!136 &2983861979323150076
 CapsuleCollider:

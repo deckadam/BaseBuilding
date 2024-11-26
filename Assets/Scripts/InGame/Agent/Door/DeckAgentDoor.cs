@@ -8,7 +8,7 @@ namespace Deck.Components.Door
 {
     public class DeckAgentDoor : DeckBuilding
     {
-        protected override async void AfterInitialize()
+        protected override async void InternalAfterBuildingInitialized()
         {
             await UniTask.Yield();
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();

@@ -49,18 +49,14 @@ MonoBehaviour:
   isStatic: 1
   localEquipRotation: {x: 0, y: 0, z: 0}
   localEquipPosition: {x: 0, y: 0, z: 0}
-  bindedItem: {fileID: 0}
   displayOffset: {x: 0, y: 0, z: 0}
   rigidbody: {fileID: 0}
-  isOnTheGround: 0
   collider: {fileID: 2366273986412897171}
-  size: 0.65000063
+  size: 0.32500032
   uniqueId:
     _id: 0
-    IdString: 
   prefabId:
     _id: 16566764
-    IdString: 
   canBePlacedOnTop: 0
 --- !u!1 &1362404623307448892
 GameObject:

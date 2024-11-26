@@ -31,17 +31,17 @@ namespace Deck.Services.ServiceCustomer
 
         private void OnTableAvailable(DeckEventOnTableAvailable obj)
         {
-            Debug.LogError("!!");
-
             foreach (var chair in obj.Table.Chairs)
             {
-                Debug.LogError("chair");
-                if (chair.IsAvailable)
+                if (!chair.IsAvailable)
                 {
-                    Debug.LogError("available");
-                    var newCustomer = CreateCustomer();
-                    newCustomer.EnqueueCommand(new DeckCommandSit(newCustomer, chair));
+                    continue;
                 }
+
+                var newCustomer = CreateCustomer();
+                newCustomer.EnqueueCommand(new DeckCommandSit(newCustomer, chair));
+
+                chair.SetOccupied(newCustomer);
             }
         }
 

@@ -2,6 +2,7 @@
 using UnityEditor;
 #endif
 using System;
+using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Data.Item;
 using Deck.Utility;
@@ -18,10 +19,8 @@ namespace Deck.Base
 
         [SerializeField] private Vector3 localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
-        [SerializeField] private DeckDataItem bindedItem;
         [SerializeField] private Vector3 displayOffset;
         [SerializeField] private new Rigidbody rigidbody;
-        [SerializeField] private bool isOnTheGround;
         [SerializeField] private new Collider collider;
         [SerializeField] private float size;
         [SerializeField] private DeckId uniqueId;
@@ -30,11 +29,9 @@ namespace Deck.Base
 
         public Vector3 LocalEquipPosition => localEquipPosition;
         public Vector3 LocalEquipRotation => localEquipRotation;
-        public DeckDataItem GetBoundItem() => bindedItem;
         public DeckId UniqueId => uniqueId;
         public Collider Collider => collider;
         public bool CanBePlacedOnTop => canBePlacedOnTop;
-        private bool _hasDropped;
         private bool _hasInitialized;
 
         private DeckAgent _agent;
@@ -86,16 +83,19 @@ namespace Deck.Base
                 if (collider is BoxCollider boxCollider)
                 {
                     var sizes = boxCollider.bounds.size;
-                    size = Mathf.Max(sizes.x, sizes.z);
+                    size = Mathf.Max(sizes.x, sizes.z) / 2f;
+                    Debug.LogError(sizes);
                 }
                 else if (collider is SphereCollider sphereCollider)
                 {
-                    size = sphereCollider.radius;
+                    size = sphereCollider.radius / 2f;
+                    Debug.LogError(size);
                 }
                 else if (collider is CapsuleCollider capsuleCollider)
                 {
                     var sizes = capsuleCollider.bounds.size;
-                    size = Mathf.Max(sizes.x, sizes.y, sizes.z);
+                    size = Mathf.Max(sizes.x, sizes.z) / 2f;
+                    Debug.LogError(sizes);
                 }
                 else
                 {
@@ -180,8 +180,6 @@ namespace Deck.Base
         {
             return null;
         }
-
-        public bool IsOnTheGround => isOnTheGround;
 
         public float GetSize()
         {

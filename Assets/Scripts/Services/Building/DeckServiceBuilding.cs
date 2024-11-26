@@ -819,7 +819,6 @@ namespace Deck.Services.Building
             {
                 if (hit.transform.TryGetComponentInParent(out DeckItemVisual itemVisual))
                 {
-                    Debug.LogError();
                     if (itemVisual.CompareTag(WallTag))
                     {
                         // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);

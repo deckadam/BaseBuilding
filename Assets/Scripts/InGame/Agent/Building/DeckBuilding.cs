@@ -62,6 +62,8 @@ namespace Deck.Components.Building
 
             itemVisualInstance.transform.localPosition = Vector3.zero;
             itemVisualInstance.transform.localRotation = Quaternion.identity;
+
+            InternalAfterBuildingInitialized();
         }
 
         protected sealed override void InternalRequestDestroy()
@@ -131,6 +133,10 @@ namespace Deck.Components.Building
         public void SetBuildingData(DeckBuildable buildingData)
         {
             this.buildingData = buildingData;
+        }
+
+        protected virtual void InternalAfterBuildingInitialized()
+        {
         }
     }
 

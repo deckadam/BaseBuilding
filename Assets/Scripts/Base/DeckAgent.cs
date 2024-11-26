@@ -186,8 +186,6 @@ namespace Deck.Base
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
-
-            AfterInitialize();
         }
 
         private void DeInitialize()
@@ -313,10 +311,6 @@ namespace Deck.Base
             }
 
             return stats;
-        }
-
-        protected virtual void AfterInitialize()
-        {
         }
 
         protected virtual void AfterLoad()

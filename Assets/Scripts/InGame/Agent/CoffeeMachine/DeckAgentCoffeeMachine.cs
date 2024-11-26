@@ -7,7 +7,7 @@ namespace Deck.InGame.Agent.CoffeeMachine
 {
     public class DeckAgentCoffeeMachine : DeckBuilding
     {
-        protected override void AfterInitialize()
+        protected override void InternalAfterBuildingInitialized()
         {
             var rotationCount = Mathf.RoundToInt(transform.localRotation.eulerAngles.y / 90f) % 4;
             var rotatedIndices = BuildingData.AccessIndices.GetRotatedIndices(rotationCount);

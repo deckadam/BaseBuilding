@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Deck.Data.Buildable;
 using Deck.Data.General;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Zenject;
 
 namespace Deck.Services.Building
@@ -72,6 +73,7 @@ namespace Deck.Services.Building
 
             newFilter.mesh = silhouetteMesh;
             var newRenderer = newObject.AddComponent<MeshRenderer>();
+            newRenderer.shadowCastingMode = ShadowCastingMode.Off;
             var materials = new Material[materialCount];
 
             newPiece.renderers[index] = newRenderer;
