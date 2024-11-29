@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Components;
 using Deck.Save;
-using Deck.Services.AgentFinder;
+using Deck.Services.Finder;
 using Deck.Utility;
 
 namespace Deck.Commands

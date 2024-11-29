@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Deck.Base;
 
-namespace Deck.Services.AgentFinder
+namespace Deck.Services.Finder
 {
     public class DeckServiceFinder : DeckServiceBase
     {
@@ -64,7 +64,7 @@ namespace Deck.Services.AgentFinder
             return _agents[uniqueId];
         }
 
-        public HashSet<DeckAgent> TryGetAgentsWithTag(DeckActionTag tag)
+        public HashSet<DeckAgent> GetAgentsWithTag(DeckActionTag tag)
         {
             return _agentsWithActions[tag];
         }

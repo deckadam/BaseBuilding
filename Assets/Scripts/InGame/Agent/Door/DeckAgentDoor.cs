@@ -1,10 +1,10 @@
 using Cysharp.Threading.Tasks;
-using Deck.Components.Building;
+using Deck.InGame.Agent.Building;
 using Deck.Services.AreaController.Events;
 using Deck.Services.Building;
 using Deck.Utility;
 
-namespace Deck.Components.Door
+namespace Deck.InGame.Agent.Door
 {
     public class DeckAgentDoor : DeckBuilding
     {

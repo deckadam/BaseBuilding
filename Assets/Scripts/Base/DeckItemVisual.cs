@@ -2,9 +2,6 @@
 using UnityEditor;
 #endif
 using System;
-using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Data.Item;
 using Deck.Utility;
 using Sirenix.OdinInspector;
 using UnityEngine;

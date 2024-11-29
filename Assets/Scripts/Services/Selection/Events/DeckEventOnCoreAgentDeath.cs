@@ -1,13 +1,13 @@
-﻿using Deck.Components.Core;
-using Deck.EventManager;
+﻿using Deck.EventManager;
+using Deck.InGame.Agent.Waiter;
 
 namespace Deck.Services.Selection.Events
 {
     public class DeckEventOnCoreAgentDeath : IDeckEvent
     {
-        public DeckAgentCore agent { get; private set; }
+        public DeckAgentWaiter agent { get; private set; }
 
-        public static DeckEventOnCoreAgentDeath Create(DeckAgentCore agent)
+        public static DeckEventOnCoreAgentDeath Create(DeckAgentWaiter agent)
         {
             return new DeckEventOnCoreAgentDeath
             {

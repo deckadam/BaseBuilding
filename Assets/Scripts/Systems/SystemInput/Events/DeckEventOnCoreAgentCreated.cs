@@ -1,13 +1,13 @@
-﻿using Deck.Components.Core;
-using Deck.EventManager;
+﻿using Deck.EventManager;
+using Deck.InGame.Agent.Waiter;
 
 namespace Deck.InputHandling.Events
 {
     public class DeckEventOnCoreAgentCreated : IDeckEvent
     {
-        public DeckAgentCore agent { get; private set; }
+        public DeckAgentWaiter agent { get; private set; }
 
-        public static DeckEventOnCoreAgentCreated Create(DeckAgentCore agent)
+        public static DeckEventOnCoreAgentCreated Create(DeckAgentWaiter agent)
         {
             return new() { agent = agent };
         }

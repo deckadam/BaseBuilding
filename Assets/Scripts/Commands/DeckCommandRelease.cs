@@ -1,9 +1,8 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
-using Deck.Commands;
 
-namespace Deck.Components
+namespace Deck.Commands
 {
     public class DeckCommandRelease : DeckCommand
     {

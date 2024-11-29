@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Deck.Base;
-using Deck.Components.Building;
 using Deck.Data.Buildable;
 using Deck.Data.General;
 using Deck.EventManager;
+using Deck.InGame.Agent.Building;
 using Deck.InputHandling.Events;
 using Deck.Instancing;
 using Deck.Services.Cam;
@@ -22,7 +22,6 @@ namespace Deck.Services.Building
 {
     public class DeckServiceBuilding : DeckServiceBase
     {
-        
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private LayerMask onWallLayerMask;
         private const int LAYER_MASK = 0b_0011_1111_1_1111_1_1111_1111_1111;
@@ -328,6 +327,7 @@ namespace Deck.Services.Building
 
                 return;
             }
+
             Debug.LogError("asd");
 
             if (!_silhouetteParent.activeSelf)
@@ -661,7 +661,12 @@ namespace Deck.Services.Building
 
             _piecesInUse.Clear();
             _rotation = Quaternion.identity;
-            _silhouetteParent.transform.rotation = Quaternion.identity;
+
+            if (_silhouetteParent && _silhouetteParent != null && _silhouetteParent.activeInHierarchy)
+            {
+                _silhouetteParent.transform.rotation = Quaternion.identity;
+            }
+
             _ninetyDegreeRotationAmount = 0;
             _isDirty = false;
         }

@@ -13,26 +13,27 @@ namespace Deck.Components
     public class DeckComponentCommandProcessor : DeckComponent
     {
         private Queue<DeckCommand> _waitingCommands = new();
-        private CancellationTokenSource _selfExecutionToken;
         private CancellationTokenSource _taskExecutionTokenSource;
         private DeckCommand _activeCommand;
 
         public void StopExecutions()
         {
-            _selfExecutionToken.Cancel();
-            _selfExecutionToken.Dispose();
+            _taskExecutionTokenSource?.Cancel();
+            _taskExecutionTokenSource?.Dispose();
+            _taskExecutionTokenSource = null;
         }
 
         public async void StartProcessCommands()
         {
-            _selfExecutionToken = new CancellationTokenSource();
             _taskExecutionTokenSource = new CancellationTokenSource();
-            while (!_selfExecutionToken.IsCancellationRequested)
+            var destroyToken = gameObject.GetCancellationTokenOnDestroy();
+            var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_taskExecutionTokenSource.Token, destroyToken);
+            while (!linkedTokenSource.IsCancellationRequested)
             {
                 if (_waitingCommands.Count > 0)
                 {
                     _activeCommand = _waitingCommands.Dequeue();
-                    var status = await _activeCommand.ProcessCommand(_taskExecutionTokenSource.Token).SuppressCancellationThrow();
+                    var status = await _activeCommand.ProcessCommand(linkedTokenSource.Token).SuppressCancellationThrow();
                     _activeCommand = null;
 
                     if (status.IsCanceled)

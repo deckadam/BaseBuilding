@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Deck.Commands;
 using Deck.Components;
+using Deck.Instancing;
 using Deck.Save;
-using Deck.Services.AgentFinder;
+using Deck.Services.Finder;
 using Deck.Services.Map;
 using Deck.UI.Stats;
 using Deck.Utility;
 using Sirenix.OdinInspector;
 using UnityEditor;
+using Zenject;
 #if UNITY_EDITOR
 using UnityEngine;
 #endif
@@ -48,6 +50,15 @@ namespace Deck.Base
 
                 throw new Exception("No valid prefab id " + name);
             }
+        }
+
+
+        protected DeckInstanceProvider instanceProvider;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            this.instanceProvider = instanceProvider;
         }
 
         public void OnValidate()
@@ -186,6 +197,8 @@ namespace Deck.Base
             }
 
             Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
+
+            AfterInitializationCompleted();
         }
 
         private void DeInitialize()
@@ -230,11 +243,13 @@ namespace Deck.Base
             return result;
         }
 
-        public void LoadData(DeckComponentHolderSaveData data)
+        public async void LoadData(DeckComponentHolderSaveData data)
         {
             SelfTransform.position = data.position;
             SelfTransform.eulerAngles = data.rotation;
             SelfTransform.localScale = data.scale;
+
+            await UniTask.NextFrame();
 
             Initialize();
             foreach (var saveData in data.componentDatas)
@@ -290,7 +305,7 @@ namespace Deck.Base
 
         protected virtual void InternalRequestDestroy()
         {
-            Destroy(gameObject);
+            instanceProvider.ReturnAgent(this);
         }
 
         protected void RaiseItemVisualChanged()
@@ -322,6 +337,10 @@ namespace Deck.Base
         }
 
         protected virtual void LoadAdditionalData(string data)
+        {
+        }
+
+        protected virtual void AfterInitializationCompleted()
         {
         }
 

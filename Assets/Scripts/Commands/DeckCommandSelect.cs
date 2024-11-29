@@ -1,6 +1,4 @@
-﻿using Deck.Commands;
-
-namespace Deck.Components
+﻿namespace Deck.Commands
 {
     public class DeckCommandSelect : DeckCommand
     {

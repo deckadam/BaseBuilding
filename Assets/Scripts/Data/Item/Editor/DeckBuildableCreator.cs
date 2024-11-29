@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Base;
-using Deck.Components;
-using Deck.Components.Building;
 using Deck.Data.Buildable;
+using Deck.InGame.Agent.Building;
 using Deck.Instancing;
 using Deck.ItemVisualProviders;
 using Deck.UI.Building;

@@ -1,5 +1,4 @@
-﻿using Deck.Components;
-using Deck.Services;
+﻿using Deck.Commands;
 using Deck.UI.Inventory;
 
 namespace Deck.ItemVisualProviders.Inventory

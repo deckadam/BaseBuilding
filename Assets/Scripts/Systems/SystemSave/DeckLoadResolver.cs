@@ -19,22 +19,22 @@ namespace Deck.Save
         public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas)
         {
             var resolvedData = new List<(DeckAgent, DeckComponentHolderSaveData)>();
-            foreach (var deckComponentHolderSaveData in agentDatas.datas)
+            foreach (var data in agentDatas.datas)
             {
-                if (deckComponentHolderSaveData.prefabId == 0)
+                if (data.prefabId == 0)
                 {
-                    DeckLogger.Component($"Agent Id has not been set, skipping. {deckComponentHolderSaveData.GetType()}");
+                    DeckLogger.Component($"Agent Id has not been set, skipping. {data.GetType()}");
                     continue;
                 }
 
-                if (deckComponentHolderSaveData.uniqueId == 0)
+                if (data.uniqueId == 0)
                 {
-                    DeckLogger.Component($"Agent Id has not been set, skipping. {deckComponentHolderSaveData.GetType()}");
+                    DeckLogger.Component($"Agent Id has not been set, skipping. {data.GetType()}");
                     continue;
                 }
 
-                var agentInstance = _instanceProvider.RentAgent(deckComponentHolderSaveData.prefabId, deckComponentHolderSaveData.uniqueId);
-                resolvedData.Add((agentInstance, deckComponentHolderSaveData));
+                var agentInstance = _instanceProvider.RentAgent(data.prefabId, data.uniqueId);
+                resolvedData.Add((agentInstance, data));
             }
 
             foreach (var tuple in resolvedData)

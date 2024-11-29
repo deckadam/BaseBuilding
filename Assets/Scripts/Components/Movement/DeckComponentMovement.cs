@@ -17,7 +17,7 @@ namespace Deck.Components
         private const string MOVEMENT_SPEED_STAT_DESCRIPTION = "The speed at which the agent moves";
 
         [SerializeField] private DeckDataMovement movementData;
-        
+
         private CancellationTokenSource _interruptCancellation;
         private NavMeshAgent _navMeshAgent;
         private bool _hasInitialized;
@@ -52,6 +52,7 @@ namespace Deck.Components
             _navMeshAgent.speed = movementData.MovementSpeed;
             _navMeshAgent.acceleration = movementData.Acceleration;
             _navMeshAgent.angularSpeed = movementData.AngularSpeed;
+            _navMeshAgent.stoppingDistance = movementData.StoppingDistance;
         }
 
         public void SetModifiedSpeed(float newSpeed = -1f, float newAcceleration = -1f, float newAngularSpeed = -1f)

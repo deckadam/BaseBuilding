@@ -4,8 +4,7 @@ using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
 using Deck.Save;
-using Deck.Services.AgentFinder;
-using Deck.Utility;
+using Deck.Services.Finder;
 
 namespace Deck.Commands
 {

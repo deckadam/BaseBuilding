@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
-using Deck.Components.Core;
 using Deck.Data.Item;
+using Deck.InGame.Agent.Waiter;
 using Deck.ItemVisualProviders;
 using Deck.Save;
-using Deck.Services.AgentFinder;
+using Deck.Services.Finder;
 using Deck.Services.Map;
 using Deck.Utility.MVC;
 using UnityEngine;
@@ -23,15 +23,15 @@ namespace Deck.GameManager
 
         private DiContainer _container;
         private DeckLoadResolver _loadResolver;
-        private DeckAgentCore _coreAgentPrefab;
+        private DeckAgentWaiter _waiterAgentPrefab;
         private DeckItemVisualProviderBasic[] _itemVisualProviders;
 
         [Inject]
-        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentCore agentCorePrefab, DeckItemVisualProviderBasic[] itemVisualProviders)
+        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentWaiter agentWaiterPrefab, DeckItemVisualProviderBasic[] itemVisualProviders)
         {
             _container = container;
             _loadResolver = loadResolver;
-            _coreAgentPrefab = agentCorePrefab;
+            _waiterAgentPrefab = agentWaiterPrefab;
             _itemVisualProviders = itemVisualProviders;
         }
 
@@ -39,7 +39,7 @@ namespace Deck.GameManager
         {
             DeckSaveSystem.CreateNewSave();
             await Deck.GetService<DeckServiceScene>().LoadMap();
-            _container.InstantiatePrefab(_coreAgentPrefab).GetComponent<DeckAgentCore>().Initialize();
+            _container.InstantiatePrefab(_waiterAgentPrefab).GetComponent<DeckAgentWaiter>().Initialize();
         }
 
         public async void LoadGame()

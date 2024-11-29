@@ -17,7 +17,7 @@ namespace Deck.Commands
 
         public virtual string GetSaveData()
         {
-            return String.Empty;
+            return string.Empty;
         }
 
         public virtual void LoadSaveData(string saveData)

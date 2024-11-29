@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Deck.Base;
 using Deck.Instancing;
-using Deck.Services.AgentFinder;
+using Deck.Services.Finder;
 using Deck.Utility;
 using UnityEngine;
 using Zenject;

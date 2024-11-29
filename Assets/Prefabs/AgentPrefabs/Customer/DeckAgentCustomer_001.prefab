@@ -62,10 +62,7 @@ MonoBehaviour:
   prefabId:
     _id: 28401031
   itemVisualInstance: {fileID: 0}
-  buildingData: {fileID: 0}
-  setVisualPosition: 0
-  buildingsOnTop: []
-  onTopOf: {fileID: 0}
+  order: {fileID: 11400000, guid: 3b5d51883ed48444c91e5480155168ae, type: 2}
 --- !u!54 &1879302412683631121
 Rigidbody:
   m_ObjectHideFlags: 0

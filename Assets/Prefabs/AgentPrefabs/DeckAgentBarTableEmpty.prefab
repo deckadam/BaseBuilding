@@ -41,12 +41,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8929698902353275128}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10e458080b0a4ae4a49a179be0bad487, type: 3}
+  m_Script: {fileID: 11500000, guid: 94681b94eb974fb2a11b200e935f48a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPosition: {fileID: 0}
+  tags: 
   components: []
-  collider: {fileID: 0}
   willSave: 1
   uniqueId:
     _id: 0
@@ -55,3 +54,5 @@ MonoBehaviour:
   itemVisualInstance: {fileID: 0}
   buildingData: {fileID: 11400000, guid: dfdfaa63580cc4045b2a6e6958ef7733, type: 2}
   setVisualPosition: 0
+  buildingsOnTop: []
+  onTopOf: {fileID: 0}

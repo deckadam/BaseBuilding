@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e81dedf9049745588c32a8a51c6fb477, type: 3}
-  m_Name: Deck Data Enemy Spawner
+  m_Script: {fileID: 11500000, guid: 2388c711ebcf431e8916225925133507, type: 3}
+  m_Name: Deck Order Filter Coffee
   m_EditorClassIdentifier: 
-  targetPrefab: {fileID: 4346999805131987214, guid: f2e16db1ad96bee42b88badc41c46b17, type: 3}
-  spawnDelay: 250
-  count: 20
-  wanderingSpeed: 1
+  requiredAgentTag: 1000
+  orderType: 1000
+  amount: 1
+  price:
+  - currencyType: 0
+    amount: 10

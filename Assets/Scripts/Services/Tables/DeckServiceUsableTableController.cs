@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Deck.Components.Furniture;
 using Deck.EventManager;
 using Deck.InGame.Agent.Furniture;
 using Deck.Services.Tables.Events;
@@ -76,7 +75,6 @@ namespace Deck.Services.Tables
                 var distance = tableTransform.position.Distance(chair.transform.position) - tableSize - chairSize;
                 var dotProduct = Vector3.Dot(chair.transform.forward, (tableTransform.position - chair.transform.position).normalized);
                 
-                Debug.LogError(distance +"  "+ dotProduct);
                 if (!(distance < tableConnectionDistance)) continue;
                 if (dotProduct <= tableConnectionDotProduct) continue;
 
@@ -84,7 +82,6 @@ namespace Deck.Services.Tables
                 var dotProductDiff = distanceDiff - currentBestDotProduct;
 
 
-                // Debug.LogError(distanceDiff + "  " + dotProductDiff);
                 if (distanceDiff + dotProductDiff > 0)
                 {
                     result = usableTable.Value;
@@ -116,7 +113,6 @@ namespace Deck.Services.Tables
                 }
 
                 matchedChairs.Add(chair);
-                Debug.LogError("has match");
                 bestMatch.AddChair(chair);
                 DeckEventOnTableAvailable.Create(bestMatch).Send();
             }

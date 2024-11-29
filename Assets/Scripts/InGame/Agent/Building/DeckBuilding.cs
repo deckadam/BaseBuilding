@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using Deck.Base;
 using Deck.Data.Buildable;
-using Deck.Instancing;
 using Deck.Save;
-using Deck.Services.AgentFinder;
 using Deck.Services.Building;
 using Deck.Services.Currency;
+using Deck.Services.Finder;
 using Deck.Services.ItemVisual;
 using Deck.Utility;
 using UI.Building.BuildMode;
 using UnityEngine;
-using Zenject;
 
-namespace Deck.Components.Building
+namespace Deck.InGame.Agent.Building
 {
     public class DeckBuilding : DeckAgent
     {
@@ -24,13 +22,6 @@ namespace Deck.Components.Building
 
         public DeckBuildable BuildingData => buildingData;
 
-        private DeckInstanceProvider _instanceProvider;
-
-        [Inject]
-        private void Inject(DeckInstanceProvider instanceProvider)
-        {
-            _instanceProvider = instanceProvider;
-        }
 
         protected override void AfterLoad()
         {
@@ -58,10 +49,11 @@ namespace Deck.Components.Building
 
             itemVisualInstance.transform.parent = SelfTransform;
 
-            if (!setVisualPosition) return;
-
-            itemVisualInstance.transform.localPosition = Vector3.zero;
-            itemVisualInstance.transform.localRotation = Quaternion.identity;
+            if (setVisualPosition)
+            {
+                itemVisualInstance.transform.localPosition = Vector3.zero;
+                itemVisualInstance.transform.localRotation = Quaternion.identity;
+            }
 
             InternalAfterBuildingInitialized();
         }
@@ -87,7 +79,7 @@ namespace Deck.Components.Building
 
             Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
 
-            _instanceProvider.ReturnAgent(this);
+            instanceProvider.ReturnAgent(this);
         }
 
         public void AddBuildingToTop(DeckBuilding building)
@@ -102,7 +94,7 @@ namespace Deck.Components.Building
             building.onTopOf = null;
         }
 
-        public override string GetAdditionalData()
+        public sealed override string GetAdditionalData()
         {
             var buildingsOnTopIds = new int[buildingsOnTop.Count];
 
@@ -112,22 +104,26 @@ namespace Deck.Components.Building
                 buildingsOnTopIds[index] = deckBuilding.UniqueId.ID;
             }
 
-            var layerData = new LayerData()
+            var layerData = new BuildingAdditionalData()
             {
-                agentUniqueIdsOfBuildingsOnTop = buildingsOnTopIds
+                agentUniqueIdsOfBuildingsOnTop = buildingsOnTopIds,
+                internalAdditionalData = InternalGetAdditionalBuildingData()
             };
 
             return DeckSaveUtility.GetSerializedData(layerData);
         }
 
-        protected override void LoadAdditionalData(string data)
+
+        protected sealed override void LoadAdditionalData(string data)
         {
-            var layerData = DeckSaveUtility.GetDeserializedData<LayerData>(data);
-            foreach (var i in layerData.agentUniqueIdsOfBuildingsOnTop)
+            var additionalData = DeckSaveUtility.GetDeserializedData<BuildingAdditionalData>(data);
+            foreach (var i in additionalData.agentUniqueIdsOfBuildingsOnTop)
             {
                 var buildingOnTop = (DeckBuilding)Deck.GetService<DeckServiceFinder>().GetAgent(i);
                 AddBuildingToTop(buildingOnTop);
             }
+
+            InternalLoadAdditionalBuildingData(additionalData.internalAdditionalData);
         }
 
         public void SetBuildingData(DeckBuildable buildingData)
@@ -138,11 +134,26 @@ namespace Deck.Components.Building
         protected virtual void InternalAfterBuildingInitialized()
         {
         }
-    }
 
-    [Serializable]
-    public class LayerData
-    {
-        public int[] agentUniqueIdsOfBuildingsOnTop;
+        protected virtual string InternalGetAdditionalBuildingData()
+        {
+            return string.Empty;
+        }
+
+        protected virtual void InternalLoadAdditionalBuildingData(string data)
+        {
+        }
+
+        public virtual Vector3[] GetAccessPosition()
+        {
+            throw new Exception("Not implemented");
+        }
+
+        [Serializable]
+        private class BuildingAdditionalData
+        {
+            public int[] agentUniqueIdsOfBuildingsOnTop;
+            public string internalAdditionalData;
+        }
     }
 }

@@ -2,7 +2,7 @@
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Commands;
-using Deck.Data.Damage;
+using Deck.Data.Component;
 using Deck.UI.Notification;
 using Deck.Utility;
 using UnityEngine;

@@ -1,4 +1,4 @@
-using Deck.Components.Building;
+using Deck.InGame.Agent.Building;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
 

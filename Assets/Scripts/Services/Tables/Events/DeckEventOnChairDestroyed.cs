@@ -1,5 +1,5 @@
-using Deck.Components.Furniture;
 using Deck.EventManager;
+using Deck.InGame.Agent.Furniture;
 
 namespace Deck.Services.Tables.Events
 {

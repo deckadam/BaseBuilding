@@ -28,7 +28,7 @@ namespace Deck.Components
 
         private void Update()
         {
-            _animator.SetFloat(DeckConstantsAnimator.MovementSpeed, _movementComponent.GetSpeed());
+            _animator.SetFloat(DeckConstantsAnimation.MovementSpeed, _movementComponent.GetSpeed());
         }
 
         public void Animate(string name)
@@ -46,9 +46,9 @@ namespace Deck.Components
             _animator.SetFloat(name, value);
         }
 
-        public void Trigger(string animationName)
+        public void Trigger(int id)
         {
-            _animator.SetTrigger(animationName);
+            _animator.SetTrigger(id);
         }
     }
 }

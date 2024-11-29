@@ -6,7 +6,7 @@ using Deck.Services.Tables.Events;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Services.ServiceCustomer
+namespace Deck.Services.Customer
 {
     public class DeckServiceCustomerController : DeckServiceBase
     {
@@ -41,7 +41,7 @@ namespace Deck.Services.ServiceCustomer
                 var newCustomer = CreateCustomer();
                 newCustomer.EnqueueCommand(new DeckCommandSit(newCustomer, chair));
 
-                chair.SetOccupied(newCustomer);
+                chair.SetOccupied();
             }
         }
 

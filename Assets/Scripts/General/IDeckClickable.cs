@@ -1,4 +1,4 @@
-﻿namespace Deck.Components.Building.General.Clickable
+﻿namespace Deck.General
 {
     public interface IDeckClickable
     {

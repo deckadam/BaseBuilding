@@ -48,10 +48,8 @@ MonoBehaviour:
   isStatic: 1
   localEquipRotation: {x: 0, y: 0, z: 0}
   localEquipPosition: {x: 0, y: 0, z: 0}
-  bindedItem: {fileID: 0}
   displayOffset: {x: 0, y: 0, z: 0}
   rigidbody: {fileID: 0}
-  isOnTheGround: 0
   collider: {fileID: 0}
   size: 0
   uniqueId:
@@ -147,8 +145,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.3, z: 0.3}
-  m_Center: {x: 0, y: 0.15, z: 0}
+  m_Size: {x: 0.84729016, y: 0.26444378, z: 0.36254114}
+  m_Center: {x: 0.000000014901161, y: 0.13263969, z: 0.03919445}
 --- !u!4 &752535599122454926 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cffc70602dba1a248ad41d2cdac60872, type: 3}

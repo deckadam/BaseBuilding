@@ -15,3 +15,4 @@ MonoBehaviour:
   movementSpeed: 6
   acceleration: 100
   angularSpeed: 600
+  stoppingDistance: 1
