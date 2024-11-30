@@ -39,6 +39,14 @@ namespace Deck.Base
         private bool _alreadyDeinitialized;
         private bool _hasBeenInitialized;
 
+        protected DeckInstanceProvider instanceProvider;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            this.instanceProvider = instanceProvider;
+        }
+
         public DeckId PrefabId
         {
             get
@@ -52,14 +60,6 @@ namespace Deck.Base
             }
         }
 
-
-        protected DeckInstanceProvider instanceProvider;
-
-        [Inject]
-        private void Inject(DeckInstanceProvider instanceProvider)
-        {
-            this.instanceProvider = instanceProvider;
-        }
 
         public void OnValidate()
         {
@@ -107,11 +107,6 @@ namespace Deck.Base
             {
                 prefabId = DeckId.CreateNew();
             }
-        }
-
-        private void OnDestroy()
-        {
-            DeInitialize();
         }
 
         private async void Start()
@@ -209,6 +204,7 @@ namespace Deck.Base
             }
 
             _alreadyDeinitialized = true;
+            _hasBeenInitialized = false;
 
             foreach (var deckComponent in components)
             {
@@ -301,6 +297,8 @@ namespace Deck.Base
             OnAgentDestroyed();
 
             InternalRequestDestroy();
+
+            DeInitialize();
         }
 
         protected virtual void InternalRequestDestroy()

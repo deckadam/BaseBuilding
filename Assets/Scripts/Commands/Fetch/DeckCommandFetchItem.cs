@@ -1,6 +1,9 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
+using Deck.Save;
+using Deck.Services.Finder;
 using UnityEngine;
 
 namespace Deck.Commands.Fetch
@@ -10,6 +13,10 @@ namespace Deck.Commands.Fetch
         private DeckAgent _fetcher;
         private Vector3 _fetchPosition;
         private DeckAgent _deliverTarget;
+
+        public DeckCommandFetchItem()
+        {
+        }
 
         public DeckCommandFetchItem(DeckAgent fetcher, Vector3 fetchPosition, DeckAgent deliverTarget)
         {
@@ -26,6 +33,36 @@ namespace Deck.Commands.Fetch
             await new DeckCommandMove(_deliverTarget.transform.position, _fetcher).ProcessCommand(token);
             Debug.LogError("Fetch completed");
             return true;
+        }
+
+        public override string GetSaveData()
+        {
+            return DeckSaveUtility.GetSerializedData(new CommandFetchSaveData(_fetcher.UniqueId.ID, _fetchPosition, _fetcher.UniqueId.ID));
+        }
+
+        public override void LoadSaveData(string saveData)
+        {
+            var loadedData = DeckSaveUtility.GetDeserializedData<CommandFetchSaveData>(saveData);
+            var serviceFinder = Deck.GetService<DeckServiceFinder>();
+            
+            _fetcher = serviceFinder.GetAgent(loadedData.fetcherUniqueId);
+            _fetchPosition = loadedData.fetchPosition;
+            _deliverTarget = serviceFinder.GetAgent(loadedData.deliverTargetUniqueId);
+        }
+
+        [Serializable]
+        private class CommandFetchSaveData
+        {
+            public int fetcherUniqueId;
+            public Vector3 fetchPosition;
+            public int deliverTargetUniqueId;
+
+            public CommandFetchSaveData(int fetcherUniqueId, Vector3 fetchPosition, int deliverTargetUniqueId)
+            {
+                this.fetcherUniqueId = fetcherUniqueId;
+                this.fetchPosition = fetchPosition;
+                this.deliverTargetUniqueId = deliverTargetUniqueId;
+            }
         }
     }
 }
