@@ -26,20 +26,6 @@ namespace Deck.InGame.Agent.Building
         protected override void AfterLoad()
         {
             InitializeBuilding();
-
-            switch (buildingData.BuildMode)
-            {
-                case DeckBuildMode.Rect or DeckBuildMode.InCell or DeckBuildMode.Line:
-                {
-                    break;
-                }
-                case DeckBuildMode.BuildOnTopWithAccessArea:
-                {
-                    var buildingService = Deck.GetService<DeckServiceBuilding>();
-                    buildingService.SetCellOccupied(transform.position.ToVector2Int(), buildingData.AccessIndices, this);
-                    break;
-                }
-            }
         }
 
         public void InitializeBuilding()

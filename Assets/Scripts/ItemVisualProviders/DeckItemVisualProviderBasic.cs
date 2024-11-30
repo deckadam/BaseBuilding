@@ -9,7 +9,7 @@ using Zenject;
 
 namespace Deck.ItemVisualProviders
 {
-    [CreateAssetMenu(fileName = "DeckItemVisualProviderBasic", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBasic")]
+    [CreateAssetMenu(fileName = "DeckItemVisualProviderBase", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBase")]
     public class DeckItemVisualProviderBasic : ScriptableObject
     {
         [SerializeField] protected List<DeckItemVisual> itemVisualSets;

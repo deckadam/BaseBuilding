@@ -78,6 +78,15 @@ namespace Deck.Services.Building
                 Gizmos.color = Color.green;
                 Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
             }
+
+            foreach (var kvp in _accessCells)
+            {
+                if (kvp.Value > 0)
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawCube(kvp.Key.ToVector3(), Vector3.one * 0.8f);
+                }
+            }
         }
 
         private void OnMiddleScroll(DeckEventMiddleScroll evt)
