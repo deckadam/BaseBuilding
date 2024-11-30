@@ -13,10 +13,6 @@ namespace Deck.Commands.Sittable
     {
         private DeckAgentHumanoid _target;
 
-        public DeckCommandGetUp()
-        {
-        }
-
         public DeckCommandGetUp(DeckAgentHumanoid target)
         {
             _target = target;

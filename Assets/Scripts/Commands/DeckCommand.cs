@@ -7,6 +7,11 @@ namespace Deck.Commands
     public class DeckCommand
     {
         public Action OnCompleted;
+
+        public DeckCommand()
+        {
+            
+        }
         
         public virtual UniTask<bool> ProcessCommand(CancellationToken token)
         {

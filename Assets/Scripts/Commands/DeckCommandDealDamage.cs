@@ -17,10 +17,6 @@ namespace Deck.Commands
         private float _baseAttackRange;
         private bool _continous;
 
-        public DeckCommandDealDamage()
-        {
-        }
-
         public DeckCommandDealDamage(int damage, float baseAttackRange, DeckComponentDamageDealer from, DeckComponentHealth to, bool canKill = true, bool continuous = true)
         {
             _damage = damage;

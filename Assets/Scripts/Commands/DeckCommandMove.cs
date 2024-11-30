@@ -15,10 +15,6 @@ namespace Deck.Commands
         private Vector3 _targetPosition;
         private DeckAgent _agent;
 
-        public DeckCommandMove()
-        {
-        }
-
         public DeckCommandMove(Vector3 targetPosition, DeckAgent agent)
         {
             _targetPosition = targetPosition;

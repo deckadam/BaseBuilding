@@ -133,7 +133,7 @@ namespace Deck.Components
             for (var index = 0; index < data.commandDatas.Length; index++)
             {
                 //Rider beni bi sal be
-                var command = (DeckCommand)Activator.CreateInstance(Type.GetType(data.commandTypes[index]) ?? throw new InvalidOperationException());
+                var command = (DeckCommand)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(Type.GetType(data.commandTypes[index]));
                 command.LoadSaveData(data.commandDatas[index]);
                 _waitingCommands.Enqueue(command);
             }

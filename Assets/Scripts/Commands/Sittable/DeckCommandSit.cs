@@ -15,10 +15,6 @@ namespace Deck.Commands.Sittable
         private DeckAgent _target;
         private DeckAgent _sittable;
 
-        public DeckCommandSit()
-        {
-        }
-
         public DeckCommandSit(DeckAgent target, DeckAgent sittable)
         {
             _target = target;
