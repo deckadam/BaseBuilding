@@ -305,7 +305,7 @@ namespace Deck.Base
 
         protected virtual void InternalRequestDestroy()
         {
-            instanceProvider.ReturnAgent(this);
+            throw new Exception("Not implemented");
         }
 
         protected void RaiseItemVisualChanged()

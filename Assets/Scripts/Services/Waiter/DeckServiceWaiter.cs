@@ -5,7 +5,7 @@ namespace Deck.Waiter
 {
     public class DeckServiceWaiter : DeckServiceBase
     {
-        private Queue<DeckAgentWaiter> _availableWaiters = new();
+        private List<DeckAgentWaiter> _availableWaiters = new();
 
         public override void BeforeGameSessionInitialized()
         {
@@ -14,12 +14,25 @@ namespace Deck.Waiter
 
         public void RegisterAvailableWaiter(DeckAgentWaiter waiter)
         {
-            _availableWaiters.Enqueue(waiter);
+            _availableWaiters.Add(waiter);
+        }
+
+        public void RemoveAvailableWaiter(DeckAgentWaiter waiter)
+        {
+            _availableWaiters.Remove(waiter);
         }
 
         public bool TryGetAvailableWaiter(out DeckAgentWaiter waiter)
         {
-            return _availableWaiters.TryDequeue(out waiter);
+            if (_availableWaiters.Count > 0)
+            {
+                waiter = _availableWaiters[0];
+                _availableWaiters.RemoveAt(0);
+                return true;
+            }
+
+            waiter = null;
+            return false;
         }
     }
 }

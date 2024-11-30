@@ -64,6 +64,10 @@ namespace Deck.Services.Order
                 }
 
                 var order = DeckOrderResolver.GetCommandFromOrder(orderToProcess, availableWaiter);
+                if (order == null)
+                {
+                    return;
+                }
 
                 availableWaiter.EnqueueCommand(order);
             }

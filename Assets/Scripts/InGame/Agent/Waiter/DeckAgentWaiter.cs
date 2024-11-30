@@ -1,23 +1,25 @@
 ﻿using Deck.Base;
 using Deck.InputHandling.Events;
-using Deck.Services.Selection.Events;
 using Deck.Utility;
 using Deck.Waiter;
 
 namespace Deck.InGame.Agent.Waiter
 {
-    public class DeckAgentWaiter : DeckAgent
+    public class DeckAgentWaiter : DeckAgentHumanoid
     {
-        protected override void InternalRequestDestroy()
+        public override void OnSpawned()
         {
-            DeckEventOnCoreAgentDeath.Create(this).Send();
-            Destroy(gameObject);
+            Deck.GetService<DeckServiceWaiter>().RegisterAvailableWaiter(this);
+        }
+
+        public override void OnDespawned()
+        {
+            Deck.GetService<DeckServiceWaiter>().RemoveAvailableWaiter(this);
         }
 
         protected override void AfterInitializationCompleted()
         {
             DeckEventOnCoreAgentCreated.Create(this).Send();
-            Deck.GetService<DeckServiceWaiter>().RegisterAvailableWaiter(this);
         }
     }
 }

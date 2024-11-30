@@ -43,8 +43,6 @@ namespace Deck.UI.Building.BuildMode
             Deck.GetService<DeckServiceEscapable>().RegisterEscapable(this);
 
             InternalOnInitialize();
-
-            Debug.LogError(GetType() + "  initialized");
         }
 
         public void OnEscapeRequested()
@@ -62,7 +60,6 @@ namespace Deck.UI.Building.BuildMode
             _onEscape?.Invoke();
 
             DeckEventOnBuildModeStopped.Create().Send();
-            Debug.LogError(GetType() + "  deinitialized");
         }
 
         protected abstract void InternalOnInitialize();

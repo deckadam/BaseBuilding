@@ -2,11 +2,13 @@
 using Deck.Components;
 using Deck.Data.Item;
 using Deck.InGame.Agent.Waiter;
-using Deck.ItemVisualProviders;
+using Deck.Instancing;
 using Deck.Save;
 using Deck.Services.Finder;
 using Deck.Services.Map;
 using Deck.Utility.MVC;
+using Deck.Waiter;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
@@ -21,25 +23,33 @@ namespace Deck.GameManager
             DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.ResetController();
         }
 
-        private DiContainer _container;
         private DeckLoadResolver _loadResolver;
         private DeckAgentWaiter _waiterAgentPrefab;
-        private DeckItemVisualProviderBasic[] _itemVisualProviders;
+        private DeckInstanceProvider _instanceProvider;
 
         [Inject]
-        private void Inject(DiContainer container, DeckLoadResolver loadResolver, DeckAgentWaiter agentWaiterPrefab, DeckItemVisualProviderBasic[] itemVisualProviders)
+        private void Inject(DeckLoadResolver loadResolver, DeckAgentWaiter agentWaiterPrefab, DeckInstanceProvider instanceProvider)
         {
-            _container = container;
             _loadResolver = loadResolver;
             _waiterAgentPrefab = agentWaiterPrefab;
-            _itemVisualProviders = itemVisualProviders;
+            _instanceProvider = instanceProvider;
         }
 
         public async void CreateNewGame()
         {
             DeckSaveSystem.CreateNewSave();
             await Deck.GetService<DeckServiceScene>().LoadMap();
-            _container.InstantiatePrefab(_waiterAgentPrefab).GetComponent<DeckAgentWaiter>().Initialize();
+            var newWaiter = _instanceProvider.RentAgent(_waiterAgentPrefab.PrefabId);
+            newWaiter.transform.parent = DeckServiceScene.GetMap().transform;
+            newWaiter.Initialize();
+        }
+
+        [Button]
+        private void CreateWaiter()
+        {
+            var newWaiter = _instanceProvider.RentAgent(_waiterAgentPrefab.PrefabId);
+            newWaiter.transform.parent = DeckServiceScene.GetMap().transform;
+            newWaiter.Initialize();
         }
 
         public async void LoadGame()

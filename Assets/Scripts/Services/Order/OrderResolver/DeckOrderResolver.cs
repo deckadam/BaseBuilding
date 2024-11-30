@@ -5,6 +5,9 @@ using Deck.Commands.Fetch;
 using Deck.InGame.Agent.Building;
 using Deck.InGame.Agent.Waiter;
 using Deck.Services.Finder;
+using Deck.UI.Notification;
+using Deck.Utility;
+using Deck.Utility.Constants;
 using UnityEngine;
 
 namespace Deck.Services.Order.OrderResolver
@@ -41,6 +44,7 @@ namespace Deck.Services.Order.OrderResolver
 
             if (!foundAgent)
             {
+                DeckEventNotificationRequested.Create(DeckConstantsNotification.OrderCannotBeFulfilled+" " + order.OrderType +" supporting agent not found").Send();
                 return null;
             }
 
