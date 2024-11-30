@@ -31,7 +31,7 @@ namespace Deck.Services.Building
 
         private readonly Vector3 _cellHalfExtents = Vector3.one / 2.001f;
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
-        private readonly Dictionary<Vector2Int, DeckBuilding> _grid = new();
+        private readonly Dictionary<Vector2Int, DeckAgentBuilding> _grid = new();
         private readonly List<DeckSilhouettePiece> _piecesInUse = new();
         private readonly Dictionary<Vector2Int, int> _accessCells = new();
         private readonly Collider[] _possibleColliders = new Collider[5];
@@ -402,7 +402,7 @@ namespace Deck.Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
@@ -429,7 +429,7 @@ namespace Deck.Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = _rotation;
@@ -454,7 +454,7 @@ namespace Deck.Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = worldPosition;
             newBuilding.transform.rotation = _rotation;
@@ -495,7 +495,7 @@ namespace Deck.Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+                var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
                 newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
@@ -539,7 +539,7 @@ namespace Deck.Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
@@ -549,21 +549,21 @@ namespace Deck.Services.Building
         public void BuildWithAccess()
         {
             var currentCellIndex = _cameraService.GetCursorCellIndex();
-            DeckBuilding buildingToBuildOnTop = null;
+            DeckAgentBuilding agentBuildingToBuildOnTop = null;
             foreach (var mainCell in _activeBuildable.Indices)
             {
-                if (!_grid.TryGetValue(currentCellIndex + mainCell, out buildingToBuildOnTop))
+                if (!_grid.TryGetValue(currentCellIndex + mainCell, out agentBuildingToBuildOnTop))
                 {
                     return;
                 }
 
-                if (!buildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
+                if (!agentBuildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                 {
                     return;
                 }
             }
 
-            if (buildingToBuildOnTop == null)
+            if (agentBuildingToBuildOnTop == null)
             {
                 return;
             }
@@ -583,14 +583,14 @@ namespace Deck.Services.Building
                 return;
             }
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = currentCellIndex.ToVector3();
             newBuilding.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
-            buildingToBuildOnTop.AddBuildingToTop(newBuilding);
+            agentBuildingToBuildOnTop.AddBuildingToTop(newBuilding);
         }
 
         private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
@@ -688,7 +688,7 @@ namespace Deck.Services.Building
             }
         }
 
-        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckBuilding agentToSet)
+        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgentBuilding agentToSet)
         {
             foreach (var index in indices)
             {
@@ -767,7 +767,7 @@ namespace Deck.Services.Building
                         return false;
                     }
 
-                    if (_activeBuildable.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckBuilding>(out var building))
+                    if (_activeBuildable.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckAgentBuilding>(out var building))
                     {
                         if (!building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
                         {
@@ -808,13 +808,13 @@ namespace Deck.Services.Building
             return true;
         }
 
-        private bool IsViableToPlaceOnTop(out DeckBuilding building, out Vector3 position)
+        private bool IsViableToPlaceOnTop(out DeckAgentBuilding agentBuilding, out Vector3 position)
         {
             if (Physics.Raycast(_cameraService.GetRayFromCamera(), out var hit))
             {
-                if (hit.transform.TryGetComponentInParent(out building))
+                if (hit.transform.TryGetComponentInParent(out agentBuilding))
                 {
-                    if (building.GetItemVisual().CanBePlacedOnTop)
+                    if (agentBuilding.GetItemVisual().CanBePlacedOnTop)
                     {
                         position = hit.point;
                         return true;
@@ -822,7 +822,7 @@ namespace Deck.Services.Building
                 }
             }
 
-            building = null;
+            agentBuilding = null;
             position = hit.point;
             return false;
         }

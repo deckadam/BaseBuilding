@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Data.Component;
@@ -14,11 +13,10 @@ namespace Deck.Components
     public class DeckComponentMovement : DeckComponent
     {
         private const string MOVEMENT_SPEED_STAT_NAME = "Movement Speed";
-        private const string MOVEMENT_SPEED_STAT_DESCRIPTION = "The speed at which the agent moves";
+        private const string MOVEMENT_SPEED_STAT_DESCRIPTION = "Agents movement speed towards a target";
 
         [SerializeField] private DeckDataMovement movementData;
 
-        private CancellationTokenSource _interruptCancellation;
         private NavMeshAgent _navMeshAgent;
         private bool _hasInitialized;
         private bool _static;
@@ -44,7 +42,7 @@ namespace Deck.Components
 
         public void SetOriginalSpeed()
         {
-            if (_navMeshAgent == null || movementData == null)
+            if (_static || movementData == null)
             {
                 return;
             }
@@ -93,12 +91,8 @@ namespace Deck.Components
         public async void InterruptMovement(int cancellationDelay = 5000)
         {
             SetDestination(_navMeshAgent.transform.position);
-            _interruptCancellation?.Cancel();
-            _interruptCancellation?.Dispose();
-            _interruptCancellation = new CancellationTokenSource();
-
             SetMovementStatus(false);
-            await UniTask.Delay(cancellationDelay, cancellationToken: _interruptCancellation.Token).SuppressCancellationThrow();
+            await UniTask.Delay(cancellationDelay);
             SetMovementStatus(true);
         }
 
@@ -179,18 +173,34 @@ namespace Deck.Components
             return _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
         }
 
+        public void SetRotation(Quaternion rotation)
+        {
+            _navMeshAgent.transform.rotation = rotation;
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            _navMeshAgent.transform.position = position;
+            _navMeshAgent.Warp(position);
+        }
+
+        public void SetDisabled()
+        {
+            _navMeshAgent.enabled = false;
+        }
+
+        public void SetEnabled()
+        {
+            _navMeshAgent.enabled = true;
+        }
+
         [Serializable]
-        public class DeckMovementComponentData
+        public struct DeckMovementComponentData
         {
             public Vector3 position;
             public Quaternion rotation;
             public Vector3 targetPosition;
             public Vector3 velocity;
-        }
-
-        public void SetRotation(Quaternion rotation)
-        {
-            _navMeshAgent.transform.rotation = rotation;
         }
     }
 }

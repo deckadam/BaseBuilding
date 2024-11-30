@@ -1,24 +1,21 @@
 using Cysharp.Threading.Tasks;
 using Deck.InGame.Agent.Building;
-using Deck.Services.AreaController.Events;
 using Deck.Services.Building;
 using Deck.Utility;
+using UnityEngine;
 
-namespace Deck.InGame.Agent.Door
+namespace Deck.InGame.Agent.BarTable
 {
-    public class DeckAgentDoor : DeckBuilding
+    public class DeckAgentAgentBarTable : DeckAgentBuilding
     {
         protected override async void InternalAfterBuildingInitialized()
         {
             await UniTask.Yield();
-            DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
             Deck.GetService<DeckServiceBuilding>().SetCellOccupied(transform.position.ToVector2Int(), BuildingData.Indices, this);
         }
 
         protected override void OnAgentDestroyed()
         {
-            var cellPosition = transform.position.ToVector2Int();
-            DeckEventOnDoorDestroyed.Create(cellPosition).Send();
             Deck.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), BuildingData.Indices);
         }
     }

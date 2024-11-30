@@ -236,6 +236,12 @@ namespace Deck.Instancing
             {
                 var instance = pool.Pop();
                 instance.OnSpawned();
+
+                if (uniqueId == 0)
+                {
+                    instance.UniqueId.ResetId(true);
+                }
+
                 instance.gameObject.SetActive(true);
                 return instance;
             }
@@ -283,6 +289,11 @@ namespace Deck.Instancing
             {
                 var instance = pool.Pop();
                 instance.gameObject.SetActive(true);
+                if (uniqueId == 0)
+                {
+                    instance.SetNewUniqueId();
+                }
+
                 instance.OnSpawned();
                 return instance;
             }

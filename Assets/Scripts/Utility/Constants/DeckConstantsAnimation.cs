@@ -8,5 +8,6 @@ namespace Deck.Utility.Constants
         public static readonly int HumanoidAttack = Animator.StringToHash("HumanoidAttack");
         public static readonly int GetHit = Animator.StringToHash("GetHit");
         public static readonly int Sit = Animator.StringToHash("Sit");
+        public static readonly int GetUp = Animator.StringToHash("GetUp");
     }
 }

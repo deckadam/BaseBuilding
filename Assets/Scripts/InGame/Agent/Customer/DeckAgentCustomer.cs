@@ -1,5 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Deck.Base;
+using Deck.Commands;
+using Deck.Commands.Sittable;
 using Deck.Services.Order;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -10,7 +12,7 @@ namespace Deck.InGame.Agent.Customer
     {
         [SerializeField] private DeckOrder order;
 
-        protected override void AfterInitializationCompleted()
+        protected override void InternalHumanoidSpawnRequested()
         {
             RequestOrder();
         }
@@ -18,7 +20,19 @@ namespace Deck.InGame.Agent.Customer
         [Button]
         private void Test()
         {
-            Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this));
+            Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+        }
+
+        private async void OnOrderCompleted()
+        {
+            Debug.LogError("Order completed");
+            await UniTask.Delay(2000);
+            EnqueueCommand(new DeckCommandGetUp(this));
+
+            var leaveCommand = new DeckCommandMove(new Vector3(20, 0, 0), this);
+            leaveCommand.OnCompleted += RequestDestroy;
+            
+            EnqueueCommand(leaveCommand);
         }
 
         private async void RequestOrder()
@@ -33,7 +47,7 @@ namespace Deck.InGame.Agent.Customer
                     return;
                 }
 
-                Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this));
+                Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
             }
         }
     }

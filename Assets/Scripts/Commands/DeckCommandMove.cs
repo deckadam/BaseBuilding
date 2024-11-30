@@ -44,20 +44,18 @@ namespace Deck.Commands
             var loadedData = DeckSaveUtility.GetDeserializedData<CommandMoveSaveData>(saveData);
 
             _targetPosition = loadedData.targetPosition;
-            _agent = Deck.GetService<DeckServiceFinder>().GetAgent(loadedData._agentId);
+            _agent = Deck.GetService<DeckServiceFinder>().GetAgent(loadedData.agentId);
         }
 
         [Serializable]
-        private class CommandMoveSaveData
+        private struct CommandMoveSaveData
         {
-            public int _agentId;
-
-            [FormerlySerializedAs("_targetPosition")]
+            public int agentId;
             public Vector3 targetPosition;
 
             public CommandMoveSaveData(int agentId, Vector3 targetPosition)
             {
-                _agentId = agentId;
+                this.agentId = agentId;
                 this.targetPosition = targetPosition;
             }
         }

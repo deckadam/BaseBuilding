@@ -48,7 +48,7 @@ namespace Deck.Services.Order.OrderResolver
                 return null;
             }
 
-            var building = closest as DeckBuilding;
+            var building = closest as DeckAgentBuilding;
 
             var accessPosition = building.GetAccessPosition()[0];
 

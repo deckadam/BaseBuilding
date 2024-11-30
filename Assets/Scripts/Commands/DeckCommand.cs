@@ -1,10 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Deck.Commands
 {
     public class DeckCommand
     {
+        public Action OnCompleted;
+        
         public virtual UniTask<bool> ProcessCommand(CancellationToken token)
         {
             return default;

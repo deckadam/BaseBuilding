@@ -13,10 +13,11 @@ using UnityEngine;
 
 namespace Deck.InGame.Agent.Furniture
 {
-    public class DeckAgentChair : DeckBuilding, IDeckSittable
+    public class DeckAgentAgentChair : DeckAgentBuilding, IDeckSittable
     {
         [SerializeField, ReadOnly] private DeckAgentHumanoid _humanoid;
-
+        [SerializeField] private Vector3 sitPositionOffset;
+        
         public bool InProcess => _inProcess;
         public bool IsAvailable => _isAvailable && !_inProcess;
 
@@ -59,8 +60,6 @@ namespace Deck.InGame.Agent.Furniture
             {
                 return;
             }
-
-            _humanoid.GetUp();
         }
 
         protected override string InternalGetAdditionalBuildingData()
@@ -109,6 +108,11 @@ namespace Deck.InGame.Agent.Furniture
             {
                 humanoid.GetDeckComponent<IDeckAnimationSetTrigger>().Trigger(DeckConstantsAnimation.Sit);
             }
+        }
+
+        public Vector3 GetSitPosition()
+        {
+            return sitPositionOffset;
         }
 
         [Serializable]

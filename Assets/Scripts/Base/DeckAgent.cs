@@ -268,22 +268,6 @@ namespace Deck.Base
         {
         }
 
-        public void AddCommand(DeckCommand command, bool isInterruptingCommand)
-        {
-            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
-            {
-                commandProcessor.AddCommand(command, isInterruptingCommand);
-            }
-        }
-
-        public void EnqueueCommand(DeckCommand command)
-        {
-            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
-            {
-                commandProcessor.EnqueCommand(command);
-            }
-        }
-
         public void RequestDestroy()
         {
             foreach (var deckComponent in components)

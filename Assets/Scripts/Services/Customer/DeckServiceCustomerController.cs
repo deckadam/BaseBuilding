@@ -1,4 +1,6 @@
-using Deck.Commands.Sit;
+using Cysharp.Threading.Tasks;
+using Deck.Commands.Sittable;
+using Deck.Components;
 using Deck.EventManager;
 using Deck.InGame.Agent.Customer;
 using Deck.Instancing;
@@ -29,7 +31,7 @@ namespace Deck.Services.Customer
             DeckEventManager.Unregister<DeckEventOnTableAvailable>(OnTableAvailable);
         }
 
-        private void OnTableAvailable(DeckEventOnTableAvailable obj)
+        private async void OnTableAvailable(DeckEventOnTableAvailable obj)
         {
             foreach (var chair in obj.Table.Chairs)
             {
@@ -38,18 +40,21 @@ namespace Deck.Services.Customer
                     continue;
                 }
 
-                var newCustomer = CreateCustomer();
+                var newCustomer = await CreateCustomer();
                 newCustomer.EnqueueCommand(new DeckCommandSit(newCustomer, chair));
 
                 chair.SetOccupied();
             }
         }
 
-        private DeckAgentCustomer CreateCustomer()
+        private async UniTask<DeckAgentCustomer> CreateCustomer()
         {
             var newCustomer = (DeckAgentCustomer)_instanceProvider.RentAgent(_customerAgentPrefab.PrefabId);
-            newCustomer.transform.position = new Vector3(20, 0, 20);
             newCustomer.Initialize();
+            await UniTask.NextFrame();
+            newCustomer.GetDeckComponent<DeckComponentMovement>().SetPosition(new Vector3(10, 0, 10));
+            await UniTask.NextFrame();
+            newCustomer.GetDeckComponent<DeckComponentMovement>().SetPosition(new Vector3(10, 0, 10));
 
             return newCustomer;
         }

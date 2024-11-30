@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Deck.InGame.Agent.Waiter;
 using Deck.Services.Order.OrderResolver;
 using Deck.Waiter;
+using UnityEngine;
 
 namespace Deck.Services.Order
 {
@@ -34,6 +36,7 @@ namespace Deck.Services.Order
 
         public void RegisterNewOrder(DeckRuntimeOrder newOrder)
         {
+            Debug.LogError("Register");
             _nonProcessedOrders.Enqueue(newOrder);
         }
 
@@ -58,7 +61,7 @@ namespace Deck.Services.Order
                     continue;
                 }
 
-                if (!_waiterService.TryGetAvailableWaiter(out var availableWaiter))
+                if (!_waiterService.TryGetAvailableWaiter(out DeckAgentWaiter availableWaiter))
                 {
                     continue;
                 }
@@ -66,10 +69,13 @@ namespace Deck.Services.Order
                 var order = DeckOrderResolver.GetCommandFromOrder(orderToProcess, availableWaiter);
                 if (order == null)
                 {
-                    return;
+                    _waiterService.RegisterAvailableWaiter(availableWaiter);
+                    continue;
                 }
 
-                availableWaiter.EnqueueCommand(order);
+                order.OnCompleted = orderToProcess.OnOrderCompleted;
+
+                availableWaiter.ProcessOrder(order);
             }
         }
     }

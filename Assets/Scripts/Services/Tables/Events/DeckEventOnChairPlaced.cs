@@ -5,13 +5,13 @@ namespace Deck.Services.Tables.Events
 {
     public struct DeckEventOnChairPlaced : IDeckEvent
     {
-        public DeckAgentChair Chair { get; private set; }
+        public DeckAgentAgentChair AgentChair { get; private set; }
 
-        public static DeckEventOnChairPlaced Create(DeckAgentChair chair)
+        public static DeckEventOnChairPlaced Create(DeckAgentAgentChair agentChair)
         {
             return new DeckEventOnChairPlaced()
             {
-                Chair = chair
+                AgentChair = agentChair
             };
         }
     }

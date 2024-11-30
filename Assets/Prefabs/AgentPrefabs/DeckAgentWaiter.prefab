@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2975080952737542294}
   - component: {fileID: 2975080952737542289}
-  - component: {fileID: 1879302412683631121}
   - component: {fileID: 7533218056992631309}
   - component: {fileID: -1336335856390473658}
   - component: {fileID: 1691301384787750885}
@@ -68,33 +67,6 @@ MonoBehaviour:
   prefabId:
     _id: 50980616
   itemVisualInstance: {fileID: 0}
---- !u!54 &1879302412683631121
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2975080952737542285}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 126
-  m_CollisionDetection: 1
 --- !u!136 &7533218056992631309
 CapsuleCollider:
   m_ObjectHideFlags: 0

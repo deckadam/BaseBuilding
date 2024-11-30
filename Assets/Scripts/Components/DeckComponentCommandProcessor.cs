@@ -15,6 +15,13 @@ namespace Deck.Components
         private Queue<DeckCommand> _waitingCommands = new();
         private CancellationTokenSource _taskExecutionTokenSource;
         private DeckCommand _activeCommand;
+        private bool _waiting;
+        private DeckAgentHumanoid _humanoid;
+
+        protected override void InternalPostInitialize()
+        {
+            _humanoid = GetComponent<DeckAgentHumanoid>();
+        }
 
         public void StopExecutions()
         {
@@ -32,14 +39,25 @@ namespace Deck.Components
             {
                 if (_waitingCommands.Count > 0)
                 {
+                    _waiting = false;
                     _activeCommand = _waitingCommands.Dequeue();
                     var status = await _activeCommand.ProcessCommand(linkedTokenSource.Token).SuppressCancellationThrow();
-                    _activeCommand = null;
 
                     if (status.IsCanceled)
                     {
                         DeckLogger.Command("Canceled");
                     }
+                    else
+                    {
+                        _activeCommand.OnCompleted?.Invoke();
+                    }
+
+                    _activeCommand = null;
+                }
+                else if (!_waiting)
+                {
+                    _waiting = true;
+                    _humanoid.OnWaiting();
                 }
 
                 await UniTask.Yield();
@@ -58,7 +76,7 @@ namespace Deck.Components
             }
         }
 
-        public void EnqueCommand(DeckCommand command)
+        public void EnqueueCommand(DeckCommand command)
         {
             _waitingCommands.Enqueue(command);
         }

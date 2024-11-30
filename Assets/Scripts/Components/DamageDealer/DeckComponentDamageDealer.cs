@@ -52,12 +52,12 @@ namespace Deck.Components
 
             equipmentManager.SetItemToHold(requiredItem);
 
-            agent.AddCommand(new DeckCommandDealDamage(GetFinalDamageValue(),
-                    dataDamage.GetAttackRange(),
-                    this,
-                    healthComponent,
-                    continuous: true),
-                true);
+            // agent.AddCommand(new DeckCommandDealDamage(GetFinalDamageValue(),
+                    // dataDamage.GetAttackRange(),
+                    // this,
+                    // healthComponent,
+                    // continuous: true),
+                // true);
         }
 
         public void OnAttackStart()

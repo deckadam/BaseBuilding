@@ -130,7 +130,7 @@ namespace Deck.Data.Item.Editor
             itemVisualPrefab.SetNewUniqueId();
 
             var buildingInstance = CreateBuildingInstance();
-            var buildingPrefab = PrefabUtility.SaveAsPrefabAsset(buildingInstance, agentPrefabName).GetComponent<DeckBuilding>();
+            var buildingPrefab = PrefabUtility.SaveAsPrefabAsset(buildingInstance, agentPrefabName).GetComponent<DeckAgentBuilding>();
             buildingPrefab.SetTags(_tags.ToArray());
             buildingPrefab.SetNewUniqueId();
 
@@ -190,7 +190,7 @@ namespace Deck.Data.Item.Editor
             var newObject = new GameObject();
             newObject.name = _nameSuffix;
 
-            var agentInstance = newObject.AddComponent<DeckBuilding>();
+            var agentInstance = newObject.AddComponent<DeckAgentBuilding>();
             agentInstance.OnValidate();
 
             return newObject;

@@ -1,4 +1,5 @@
 using Deck.Base;
+using UnityEngine;
 
 namespace Deck.General
 {
@@ -6,5 +7,6 @@ namespace Deck.General
     {
         void OnSit(DeckAgentHumanoid humanoid);
         void OnGetUp(DeckAgentHumanoid humanoid);
+        Vector3 GetSitPosition();
     }
 }

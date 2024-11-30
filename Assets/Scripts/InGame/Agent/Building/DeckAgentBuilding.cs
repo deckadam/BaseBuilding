@@ -3,25 +3,22 @@ using System.Collections.Generic;
 using Deck.Base;
 using Deck.Data.Buildable;
 using Deck.Save;
-using Deck.Services.Building;
 using Deck.Services.Currency;
 using Deck.Services.Finder;
 using Deck.Services.ItemVisual;
 using Deck.Utility;
-using UI.Building.BuildMode;
 using UnityEngine;
 
 namespace Deck.InGame.Agent.Building
 {
-    public class DeckBuilding : DeckAgent
+    public class DeckAgentBuilding : DeckAgent
     {
         [SerializeField] private DeckBuildable buildingData;
         [SerializeField] private bool setVisualPosition;
-        [SerializeField] private List<DeckBuilding> buildingsOnTop = new();
-        [SerializeField] private DeckBuilding onTopOf;
+        [SerializeField] private List<DeckAgentBuilding> buildingsOnTop = new();
+        [SerializeField] private DeckAgentBuilding onTopOf;
 
         public DeckBuildable BuildingData => buildingData;
-
 
         protected override void AfterLoad()
         {
@@ -68,16 +65,16 @@ namespace Deck.InGame.Agent.Building
             instanceProvider.ReturnAgent(this);
         }
 
-        public void AddBuildingToTop(DeckBuilding building)
+        public void AddBuildingToTop(DeckAgentBuilding agentBuilding)
         {
-            buildingsOnTop.Add(building);
-            building.onTopOf = this;
+            buildingsOnTop.Add(agentBuilding);
+            agentBuilding.onTopOf = this;
         }
 
-        private void RemoveBuildingFromTop(DeckBuilding building)
+        private void RemoveBuildingFromTop(DeckAgentBuilding agentBuilding)
         {
-            buildingsOnTop.Remove(building);
-            building.onTopOf = null;
+            buildingsOnTop.Remove(agentBuilding);
+            agentBuilding.onTopOf = null;
         }
 
         public sealed override string GetAdditionalData()
@@ -99,13 +96,12 @@ namespace Deck.InGame.Agent.Building
             return DeckSaveUtility.GetSerializedData(layerData);
         }
 
-
         protected sealed override void LoadAdditionalData(string data)
         {
             var additionalData = DeckSaveUtility.GetDeserializedData<BuildingAdditionalData>(data);
             foreach (var i in additionalData.agentUniqueIdsOfBuildingsOnTop)
             {
-                var buildingOnTop = (DeckBuilding)Deck.GetService<DeckServiceFinder>().GetAgent(i);
+                var buildingOnTop = (DeckAgentBuilding)Deck.GetService<DeckServiceFinder>().GetAgent(i);
                 AddBuildingToTop(buildingOnTop);
             }
 
@@ -115,6 +111,11 @@ namespace Deck.InGame.Agent.Building
         public void SetBuildingData(DeckBuildable buildingData)
         {
             this.buildingData = buildingData;
+        }
+
+        public virtual Vector3[] GetAccessPosition()
+        {
+            throw new Exception("Not implemented");
         }
 
         protected virtual void InternalAfterBuildingInitialized()
@@ -128,11 +129,6 @@ namespace Deck.InGame.Agent.Building
 
         protected virtual void InternalLoadAdditionalBuildingData(string data)
         {
-        }
-
-        public virtual Vector3[] GetAccessPosition()
-        {
-            throw new Exception("Not implemented");
         }
 
         [Serializable]

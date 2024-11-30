@@ -4,7 +4,7 @@ using Deck.Utility;
 
 namespace Deck.InGame.Agent.Furniture
 {
-    public class DeckAgentTable : DeckBuilding
+    public class DeckAgentAgentTable : DeckAgentBuilding
     {
         protected override void InternalAfterBuildingInitialized()
         {

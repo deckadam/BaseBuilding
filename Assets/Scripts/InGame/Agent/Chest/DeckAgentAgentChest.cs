@@ -2,7 +2,7 @@
 
 namespace Deck.InGame.Agent.Chest
 {
-    public class DeckAgentChest : DeckBuilding
+    public class DeckAgentAgentChest : DeckAgentBuilding
     {
     }
 }

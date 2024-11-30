@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Deck.InGame.Agent.CoffeeMachine
 {
-    public class DeckAgentCoffeeMachine : DeckBuilding
+    public class DeckAgentAgentCoffeeMachine : DeckAgentBuilding
     {
         protected override void InternalAfterBuildingInitialized()
         {

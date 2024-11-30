@@ -1,17 +1,52 @@
+using Deck.Commands;
+using Deck.Components;
+using UnityEngine;
+
 namespace Deck.Base
 {
     public class DeckAgentHumanoid : DeckAgent
     {
-        protected override void InternalRequestDestroy()
+        public void AddCommand(DeckCommand command, bool isInterruptingCommand)
         {
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
+            {
+                commandProcessor.AddCommand(command, isInterruptingCommand);
+            }
+        }
+
+        public void EnqueueCommand(DeckCommand command)
+        {
+            if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
+            {
+                commandProcessor.EnqueueCommand(command);
+            }
+        }
+
+        public void OnWaiting()
+        {
+            InternalOnWaiting();
+        }
+
+        protected virtual void InternalOnWaiting()
+        {
+        }
+
+        protected sealed override void InternalRequestDestroy()
+        {
+            InternalHumanoidDespawnRequested();
             instanceProvider.ReturnAgent(this);
         }
 
-        public void Sit()
+        protected sealed override void AfterInitializationCompleted()
+        {
+            InternalHumanoidSpawnRequested();
+        }
+
+        protected virtual void InternalHumanoidDespawnRequested()
         {
         }
 
-        public void GetUp()
+        protected virtual void InternalHumanoidSpawnRequested()
         {
         }
     }

@@ -5,6 +5,7 @@ using Deck.InGame.Agent.Furniture;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Deck.Services.Tables
 {
@@ -12,13 +13,13 @@ namespace Deck.Services.Tables
     {
         [SerializeField] private float tableConnectionDistance;
         [SerializeField] private float tableConnectionDotProduct;
-        private Dictionary<DeckAgentTable, DeckTableWithChairs> _usableTables;
-        private HashSet<DeckAgentChair> _freeChairs;
+        private Dictionary<DeckAgentAgentTable, DeckTableWithChairs> _usableTables;
+        private HashSet<DeckAgentAgentChair> _freeChairs;
 
         public override void Initialize()
         {
-            _usableTables = new Dictionary<DeckAgentTable, DeckTableWithChairs>();
-            _freeChairs = new HashSet<DeckAgentChair>();
+            _usableTables = new Dictionary<DeckAgentAgentTable, DeckTableWithChairs>();
+            _freeChairs = new HashSet<DeckAgentAgentChair>();
 
             DeckEventManager.Register<DeckEventOnTablePlaced>(OnTablePlaced);
             DeckEventManager.Register<DeckEventOnTableDestroyed>(OnTableDestroyed);
@@ -36,30 +37,30 @@ namespace Deck.Services.Tables
 
         private void OnChairDestroyed(DeckEventOnChairDestroyed obj)
         {
-            _freeChairs.Remove(obj.Chair);
+            _freeChairs.Remove(obj.AgentChair);
 
             foreach (var keyValuePair in _usableTables)
             {
-                keyValuePair.Value.RemoveChair(obj.Chair);
+                keyValuePair.Value.RemoveChair(obj.AgentChair);
             }
         }
 
         private void OnChairPlaced(DeckEventOnChairPlaced obj)
         {
-            _freeChairs.Add(obj.Chair);
+            _freeChairs.Add(obj.AgentChair);
 
-            if (!TryGetBestMatch(obj.Chair, out var bestMatch))
+            if (!TryGetBestMatch(obj.AgentChair, out var bestMatch))
             {
-                _freeChairs.Add(obj.Chair);
+                _freeChairs.Add(obj.AgentChair);
                 return;
             }
 
-            bestMatch.AddChair(obj.Chair);
+            bestMatch.AddChair(obj.AgentChair);
             DeckEventOnTableAvailable.Create(bestMatch).Send();
         }
 
 
-        private bool TryGetBestMatch(DeckAgentChair chair, out DeckTableWithChairs result)
+        private bool TryGetBestMatch(DeckAgentAgentChair agentChair, out DeckTableWithChairs result)
         {
             result = null;
 
@@ -68,12 +69,12 @@ namespace Deck.Services.Tables
             var foundAMatch = false;
             foreach (var usableTable in _usableTables)
             {
-                var tableTransform = usableTable.Value.Table.transform;
-                var tableSize = usableTable.Value.Table.GetItemVisual().GetSize();
-                var chairSize = chair.GetItemVisual().GetSize();
+                var tableTransform = usableTable.Value.agentTable.transform;
+                var tableSize = usableTable.Value.agentTable.GetItemVisual().GetSize();
+                var chairSize = agentChair.GetItemVisual().GetSize();
 
-                var distance = tableTransform.position.Distance(chair.transform.position) - tableSize - chairSize;
-                var dotProduct = Vector3.Dot(chair.transform.forward, (tableTransform.position - chair.transform.position).normalized);
+                var distance = tableTransform.position.Distance(agentChair.transform.position) - tableSize - chairSize;
+                var dotProduct = Vector3.Dot(agentChair.transform.forward, (tableTransform.position - agentChair.transform.position).normalized);
                 
                 if (!(distance < tableConnectionDistance)) continue;
                 if (dotProduct <= tableConnectionDotProduct) continue;
@@ -94,17 +95,17 @@ namespace Deck.Services.Tables
 
         private void OnTableDestroyed(DeckEventOnTableDestroyed obj)
         {
-            RemoveTable(obj.Table);
+            RemoveTable(obj.AgentTable);
         }
 
         private void OnTablePlaced(DeckEventOnTablePlaced obj)
         {
-            var newTableWithChairs = new DeckTableWithChairs(obj.Table);
-            _usableTables.Add(obj.Table, newTableWithChairs);
+            var newTableWithChairs = new DeckTableWithChairs(obj.AgentTable);
+            _usableTables.Add(obj.AgentTable, newTableWithChairs);
 
             DeckEventOnTableAvailable.Create(newTableWithChairs).Send();
 
-            var matchedChairs = new HashSet<DeckAgentChair>();
+            var matchedChairs = new HashSet<DeckAgentAgentChair>();
             foreach (var chair in _freeChairs)
             {
                 if (!TryGetBestMatch(chair, out var bestMatch))
@@ -123,14 +124,14 @@ namespace Deck.Services.Tables
             }
         }
 
-        private void RemoveTable(DeckAgentTable table)
+        private void RemoveTable(DeckAgentAgentTable agentTable)
         {
-            foreach (var chair in _usableTables[table].Chairs)
+            foreach (var chair in _usableTables[agentTable].Chairs)
             {
                 chair.OnTableDestroyed();
             }
 
-            _usableTables.Remove(table);
+            _usableTables.Remove(agentTable);
         }
 
         public override void AfterGameSessionInitialized()
@@ -146,23 +147,23 @@ namespace Deck.Services.Tables
     [Serializable]
     public class DeckTableWithChairs
     {
-        public DeckAgentTable Table;
-        public HashSet<DeckAgentChair> Chairs;
+        [FormerlySerializedAs("Table")] public DeckAgentAgentTable agentTable;
+        public HashSet<DeckAgentAgentChair> Chairs;
 
-        public DeckTableWithChairs(DeckAgentTable table)
+        public DeckTableWithChairs(DeckAgentAgentTable agentTable)
         {
-            Table = table;
-            Chairs = new HashSet<DeckAgentChair>();
+            this.agentTable = agentTable;
+            Chairs = new HashSet<DeckAgentAgentChair>();
         }
 
-        public void AddChair(DeckAgentChair chair)
+        public void AddChair(DeckAgentAgentChair agentChair)
         {
-            Chairs.Add(chair);
+            Chairs.Add(agentChair);
         }
 
-        public void RemoveChair(DeckAgentChair chair)
+        public void RemoveChair(DeckAgentAgentChair agentChair)
         {
-            Chairs.Remove(chair);
+            Chairs.Remove(agentChair);
         }
     }
 }

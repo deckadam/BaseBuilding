@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688244125595013509}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-4123667621523898490
 MonoBehaviour:
@@ -44,19 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa7c750658442c796b37652e142f206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPosition: {fileID: 0}
+  tags: 
   components: []
-  activeSize: 1
-  collider: {fileID: 0}
   willSave: 1
   uniqueId:
     _id: 0
-    IdString: 
   prefabId:
     _id: 89350891
-    IdString: 
-  selfTransform: {fileID: 0}
+  itemVisualInstance: {fileID: 0}
   buildingData: {fileID: 11400000, guid: fcecd0616c929d6438ba26a5da4e2a5b, type: 2}
-  itemVisualPrefab: {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
   setVisualPosition: 1
-  setVisualRotation: 1
+  buildingsOnTop: []
+  onTopOf: {fileID: 0}
+  _humanoid: {fileID: 0}
+  sitPositionOffset: {x: 0, y: 0.2, z: 0.2}

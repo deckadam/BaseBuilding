@@ -5,13 +5,13 @@ namespace Deck.Services.Tables.Events
 {
     public struct DeckEventOnTableDestroyed : IDeckEvent
     {
-        public DeckAgentTable Table { get; private set; }
+        public DeckAgentAgentTable AgentTable { get; private set; }
 
-        public static DeckEventOnTableDestroyed Create(DeckAgentTable table)
+        public static DeckEventOnTableDestroyed Create(DeckAgentAgentTable agentTable)
         {
             return new DeckEventOnTableDestroyed()
             {
-                Table = table
+                AgentTable = agentTable
             };
         }
     }

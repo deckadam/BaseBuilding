@@ -19,19 +19,21 @@ namespace Deck.Services.Order
         public int Amount => amount;
         public DeckPrice[] Price => price;
         public DeckAgent RequestingAgent => requestingAgent;
+        public Action OnOrderCompleted { get; }
 
-        public static DeckRuntimeOrder Create(DeckOrder order, DeckAgent requestingAgent)
+        public static DeckRuntimeOrder Create(DeckOrder order, DeckAgent requestingAgent,Action onOrderCompleted)
         {
-            return new DeckRuntimeOrder(order.RequiredAgentTag, order.OrderType, order.Amount, order.Price, requestingAgent);
+            return new DeckRuntimeOrder(order.RequiredAgentTag, order.OrderType, order.Amount, order.Price, requestingAgent,onOrderCompleted);
         }
 
-        private DeckRuntimeOrder(DeckActionTag requiredAgentTag, DeckOrderType orderType, int amount, DeckPrice[] price, DeckAgent requestingAgent)
+        private DeckRuntimeOrder(DeckActionTag requiredAgentTag, DeckOrderType orderType, int amount, DeckPrice[] price, DeckAgent requestingAgent,Action onOrderCompleted)
         {
             this.requiredAgentTag = requiredAgentTag;
             this.orderType = orderType;
             this.amount = amount;
             this.price = price;
             this.requestingAgent = requestingAgent;
+            OnOrderCompleted = onOrderCompleted;
         }
     }
 }
