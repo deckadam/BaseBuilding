@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Deck.Data.Currency
+namespace Data.Currency
 {
     [Serializable]
     public struct DeckPrice

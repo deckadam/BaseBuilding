@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Deck.Data.Currency
+namespace Data.Currency
 {
     [CreateAssetMenu(fileName = "Deck Currency", menuName = "Deck/Data/Currency")]
     public class DeckCurrency : ScriptableObject

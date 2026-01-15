@@ -1,9 +1,9 @@
+using Commands.Sittable;
 using Cysharp.Threading.Tasks;
-using Deck.Commands.Sittable;
 using Deck.Components;
-using Deck.InGame.Agent.Customer;
 using Deck.Services.Tables.Events;
 using EventManager;
+using InGame.Agent.Customer;
 using Instancing;
 using Services;
 using UnityEngine;

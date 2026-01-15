@@ -1,7 +1,7 @@
 ﻿using System;
 using Base;
+using Data.Currency;
 using Deck.Base;
-using Deck.Data.Currency;
 using Services.Building;
 using Sirenix.OdinInspector;
 using UI.Building.BuildMode;

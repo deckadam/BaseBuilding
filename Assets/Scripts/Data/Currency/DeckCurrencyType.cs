@@ -1,4 +1,4 @@
-namespace Deck.Data.Currency
+namespace Data.Currency
 {
     public enum DeckCurrencyType
     {

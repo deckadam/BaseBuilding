@@ -2,11 +2,13 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
+using Deck.Commands;
 using Deck.Components;
+using Services;
 using Services.Finder;
 using Systems.SystemSave;
 
-namespace Deck.Commands
+namespace Commands
 {
     public class DeckCommandPickUpItem : DeckCommand
     {
@@ -42,8 +44,8 @@ namespace Deck.Commands
         public override void LoadSaveData(string saveData)
         {
             var data = DeckSaveUtility.GetDeserializedData<SaveData>(saveData);
-            var agent = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(data.targetAgentId);
-            _itemVisual = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetItemVisual(data.prefabId);
+            var agent = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(data.targetAgentId);
+            _itemVisual = DeckServiceProvider.GetService<DeckServiceFinder>().GetItemVisual(data.prefabId);
             _inventory = agent.GetDeckComponent<DeckComponentInventory>();
             _movement = agent.GetDeckComponent<DeckComponentMovement>();
         }

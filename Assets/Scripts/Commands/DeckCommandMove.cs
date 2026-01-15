@@ -2,14 +2,14 @@
 using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
+using Deck.Commands;
 using Deck.Components;
+using Services;
 using Services.Finder;
 using Systems.SystemSave;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Deck.Commands
+namespace Commands
 {
     public class DeckCommandMove : DeckCommand
     {
@@ -41,7 +41,7 @@ namespace Deck.Commands
             var loadedData = DeckSaveUtility.GetDeserializedData<CommandMoveSaveData>(saveData);
 
             _targetPosition = loadedData.targetPosition;
-            _agent = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.agentId);
+            _agent = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.agentId);
         }
 
         [Serializable]

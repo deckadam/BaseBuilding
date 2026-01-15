@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Deck.Base;
+using Deck.Components;
 using Deck.Data.Item;
-using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
+using Services;
 using Services.ItemVisual;
 using UnityEngine;
 using Utility;
 
-namespace Deck.Components
+namespace Components.ItemHolder
 {
     public class DeckComponentEquipmentManager : DeckComponent, IDeckItemItemHolder
     {
@@ -60,7 +61,7 @@ namespace Deck.Components
         {
             if (_currentlyEquippedItem != null && _currentlyEquippedItem != itemToHold.Representation)
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(_currentlyEquippedItem);
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(_currentlyEquippedItem);
                 _currentlyEquippedItem = null;
                 agent.GetDeckComponent<IDeckAnimationSetBool>().Animate(_currentlyEquippedItemState, false);
             }
@@ -91,7 +92,7 @@ namespace Deck.Components
         private void EquipItem(DeckDataItem itemData, Transform target)
         {
             _currentlyEquippedItemData = itemData;
-            if (!global::Services.DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
+            if (!DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
             {
                 DeckLogger.Error("Can't get item visual for " + itemData.Name);
                 return;

@@ -1,6 +1,6 @@
 using EventManager;
 
-namespace Deck.UI.MainMenu.Events
+namespace UI.MainMenu.Events
 {
     public class DeckEventOnGameSceneLoaded : IDeckEvent
     {

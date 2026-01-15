@@ -1,12 +1,12 @@
+using Data.Currency;
 using Deck.Base;
-using Deck.Data.Currency;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.Currency
+namespace UI.Currency
 {
-    public class DeckUICurrencyDisplayer : DeckUIElement
+    public class DeckUICurrencyDisplay : DeckUIElement
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI amountText;

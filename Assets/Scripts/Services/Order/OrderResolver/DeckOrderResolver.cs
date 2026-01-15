@@ -1,10 +1,8 @@
 using System;
 using Base;
-using Deck.Base;
+using Commands.Fetch;
 using Deck.Commands;
-using Deck.Commands.Fetch;
 using Deck.UI.Notification;
-using Deck.Utility;
 using Deck.Utility.Constants;
 using InGame.Agent.Building;
 using InGame.Agent.Waiter;
@@ -12,7 +10,7 @@ using Services.Finder;
 using UnityEngine;
 using Utility;
 
-namespace Deck.Services.Order.OrderResolver
+namespace Services.Order.OrderResolver
 {
     public static class DeckOrderResolver
     {
@@ -30,7 +28,7 @@ namespace Deck.Services.Order.OrderResolver
 
         private static DeckCommandFetchItem GetCoffeeFetchCommand(DeckRuntimeOrder order, DeckAgentWaiter waiter)
         {
-            var agents = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgentsWithTag(order.RequiredAgentTag);
+            var agents = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgentsWithTag(order.RequiredAgentTag);
 
             DeckAgent closest = null;
             var currentDistance = float.MaxValue;

@@ -1,17 +1,16 @@
 ﻿using Base;
-using Deck.Base;
+using Data.Currency;
 using Deck.Components;
-using Deck.Data.Currency;
-using Deck.GameManager;
-using Deck.InGame.Agent.Customer;
 using Deck.Services.Cam;
-using Deck.Services.Escapable;
 using Deck.Services.PopUp;
 using Deck.Services.Selection;
-using Deck.Utility;
 using Deck.Utility.MonoBehaviours;
+using GameManager;
+using InGame.Agent.Customer;
 using Instancing;
+using Services;
 using Services.Currency;
+using Services.Escapable;
 using Systems.SystemInput.Events;
 using Systems.SystemSave;
 using UI.Inventory;
@@ -20,7 +19,7 @@ using UnityEngine.EventSystems;
 using Utility;
 using Zenject;
 
-namespace Deck.InputHandling
+namespace Systems.SystemInput
 {
     public class DeckInputHandlingSystem : MonoBehaviour
     {
@@ -62,11 +61,11 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, 50);
+                DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, 50);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, -50);
+                DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(DeckCurrencyType.Money, -50);
             }
         }
 
@@ -74,7 +73,7 @@ namespace Deck.InputHandling
         {
             if (!Input.GetKeyDown(KeyCode.Delete)) return;
 
-            var ray = global::Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetRayFromCamera();
+            var ray = DeckServiceProvider.GetService<DeckServiceCamera>().GetRayFromCamera();
             if (!Physics.Raycast(ray, out var hit)) return;
 
             if (!hit.transform.TryGetComponentInParent<DeckAgent>(out var agent)) return;
@@ -96,7 +95,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                global::Services.DeckServiceProvider.GetService<DeckGameManager>().GatherSaveData();
+                DeckServiceProvider.GetService<DeckGameManager>().GatherSaveData();
                 DeckSaveSystem.Save();
             }
         }
@@ -105,7 +104,7 @@ namespace Deck.InputHandling
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceEscapable>().CloseEscapable();
+                DeckServiceProvider.GetService<DeckServiceEscapable>().CloseEscapable();
             }
         }
 
@@ -113,7 +112,7 @@ namespace Deck.InputHandling
         {
             if (DeckServiceSelection.currentSelection != null && Input.GetKeyDown(KeyCode.I))
             {
-                var newPopUp = global::Services.DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckInventoryPopUp>();
+                var newPopUp = DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckInventoryPopUp>();
                 var inventoryComponent = DeckServiceSelection.currentSelection.GetDeckComponent<DeckComponentInventory>();
                 if (inventoryComponent == null)
                 {
@@ -133,7 +132,7 @@ namespace Deck.InputHandling
                 return;
             }
 
-            var ray = global::Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(Input.mousePosition);
+            var ray = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().ScreenPointToRay(Input.mousePosition);
             if (!Physics.Raycast(ray, out var hit, 100f))
             {
                 return;
@@ -153,11 +152,11 @@ namespace Deck.InputHandling
 
             if (canPossess)
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceSelection>().OnPossession(componentHolder);
+                DeckServiceProvider.GetService<DeckServiceSelection>().OnPossession(componentHolder);
             }
             else
             {
-                global::Services.DeckServiceProvider.GetService<DeckServiceSelection>().OnSelection(componentHolder);
+                DeckServiceProvider.GetService<DeckServiceSelection>().OnSelection(componentHolder);
             }
         }
 
@@ -176,7 +175,7 @@ namespace Deck.InputHandling
                 {
                     _isInputStartedOnUI = false;
                     _lastInputPosition = Input.mousePosition.ToVector2Int();
-                    DeckEventOnLeftClickDown.Create(global::Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+                    DeckEventOnLeftClickDown.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
                 }
             }
             else if (Input.GetMouseButtonUp(0))
@@ -186,7 +185,7 @@ namespace Deck.InputHandling
                     return;
                 }
 
-                DeckEventOnLeftClickUp.Create(global::Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition(), IsOnUI()).Send();
+                DeckEventOnLeftClickUp.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition(), IsOnUI()).Send();
             }
 
             if (Input.mouseScrollDelta.y != 0)
@@ -202,7 +201,7 @@ namespace Deck.InputHandling
             }
 
             _lastInputPosition = currentInputPosition;
-            DeckEventOnMouseMove.Create(global::Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+            DeckEventOnMouseMove.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
         }
 
         private bool IsOnUI()

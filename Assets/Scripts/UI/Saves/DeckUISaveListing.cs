@@ -3,49 +3,48 @@ using Deck.SaveListingMenu.Events;
 using Deck.Services.PopUp;
 using Deck.Services.UI;
 using Deck.UI.Confirmation;
-using Deck.Utility;
 using Deck.Utility.Constants;
+using Services;
 using Systems.SystemSave;
-using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 
-namespace Deck.UI.Saves
+namespace UI.Saves
 {
     public class DeckUISaveListing : DeckUIBase
     {
         [SerializeField] private RectTransform scrollParent;
         [SerializeField] private GridLayoutGroup gridLayoutGroup;
-        private List<DeckSaveDisplayer> _activeDisplayers = new();
-        private DeckSaveDisplayer _lastSelectedDisplayer;
+        private List<DeckSaveDisplayer> _activeDisplays = new();
+        private DeckSaveDisplayer _lastSelectedDisplay;
 
         protected override void OnPreAppear()
         {
-            _lastSelectedDisplayer = null;
-            InitializeSaveDisplayers();
+            _lastSelectedDisplay = null;
+            InitializeSaveDisplays();
         }
 
-        private void InitializeSaveDisplayers()
+        private void InitializeSaveDisplays()
         {
-            if (_activeDisplayers != null)
+            if (_activeDisplays != null)
             {
-                InstanceProvider.ReturnUIElement(_activeDisplayers);
+                InstanceProvider.ReturnUIElement(_activeDisplays);
             }
 
-            _activeDisplayers.Clear();
+            _activeDisplays.Clear();
 
 
             var saveFiles = DeckSaveSystem.GetAllSaves();
             AdjustScrollWindowSize(saveFiles.Length);
 
-            for (var index = 0; index < saveFiles.Length; index++)
+            foreach (var saveFile in saveFiles)
             {
-                var newDisplayer = InstanceProvider.RentUIElement<DeckSaveDisplayer>();
-                newDisplayer.SetData(saveFiles[index], this);
-                newDisplayer.transform.SetParent(scrollParent, false);
-                newDisplayer.transform.localPosition = Vector2.zero;
-                _activeDisplayers.Add(newDisplayer);
+                var newDisplay = InstanceProvider.RentUIElement<DeckSaveDisplayer>();
+                newDisplay.SetData(saveFile, this);
+                newDisplay.transform.SetParent(scrollParent, false);
+                newDisplay.transform.localPosition = Vector2.zero;
+                _activeDisplays.Add(newDisplay);
             }
         }
 
@@ -61,35 +60,35 @@ namespace Deck.UI.Saves
 
         public void OnLoadButtonClicked()
         {
-            if (_lastSelectedDisplayer == null)
+            if (_lastSelectedDisplay == null)
             {
                 return;
             }
 
-            DeckEventOnLoadRequested.Create(_lastSelectedDisplayer.GetSaveFile()).Send();
+            DeckEventOnLoadRequested.Create(_lastSelectedDisplay.GetSaveFile()).Send();
         }
 
         public void OnDeleteButtonClicked()
         {
-            if (_lastSelectedDisplayer == null)
+            if (_lastSelectedDisplay == null)
             {
                 return;
             }
 
-            var newConfirmationPopUp = global::Services.DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
-            var parent = global::Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
+            var newConfirmationPopUp = DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
+            var parent = DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.deleteSaveFileDialogue, () =>
             {
-                DeckSaveSystem.DeleteSaveFile(_lastSelectedDisplayer.GetSaveFile());
-                InitializeSaveDisplayers();
+                DeckSaveSystem.DeleteSaveFile(_lastSelectedDisplay.GetSaveFile());
+                InitializeSaveDisplays();
             }, null);
         }
 
         public void SetSelected(DeckSaveDisplayer saveDisplayer)
         {
-            _lastSelectedDisplayer = saveDisplayer;
+            _lastSelectedDisplay = saveDisplayer;
         }
     }
 }

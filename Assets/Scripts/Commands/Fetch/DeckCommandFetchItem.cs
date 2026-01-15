@@ -2,12 +2,12 @@ using System;
 using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
+using Deck.Commands;
 using Services.Finder;
 using Systems.SystemSave;
 using UnityEngine;
 
-namespace Deck.Commands.Fetch
+namespace Commands.Fetch
 {
     public class DeckCommandFetchItem : DeckCommand
     {
@@ -44,7 +44,7 @@ namespace Deck.Commands.Fetch
         public override void LoadSaveData(string saveData)
         {
             var loadedData = DeckSaveUtility.GetDeserializedData<CommandFetchSaveData>(saveData);
-            var serviceFinder = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>();
+            var serviceFinder = Services.DeckServiceProvider.GetService<DeckServiceFinder>();
             
             _fetcher = serviceFinder.GetAgent(loadedData.fetcherUniqueId);
             _fetchPosition = loadedData.fetchPosition;

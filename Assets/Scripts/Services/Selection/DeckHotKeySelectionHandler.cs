@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using Base;
-using Deck.Base;
+using Deck.Services.Selection;
 using Deck.Services.Selection.Events;
 using Deck.UI.Hotkey.Events;
-using Deck.Utility;
 using EventManager;
 using Systems.SystemInput.Events;
 using UnityEngine;
 using Utility;
 
-namespace Deck.Services.Selection
+namespace Services.Selection
 {
     public class DeckHotKeySelectionHandler
     {
@@ -18,7 +17,7 @@ namespace Deck.Services.Selection
 
         public void Initialize()
         {
-            _serviceSelection = global::Services.DeckServiceProvider.GetService<DeckServiceSelection>();
+            _serviceSelection = DeckServiceProvider.GetService<DeckServiceSelection>();
             DeckEventManager.Register<DeckEventOnAgentPossessed>(OnAgentPossessed);
             DeckEventManager.Register<DeckEventOnCoreAgentCreated>(OnCoreAgentCreated);
             DeckEventManager.Register<DeckEventOnCoreAgentDeath>(OnCoreAgentDeath);

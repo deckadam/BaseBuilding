@@ -1,5 +1,5 @@
 using System.Linq;
-using Deck.Data.Currency;
+using Data.Currency;
 using Systems.SystemSave;
 using UnityEngine;
 

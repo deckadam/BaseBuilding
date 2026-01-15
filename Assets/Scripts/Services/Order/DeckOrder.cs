@@ -1,7 +1,7 @@
-using Deck.Data.Currency;
+using Data.Currency;
 using UnityEngine;
 
-namespace Deck.Services.Order
+namespace Services.Order
 {
     [CreateAssetMenu(fileName = "Deck Order",menuName = "Deck/Data/Order")]
     public class DeckOrder : ScriptableObject

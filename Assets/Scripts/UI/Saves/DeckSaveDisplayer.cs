@@ -3,15 +3,15 @@ using Deck.SaveListingMenu.Events;
 using Deck.Services.PopUp;
 using Deck.Services.UI;
 using Deck.UI.Confirmation;
-using Deck.Utility;
 using Deck.Utility.Constants;
+using Services;
 using Systems.SystemSave;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
 
-namespace Deck.UI.Saves
+namespace UI.Saves
 {
     public class DeckSaveDisplayer : DeckUIElement, IPointerClickHandler
     {
@@ -32,8 +32,8 @@ namespace Deck.UI.Saves
             _uiSaveListing.SetSelected(this);
             if (eventData.clickCount != 2) return;
 
-            var newConfirmationPopUp = global::Services.DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
-            var parent = global::Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
+            var newConfirmationPopUp = DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckConfirmationPopUp>();
+            var parent = DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUISaveListing>().GetRectTransform();
             newConfirmationPopUp.transform.SetParent(parent, false);
             newConfirmationPopUp.transform.localPosition = Vector2.zero;
             newConfirmationPopUp.Initialize(DeckConstantsConfirmationDialogue.loadSaveFileDialogue, () => DeckEventOnLoadRequested.Create(_saveFile).Send(), null);

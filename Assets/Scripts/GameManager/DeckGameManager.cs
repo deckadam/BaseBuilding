@@ -1,20 +1,19 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
 using Deck.Data.Item;
-using Deck.Services.Map;
 using Deck.Utility.MVC;
-using Deck.Waiter;
 using InGame.Agent.Waiter;
 using Instancing;
 using Services;
 using Services.Finder;
+using Services.Map;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.GameManager
+namespace GameManager
 {
     public class DeckGameManager : DeckServiceBase
     {
@@ -40,7 +39,7 @@ namespace Deck.GameManager
         public async void CreateNewGame()
         {
             DeckSaveSystem.CreateNewSave();
-            await global::Services.DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
+            await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
             var newWaiter = _instanceProvider.RentAgent(_waiterAgentPrefab.PrefabId);
             newWaiter.transform.parent = DeckServiceScene.GetMap().transform;
             newWaiter.Initialize();
@@ -56,16 +55,16 @@ namespace Deck.GameManager
 
         public async void LoadGame()
         {
-            await global::Services.DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
+            await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
             var agentsData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             _loadResolver.ResolveAndLoad(agentsData);
         }
 
         public void GatherSaveData()
         {
-            global::Services.DeckServiceProvider.BeforeSaveRequest();
+            DeckServiceProvider.BeforeSaveRequest();
 
-            var agents = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgents();
+            var agents = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgents();
             var agentDatas = new DeckComponentHolderSaveDatas();
             foreach (var agent in agents)
             {

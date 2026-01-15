@@ -3,22 +3,22 @@ using Deck.Base;
 using Deck.Components;
 using Deck.General;
 using Deck.Services.Tables.Events;
-using Deck.Utility;
 using Deck.Utility.Constants;
 using InGame.Agent.Building;
+using Services;
 using Services.Finder;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using UnityEngine;
 using Utility;
 
-namespace Deck.InGame.Agent.Furniture
+namespace InGame.Agent.Furniture
 {
     public class DeckAgentAgentChair : DeckAgentBuilding, IDeckSittable
     {
         [SerializeField, ReadOnly] private DeckAgentHumanoid _humanoid;
         [SerializeField] private Vector3 sitPositionOffset;
-        
+
         public bool InProcess => _inProcess;
         public bool IsAvailable => _isAvailable && !_inProcess;
 
@@ -101,7 +101,7 @@ namespace Deck.InGame.Agent.Furniture
 
             if (chairData.sittingHumanoidUniqueId == 0) return;
 
-            var humanoid = (DeckAgentHumanoid)global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(chairData.sittingHumanoidUniqueId);
+            var humanoid = (DeckAgentHumanoid)DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(chairData.sittingHumanoidUniqueId);
 
             SetOccupied();
             OnSit(humanoid);

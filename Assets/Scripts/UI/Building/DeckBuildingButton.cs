@@ -1,7 +1,7 @@
 using Deck.Base;
-using Deck.Services.Escapable;
 using Deck.Services.UI;
 using DG.Tweening;
+using Services.Escapable;
 using UnityEngine;
 using UnityEngine.UI;
 

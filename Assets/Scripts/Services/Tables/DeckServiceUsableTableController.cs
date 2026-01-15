@@ -4,6 +4,7 @@ using Deck.InGame.Agent.Furniture;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
 using EventManager;
+using InGame.Agent.Furniture;
 using Services;
 using UnityEngine;
 using UnityEngine.Serialization;

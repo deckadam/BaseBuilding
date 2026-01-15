@@ -1,13 +1,13 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
+using Deck.Commands;
 using Deck.Components;
 using Deck.Utility.Constants;
 using Services.Finder;
 using Systems.SystemSave;
-using UnityEngine;
 
-namespace Deck.Commands.Sittable
+namespace Commands.Sittable
 {
     public class DeckCommandGetUp : DeckCommand
     {
@@ -20,7 +20,6 @@ namespace Deck.Commands.Sittable
 
         public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            Debug.LogError("Getting up");
             var animatorHumanoid = _target.GetDeckComponent<IDeckAnimationSetTrigger>();
             animatorHumanoid.Trigger(DeckConstantsAnimation.GetUp);
 
@@ -38,7 +37,7 @@ namespace Deck.Commands.Sittable
         public override void LoadSaveData(string saveData)
         {
             var loadedData = DeckSaveUtility.GetDeserializedData<DeckCommandGetUpSaveData>(saveData);
-            _target = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.targetId) as DeckAgentHumanoid;
+            _target = Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.targetId) as DeckAgentHumanoid;
         }
 
         private struct DeckCommandGetUpSaveData

@@ -1,12 +1,13 @@
+using Commands;
+using Commands.Sittable;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
-using Deck.Commands;
-using Deck.Commands.Sittable;
-using Deck.Services.Order;
+using Services;
+using Services.Order;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Deck.InGame.Agent.Customer
+namespace InGame.Agent.Customer
 {
     public class DeckAgentCustomer : DeckAgentHumanoid
     {
@@ -20,7 +21,7 @@ namespace Deck.InGame.Agent.Customer
         [Button]
         private void Test()
         {
-            global::Services.DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+            DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
         }
 
         private async void OnOrderCompleted()
@@ -31,7 +32,7 @@ namespace Deck.InGame.Agent.Customer
 
             var leaveCommand = new DeckCommandMove(new Vector3(20, 0, 0), this);
             leaveCommand.OnCompleted += RequestDestroy;
-            
+
             EnqueueCommand(leaveCommand);
         }
 
@@ -47,7 +48,7 @@ namespace Deck.InGame.Agent.Customer
                     return;
                 }
 
-                global::Services.DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+                DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
             }
         }
     }

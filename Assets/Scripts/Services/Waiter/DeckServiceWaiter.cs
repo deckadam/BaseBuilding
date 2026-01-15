@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using InGame.Agent.Waiter;
-using Services;
-using UnityEngine;
 
-namespace Deck.Waiter
+namespace Services.Waiter
 {
     public class DeckServiceWaiter : DeckServiceBase
     {

@@ -1,10 +1,9 @@
 using System;
 using Base;
-using Deck.Base;
-using Deck.Data.Currency;
+using Data.Currency;
 using UnityEngine;
 
-namespace Deck.Services.Order
+namespace Services.Order
 {
     [Serializable]
     public struct DeckRuntimeOrder
@@ -22,12 +21,12 @@ namespace Deck.Services.Order
         public DeckAgent RequestingAgent => requestingAgent;
         public Action OnOrderCompleted { get; }
 
-        public static DeckRuntimeOrder Create(DeckOrder order, DeckAgent requestingAgent,Action onOrderCompleted)
+        public static DeckRuntimeOrder Create(DeckOrder order, DeckAgent requestingAgent, Action onOrderCompleted)
         {
-            return new DeckRuntimeOrder(order.RequiredAgentTag, order.OrderType, order.Amount, order.Price, requestingAgent,onOrderCompleted);
+            return new DeckRuntimeOrder(order.RequiredAgentTag, order.OrderType, order.Amount, order.Price, requestingAgent, onOrderCompleted);
         }
 
-        private DeckRuntimeOrder(DeckActionTag requiredAgentTag, DeckOrderType orderType, int amount, DeckPrice[] price, DeckAgent requestingAgent,Action onOrderCompleted)
+        private DeckRuntimeOrder(DeckActionTag requiredAgentTag, DeckOrderType orderType, int amount, DeckPrice[] price, DeckAgent requestingAgent, Action onOrderCompleted)
         {
             this.requiredAgentTag = requiredAgentTag;
             this.orderType = orderType;

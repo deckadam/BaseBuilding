@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.Services.Escapable;
 using Deck.Services.UI;
-using Deck.UI.MainMenu.Events;
 using EventManager;
+using Services.Escapable;
+using UI.MainMenu.Events;
 using UnityEngine;
 
 namespace UI.Building

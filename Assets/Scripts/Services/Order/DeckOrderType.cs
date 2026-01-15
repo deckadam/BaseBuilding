@@ -1,4 +1,4 @@
-namespace Deck.Services.Order
+namespace Services.Order
 {
     public enum DeckOrderType
     {
