@@ -2,14 +2,15 @@ using System;
 using Deck.Base;
 using Deck.Components;
 using Deck.General;
-using Deck.InGame.Agent.Building;
-using Deck.Save;
-using Deck.Services.Finder;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
 using Deck.Utility.Constants;
+using InGame.Agent.Building;
+using Services.Finder;
 using Sirenix.OdinInspector;
+using Systems.SystemSave;
 using UnityEngine;
+using Utility;
 
 namespace Deck.InGame.Agent.Furniture
 {
@@ -100,7 +101,7 @@ namespace Deck.InGame.Agent.Furniture
 
             if (chairData.sittingHumanoidUniqueId == 0) return;
 
-            var humanoid = (DeckAgentHumanoid)Deck.GetService<DeckServiceFinder>().GetAgent(chairData.sittingHumanoidUniqueId);
+            var humanoid = (DeckAgentHumanoid)global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(chairData.sittingHumanoidUniqueId);
 
             SetOccupied();
             OnSit(humanoid);

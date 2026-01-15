@@ -1,7 +1,6 @@
-﻿using Deck.Commands;
-using Deck.UI.Inventory;
+﻿using UI.Inventory;
 
-namespace Deck.ItemVisualProviders.Inventory
+namespace Services.Inventory
 {
     public class DeckServiceInventory : DeckServiceBase
     {

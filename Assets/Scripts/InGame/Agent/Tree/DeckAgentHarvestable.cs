@@ -1,4 +1,5 @@
-﻿using Deck.Base;
+﻿using Base;
+using Deck.Base;
 
 namespace Deck.InGame.Agent.Tree
 {

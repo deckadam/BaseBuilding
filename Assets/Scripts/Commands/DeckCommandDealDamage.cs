@@ -2,9 +2,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Components;
-using Deck.Save;
-using Deck.Services.Finder;
 using Deck.Utility;
+using Services.Finder;
+using Systems.SystemSave;
+using Utility;
 
 namespace Deck.Commands
 {
@@ -103,8 +104,8 @@ namespace Deck.Commands
         {
             var loadData = DeckSaveUtility.GetDeserializedData<SaveData>(saveData);
             _canKill = loadData.canKill;
-            _from = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.fromAgent).GetDeckComponent<DeckComponentDamageDealer>();
-            _to = Deck.GetService<DeckServiceFinder>().GetAgent(loadData.toAgent).GetDeckComponent<DeckComponentHealth>();
+            _from = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadData.fromAgent).GetDeckComponent<DeckComponentDamageDealer>();
+            _to = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadData.toAgent).GetDeckComponent<DeckComponentHealth>();
             _damage = loadData.damage;
             _baseAttackRange = loadData.baseAttackRange;
             _continous = loadData.continous;

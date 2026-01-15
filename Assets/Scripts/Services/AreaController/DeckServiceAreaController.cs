@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Deck.EventManager;
 using Deck.InGame.Area;
-using Deck.Services.AreaController.Events;
+using EventManager;
+using Services;
+using Services.AreaController.Events;
 using UnityEngine;
 
 namespace Deck.Services.AreaController

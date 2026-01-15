@@ -1,4 +1,4 @@
-namespace Deck.UI.Building.BuildingSets.DeckBuildingBarTable
+namespace UI.Building.BuildingSets.DeckBuildingBarTable
 {
     public class DeckBuildingButtonBarTable : DeckBuildingButton
     {

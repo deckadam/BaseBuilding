@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Deck.Base;
 using UnityEngine;
 
-namespace Deck.Save
+namespace Systems.SystemSave.Data
 {
     [Serializable]
     public class DeckComponentHolderSaveDatas

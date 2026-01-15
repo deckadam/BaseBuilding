@@ -1,7 +1,7 @@
-using Deck.EventManager;
+using EventManager;
 using UnityEngine;
 
-namespace Deck.InputHandling.Events
+namespace Systems.SystemInput.Events
 {
     public class DeckEventOnMouseMove : IDeckEvent
     {

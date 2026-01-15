@@ -1,14 +1,13 @@
 using System.Collections.Generic;
+using Data.Buildable;
 using Deck.Base;
-using Deck.Data.Buildable;
-using Deck.Services.Building;
 using Deck.Services.Escapable;
-using Deck.UI.Building.BuildMode;
-using Deck.Utility;
+using Services.Building;
 using UI.Building.BuildMode;
 using UnityEngine;
+using Utility;
 
-namespace Deck.UI.Building
+namespace UI.Building
 {
     public class DeckBuildingPage : DeckUIElement
     {
@@ -37,8 +36,8 @@ namespace Deck.UI.Building
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
 
-            escapableService = Deck.GetService<DeckServiceEscapable>();
-            BuildingService = Deck.GetService<DeckServiceBuilding>();
+            escapableService = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
+            BuildingService = Services.DeckServiceProvider.GetService<DeckServiceBuilding>();
 
             foreach (var buildable in buildables)
             {

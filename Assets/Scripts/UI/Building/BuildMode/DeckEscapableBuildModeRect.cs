@@ -1,9 +1,9 @@
-using Deck.InputHandling.Events;
-using Deck.Services.Building;
 using Deck.Services.Cam;
+using Services.Building;
+using Systems.SystemInput.Events;
 using UnityEngine;
 
-namespace Deck.UI.Building.BuildMode
+namespace UI.Building.BuildMode
 {
     public class DeckEscapableBuildModeRect : DeckEscapableBuildMode
     {
@@ -20,7 +20,7 @@ namespace Deck.UI.Building.BuildMode
         protected override void InternalOnLeftClickDown(DeckEventOnLeftClickDown obj)
         {
             _isDown = true;
-            _initialCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            _initialCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
         }
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
@@ -31,8 +31,8 @@ namespace Deck.UI.Building.BuildMode
             }
 
             _isDown = false;
-            var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            Deck.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
+            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            Services.DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
         protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
@@ -42,7 +42,7 @@ namespace Deck.UI.Building.BuildMode
                 return;
             }
 
-            var currentCellPosition = Deck.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
             if (_currentCellPosition != currentCellPosition)
             {

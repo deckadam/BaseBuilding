@@ -1,4 +1,4 @@
-using Deck.EventManager;
+using EventManager;
 
 namespace Deck.UI.MainMenu.Events
 {

@@ -1,13 +1,14 @@
 ﻿using System;
+using Base;
 using Deck.Base;
 using Deck.Data.Currency;
-using Deck.Services.Building;
-using Deck.Utility;
+using Services.Building;
 using Sirenix.OdinInspector;
 using UI.Building.BuildMode;
 using UnityEngine;
+using Utility;
 
-namespace Deck.Data.Buildable
+namespace Data.Buildable
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject

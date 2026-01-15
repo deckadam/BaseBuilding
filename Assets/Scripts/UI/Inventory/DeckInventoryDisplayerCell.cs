@@ -3,16 +3,16 @@ using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders.Inventory;
 using Deck.Services.Selection;
 using Deck.Services.UI;
 using Deck.UI.GamePlay;
+using Services.Inventory;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Deck.UI.Inventory
+namespace UI.Inventory
 {
     public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -45,8 +45,8 @@ namespace Deck.UI.Inventory
 
         private async void FollowCursor(CancellationTokenSource tokenSource)
         {
-            visualParent.SetParent(Deck.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform(), true);
-            Deck.GetService<DeckServiceInventory>().OnDragBegin(this);
+            visualParent.SetParent(Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform(), true);
+            Services.DeckServiceProvider.GetService<DeckServiceInventory>().OnDragBegin(this);
             image.raycastTarget = false;
             var offset = new Vector2(Screen.width / 2f, Screen.height / 2f);
             while (!tokenSource.IsCancellationRequested)
@@ -55,7 +55,7 @@ namespace Deck.UI.Inventory
                 await UniTask.NextFrame();
             }
 
-            Deck.GetService<DeckServiceInventory>().TryToPlace();
+            Services.DeckServiceProvider.GetService<DeckServiceInventory>().TryToPlace();
 
             image.raycastTarget = true;
             visualParent.SetParent(transform, true);

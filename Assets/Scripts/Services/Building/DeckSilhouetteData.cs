@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Deck.Services.Building
+namespace Services.Building
 {
     [Serializable]
     public struct DeckSilhouetteData

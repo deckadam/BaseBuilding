@@ -1,5 +1,4 @@
 using System;
-using Deck.UI.Building.BuildMode;
 
 namespace UI.Building.BuildMode
 {
@@ -14,6 +13,7 @@ namespace UI.Building.BuildMode
                 DeckBuildMode.Rect => new DeckEscapableBuildModeRect(),
                 DeckBuildMode.InCell => new DeckEscapableBuildModeInCell(false),
                 DeckBuildMode.InCellCanReplace => new DeckEscapableBuildModeInCell(true),
+                DeckBuildMode.InCellMultiple => new DeckEscapableBuildModeInCellMultiple(),
                 DeckBuildMode.OnTop => new DeckEscapableBuildModeOnTop(),
                 DeckBuildMode.OnWall => new DeckEscapableBuildModeOnWall(),
                 DeckBuildMode.BuildOnTopWithAccessArea => new DeckEscapableBuildModeBuildOnTopWithAccessArea(),
@@ -27,6 +27,7 @@ namespace UI.Building.BuildMode
         Free = 0,
         InCell = 100,
         InCellCanReplace = 101,
+        InCellMultiple = 102,
         OnWall = 200,
         OnTop = 300,
         Rect = 400,

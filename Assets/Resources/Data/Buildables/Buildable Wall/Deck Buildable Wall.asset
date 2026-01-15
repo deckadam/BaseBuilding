@@ -24,7 +24,7 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
-  rotationMode: 0
+  rotationMode: 100
   icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5, z: 0.30000013}
   prices:

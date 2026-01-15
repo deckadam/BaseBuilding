@@ -1,9 +1,12 @@
-﻿using Deck.Base;
+﻿using Base;
+using Deck.Base;
 using Deck.Commands;
-using Deck.EventManager;
-using Deck.InputHandling.Events;
 using Deck.Services.Selection.Events;
 using Deck.Utility;
+using EventManager;
+using Services;
+using Systems.SystemInput.Events;
+using Utility;
 
 namespace Deck.Services.Selection
 {

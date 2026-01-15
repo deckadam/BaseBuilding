@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Deck.EventManager
+namespace EventManager
 {
     public static class DeckEventManager
     {

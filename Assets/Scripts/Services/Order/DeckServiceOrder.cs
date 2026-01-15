@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Deck.InGame.Agent.Waiter;
 using Deck.Services.Order.OrderResolver;
 using Deck.Waiter;
+using InGame.Agent.Waiter;
+using Services;
 using UnityEngine;
 
 namespace Deck.Services.Order
@@ -16,7 +17,7 @@ namespace Deck.Services.Order
 
         public override void Initialize()
         {
-            _waiterService = Deck.GetService<DeckServiceWaiter>();
+            _waiterService = global::Services.DeckServiceProvider.GetService<DeckServiceWaiter>();
         }
 
         public override void BeforeGameSessionInitialized()

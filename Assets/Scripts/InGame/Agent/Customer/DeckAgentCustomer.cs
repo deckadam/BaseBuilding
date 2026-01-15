@@ -20,7 +20,7 @@ namespace Deck.InGame.Agent.Customer
         [Button]
         private void Test()
         {
-            Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+            global::Services.DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
         }
 
         private async void OnOrderCompleted()
@@ -47,7 +47,7 @@ namespace Deck.InGame.Agent.Customer
                     return;
                 }
 
-                Deck.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+                global::Services.DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
             }
         }
     }

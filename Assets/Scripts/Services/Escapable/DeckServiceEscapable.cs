@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Deck.Services.UI;
 using Deck.UI.MainMenu;
+using Services;
 
 namespace Deck.Services.Escapable
 {
@@ -32,7 +33,7 @@ namespace Deck.Services.Escapable
                 {
                     if (_escapables.Count == 0)
                     {
-                        Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                        global::Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
                         return;
                     }
 
@@ -48,7 +49,7 @@ namespace Deck.Services.Escapable
             }
             else
             {
-                Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                global::Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
             }
         }
 
@@ -61,7 +62,7 @@ namespace Deck.Services.Escapable
             }
             else if (_escapables.Count == 0)
             {
-                Deck.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
+                global::Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
             }
         }
 

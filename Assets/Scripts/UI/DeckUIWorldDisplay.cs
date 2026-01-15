@@ -5,8 +5,9 @@ using Deck.Services.UI;
 using Deck.UI.Health;
 using Deck.Utility;
 using UnityEngine;
+using Utility;
 
-namespace Deck.UI
+namespace UI
 {
     public class DeckUIWorldDisplay : DeckUIElement
     {
@@ -27,7 +28,7 @@ namespace Deck.UI
 
         public void SetTarget(Transform target)
         {
-            mainCamera = Deck.GetService<DeckServiceCamera>().GetCamera();
+            mainCamera = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera();
             this.target = target;
         }
 
@@ -38,12 +39,12 @@ namespace Deck.UI
 
         protected override void InternalOnDeSpawned()
         {
-            Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
+            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
         }
 
         protected override void InternalOnSpawned()
         {
-            Deck.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
+            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
         }
 
         private void LateUpdate()

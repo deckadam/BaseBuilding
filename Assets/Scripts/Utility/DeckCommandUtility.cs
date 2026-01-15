@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using Deck.Components;
 using UnityEngine;
 
-namespace Deck.Utility
+namespace Utility
 {
     public static class DeckCommandUtility
     {

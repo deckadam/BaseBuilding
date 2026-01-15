@@ -1,14 +1,16 @@
 using System;
+using Base;
 using Deck.Base;
 using Deck.Commands;
 using Deck.Commands.Fetch;
-using Deck.InGame.Agent.Building;
-using Deck.InGame.Agent.Waiter;
-using Deck.Services.Finder;
 using Deck.UI.Notification;
 using Deck.Utility;
 using Deck.Utility.Constants;
+using InGame.Agent.Building;
+using InGame.Agent.Waiter;
+using Services.Finder;
 using UnityEngine;
+using Utility;
 
 namespace Deck.Services.Order.OrderResolver
 {
@@ -28,23 +30,25 @@ namespace Deck.Services.Order.OrderResolver
 
         private static DeckCommandFetchItem GetCoffeeFetchCommand(DeckRuntimeOrder order, DeckAgentWaiter waiter)
         {
-            var agents = Deck.GetService<DeckServiceFinder>().GetAgentsWithTag(order.RequiredAgentTag);
+            var agents = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgentsWithTag(order.RequiredAgentTag);
 
             DeckAgent closest = null;
             var currentDistance = float.MaxValue;
             var foundAgent = false;
             foreach (var deckAgent in agents)
             {
-                if (Vector3.Distance(waiter.transform.position, deckAgent.transform.position) < currentDistance)
+                var tempDistance = Vector3.Distance(waiter.transform.position, deckAgent.transform.position);
+                if (tempDistance < currentDistance)
                 {
                     foundAgent = true;
                     closest = deckAgent;
+                    currentDistance = tempDistance;
                 }
             }
 
             if (!foundAgent)
             {
-                DeckEventNotificationRequested.Create(DeckConstantsNotification.OrderCannotBeFulfilled+" " + order.OrderType +" supporting agent not found").Send();
+                DeckEventNotificationRequested.Create(DeckConstantsNotification.OrderCannotBeFulfilled + " " + order.OrderType + " supporting agent not found").Send();
                 return null;
             }
 

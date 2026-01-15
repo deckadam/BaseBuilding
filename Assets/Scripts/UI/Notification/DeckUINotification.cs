@@ -1,6 +1,8 @@
-﻿using Deck.EventManager;
-using Deck.Utility;
+﻿using Deck.Utility;
+using EventManager;
+using UI;
 using UnityEngine;
+using Utility;
 
 namespace Deck.UI.Notification
 {

@@ -1,10 +1,12 @@
 using System.Threading;
+using Base;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
 using Deck.Data.Component;
 using Deck.Utility;
 using UnityEngine;
+using Utility;
 
 namespace Deck.InGame.AI
 {

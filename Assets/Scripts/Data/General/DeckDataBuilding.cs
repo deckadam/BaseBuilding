@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Deck.Data.General
+namespace Data.General
 {
     [CreateAssetMenu(menuName = "Deck/Binder/Building", fileName = "Deck Building Data")]
     public class DeckDataBuilding : ScriptableObjectInstaller

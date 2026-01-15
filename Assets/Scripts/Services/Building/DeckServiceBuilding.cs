@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Data.Buildable;
+using Data.General;
 using Deck.Base;
-using Deck.Data.Buildable;
-using Deck.Data.General;
-using Deck.EventManager;
-using Deck.InGame.Agent.Building;
-using Deck.InputHandling.Events;
-using Deck.Instancing;
 using Deck.Services.Cam;
-using Deck.Services.Currency;
 using Deck.Services.Map;
 using Deck.UI.Notification;
 using Deck.Utility;
 using Deck.Utility.Iterators;
 using Deck.Utility.MonoBehaviours;
+using EventManager;
+using InGame.Agent.Building;
+using Instancing;
+using Services.Currency;
+using Systems.SystemInput.Events;
 using UI.Building.BuildMode;
 using UnityEngine;
+using Utility;
 using Zenject;
 
-namespace Deck.Services.Building
+namespace Services.Building
 {
     public class DeckServiceBuilding : DeckServiceBase
     {
@@ -57,8 +58,8 @@ namespace Deck.Services.Building
 
         public override void Initialize()
         {
-            _cameraService = Deck.GetService<DeckServiceCamera>();
-            _currencyService = Deck.GetService<DeckServiceCurrency>();
+            _cameraService = DeckServiceProvider.GetService<DeckServiceCamera>();
+            _currencyService = DeckServiceProvider.GetService<DeckServiceCurrency>();
             _lastCheckedCellIndex = _defaultCellPosition;
             _silhouetteParent = new GameObject()
             {
@@ -545,6 +546,37 @@ namespace Deck.Services.Building
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
         }
+        
+        public void BuildInCellMultiple()
+        {
+            if (_activeBuildable == null)
+            {
+                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
+                return;
+            }
+
+            var cellIndex = _cameraService.GetCursorCellIndex();
+
+            if (_lastCheckedCellIndex == cellIndex)
+            {
+                return;
+            }
+
+            _lastCheckedCellIndex = cellIndex;
+
+            if (!IsViableBuildCell(_activeBuildable.Indices, cellIndex))
+            {
+                return;
+            }
+
+            if (!PayIfCanAfford()) return;
+
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
+            newBuilding.transform.position = cellIndex.ToVector3();
+            newBuilding.Initialize();
+            newBuilding.InitializeBuilding();
+        }
 
         public void BuildWithAccess()
         {
@@ -688,7 +720,7 @@ namespace Deck.Services.Building
             }
         }
 
-        public void SetCellOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgentBuilding agentToSet)
+        public void SetCellsOccupied(Vector2Int cellIndex, IEnumerable<Vector2Int> indices, DeckAgentBuilding agentToSet)
         {
             foreach (var index in indices)
             {

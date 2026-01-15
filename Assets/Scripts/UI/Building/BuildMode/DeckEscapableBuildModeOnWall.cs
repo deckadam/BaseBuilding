@@ -1,7 +1,7 @@
-using Deck.InputHandling.Events;
-using Deck.Services.Building;
+using Services.Building;
+using Systems.SystemInput.Events;
 
-namespace Deck.UI.Building.BuildMode
+namespace UI.Building.BuildMode
 {
     public class DeckEscapableBuildModeOnWall : DeckEscapableBuildMode
     {
@@ -16,7 +16,7 @@ namespace Deck.UI.Building.BuildMode
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
-            Deck.GetService<DeckServiceBuilding>().BuildOnWall();
+            Services.DeckServiceProvider.GetService<DeckServiceBuilding>().BuildOnWall();
             BuildingService.UpdateSilhouetteOnWall();
         }
 

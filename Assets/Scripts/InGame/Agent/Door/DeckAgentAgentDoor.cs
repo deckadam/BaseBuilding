@@ -1,8 +1,10 @@
 using Cysharp.Threading.Tasks;
-using Deck.InGame.Agent.Building;
-using Deck.Services.AreaController.Events;
 using Deck.Services.Building;
 using Deck.Utility;
+using InGame.Agent.Building;
+using Services.AreaController.Events;
+using Services.Building;
+using Utility;
 
 namespace Deck.InGame.Agent.Door
 {
@@ -12,14 +14,14 @@ namespace Deck.InGame.Agent.Door
         {
             await UniTask.Yield();
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
-            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(transform.position.ToVector2Int(), BuildingData.Indices, this);
+            global::Services.DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(transform.position.ToVector2Int(), BuildingData.Indices, this);
         }
 
         protected override void OnAgentDestroyed()
         {
             var cellPosition = transform.position.ToVector2Int();
             DeckEventOnDoorDestroyed.Create(cellPosition).Send();
-            Deck.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), BuildingData.Indices);
+            global::Services.DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), BuildingData.Indices);
         }
     }
 }

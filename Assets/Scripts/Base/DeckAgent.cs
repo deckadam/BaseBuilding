@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
+using Deck.Base;
 using Deck.Components;
-using Deck.Instancing;
-using Deck.Save;
-using Deck.Services.Finder;
 using Deck.Services.Map;
 using Deck.UI.Stats;
-using Deck.Utility;
+using Instancing;
+using Services;
+using Services.Finder;
 using Sirenix.OdinInspector;
+using Systems.SystemSave;
+using Systems.SystemSave.Data;
 using UnityEditor;
-using Zenject;
-#if UNITY_EDITOR
 using UnityEngine;
-#endif
+using Utility;
+using Zenject;
 
-namespace Deck.Base
+namespace Base
 {
     public class DeckAgent : DeckPoolable
     {
@@ -29,6 +29,9 @@ namespace Deck.Base
         [SerializeField] private DeckId prefabId;
 
         [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
+        [SerializeField, ReadOnly] protected DeckItemVisual[] itemVisualInstances;
+
+        [SerializeField, ReadOnly] protected bool isMultiInstance;
 
         public DeckId UniqueId => uniqueId;
         public DeckComponent[] Components => components;
@@ -60,17 +63,15 @@ namespace Deck.Base
             }
         }
 
-
+#if UNITY_EDITOR
         public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
 
-#if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
-#endif
 
             foreach (var agent in Resources.FindObjectsOfTypeAll(typeof(DeckAgent)))
             {
@@ -86,7 +87,7 @@ namespace Deck.Base
                     continue;
                 }
 
-                if (agentComponent.name == name)
+                if (agentComponent.GetInstanceID() == GetInstanceID())
                 {
                     continue;
                 }
@@ -108,6 +109,7 @@ namespace Deck.Base
                 prefabId = DeckId.CreateNew();
             }
         }
+#endif
 
         private async void Start()
         {
@@ -191,7 +193,7 @@ namespace Deck.Base
                 commandProcessor.StartProcessCommands();
             }
 
-            Deck.GetService<DeckServiceFinder>().RegisterAgent(this);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RegisterAgent(this);
 
             AfterInitializationCompleted();
         }
@@ -276,7 +278,7 @@ namespace Deck.Base
             }
 
 
-            Deck.GetService<DeckServiceFinder>().RemoveAgent(this);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveAgent(this);
 
             OnAgentDestroyed();
 
@@ -332,10 +334,28 @@ namespace Deck.Base
             itemVisualInstance.transform.parent = SelfTransform;
             itemVisualInstance.transform.localPosition = Vector3.zero;
         }
+        
+        public void SetItemVisuals(DeckItemVisual[] newInstances)
+        {
+            itemVisualInstances = newInstances;
+            foreach (var deckItemVisual in newInstances)
+            {
+                deckItemVisual.transform.parent = SelfTransform;
+                deckItemVisual.transform.localPosition = Vector3.zero;
+            }
+
+            isMultiInstance = true;
+        }
 
         public DeckItemVisual GetItemVisual()
         {
             return itemVisualInstance;
+        }
+
+
+        public DeckItemVisual[] GetItemVisuals()
+        {
+            return itemVisualInstances;
         }
 
         public void SetTags(DeckActionTag[] tags)

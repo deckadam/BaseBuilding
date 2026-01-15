@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Base;
 using Deck.Base;
-using Deck.EventManager;
-using Deck.Services.AreaController.Events;
-using Deck.Utility;
 using Deck.Utility.Iterators;
+using EventManager;
+using Services.AreaController.Events;
 using UnityEngine;
+using Utility;
 using Zenject;
 
-namespace Deck.ItemVisualProviders
+namespace ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBarTable", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBarTable")]
     public class DeckItemVisualProviderBarTable : DeckItemVisualProviderBasic

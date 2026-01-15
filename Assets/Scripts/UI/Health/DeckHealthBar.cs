@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

@@ -1,6 +1,6 @@
-using Deck.EventManager;
+using EventManager;
 
-namespace Deck.InputHandling.Events
+namespace Systems.SystemInput.Events
 {
     public class DeckEventMiddleScroll:IDeckEvent
     {

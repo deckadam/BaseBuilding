@@ -1,4 +1,4 @@
-namespace Deck.UI.Building.BuildingSets
+namespace UI.Building.BuildingSets
 {
     public enum DeckBuildableType
     {
@@ -6,6 +6,7 @@ namespace Deck.UI.Building.BuildingSets
         Furniture,
         Miscellaneous,
         BarTable,
+        Room = 100,
         Error = 9999
     }
 }

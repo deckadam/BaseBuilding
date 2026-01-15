@@ -1,13 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Base;
 using Deck.Base;
-using Deck.Instancing;
-using Deck.Services.Finder;
-using Deck.Utility;
+using Instancing;
+using Services;
+using Services.Finder;
 using UnityEngine;
+using Utility;
 using Zenject;
 
-namespace Deck.ItemVisualProviders
+namespace ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderBase", menuName = "Service/ItemVisualManager/DeckItemVisualProviderBase")]
     public class DeckItemVisualProviderBasic : ScriptableObject
@@ -61,7 +64,6 @@ namespace Deck.ItemVisualProviders
         {
         }
 
-
         public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual);
@@ -70,6 +72,11 @@ namespace Deck.ItemVisualProviders
         public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
         {
             return RentIfHasItemVisual(prefabId, out itemVisual);
+        }
+
+        public virtual bool RequestMultipleItemVisuals(DeckAgent agent,DeckId prefabId, Vector2Int[] indices,out DeckItemVisual[] itemVisuals)
+        {
+            throw new Exception("Multiple rent is not implemented for basic provider");
         }
 
         public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -83,7 +90,7 @@ namespace Deck.ItemVisualProviders
             {
                 itemVisual = _instanceProvider.RentItemVisual(prefabId);
                 itemVisual.gameObject.SetActive(true);
-                Deck.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisual);
+                DeckServiceProvider.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisual);
                 return true;
             }
 
@@ -96,7 +103,7 @@ namespace Deck.ItemVisualProviders
             if (!_supportedItemVisuals.Contains(itemVisual.PrefabId.ID)) return false;
 
             _instanceProvider.ReturnItemVisual(itemVisual);
-            Deck.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
 
             return true;
         }

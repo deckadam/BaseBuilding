@@ -1,7 +1,7 @@
 using System;
-using Deck.Instancing;
-using Deck.Utility;
+using Instancing;
 using UnityEngine;
+using Utility;
 using Zenject;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,23 +39,32 @@ namespace Deck.Base
             InstanceProvider = instanceProvider;
         }
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             InternalOnValidate();
             rectTransform ??= GetComponent<RectTransform>();
 
-#if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
-#endif
 
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckUIElement)))
             {
                 var uiElement = itemVisual as DeckUIElement;
 
-                if (uiElement.name == name)
+                if (uiElement == null)
+                {
+                    continue;
+                }
+
+                if (uiElement.GetHashCode() == GetHashCode())
+                {
+                    continue;
+                }
+
+                if (uiElement.GetInstanceID() == GetInstanceID())
                 {
                     continue;
                 }
@@ -77,6 +86,7 @@ namespace Deck.Base
                 prefabId = DeckId.CreateNew();
             }
         }
+#endif
 
         public override void OnDespawned()
         {

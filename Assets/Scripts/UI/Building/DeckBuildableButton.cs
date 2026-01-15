@@ -1,10 +1,10 @@
+using Data.Buildable;
 using Deck.Base;
-using Deck.Data.Buildable;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.Building
+namespace UI.Building
 {
     public class DeckBuildableButton : DeckUIElement
     {

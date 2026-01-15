@@ -1,4 +1,4 @@
-using Deck.InGame.Agent.Building;
+using InGame.Agent.Building;
 
 namespace Deck.InGame.Agent.Misc
 {

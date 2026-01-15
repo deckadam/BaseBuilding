@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.EventManager;
 using Deck.Services.Escapable;
 using Deck.Services.UI;
 using Deck.UI.MainMenu.Events;
+using EventManager;
 using UnityEngine;
 
-namespace Deck.UI.Building
+namespace UI.Building
 {
     public class DeckUIBuilding : DeckUIBase, IDeckEscapable
     {
@@ -32,7 +32,7 @@ namespace Deck.UI.Building
                 button.Initialize(this, page);
             }
 
-            _serviceEscapable = Deck.GetService<DeckServiceEscapable>();
+            _serviceEscapable = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
 
             DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnEventAppear);
             DeckEventManager.Register<DeckEventOnMainMenuDisappear>(OnEventAppear);

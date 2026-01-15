@@ -1,4 +1,4 @@
-namespace Deck.UI.Building.BuildingSets.DeckBuildingFurniture
+namespace UI.Building.BuildingSets.DeckBuildingFurniture
 {
     public class DeckBuildingPageFurniture : DeckBuildingPage
     {

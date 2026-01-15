@@ -1,15 +1,14 @@
 using System;
-using Deck.Data.Buildable;
-using Deck.EventManager;
-using Deck.InputHandling.Events;
-using Deck.Services.Building;
+using Data.Buildable;
 using Deck.Services.Building.Events;
 using Deck.Services.Escapable;
 using Deck.Services.UI;
-using Deck.Utility;
-using UnityEngine;
+using EventManager;
+using Services.Building;
+using Systems.SystemInput.Events;
+using Utility;
 
-namespace Deck.UI.Building.BuildMode
+namespace UI.Building.BuildMode
 {
     public abstract class DeckEscapableBuildMode : IDeckEscapable
     {
@@ -37,10 +36,10 @@ namespace Deck.UI.Building.BuildMode
             DeckEventManager.Register<DeckEventOnLeftClickUp>(InternalOnLeftClickUp);
             DeckEventManager.Register<DeckEventOnMouseMove>(InternalOnMouseMove);
 
-            BuildingService = Deck.GetService<DeckServiceBuilding>();
+            BuildingService = Services.DeckServiceProvider.GetService<DeckServiceBuilding>();
             DeckEventOnBuildModeStarted.Create().Send();
 
-            Deck.GetService<DeckServiceEscapable>().RegisterEscapable(this);
+            Services.DeckServiceProvider.GetService<DeckServiceEscapable>().RegisterEscapable(this);
 
             InternalOnInitialize();
         }

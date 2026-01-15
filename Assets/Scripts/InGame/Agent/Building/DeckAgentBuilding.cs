@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Deck.Base;
-using Deck.Data.Buildable;
-using Deck.Save;
-using Deck.Services.Currency;
-using Deck.Services.Finder;
-using Deck.Services.ItemVisual;
-using Deck.Utility;
+using Base;
+using Data.Buildable;
+using Services;
+using Services.Currency;
+using Services.Finder;
+using Services.ItemVisual;
+using Systems.SystemSave;
 using UnityEngine;
+using Utility;
 
-namespace Deck.InGame.Agent.Building
+namespace InGame.Agent.Building
 {
     public class DeckAgentBuilding : DeckAgent
     {
@@ -27,15 +28,35 @@ namespace Deck.InGame.Agent.Building
 
         public void InitializeBuilding()
         {
-            Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
-            RaiseItemVisualChanged();
-
-            itemVisualInstance.transform.parent = SelfTransform;
-
-            if (setVisualPosition)
+            if (buildingData.Indices.Length == 1)
             {
-                itemVisualInstance.transform.localPosition = Vector3.zero;
-                itemVisualInstance.transform.localRotation = Quaternion.identity;
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
+                RaiseItemVisualChanged();
+
+                itemVisualInstance.transform.parent = SelfTransform;
+
+                if (setVisualPosition)
+                {
+                    itemVisualInstance.transform.localPosition = Vector3.zero;
+                    itemVisualInstance.transform.localRotation = Quaternion.identity;
+                }
+            }
+            else if (buildingData.Indices.Length > 1)
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(this, buildingData.ItemVisual.PrefabId, buildingData.Indices.Length, SelfTransform.position.ToVector2Int(), buildingData.Indices, out itemVisualInstances);
+                RaiseItemVisualChanged();
+                SetItemVisuals(itemVisualInstances);
+
+                for (var i = 0; i < itemVisualInstances.Length; i++)
+                {
+                    var deckItemVisual = itemVisualInstances[i];
+                    deckItemVisual.transform.parent = SelfTransform;
+
+                    if (!setVisualPosition) continue;
+
+                    deckItemVisual.transform.localPosition = buildingData.Indices[i].ToVector3();
+                    deckItemVisual.transform.localRotation = Quaternion.identity;
+                }
             }
 
             InternalAfterBuildingInitialized();
@@ -55,12 +76,16 @@ namespace Deck.InGame.Agent.Building
                 onTopOf.RemoveBuildingFromTop(this);
             }
 
-            if (itemVisualInstance != null)
+            if (isMultiInstance && itemVisualInstances != null)
             {
-                Deck.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisuals(itemVisualInstances);
+            }
+            else if (itemVisualInstance != null)
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
             }
 
-            Deck.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
+            DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
 
             instanceProvider.ReturnAgent(this);
         }
@@ -101,16 +126,16 @@ namespace Deck.InGame.Agent.Building
             var additionalData = DeckSaveUtility.GetDeserializedData<BuildingAdditionalData>(data);
             foreach (var i in additionalData.agentUniqueIdsOfBuildingsOnTop)
             {
-                var buildingOnTop = (DeckAgentBuilding)Deck.GetService<DeckServiceFinder>().GetAgent(i);
+                var buildingOnTop = (DeckAgentBuilding)DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(i);
                 AddBuildingToTop(buildingOnTop);
             }
 
             InternalLoadAdditionalBuildingData(additionalData.internalAdditionalData);
         }
 
-        public void SetBuildingData(DeckBuildable buildingData)
+        public void SetBuildingData(DeckBuildable dataToSet)
         {
-            this.buildingData = buildingData;
+            buildingData = dataToSet;
         }
 
         public virtual Vector3[] GetAccessPosition()

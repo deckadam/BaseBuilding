@@ -1,22 +1,22 @@
 using Cysharp.Threading.Tasks;
-using Deck.InGame.Agent.Building;
-using Deck.Services.Building;
-using Deck.Utility;
-using UnityEngine;
+using InGame.Agent.Building;
+using Services;
+using Services.Building;
+using Utility;
 
-namespace Deck.InGame.Agent.BarTable
+namespace InGame.Agent.BarTable
 {
     public class DeckAgentAgentBarTable : DeckAgentBuilding
     {
         protected override async void InternalAfterBuildingInitialized()
         {
             await UniTask.Yield();
-            Deck.GetService<DeckServiceBuilding>().SetCellOccupied(transform.position.ToVector2Int(), BuildingData.Indices, this);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(transform.position.ToVector2Int(), BuildingData.Indices, this);
         }
 
         protected override void OnAgentDestroyed()
         {
-            Deck.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), BuildingData.Indices);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), BuildingData.Indices);
         }
     }
 }

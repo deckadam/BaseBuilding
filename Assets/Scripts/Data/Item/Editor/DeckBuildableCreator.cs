@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using Base;
+using Data.Buildable;
 using Deck.Base;
-using Deck.Data.Buildable;
-using Deck.InGame.Agent.Building;
-using Deck.Instancing;
-using Deck.ItemVisualProviders;
-using Deck.UI.Building;
-using Deck.UI.Building.BuildingSets;
-using Deck.UI.Building.BuildingSets.BuildingMiscellaneous;
-using Deck.UI.Building.BuildingSets.BuildingWallsAndDoors;
-using Deck.UI.Building.BuildingSets.DeckBuildingBarTable;
-using Deck.UI.Building.BuildingSets.DeckBuildingFurniture;
-using Deck.Utility;
+using InGame.Agent.Building;
+using Instancing;
+using ItemVisualProviders;
+using UI.Building;
+using UI.Building.BuildingSets;
+using UI.Building.BuildingSets.DeckBuidlingMiscellaneous;
+using UI.Building.BuildingSets.DeckBuildingBarTable;
+using UI.Building.BuildingSets.DeckBuildingFurniture;
+using UI.Building.BuildingSets.DeckBuildingRooms;
+using UI.Building.BuildingSets.DeckBuildingWallsAndDoors;
 using UI.Building.BuildMode;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using Utility;
 
-namespace Deck.Data.Item.Editor
+namespace Data.Item.Editor
 {
     public class DeckBuildableCreator : EditorWindow
     {
@@ -113,6 +115,11 @@ namespace Deck.Data.Item.Editor
 
                 case DeckBuildableType.BarTable:
                     page = Resources.FindObjectsOfTypeAll<DeckBuildingPageBarTable>()[0];
+                    suffix = "BarTable";
+                    break;
+                
+                case DeckBuildableType.Room:
+                    page = Resources.FindObjectsOfTypeAll<DeckBuildingPageRooms>()[0];
                     suffix = "BarTable";
                     break;
 

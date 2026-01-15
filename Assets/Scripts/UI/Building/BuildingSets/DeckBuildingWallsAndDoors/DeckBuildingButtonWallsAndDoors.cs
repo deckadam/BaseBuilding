@@ -1,4 +1,4 @@
-namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
+namespace UI.Building.BuildingSets.DeckBuildingWallsAndDoors
 {
     public class DeckBuildingButtonWallsAndDoors : DeckBuildingButton
     {

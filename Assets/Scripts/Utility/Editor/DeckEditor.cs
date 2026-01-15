@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Deck.Data.Buildable;
-using Deck.EventManager;
-using Deck.InputHandling.Events;
-using Deck.Instancing;
+using Data.Buildable;
+using EventManager;
+using Instancing;
+using Systems.SystemInput.Events;
 using UnityEditor;
 using UnityEngine;
 
-namespace Deck.Utility.Editor
+namespace Utility.Editor
 {
     public static class DeckEditor
     {

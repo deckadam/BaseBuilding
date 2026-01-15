@@ -1,8 +1,9 @@
 ﻿using Deck.Base;
 using Deck.Data.ItemDrop;
-using Deck.Services.ItemVisual;
 using Deck.Utility;
+using Services.ItemVisual;
 using UnityEngine;
+using Utility;
 using Random = UnityEngine.Random;
 
 namespace Deck.Components
@@ -33,7 +34,7 @@ namespace Deck.Components
             var item = drop.itemDrop.GetItem();
             for (var i = 0; i < drop.amount; i++)
             {
-                if (!Deck.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem))
+                if (!global::Services.DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem))
                 {
                     DeckLogger.Error("Item visual not found for id " + item.Representation.PrefabId);
                     continue;

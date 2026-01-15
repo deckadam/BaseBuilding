@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Utility
+namespace Utility
 {
     public class DeckSingleton<T> : MonoBehaviour where T : DeckSingleton<T>
     {

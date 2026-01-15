@@ -1,6 +1,6 @@
-﻿using Deck.EventManager;
+﻿using EventManager;
 
-namespace Deck.Utility
+namespace Utility
 {
     public static class DeckEventUtility
     {

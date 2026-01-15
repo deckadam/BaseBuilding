@@ -1,12 +1,13 @@
 using System;
 using System.Threading;
+using Base;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
 using Deck.General;
-using Deck.Save;
-using Deck.Services.Finder;
 using Deck.Utility.Constants;
+using Services.Finder;
+using Systems.SystemSave;
 
 namespace Deck.Commands.Sittable
 {
@@ -48,8 +49,8 @@ namespace Deck.Commands.Sittable
         public override void LoadSaveData(string data)
         {
             var deserializedData = DeckSaveUtility.GetDeserializedData<DeckCommandSitSaveData>(data);
-            _target = Deck.GetService<DeckServiceFinder>().GetAgent(deserializedData.targetId);
-            _sittable = Deck.GetService<DeckServiceFinder>().GetAgent(deserializedData.sittableId);
+            _target = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(deserializedData.targetId);
+            _sittable = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(deserializedData.sittableId);
         }
 
         [Serializable]

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck
+namespace InGame.Map
 {
     public class DeckGround : MonoBehaviour
     {

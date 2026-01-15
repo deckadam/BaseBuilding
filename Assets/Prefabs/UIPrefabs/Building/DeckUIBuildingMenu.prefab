@@ -279,5 +279,7 @@ MonoBehaviour:
     page: {fileID: 429786604705594565, guid: 1bf0cddb387380a40ae02170baaa811f, type: 3}
   - button: {fileID: 4902240436691805134, guid: a78c2ba81073e314d9cc566a0670029e, type: 3}
     page: {fileID: 429786604705594565, guid: 1afdac9b72a092246b48cae55d3c3020, type: 3}
+  - button: {fileID: -8058635555420699225, guid: 53594910e72e4554e920ff90f44a623c, type: 3}
+    page: {fileID: 429786604705594565, guid: 9fd4a288e21678c4f8328d15d2e575f3, type: 3}
   buttonsContainer: {fileID: 8158672689194224392}
   pagesContainer: {fileID: 4922600709843253251}

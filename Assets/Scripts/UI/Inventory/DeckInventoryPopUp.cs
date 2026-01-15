@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Deck.Components;
 using Deck.Data.Item;
-using Deck.ItemVisualProviders.Inventory;
+using Services.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Deck.UI.Inventory
+namespace UI.Inventory
 {
     public class DeckInventoryPopUp : DeckPopUpBase, IPointerEnterHandler, IPointerExitHandler
     {
@@ -17,7 +17,7 @@ namespace Deck.UI.Inventory
 
         public void SetTarget(DeckComponentInventory componentInventory)
         {
-            _serviceInventory = Deck.GetService<DeckServiceInventory>();
+            _serviceInventory = Services.DeckServiceProvider.GetService<DeckServiceInventory>();
 
             _componentInventory = componentInventory;
             _componentInventory.AddListener(CreateNewCells);

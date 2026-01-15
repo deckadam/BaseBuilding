@@ -1,7 +1,7 @@
-using Deck.EventManager;
+using EventManager;
 using UnityEngine;
 
-namespace Deck.Services.AreaController.Events
+namespace Services.AreaController.Events
 {
     public struct DeckEventOnWallBuild : IDeckEvent
     {

@@ -1,26 +1,31 @@
 using System.Collections.Generic;
 using System.Linq;
+using Base;
 using Deck.Base;
-using Deck.Utility;
 using Deck.Utility.Iterators;
 using UnityEngine;
+using Utility;
 
-namespace Deck.ItemVisualProviders
+namespace ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderWall", menuName = "Service/ItemVisualManager/DeckItemVisualProviderWall")]
     public class DeckItemVisualProviderWall : DeckItemVisualProviderBasic
     {
         [SerializeField] private DeckItemVisual horizontalPrefab;
         [SerializeField] private DeckItemVisual verticalPrefab;
+
         [SerializeField] private DeckItemVisual twoCornerUpperLeftPrefab;
         [SerializeField] private DeckItemVisual twoCornerUpperRightPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerLeftPrefab;
         [SerializeField] private DeckItemVisual twoCornerLowerRightPrefab;
+
         [SerializeField] private DeckItemVisual threeCornerUpperPrefab;
         [SerializeField] private DeckItemVisual threeCornerLowerPrefab;
         [SerializeField] private DeckItemVisual threeCornerLeftPrefab;
         [SerializeField] private DeckItemVisual threeCornerRightPrefab;
+
         [SerializeField] private DeckItemVisual fourCornerPrefab;
+
         [SerializeField] private DeckItemVisual emptyPrefab;
 
         private Dictionary<Vector2Int, DeckItemVisual> _activeWalls;
@@ -88,6 +93,30 @@ namespace Deck.ItemVisualProviders
             return true;
         }
 
+        public override bool RequestMultipleItemVisuals(DeckAgent agent, DeckId prefabId, Vector2Int[] indices, out DeckItemVisual[] itemVisuals)
+        {
+            if (!IsSupportedItemVisual(prefabId))
+            {
+                itemVisuals = null;
+                return false;
+            }
+            
+            foreach (var index in indices)
+            {
+                _wallCheckSet.Add(index);
+                _activeWallAgents[index] = agent;
+            }
+
+            itemVisuals = new DeckItemVisual[indices.Length];
+            for (var i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                itemVisuals[i] = PlaceItemVisual(index, false);
+            }
+
+            return true;
+        }
+
         private DeckItemVisual PlaceWallWithNeighbours(Vector2Int position)
         {
             var neighbours = position.GetNeighbours();
@@ -102,7 +131,7 @@ namespace Deck.ItemVisualProviders
             return PlaceItemVisual(position);
         }
 
-        private DeckItemVisual PlaceItemVisual(Vector2Int position)
+        private DeckItemVisual PlaceItemVisual(Vector2Int position, bool setItemVisual = true)
         {
             var checkList = new bool[4];
 
@@ -118,7 +147,12 @@ namespace Deck.ItemVisualProviders
             var agent = _activeWallAgents[position];
             var itemVisualPrefab = GetVisualToPlace(checkList);
             RentIfHasItemVisual(itemVisualPrefab.PrefabId, out var itemVisualInstance);
-            agent.SetItemVisual(itemVisualInstance);
+
+            if (setItemVisual)
+            {
+                agent.SetItemVisual(itemVisualInstance);
+            }
+
             itemVisualInstance.SetAgent(agent);
 
             _activeWalls[position] = itemVisualInstance;

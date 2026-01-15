@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading;
+using Base;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
-using Deck.Save;
-using Deck.Services.Finder;
+using Services.Finder;
+using Systems.SystemSave;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -40,7 +41,7 @@ namespace Deck.Commands
             var loadedData = DeckSaveUtility.GetDeserializedData<CommandMoveSaveData>(saveData);
 
             _targetPosition = loadedData.targetPosition;
-            _agent = Deck.GetService<DeckServiceFinder>().GetAgent(loadedData.agentId);
+            _agent = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.agentId);
         }
 
         [Serializable]

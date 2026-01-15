@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Deck.Utility.Iterators;
 using UnityEngine;
 
-namespace Deck.Utility
+namespace Utility
 {
     public static class DeckVectorUtility
     {

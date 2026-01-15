@@ -1,8 +1,8 @@
-using Deck.Data.Buildable;
+using Data.Buildable;
 using Deck.Services.Cam;
 using UnityEngine;
 
-namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
+namespace UI.Building.BuildingSets.DeckBuildingWallsAndDoors
 {
     public class DeckBuildingPageWallsAndDoors : DeckBuildingPage
     {
@@ -14,7 +14,7 @@ namespace Deck.UI.Building.BuildingSets.BuildingWallsAndDoors
 
         protected override void InternalInitialize()
         {
-            _serviceCamera = Deck.GetService<DeckServiceCamera>();
+            _serviceCamera = Services.DeckServiceProvider.GetService<DeckServiceCamera>();
         }
 
         public override Quaternion GetBuildableRotation(DeckBuildable buildable)

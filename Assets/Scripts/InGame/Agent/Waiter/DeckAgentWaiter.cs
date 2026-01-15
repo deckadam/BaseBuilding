@@ -1,17 +1,16 @@
 ﻿using Deck.Base;
 using Deck.Commands;
-using Deck.InputHandling.Events;
-using Deck.Utility;
 using Deck.Waiter;
-using UnityEngine;
+using Systems.SystemInput.Events;
+using Utility;
 
-namespace Deck.InGame.Agent.Waiter
+namespace InGame.Agent.Waiter
 {
     public class DeckAgentWaiter : DeckAgentHumanoid
     {
         protected override void InternalHumanoidDespawnRequested()
         {
-            Deck.GetService<DeckServiceWaiter>().RemoveAvailableWaiter(this);
+            Services.DeckServiceProvider.GetService<DeckServiceWaiter>().RemoveAvailableWaiter(this);
         }
 
         protected override void InternalHumanoidSpawnRequested()
@@ -21,8 +20,7 @@ namespace Deck.InGame.Agent.Waiter
 
         protected override void InternalOnWaiting()
         {
-            Debug.LogError("Waiting");
-            Deck.GetService<DeckServiceWaiter>().RegisterAvailableWaiter(this);
+            Services.DeckServiceProvider.GetService<DeckServiceWaiter>().RegisterAvailableWaiter(this);
         }
 
         public void ProcessOrder(DeckCommand order)

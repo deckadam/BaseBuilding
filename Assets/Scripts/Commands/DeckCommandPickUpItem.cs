@@ -3,8 +3,8 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Deck.Base;
 using Deck.Components;
-using Deck.Save;
-using Deck.Services.Finder;
+using Services.Finder;
+using Systems.SystemSave;
 
 namespace Deck.Commands
 {
@@ -42,8 +42,8 @@ namespace Deck.Commands
         public override void LoadSaveData(string saveData)
         {
             var data = DeckSaveUtility.GetDeserializedData<SaveData>(saveData);
-            var agent = Deck.GetService<DeckServiceFinder>().GetAgent(data.targetAgentId);
-            _itemVisual = Deck.GetService<DeckServiceFinder>().GetItemVisual(data.prefabId);
+            var agent = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(data.targetAgentId);
+            _itemVisual = global::Services.DeckServiceProvider.GetService<DeckServiceFinder>().GetItemVisual(data.prefabId);
             _inventory = agent.GetDeckComponent<DeckComponentInventory>();
             _movement = agent.GetDeckComponent<DeckComponentMovement>();
         }

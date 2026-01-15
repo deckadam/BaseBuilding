@@ -1,8 +1,7 @@
-using Deck.InputHandling.Events;
-using Deck.Services.Building;
-using UnityEngine;
+using Services.Building;
+using Systems.SystemInput.Events;
 
-namespace Deck.UI.Building.BuildMode
+namespace UI.Building.BuildMode
 {
     public class DeckEscapableBuildModeInCell : DeckEscapableBuildMode
     {
@@ -24,7 +23,7 @@ namespace Deck.UI.Building.BuildMode
 
         protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
         {
-            Deck.GetService<DeckServiceBuilding>().BuildInCell(_canReplace);
+            Services.DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInCell(_canReplace);
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
             BuildingService.UpdateSilhouetteInCell(rotation, _canReplace);
         }

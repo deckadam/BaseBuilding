@@ -192,10 +192,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId:
     _id: 42982892
-    IdString: 57288778
   rectTransform: {fileID: 3500354199899450660}
   movementDuration: 0.2
-  movementEase: 3
+  movementEase: 27
   appearPosition: {x: 0, y: 50}
   disappearPosition: {x: 0, y: 0}
   background: {fileID: 5738685041691142213}

@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Deck.UI.Building
+namespace UI.Building
 {
     public class DeckBuildingButton : DeckUIElement, IDeckEscapable
     {
@@ -38,7 +38,7 @@ namespace Deck.UI.Building
         {
             this.uiBuilding = uiBuilding;
             this.page = page;
-            _escapableService = Deck.GetService<DeckServiceEscapable>();
+            _escapableService = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
             OnInitialize();
         }
 

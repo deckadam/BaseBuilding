@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Deck.Data.Currency;
-using Deck.Services.Currency;
+using Services.Currency;
+using UI;
 using UnityEngine;
 
 namespace Deck.UI.Currency
@@ -14,7 +15,7 @@ namespace Deck.UI.Currency
 
         public override void AfterGameSessionInitialized()
         {
-            _currencies = Deck.GetService<DeckServiceCurrency>().GetCurrencies();
+            _currencies = global::Services.DeckServiceProvider.GetService<DeckServiceCurrency>().GetCurrencies();
             for (var index = 0; index < _currencies.Length; index++)
             {
                 _currencies[index] = DeckCurrency.Create(_currencies[index]);

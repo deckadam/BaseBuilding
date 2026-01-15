@@ -5,7 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Deck.Utility
+namespace Utility
 {
     public static class DeckClassUtility
     {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Deck.Data.Buildable;
-using Deck.Data.General;
+using Data.Buildable;
+using Data.General;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
 
-namespace Deck.Services.Building
+namespace Services.Building
 {
     public class DeckSilhouetteProvider
     {

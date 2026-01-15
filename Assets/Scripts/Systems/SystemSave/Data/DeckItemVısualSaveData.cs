@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace Deck.Save
+namespace Systems.SystemSave.Data
 {
     [Serializable]
     public struct DeckItemVisualSaveDatas

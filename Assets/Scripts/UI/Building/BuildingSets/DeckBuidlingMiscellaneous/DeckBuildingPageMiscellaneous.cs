@@ -1,4 +1,4 @@
-namespace Deck.UI.Building.BuildingSets.BuildingMiscellaneous
+namespace UI.Building.BuildingSets.DeckBuidlingMiscellaneous
 {
     public class DeckBuildingPageMiscellaneous : DeckBuildingPage
     {

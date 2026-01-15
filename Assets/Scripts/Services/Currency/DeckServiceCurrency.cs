@@ -1,9 +1,9 @@
 using System.Linq;
 using Deck.Data.Currency;
-using Deck.Save;
+using Systems.SystemSave;
 using UnityEngine;
 
-namespace Deck.Services.Currency
+namespace Services.Currency
 {
     public class DeckServiceCurrency : DeckServiceBase
     {

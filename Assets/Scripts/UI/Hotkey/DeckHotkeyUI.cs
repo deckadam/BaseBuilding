@@ -1,5 +1,6 @@
-﻿using Deck.EventManager;
-using Deck.UI.Hotkey.Events;
+﻿using Deck.UI.Hotkey.Events;
+using EventManager;
+using UI;
 
 namespace Deck.UI.Hotkey
 {

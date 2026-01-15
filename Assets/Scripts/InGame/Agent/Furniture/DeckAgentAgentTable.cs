@@ -1,6 +1,7 @@
-using Deck.InGame.Agent.Building;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
+using InGame.Agent.Building;
+using Utility;
 
 namespace Deck.InGame.Agent.Furniture
 {

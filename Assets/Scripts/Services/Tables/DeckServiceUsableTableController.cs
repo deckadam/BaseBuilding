@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
-using Deck.EventManager;
 using Deck.InGame.Agent.Furniture;
 using Deck.Services.Tables.Events;
 using Deck.Utility;
+using EventManager;
+using Services;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utility;
 
 namespace Deck.Services.Tables
 {

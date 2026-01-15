@@ -1,7 +1,7 @@
 ﻿using Cinemachine;
 using UnityEngine;
 
-namespace Deck
+namespace InGame.Map
 {
     public class DeckMap : MonoBehaviour
     {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Deck.InGame.Agent.Waiter;
+using InGame.Agent.Waiter;
+using Services;
 using UnityEngine;
 
 namespace Deck.Waiter
@@ -16,7 +17,6 @@ namespace Deck.Waiter
         public void RegisterAvailableWaiter(DeckAgentWaiter waiter)
         {
             _availableWaiters.Add(waiter);
-            Debug.LogError(_availableWaiters.Count);
         }
 
         public void RemoveAvailableWaiter(DeckAgentWaiter waiter)

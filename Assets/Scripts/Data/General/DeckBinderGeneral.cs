@@ -1,13 +1,13 @@
-﻿using Deck.InGame.Agent.Waiter;
-using Deck.Instancing;
-using Deck.ItemVisualProviders;
-using Deck.Save;
-using Deck.Services.Building;
+﻿using InGame.Agent.Waiter;
+using Instancing;
+using ItemVisualProviders;
+using Services.Building;
+using Systems.SystemSave;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
 
-namespace Deck.Data.General
+namespace Data.General
 {
     [CreateAssetMenu(menuName = "Deck/Binder/General", fileName = "Deck Binder General")]
     public class DeckBinderGeneral : ScriptableObjectInstaller
@@ -16,7 +16,9 @@ namespace Deck.Data.General
         [SerializeField] private DeckItemVisualProviderWall wallProvider;
         [SerializeField] private DeckItemVisualProviderDoor doorProvider;
 
-        [FormerlySerializedAs("agentCorePrefab")] [SerializeField] private DeckAgentWaiter agentWaiterPrefab;
+        [FormerlySerializedAs("agentCorePrefab")] [SerializeField]
+        private DeckAgentWaiter agentWaiterPrefab;
+
         [SerializeField] private DeckInstanceProvider instanceProvider;
 
         public override void InstallBindings()

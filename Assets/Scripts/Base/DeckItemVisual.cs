@@ -2,9 +2,10 @@
 using UnityEditor;
 #endif
 using System;
-using Deck.Utility;
+using Base;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Utility;
 using Random = UnityEngine.Random;
 
 namespace Deck.Base
@@ -101,24 +102,33 @@ namespace Deck.Base
             }
         }
 
+#if UNITY_EDITOR
         [Button]
         public void OnValidate()
         {
             rigidbody = GetComponent<Rigidbody>();
             isStatic = rigidbody == null;
 
-#if UNITY_EDITOR
             if (!PrefabUtility.IsPartOfPrefabAsset(gameObject))
             {
                 return;
             }
-#endif
 
             foreach (var itemVisual in Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual)))
             {
                 var itemVisualComponent = itemVisual as DeckItemVisual;
 
-                if (itemVisualComponent.name == name)
+                if (itemVisualComponent == null)
+                {
+                    continue;
+                }
+
+                if (itemVisualComponent.GetHashCode() == GetHashCode())
+                {
+                    continue;
+                }
+
+                if (itemVisualComponent.GetInstanceID() == GetInstanceID())
                 {
                     continue;
                 }
@@ -129,7 +139,7 @@ namespace Deck.Base
                 }
             }
 
-            if (int.TryParse(name[^1].ToString(), out var _))
+            if (int.TryParse(name[^1].ToString(), out _))
             {
                 prefabId.ResetId();
                 return;
@@ -140,6 +150,7 @@ namespace Deck.Base
                 prefabId = DeckId.CreateNew();
             }
         }
+#endif
 
         public void SetAgent(DeckAgent agent)
         {

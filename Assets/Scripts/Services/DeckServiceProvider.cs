@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Services;
+using Deck;
 using Deck.Utility;
 using UnityEngine;
+using Utility;
 using Object = UnityEngine.Object;
 
-namespace Deck
+namespace Services
 {
-    public static class Deck
+    public static class DeckServiceProvider
     {
         private static Dictionary<Type, DeckServiceBase> _services;
 

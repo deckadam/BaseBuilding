@@ -4,7 +4,7 @@ using Deck.UI.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Deck.UI
+namespace UI
 {
     [RequireComponent(typeof(EventTrigger))]
     public abstract class DeckPopUpBase : DeckUIElement
@@ -52,7 +52,7 @@ namespace Deck.UI
         public void Show()
         {
             gameObject.SetActive(true);
-            var gamePlayUIRect = Deck.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform();
+            var gamePlayUIRect = Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIGamePlay>().GetRectTransform();
             rect.SetParent(gamePlayUIRect, false);
             rect.anchoredPosition = Vector2.zero;
         }

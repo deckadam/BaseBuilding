@@ -1,7 +1,7 @@
-﻿using Deck.EventManager;
-using Deck.InGame.Agent.Waiter;
+﻿using EventManager;
+using InGame.Agent.Waiter;
 
-namespace Deck.InputHandling.Events
+namespace Systems.SystemInput.Events
 {
     public class DeckEventOnCoreAgentCreated : IDeckEvent
     {

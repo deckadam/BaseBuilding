@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Deck.Save
+namespace Systems.SystemSave
 {
     public static class DeckSaveUtility
     {

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using Base;
 using Deck.Base;
-using Deck.Utility;
 using UnityEngine;
+using Utility;
 using Zenject;
 
-namespace Deck.ItemVisualProviders
+namespace ItemVisualProviders
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderDoor", menuName = "Service/ItemVisualManager/DeckItemVisualProviderDoor")]
     public class DeckItemVisualProviderDoor : DeckItemVisualProviderBasic

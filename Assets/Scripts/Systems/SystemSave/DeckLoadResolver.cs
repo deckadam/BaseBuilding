@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using Deck.Base;
-using Deck.Instancing;
-using Deck.Utility;
+using Base;
+using Instancing;
+using Systems.SystemSave.Data;
+using Utility;
 using Zenject;
 
-namespace Deck.Save
+namespace Systems.SystemSave
 {
     public class DeckLoadResolver
     {

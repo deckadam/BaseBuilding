@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.UI
+namespace UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public class DeckUIBase : DeckUIElement

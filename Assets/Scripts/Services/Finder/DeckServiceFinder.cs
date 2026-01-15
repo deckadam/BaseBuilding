@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Base;
 using Deck.Base;
 
-namespace Deck.Services.Finder
+namespace Services.Finder
 {
     public class DeckServiceFinder : DeckServiceBase
     {
