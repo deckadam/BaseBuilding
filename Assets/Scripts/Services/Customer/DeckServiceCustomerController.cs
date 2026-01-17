@@ -1,15 +1,14 @@
 using Commands.Sittable;
+using Components.Movement;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
-using Deck.Services.Tables.Events;
 using EventManager;
 using InGame.Agent.Customer;
 using Instancing;
-using Services;
+using Services.Tables.Events;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Services.Customer
+namespace Services.Customer
 {
     public class DeckServiceCustomerController : DeckServiceBase
     {

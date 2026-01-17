@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Utility.Animators
+namespace Utility.Animators
 {
     [CreateAssetMenu(menuName = "Deck/Data/Animation/Deck Animation Parameters Animation Curve", fileName = "Deck Animation Parameters Animation Curve")]
     public class DeckAnimationParametersAnimationCurve : ScriptableObject

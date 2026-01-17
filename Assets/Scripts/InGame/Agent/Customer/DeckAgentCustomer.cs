@@ -1,7 +1,7 @@
+using Base;
 using Commands;
 using Commands.Sittable;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
 using Services;
 using Services.Order;
 using Sirenix.OdinInspector;
@@ -26,7 +26,6 @@ namespace InGame.Agent.Customer
 
         private async void OnOrderCompleted()
         {
-            Debug.LogError("Order completed");
             await UniTask.Delay(2000);
             EnqueueCommand(new DeckCommandGetUp(this));
 

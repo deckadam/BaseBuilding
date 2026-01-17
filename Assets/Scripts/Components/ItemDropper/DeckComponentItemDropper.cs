@@ -1,5 +1,5 @@
-﻿using Deck.Base;
-using Deck.Data.ItemDrop;
+﻿using Base;
+using Data.ItemDrop;
 using Services;
 using Services.ItemVisual;
 using UnityEngine;

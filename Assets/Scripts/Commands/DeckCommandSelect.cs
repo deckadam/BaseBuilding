@@ -1,4 +1,4 @@
-﻿namespace Deck.Commands
+﻿namespace Commands
 {
     public class DeckCommandSelect : DeckCommand
     {

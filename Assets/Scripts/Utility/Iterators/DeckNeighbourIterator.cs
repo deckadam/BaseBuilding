@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Deck.Utility.Iterators
+namespace Utility.Iterators
 {
     public static class DeckNeighbourIterator
     {

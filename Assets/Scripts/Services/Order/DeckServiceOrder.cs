@@ -36,7 +36,6 @@ namespace Services.Order
 
         public void RegisterNewOrder(DeckRuntimeOrder newOrder)
         {
-            Debug.LogError("Register");
             _nonProcessedOrders.Enqueue(newOrder);
         }
 

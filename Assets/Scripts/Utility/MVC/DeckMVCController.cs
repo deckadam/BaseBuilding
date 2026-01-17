@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Deck.Utility.MVC
+namespace Utility.MVC
 {
     public class DeckMVCController<T, J> where T : class where J : class
     {

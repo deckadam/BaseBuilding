@@ -1,4 +1,4 @@
-namespace Deck.Services.UI
+namespace Services.UI
 {
     public interface IDeckEscapable
     {

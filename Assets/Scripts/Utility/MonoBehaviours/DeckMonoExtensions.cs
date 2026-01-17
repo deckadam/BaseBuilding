@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Deck.Utility.MonoBehaviours
+namespace Utility.MonoBehaviours
 {
     public static class DeckMonoExtensions
     {

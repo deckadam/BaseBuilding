@@ -1,13 +1,13 @@
 ﻿using System;
+using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Data.Component;
-using Deck.UI.Stats;
+using Data.Component;
 using Systems.SystemSave;
+using UI.Stats;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Deck.Components
+namespace Components.Movement
 {
     [Serializable]
     public class DeckComponentMovement : DeckComponent

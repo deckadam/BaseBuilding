@@ -1,5 +1,5 @@
 using Data.Buildable;
-using Deck.Services.Cam;
+using Services.Camera;
 using UnityEngine;
 
 namespace UI.Building.BuildingSets.DeckBuildingWallsAndDoors

@@ -1,6 +1,6 @@
 ﻿using EventManager;
 
-namespace Deck.UI.Hotkey.Events
+namespace UI.Hotkey.Events
 {
     public class DeckEventOnActiveHotkeyCountChanged : IDeckEvent
     {

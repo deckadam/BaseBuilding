@@ -1,20 +1,20 @@
 ﻿using System.Threading;
+using Base;
+using Components.AnimatingComponents.Interfaces;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Components;
-using Deck.Data.Item;
-using Deck.Services.Selection;
-using Deck.Services.UI;
-using Deck.UI.GamePlay;
+using Data.Item;
 using Services.Inventory;
+using Services.Selection;
+using Services.UI;
 using TMPro;
+using UI.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Inventory
 {
-    public class DeckInventoryDisplayerCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+    public class DeckInventoryDisplayCell : DeckUIElement, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image image;
         [SerializeField] private TextMeshProUGUI amountText;

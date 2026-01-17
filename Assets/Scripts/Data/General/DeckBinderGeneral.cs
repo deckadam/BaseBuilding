@@ -1,10 +1,11 @@
 ﻿using InGame.Agent.Waiter;
+using InGame.Map.Data;
 using Instancing;
 using ItemVisualProviders;
+using ItemVisualProviders.Door;
 using Services.Building;
 using Systems.SystemSave;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Data.General
@@ -15,11 +16,9 @@ namespace Data.General
         [SerializeField] private DeckItemVisualProviderBasic[] itemVisualProviders;
         [SerializeField] private DeckItemVisualProviderWall wallProvider;
         [SerializeField] private DeckItemVisualProviderDoor doorProvider;
-
-        [FormerlySerializedAs("agentCorePrefab")] [SerializeField]
-        private DeckAgentWaiter agentWaiterPrefab;
-
+        [SerializeField] private DeckAgentWaiter agentWaiterPrefab;
         [SerializeField] private DeckInstanceProvider instanceProvider;
+        [SerializeField] private DeckDataMap mapData;
 
         public override void InstallBindings()
         {
@@ -31,6 +30,7 @@ namespace Data.General
             Container.BindInstance(wallProvider);
             Container.BindInstance(doorProvider);
             Container.BindInstance(instanceProvider);
+            Container.BindInstance(mapData);
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {

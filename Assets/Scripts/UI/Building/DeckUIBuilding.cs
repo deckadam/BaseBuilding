@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Deck.Services.UI;
 using EventManager;
 using Services.Escapable;
+using Services.UI;
 using UI.MainMenu.Events;
 using UnityEngine;
 

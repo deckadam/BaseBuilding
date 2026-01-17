@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck;
-using Deck.Utility;
 using UnityEngine;
 using Utility;
 using Object = UnityEngine.Object;

@@ -1,11 +1,10 @@
-using Deck.Services.Tables.Events;
-using Deck.Utility;
 using InGame.Agent.Building;
+using Services.Tables.Events;
 using Utility;
 
-namespace Deck.InGame.Agent.Furniture
+namespace InGame.Agent.Furniture
 {
-    public class DeckAgentAgentTable : DeckAgentBuilding
+    public class DeckAgentTable : DeckAgentBuilding
     {
         protected override void InternalAfterBuildingInitialized()
         {

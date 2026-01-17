@@ -1,13 +1,13 @@
 ﻿using System.Threading;
+using Components.Inventory;
+using Components.Movement;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
-using Deck.Data.Item;
-using Deck.Services.Selection;
-using Deck.Utility;
-using Deck.Utility.Constants;
+using Data.Item;
+using Services.Selection;
 using Utility;
+using Utility.Constants;
 
-namespace Deck.Commands
+namespace Commands
 {
     public class DeckCommandTransferItem : DeckCommand
     {

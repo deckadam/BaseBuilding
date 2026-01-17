@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Deck.Utility.Animators
+namespace Utility.Animators
 {
     [Serializable]
     public class DeckAnimator

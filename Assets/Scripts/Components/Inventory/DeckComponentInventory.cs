@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Base;
-using Deck.Data.Item;
+using Base;
+using Data.Item;
 
-namespace Deck.Components
+namespace Components.Inventory
 {
     public class DeckComponentInventory : DeckComponent
     {

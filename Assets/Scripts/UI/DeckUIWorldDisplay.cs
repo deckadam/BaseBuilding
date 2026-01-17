@@ -1,9 +1,8 @@
 ﻿using System;
-using Deck.Base;
-using Deck.Services.Cam;
-using Deck.Services.UI;
-using Deck.UI.Health;
-using Deck.Utility;
+using Base;
+using Services.Camera;
+using Services.UI;
+using UI.Health;
 using UnityEngine;
 using Utility;
 
@@ -39,12 +38,12 @@ namespace UI
 
         protected override void InternalOnDeSpawned()
         {
-            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().RemoveDisplay(this);
+            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplay>().RemoveDisplay(this);
         }
 
         protected override void InternalOnSpawned()
         {
-            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplayer>().AddDisplay(this);
+            Services.DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIWorldLabelDisplay>().AddDisplay(this);
         }
 
         private void LateUpdate()

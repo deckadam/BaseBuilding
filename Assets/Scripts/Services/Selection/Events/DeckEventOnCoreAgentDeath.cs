@@ -1,7 +1,7 @@
 ﻿using EventManager;
 using InGame.Agent.Waiter;
 
-namespace Deck.Services.Selection.Events
+namespace Services.Selection.Events
 {
     public class DeckEventOnCoreAgentDeath : IDeckEvent
     {

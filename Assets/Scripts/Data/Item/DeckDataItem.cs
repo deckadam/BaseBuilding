@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Base;
+using Base;
 using UnityEngine;
 
-namespace Deck.Data.Item
+namespace Data.Item
 {
     [CreateAssetMenu(fileName = "Deck Data Item", menuName = "Deck/Data/Item", order = 0)]
     public class DeckDataItem : ScriptableObject

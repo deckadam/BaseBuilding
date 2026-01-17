@@ -1,9 +1,8 @@
 using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
 
-namespace Deck.InGame.AI
+namespace InGame.AI
 {
     public interface IDeckAIState
     {

@@ -1,6 +1,6 @@
 using EventManager;
 
-namespace Deck.Services.Building.Events
+namespace Services.Building.Events
 {
     public struct DeckEventOnBuildModeStopped:IDeckEvent
     {

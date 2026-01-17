@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Deck.Utility.MVC
+namespace Utility.MVC
 {
     public interface IDeckModel<T, J>
     {

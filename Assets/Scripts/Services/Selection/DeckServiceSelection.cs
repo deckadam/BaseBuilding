@@ -1,15 +1,11 @@
 ﻿using Base;
-using Deck.Base;
-using Deck.Commands;
-using Deck.Services.Selection.Events;
-using Deck.Utility;
+using Commands;
 using EventManager;
-using Services;
-using Services.Selection;
+using Services.Selection.Events;
 using Systems.SystemInput.Events;
 using Utility;
 
-namespace Deck.Services.Selection
+namespace Services.Selection
 {
     public class DeckServiceSelection : DeckServiceBase
     {

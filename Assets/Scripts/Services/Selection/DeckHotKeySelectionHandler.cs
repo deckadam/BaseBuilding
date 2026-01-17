@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Base;
-using Deck.Services.Selection;
-using Deck.Services.Selection.Events;
-using Deck.UI.Hotkey.Events;
 using EventManager;
+using Services.Selection.Events;
 using Systems.SystemInput.Events;
+using UI.Hotkey.Events;
 using UnityEngine;
 using Utility;
 

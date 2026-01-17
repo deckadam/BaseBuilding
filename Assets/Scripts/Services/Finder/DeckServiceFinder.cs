@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Base;
-using Deck.Base;
 
 namespace Services.Finder
 {
@@ -24,9 +23,25 @@ namespace Services.Finder
             _itemVisuals[itemVisual.UniqueId.ID] = itemVisual;
         }
 
+        public void BulkRegisterItemVisual(DeckItemVisual[] itemVisual)
+        {
+            foreach (var item in itemVisual)
+            {
+                _itemVisuals[item.UniqueId.ID] = item;
+            }
+        }
+
         public void RemoveItemVisual(DeckItemVisual itemVisual)
         {
             _itemVisuals.Remove(itemVisual.UniqueId.ID);
+        }
+
+        public void RemoveItemVisual(DeckItemVisual[] itemVisual)
+        {
+            foreach (var instance in itemVisual)
+            {
+                _itemVisuals.Remove(instance.UniqueId.ID);
+            }
         }
 
         public DeckItemVisual GetItemVisual(int uniqueId)

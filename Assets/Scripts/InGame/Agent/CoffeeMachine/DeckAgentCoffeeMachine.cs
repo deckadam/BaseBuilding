@@ -6,7 +6,7 @@ using Utility;
 
 namespace InGame.Agent.CoffeeMachine
 {
-    public class DeckAgentAgentCoffeeMachine : DeckAgentBuilding
+    public class DeckAgentCoffeeMachine : DeckAgentBuilding
     {
         protected override void InternalAfterBuildingInitialized()
         {

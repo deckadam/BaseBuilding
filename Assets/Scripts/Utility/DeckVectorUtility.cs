@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Deck.Utility.Iterators;
 using UnityEngine;
+using Utility.Iterators;
 
 namespace Utility
 {

@@ -1,6 +1,4 @@
-﻿using UI;
-
-namespace Deck.UI.GamePlay
+﻿namespace UI.GamePlay
 {
     public class DeckUIGamePlay : DeckUIBase
     {

@@ -1,12 +1,11 @@
 ﻿using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Services.Selection.Events;
 using EventManager;
+using Services.Selection.Events;
 using UnityEngine;
 
-namespace Deck.Selection
+namespace InGame.Selection
 {
     public class DeckSelectionHighlighter : MonoBehaviour
     {

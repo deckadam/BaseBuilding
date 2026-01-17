@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Deck.Base;
-using Deck.Utility.Iterators;
 using EventManager;
 using Services.AreaController.Events;
 using UnityEngine;
 using Utility;
+using Utility.Iterators;
 using Zenject;
 
 namespace ItemVisualProviders
@@ -124,7 +123,7 @@ namespace ItemVisualProviders
                             continue;
                         }
 
-                        ReturnIfHasItemVisual(currentlyPlaced);
+                        TryReturnItemVisual(currentlyPlaced);
                     }
 
                     positionsToRemove.Remove(prefabSet.Item2);
@@ -136,7 +135,7 @@ namespace ItemVisualProviders
 
                 foreach (var positionToRemove in positionsToRemove)
                 {
-                    ReturnIfHasItemVisual(existingValues[positionToRemove]);
+                    TryReturnItemVisual(existingValues[positionToRemove]);
                     existingValues.Remove(positionToRemove);
                 }
 
@@ -148,14 +147,14 @@ namespace ItemVisualProviders
         {
             if (!IsSupportedItemVisual(itemVisual)) return false;
 
-            ReturnIfHasItemVisual(itemVisual);
+            TryReturnItemVisual(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
 
             if (_activeWallConnections.TryGetValue(itemPos, out var existingValues))
             {
                 foreach (var deckItemVisual in existingValues)
                 {
-                    ReturnIfHasItemVisual(deckItemVisual.Value);
+                    TryReturnItemVisual(deckItemVisual.Value);
                 }
 
                 _activeBarTables.Remove(itemPos);
@@ -190,7 +189,7 @@ namespace ItemVisualProviders
             {
                 if (_barTableCheckSet.Contains(neighbour))
                 {
-                    ReturnIfHasItemVisual(_activeBarTables[neighbour]);
+                    TryReturnItemVisual(_activeBarTables[neighbour]);
                     PlaceItemVisual(neighbour);
                 }
 

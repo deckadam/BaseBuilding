@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Deck.Base;
-using Deck.Utility.Iterators;
+using EventManager;
+using ItemVisualProviders.Door.Events;
+using Services.Map;
 using UnityEngine;
 using Utility;
+using Utility.Iterators;
 
 namespace ItemVisualProviders
 {
@@ -33,35 +35,56 @@ namespace ItemVisualProviders
         private HashSet<Vector2Int> _wallCheckSet;
         private HashSet<Vector2Int> _doorCheckSet;
 
-        private HashSet<int> _supportedPrefabIds;
-
         protected override void InternalOnInitialize()
         {
             _activeWalls = new Dictionary<Vector2Int, DeckItemVisual>();
             _activeWallAgents = new Dictionary<Vector2Int, DeckAgent>();
             _wallCheckSet = new HashSet<Vector2Int>();
             _doorCheckSet = new HashSet<Vector2Int>();
+
+            DeckEventManager.Register<DeckEventOnDoorPlaced>(OnDoorPlaced);
+            DeckEventManager.Register<DeckEventOnDoorRemoved>(OnDoorRemoved);
         }
 
-        public void OnDoorPlaced(Vector2Int cellIndex)
+        protected override void InternalOnDeInitialize()
         {
-            if (_wallCheckSet.Contains(cellIndex))
+            DeckEventManager.Unregister<DeckEventOnDoorPlaced>(OnDoorPlaced);
+            DeckEventManager.Unregister<DeckEventOnDoorRemoved>(OnDoorRemoved);
+        }
+
+        private void OnDoorPlaced(DeckEventOnDoorPlaced obj)
+        {
+            if (_wallCheckSet.Contains(obj.position))
             {
-                ReturnIfHasItemVisual(_activeWalls[cellIndex]);
-                _activeWalls.Remove(cellIndex);
-                _activeWallAgents.Remove(cellIndex);
-                _wallCheckSet.Remove(cellIndex);
+                TryReturnItemVisual(_activeWalls[obj.position]);
+                _activeWalls.Remove(obj.position);
+                _activeWallAgents.Remove(obj.position);
+                _wallCheckSet.Remove(obj.position);
             }
 
-            _doorCheckSet.Add(cellIndex);
+            _doorCheckSet.Add(obj.position);
 
-            var neighbours = cellIndex.GetNeighbours();
+            var neighbours = obj.position.GetNeighbours();
             foreach (var neighbour in neighbours)
             {
                 if (!_activeWalls.TryGetValue(neighbour, out var temp)) continue;
 
-                ReturnIfHasItemVisual(temp);
+                TryReturnItemVisual(temp);
                 PlaceItemVisual(neighbour);
+            }
+        }
+
+        private void OnDoorRemoved(DeckEventOnDoorRemoved obj)
+        {
+            _doorCheckSet.Remove(obj.position);
+            var neighbours = obj.position.GetNeighbours();
+            foreach (var neighbour in neighbours)
+            {
+                if (!_wallCheckSet.Contains(neighbour))
+                    continue;
+
+                TryReturnItemVisual(_activeWalls[neighbour]);
+                PlaceWallWithNeighbours(neighbour);
             }
         }
 
@@ -69,12 +92,22 @@ namespace ItemVisualProviders
         {
             if (!IsSupportedItemVisual(itemVisual)) return false;
 
-            ReturnIfHasItemVisual(itemVisual);
+            TryReturnItemVisual(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
 
             _activeWalls.Remove(itemPos);
             _activeWallAgents.Remove(itemPos);
             _wallCheckSet.Remove(itemPos);
+
+            var neighbours = itemPos.GetNeighbours();
+            foreach (var neighbour in neighbours)
+            {
+                if (!_wallCheckSet.Contains(neighbour))
+                    continue;
+
+                TryReturnItemVisual(_activeWalls[neighbour]);
+                PlaceWallWithNeighbours(neighbour);
+            }
 
             return true;
         }
@@ -93,28 +126,68 @@ namespace ItemVisualProviders
             return true;
         }
 
-        public override bool RequestMultipleItemVisuals(DeckAgent agent, DeckId prefabId, Vector2Int[] indices, out DeckItemVisual[] itemVisuals)
+        public override bool RequestBulkItemVisuals(DeckAgent[] agents, DeckId prefabId, Vector2Int[] indices, out DeckItemVisual[] itemVisuals)
         {
             if (!IsSupportedItemVisual(prefabId))
             {
                 itemVisuals = null;
                 return false;
             }
-            
-            foreach (var index in indices)
-            {
-                _wallCheckSet.Add(index);
-                _activeWallAgents[index] = agent;
-            }
 
-            itemVisuals = new DeckItemVisual[indices.Length];
             for (var i = 0; i < indices.Length; i++)
             {
                 var index = indices[i];
-                itemVisuals[i] = PlaceItemVisual(index, false);
+                _wallCheckSet.Add(index);
+                _activeWallAgents[index] = agents[i];
             }
 
+            var checkList = new bool[4];
+            itemVisuals = new DeckItemVisual[indices.Length];
+            for (var i = 0; i < indices.Length; i++)
+            {
+                var position = indices[i];
+                var neighbours = position.GetNeighbours();
+                for (var index = 0; index < neighbours.Length; index++)
+                {
+                    var neighbour = neighbours[index];
+                    var isWall = _wallCheckSet.Contains(neighbour);
+                    var isWallOrDoor = isWall || _doorCheckSet.Contains(neighbour);
+                    checkList[index] = isWallOrDoor;
+                }
+
+                var itemVisualPrefab = GetVisualToPlace(checkList);
+                RentIfHasItemVisual(itemVisualPrefab.PrefabId, out var newInstance);
+
+                var agent = _activeWallAgents[position];
+                agent.SetItemVisual(newInstance);
+                newInstance.SetAgent(agent);
+
+                _activeWalls[position] = newInstance;
+                itemVisuals[i] = newInstance;
+            }
             return true;
+        }
+
+        public void RequestFill(Vector2Int minIndex, Vector2Int maxIndex)
+        {
+            for (var x = minIndex.x; x < maxIndex.x; x++)
+            {
+                for (var y = minIndex.y; y < maxIndex.y; y++)
+                {
+                    _wallCheckSet.Add(new Vector2Int(x, y));
+                }
+            }
+
+            var mapTransform = DeckServiceScene.GetMap().transform;
+            for (var x = minIndex.x; x < maxIndex.x; x++)
+            {
+                for (var y = minIndex.y; y < maxIndex.y; y++)
+                {
+                    var itemVisual = PlaceItemVisual(new Vector2Int(x, y), false, false);
+                    itemVisual.transform.SetParent(mapTransform);
+                    itemVisual.transform.position = new Vector3(x, 0, y);
+                }
+            }
         }
 
         private DeckItemVisual PlaceWallWithNeighbours(Vector2Int position)
@@ -124,14 +197,14 @@ namespace ItemVisualProviders
             foreach (var neighbour in neighbours)
             {
                 if (!_wallCheckSet.Contains(neighbour)) continue;
-                ReturnIfHasItemVisual(_activeWalls[neighbour]);
+                TryReturnItemVisual(_activeWalls[neighbour]);
                 PlaceItemVisual(neighbour);
             }
 
             return PlaceItemVisual(position);
         }
 
-        private DeckItemVisual PlaceItemVisual(Vector2Int position, bool setItemVisual = true)
+        private DeckItemVisual PlaceItemVisual(Vector2Int position, bool setItemVisual = true, bool setAgent = true)
         {
             var checkList = new bool[4];
 
@@ -144,26 +217,67 @@ namespace ItemVisualProviders
                 checkList[index] = isWallOrDoor;
             }
 
-            var agent = _activeWallAgents[position];
             var itemVisualPrefab = GetVisualToPlace(checkList);
             RentIfHasItemVisual(itemVisualPrefab.PrefabId, out var itemVisualInstance);
 
             if (setItemVisual)
             {
+                var agent = _activeWallAgents[position];
                 agent.SetItemVisual(itemVisualInstance);
             }
 
-            itemVisualInstance.SetAgent(agent);
+            if (setAgent)
+            {
+                var agent = _activeWallAgents[position];
+                itemVisualInstance.SetAgent(agent);
+            }
 
             _activeWalls[position] = itemVisualInstance;
 
             return itemVisualInstance;
         }
 
+        public (Vector2Int, bool)[] GetNeighbourWallSet(Vector2Int cellIndex)
+        {
+            var result = new (Vector2Int, bool)[8];
+            var neighbours = cellIndex.GetRectNeighbours();
+            for (var index = 0; index < neighbours.Length; index++)
+            {
+                var pos = neighbours[index];
+                if (_wallCheckSet.Contains(pos))
+                {
+                    result[index] = (pos, true);
+                }
+            }
+
+            return result;
+        }
+
+        public int GetNeighbourCount(Vector2Int cellIndex)
+        {
+            var neighbours = cellIndex.GetNeighbours();
+            return neighbours.Count(pos => _wallCheckSet.Contains(pos));
+        }
+
+        public bool[] GetNeighbourSetRect(Vector2Int cellIndex)
+        {
+            var result = new bool[4];
+            var neighbours = cellIndex.GetRectNeighbours();
+            for (var index = 0; index < neighbours.Length; index++)
+            {
+                var pos = neighbours[index];
+                if (_wallCheckSet.Contains(pos))
+                {
+                    result[index] = true;
+                }
+            }
+
+            return result;
+        }
+
         private DeckItemVisual GetVisualToPlace(IReadOnlyList<bool> checkList)
         {
             var trueCount = checkList.Count(b => b);
-
             if (trueCount == 4)
             {
                 return fourCornerPrefab;
@@ -243,70 +357,6 @@ namespace ItemVisualProviders
             }
 
             return emptyPrefab;
-        }
-
-        public (Vector2Int, bool)[] GetNeighbourWallSet(Vector2Int cellIndex)
-        {
-            var result = new (Vector2Int, bool)[8];
-            var neighbours = cellIndex.GetRectNeighbours();
-            for (var index = 0; index < neighbours.Length; index++)
-            {
-                var pos = neighbours[index];
-                if (_wallCheckSet.Contains(pos))
-                {
-                    result[index] = (pos, true);
-                }
-            }
-
-            return result;
-        }
-
-
-        public int GetNeighbourCount(Vector2Int cellIndex)
-        {
-            var count = 0;
-            var neighbours = cellIndex.GetNeighbours();
-            for (var index = 0; index < neighbours.Length; index++)
-            {
-                var pos = neighbours[index];
-                if (_wallCheckSet.Contains(pos))
-                {
-                    count++;
-                }
-            }
-
-            return count;
-        }
-
-        public bool[] GetNeighbourSetRect(Vector2Int cellIndex)
-        {
-            var result = new bool[4];
-            var neighbours = cellIndex.GetRectNeighbours();
-            for (var index = 0; index < neighbours.Length; index++)
-            {
-                var pos = neighbours[index];
-                if (_wallCheckSet.Contains(pos))
-                {
-                    result[index] = true;
-                }
-            }
-
-            return result;
-        }
-
-        public void OnDoorRemoved(Vector2Int cellIndex)
-        {
-            _doorCheckSet.Remove(cellIndex);
-
-            var neighbours = cellIndex.GetNeighbours();
-            foreach (var neighbour in neighbours)
-            {
-                if (!_wallCheckSet.Contains(neighbour))
-                    continue;
-
-                ReturnIfHasItemVisual(_activeWalls[neighbour]);
-                PlaceWallWithNeighbours(neighbour);
-            }
         }
 
         public bool HasWallOnPosition(Vector2Int cellIndex)

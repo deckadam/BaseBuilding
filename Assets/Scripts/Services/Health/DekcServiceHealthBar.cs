@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Components;
-using Deck.Utility.MVC;
-using Services;
+using Components.Health;
+using Utility.MVC;
 
-namespace Deck.Services.Health
+namespace Services.Health
 {
     public class DekcServiceHealthBar : DeckServiceBase, IDeckModel<DeckComponentHealth, IEnumerable<DeckComponentHealth>>
     {

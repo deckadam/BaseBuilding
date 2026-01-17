@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Commands;
 using Services.Finder;
 using Systems.SystemSave;
 using UnityEngine;
@@ -30,9 +29,7 @@ namespace Commands.Fetch
         {
             await new DeckCommandMove(_fetchPosition, _fetcher).ProcessCommand(token);
             await UniTask.Delay(1000, cancellationToken: token).SuppressCancellationThrow();
-            Debug.LogError("Fetch second part");
             await new DeckCommandMove(_deliverTarget.transform.position, _fetcher).ProcessCommand(token);
-            Debug.LogError("Fetch completed");
             return true;
         }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Deck.Base
+namespace Base
 {
     public class DeckPoolable : MonoBehaviour
     {
@@ -8,7 +8,7 @@ namespace Deck.Base
         {
         }
 
-        public virtual void OnDespawned()
+        public virtual void OnDeSpawned()
         {
         }
     }

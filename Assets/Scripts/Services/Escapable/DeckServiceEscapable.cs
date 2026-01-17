@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Deck.Services.UI;
+using Services.UI;
 using UI.MainMenu;
 
 namespace Services.Escapable

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Base;
-using Deck.Base;
 using Instancing;
 using Services;
 using Services.Finder;
@@ -28,16 +26,15 @@ namespace ItemVisualProviders
 
         public void AddItemVisual(DeckItemVisual itemVisual)
         {
-            if (!itemVisualSets.Contains(itemVisual))
-            {
-                itemVisualSets.Add(itemVisual);
-            }
-            else
+            if (itemVisualSets.Contains(itemVisual))
             {
                 DeckLogger.Error("Already contains item visual");
+                return;
             }
 
-            itemVisualSets = itemVisualSets.Where(x => x != null).ToList();
+            itemVisualSets.Add(itemVisual);
+
+            // itemVisualSets = itemVisualSets.Where(x => x != null).ToList();
         }
 
         public void Initialize()
@@ -51,37 +48,9 @@ namespace ItemVisualProviders
             InternalOnInitialize();
         }
 
-        protected virtual void InternalOnInitialize()
-        {
-        }
-
         public void OnDeInitialize()
         {
             InternalOnDeInitialize();
-        }
-
-        protected virtual void InternalOnDeInitialize()
-        {
-        }
-
-        public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
-        {
-            return RentIfHasItemVisual(prefabId, out itemVisual);
-        }
-
-        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
-        {
-            return RentIfHasItemVisual(prefabId, out itemVisual);
-        }
-
-        public virtual bool RequestMultipleItemVisuals(DeckAgent agent,DeckId prefabId, Vector2Int[] indices,out DeckItemVisual[] itemVisuals)
-        {
-            throw new Exception("Multiple rent is not implemented for basic provider");
-        }
-
-        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
-        {
-            return ReturnIfHasItemVisual(itemVisual);
         }
 
         protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
@@ -98,9 +67,33 @@ namespace ItemVisualProviders
             return false;
         }
 
-        protected bool ReturnIfHasItemVisual(DeckItemVisual itemVisual)
+        protected bool BulkRentIfHasItemVisual(DeckId prefabId, int count, out DeckItemVisual[] itemVisuals)
+        {
+            if (_supportedItemVisuals.Contains(prefabId.ID))
+            {
+                itemVisuals = _instanceProvider.BulkRentItemVisual(prefabId, count);
+                DeckServiceProvider.GetService<DeckServiceFinder>().BulkRegisterItemVisual(itemVisuals);
+                return true;
+            }
+
+            itemVisuals = default;
+            return false;
+        }
+
+        protected bool TryReturnItemVisual(DeckItemVisual itemVisual)
         {
             if (!_supportedItemVisuals.Contains(itemVisual.PrefabId.ID)) return false;
+
+            _instanceProvider.ReturnItemVisual(itemVisual);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+
+            return true;
+        }
+
+        protected bool TryReturnItemVisual(DeckItemVisual[] itemVisual)
+        {
+            var sample = itemVisual[0];
+            if (!_supportedItemVisuals.Contains(sample.PrefabId.ID)) return false;
 
             _instanceProvider.ReturnItemVisual(itemVisual);
             DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
@@ -121,6 +114,50 @@ namespace ItemVisualProviders
         protected bool IsSupportedItemVisual(DeckItemVisual itemVisual)
         {
             return _supportedItemVisuals.Contains(itemVisual.PrefabId.ID);
+        }
+
+        protected virtual void InternalOnInitialize()
+        {
+        }
+
+        protected virtual void InternalOnDeInitialize()
+        {
+        }
+
+        public virtual bool RequestItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
+        {
+            return RentIfHasItemVisual(prefabId, out itemVisual);
+        }
+
+        public virtual bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
+        {
+            return RentIfHasItemVisual(prefabId, out itemVisual);
+        }
+
+        public virtual bool RequestBulkItemVisuals(DeckAgent agent, DeckId prefabId, out DeckItemVisual[] itemVisuals)
+        {
+            throw new Exception("Multiple rent is not implemented for basic provider");
+        }
+
+        public virtual bool RequestBulkItemVisuals(DeckAgent[] agent, DeckId prefabId, out DeckItemVisual[] itemVisuals)
+        {
+            throw new Exception("Multiple rent is not implemented for basic provider");
+        }
+
+        public virtual bool RequestBulkItemVisuals(DeckAgent[] agent, DeckId prefabId, Vector2Int[] indices, out DeckItemVisual[] itemVisuals)
+        {
+            throw new Exception("Multiple rent is not implemented for basic provider");
+        }
+
+
+        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
+        {
+            return TryReturnItemVisual(itemVisual);
+        }
+
+        public virtual bool ReturnItemVisual(DeckItemVisual[] itemVisuals)
+        {
+            return TryReturnItemVisual(itemVisuals);
         }
     }
 }

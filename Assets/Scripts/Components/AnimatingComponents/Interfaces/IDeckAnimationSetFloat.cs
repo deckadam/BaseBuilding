@@ -1,4 +1,4 @@
-﻿namespace Deck.Components
+﻿namespace Components.AnimatingComponents.Interfaces
 {
     public interface IDeckAnimationSetFloat
     {

@@ -1,4 +1,4 @@
-namespace Deck.UI.Stats
+namespace UI.Stats
 {
     public struct DeckStat
     {

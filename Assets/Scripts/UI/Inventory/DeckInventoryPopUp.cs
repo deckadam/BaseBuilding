@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Deck.Components;
-using Deck.Data.Item;
+using Components.Inventory;
+using Data.Item;
 using Services.Inventory;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,7 +12,7 @@ namespace UI.Inventory
         [SerializeField] private RectTransform cellParent;
 
         private DeckServiceInventory _serviceInventory;
-        private List<DeckInventoryDisplayerCell> _cells = new();
+        private List<DeckInventoryDisplayCell> _cells = new();
         private DeckComponentInventory _componentInventory;
 
         public void SetTarget(DeckComponentInventory componentInventory)
@@ -37,7 +37,7 @@ namespace UI.Inventory
 
             foreach (var deckItem in items)
             {
-                var newCell = InstanceProvider.RentUIElement<DeckInventoryDisplayerCell>();
+                var newCell = InstanceProvider.RentUIElement<DeckInventoryDisplayCell>();
                 newCell.transform.SetParent(cellParent, false);
                 newCell.Initialize(deckItem.Key, deckItem.Value, this);
                 newCell.gameObject.SetActive(true);

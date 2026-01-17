@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.Base;
-using Deck.Components;
-using Deck.Data.Item;
-using Deck.Utility.MonoBehaviours;
+using Base;
+using Components.AnimatingComponents.Interfaces;
+using Data.Item;
 using Services;
 using Services.ItemVisual;
 using UnityEngine;
 using Utility;
+using Utility.MonoBehaviours;
 
 namespace Components.ItemHolder
 {

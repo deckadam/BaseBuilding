@@ -1,14 +1,14 @@
 using System;
 using Base;
+using Commands;
 using Commands.Fetch;
-using Deck.Commands;
-using Deck.UI.Notification;
-using Deck.Utility.Constants;
 using InGame.Agent.Building;
 using InGame.Agent.Waiter;
 using Services.Finder;
+using UI.Notification;
 using UnityEngine;
 using Utility;
+using Utility.Constants;
 
 namespace Services.Order.OrderResolver
 {

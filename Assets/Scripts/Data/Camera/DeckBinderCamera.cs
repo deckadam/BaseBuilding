@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace Deck.Data.Camera
+namespace Data.Camera
 {
     [CreateAssetMenu(menuName = "Deck/Binder/Camera", fileName = "Deck Binder Camera")]
     public class DeckBinderCamera : ScriptableObjectInstaller

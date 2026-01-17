@@ -1,6 +1,6 @@
 using EventManager;
 
-namespace Deck.Services.Tables.Events
+namespace Services.Tables.Events
 {
     public struct DeckEventOnTableAvailable : IDeckEvent
     {

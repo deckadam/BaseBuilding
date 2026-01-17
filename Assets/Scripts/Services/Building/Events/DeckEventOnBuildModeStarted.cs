@@ -1,8 +1,8 @@
 using EventManager;
 
-namespace Deck.Services.Building.Events
+namespace Services.Building.Events
 {
-    public struct DeckEventOnBuildModeStarted:IDeckEvent
+    public struct DeckEventOnBuildModeStarted : IDeckEvent
     {
         public static DeckEventOnBuildModeStarted Create()
         {

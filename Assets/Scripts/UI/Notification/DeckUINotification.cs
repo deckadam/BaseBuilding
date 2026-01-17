@@ -1,10 +1,8 @@
-﻿using Deck.Utility;
-using EventManager;
-using UI;
+﻿using EventManager;
 using UnityEngine;
 using Utility;
 
-namespace Deck.UI.Notification
+namespace UI.Notification
 {
     public class DeckUINotification : DeckUIBase
     {

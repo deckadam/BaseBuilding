@@ -1,8 +1,8 @@
-using Deck.Base;
+using Base;
 using TMPro;
 using UnityEngine;
 
-namespace Deck.UI.Stats
+namespace UI.Stats
 {
     public class DeckUIStatElement : DeckUIElement
     {

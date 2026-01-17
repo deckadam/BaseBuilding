@@ -1,16 +1,15 @@
 ﻿using System;
 using Base;
+using Components.Health;
+using Components.Inventory;
 using Components.ItemHolder;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Commands;
-using Deck.Data.Component;
-using Deck.UI.Notification;
-using Deck.Utility;
+using Data.Component;
+using UI.Notification;
 using UnityEngine;
 using Utility;
 
-namespace Deck.Components
+namespace Components.DamageDealer
 {
     [Serializable]
     public class DeckComponentDamageDealer : DeckComponent

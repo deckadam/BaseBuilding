@@ -1,4 +1,4 @@
-using Deck.Services.Cam;
+using Services.Camera;
 using Systems.SystemInput.Events;
 using UnityEngine;
 

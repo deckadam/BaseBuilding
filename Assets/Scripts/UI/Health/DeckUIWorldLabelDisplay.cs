@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using UI;
 using UnityEngine;
 
-namespace Deck.UI.Health
+namespace UI.Health
 {
-    public class DeckUIWorldLabelDisplayer : DeckUIBase
+    public class DeckUIWorldLabelDisplay : DeckUIBase
     {
         [SerializeField] private List<DeckUIWorldDisplay> _healthBars = new();
 

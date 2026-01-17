@@ -1,7 +1,6 @@
 ﻿using Base;
-using Deck.Base;
 
-namespace Deck.InGame.Agent.Tree
+namespace InGame.Agent.Tree
 {
     public class DeckAgentHarvestable : DeckAgent
     {

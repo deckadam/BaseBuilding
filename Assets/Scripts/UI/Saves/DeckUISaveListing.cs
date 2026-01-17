@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
-using Deck.SaveListingMenu.Events;
-using Deck.Services.PopUp;
-using Deck.Services.UI;
-using Deck.UI.Confirmation;
-using Deck.Utility.Constants;
 using Services;
+using Services.PopUp;
+using Services.UI;
 using Systems.SystemSave;
+using Systems.SystemSave.Events;
+using UI.Confirmation;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
+using Utility.Constants;
 
 namespace UI.Saves
 {

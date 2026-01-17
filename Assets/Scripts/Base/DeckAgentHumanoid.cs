@@ -1,9 +1,7 @@
-using Base;
-using Deck.Commands;
-using Deck.Components;
-using UnityEngine;
+using Commands;
+using Components;
 
-namespace Deck.Base
+namespace Base
 {
     public class DeckAgentHumanoid : DeckAgent
     {

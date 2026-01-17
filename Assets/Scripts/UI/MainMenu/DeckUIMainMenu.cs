@@ -1,15 +1,17 @@
 ﻿using Cysharp.Threading.Tasks;
-using Deck.SaveListingMenu.Events;
-using Deck.Services.UI;
 using EventManager;
 using GameManager;
+using InGame.Map.Data;
 using Services;
+using Services.UI;
 using Systems.SystemSave;
+using Systems.SystemSave.Events;
 using UI.MainMenu.Events;
 using UI.Saves;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
+using Zenject;
 
 namespace UI.MainMenu
 {
@@ -20,6 +22,13 @@ namespace UI.MainMenu
         [SerializeField] private Button loadSavesButton;
 
         private bool _loadingInProgress;
+        private DeckDataMap _mapData;
+
+        [Inject]
+        private void Inject(DeckDataMap mapData)
+        {
+            _mapData = mapData;
+        }
 
         public override void Initialize()
         {
@@ -61,7 +70,7 @@ namespace UI.MainMenu
             _loadingInProgress = true;
             DeckLogger.Inform("New game starting");
 
-            DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame();
+            DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame(_mapData);
             DeckEventOnGameSceneLoaded.Create().Send();
 
             await UniTask.NextFrame();

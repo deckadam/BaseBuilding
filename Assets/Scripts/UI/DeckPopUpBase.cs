@@ -1,6 +1,6 @@
-﻿using Deck.Base;
-using Deck.Services.UI;
-using Deck.UI.GamePlay;
+﻿using Base;
+using Services.UI;
+using UI.GamePlay;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

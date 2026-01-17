@@ -1,5 +1,5 @@
+using Base;
 using Data.Currency;
-using Deck.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

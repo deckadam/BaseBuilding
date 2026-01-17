@@ -1,10 +1,9 @@
 ﻿using TMPro;
-using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Deck.UI.Health
+namespace UI.Health
 {
     public class DeckHealthBar : DeckUIWorldDisplay
     {

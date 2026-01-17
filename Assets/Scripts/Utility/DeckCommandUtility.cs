@@ -1,6 +1,6 @@
 ﻿using System.Threading;
+using Components.Movement;
 using Cysharp.Threading.Tasks;
-using Deck.Components;
 using UnityEngine;
 
 namespace Utility

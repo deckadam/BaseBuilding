@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Base;
-using Deck.Base;
+using ItemVisualProviders.Door.Events;
 using UnityEngine;
 using Utility;
 using Zenject;
 
-namespace ItemVisualProviders
+namespace ItemVisualProviders.Door
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderDoor", menuName = "Service/ItemVisualManager/DeckItemVisualProviderDoor")]
     public class DeckItemVisualProviderDoor : DeckItemVisualProviderBasic
@@ -18,27 +18,10 @@ namespace ItemVisualProviders
         private HashSet<Vector2Int> _doorCheckSet;
         private Dictionary<Vector2Int, DeckItemVisual> _activeDoors;
 
-        private DeckItemVisualProviderWall _wallProvider;
-
-        [Inject]
-        private void Inject(DeckItemVisualProviderWall wallProvider)
-        {
-            _wallProvider = wallProvider;
-        }
-
         protected override void InternalOnInitialize()
         {
             _doorCheckSet = new HashSet<Vector2Int>();
             _activeDoors = new Dictionary<Vector2Int, DeckItemVisual>();
-        }
-
-        public void ReturnItemVisual(Vector2Int cellIndex)
-        {
-            if (!_doorCheckSet.Contains(cellIndex)) return;
-
-            _doorCheckSet.Remove(cellIndex);
-            ReturnIfHasItemVisual(_activeDoors[cellIndex]);
-            _wallProvider.OnDoorRemoved(cellIndex);
         }
 
         public override bool ReturnItemVisual(DeckItemVisual itemVisual)
@@ -46,10 +29,16 @@ namespace ItemVisualProviders
             if (!itemVisual.PrefabId.Equals(doorPrefab.PrefabId)) return false;
 
             var pos = itemVisual.transform.position.ToVector2Int();
-            _doorCheckSet.Remove(pos);
-            ReturnIfHasItemVisual(itemVisual);
+            if (!_doorCheckSet.Contains(pos))
+            {
+                DeckLogger.Inform("Non registered door tried to return item visual");
+                return false;
+            }
 
-            _wallProvider.OnDoorRemoved(pos);
+            _doorCheckSet.Remove(pos);
+            TryReturnItemVisual(itemVisual);
+
+            DeckEventOnDoorRemoved.Create(pos).Send();
             _activeDoors.Remove(pos);
             return true;
         }
@@ -74,20 +63,22 @@ namespace ItemVisualProviders
             itemVisual.transform.rotation = GetDoorRotation(cellIndex);
             itemVisual.transform.position = cellIndex.ToVector3();
 
-            _wallProvider.OnDoorPlaced(cellIndex);
+            DeckEventOnDoorPlaced.Create(cellIndex).Send();
             return true;
         }
 
         private Quaternion GetDoorRotation(Vector2Int cellIndex)
         {
-            var neighbourSet = _wallProvider.GetNeighbourWallSet(cellIndex);
 
-            if (neighbourSet[0].Item2 || neighbourSet[1].Item2)
+            var neighbourSet = new bool[4];
+            DeckEventOnNeighbourSetRequested.Create(cellIndex, ref neighbourSet).Send();
+
+            if (neighbourSet[0] || neighbourSet[1])
             {
                 return _horizontalRotation;
             }
 
-            if (neighbourSet[2].Item2 || neighbourSet[3].Item2)
+            if (neighbourSet[2] || neighbourSet[3])
             {
                 return _verticalRotation;
             }

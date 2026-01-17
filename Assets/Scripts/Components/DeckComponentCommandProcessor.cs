@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Base;
+using Commands;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Commands;
-using Deck.Utility;
 using Systems.SystemSave;
 using Utility;
 
-namespace Deck.Components
+namespace Components
 {
     public class DeckComponentCommandProcessor : DeckComponent
     {
@@ -31,7 +30,7 @@ namespace Deck.Components
             _taskExecutionTokenSource = null;
         }
 
-        public async void StartProcessCommands()
+        public async void StartProcessingCommands()
         {
             _taskExecutionTokenSource = new CancellationTokenSource();
             var destroyToken = gameObject.GetCancellationTokenOnDestroy();

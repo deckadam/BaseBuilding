@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
-using Deck.Components;
-using Deck.Data.Item;
-using Deck.Utility.MVC;
+using Components.Health;
+using Data.Item;
+using GameManager.Events;
 using InGame.Agent.Waiter;
+using InGame.Map.Data;
 using Instancing;
 using Services;
+using Services.Building;
 using Services.Finder;
 using Services.Map;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
 using UnityEngine;
+using Utility;
+using Utility.MVC;
 using Zenject;
 
 namespace GameManager
@@ -25,32 +29,18 @@ namespace GameManager
         }
 
         private DeckLoadResolver _loadResolver;
-        private DeckAgentWaiter _waiterAgentPrefab;
-        private DeckInstanceProvider _instanceProvider;
 
         [Inject]
-        private void Inject(DeckLoadResolver loadResolver, DeckAgentWaiter agentWaiterPrefab, DeckInstanceProvider instanceProvider)
+        private void Inject(DeckLoadResolver loadResolver)
         {
             _loadResolver = loadResolver;
-            _waiterAgentPrefab = agentWaiterPrefab;
-            _instanceProvider = instanceProvider;
         }
 
-        public async void CreateNewGame()
+        public async void CreateNewGame(DeckDataMap mapData)
         {
             DeckSaveSystem.CreateNewSave();
             await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
-            var newWaiter = _instanceProvider.RentAgent(_waiterAgentPrefab.PrefabId);
-            newWaiter.transform.parent = DeckServiceScene.GetMap().transform;
-            newWaiter.Initialize();
-        }
-
-        [Button]
-        private void CreateWaiter()
-        {
-            var newWaiter = _instanceProvider.RentAgent(_waiterAgentPrefab.PrefabId);
-            newWaiter.transform.parent = DeckServiceScene.GetMap().transform;
-            newWaiter.Initialize();
+            DeckEventOnNewMapCreated.Create(mapData).Send();
         }
 
         public async void LoadGame()

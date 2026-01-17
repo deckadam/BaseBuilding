@@ -1,9 +1,11 @@
 ﻿using System;
-using Deck.Base;
-using Deck.Utility.Constants;
+using Base;
+using Components.AnimatingComponents.Interfaces;
+using Components.Movement;
 using UnityEngine;
+using Utility.Constants;
 
-namespace Deck.Components
+namespace Components.AnimatingComponents.Core
 {
     public class DeckComponentAnimatorHumanoid : DeckComponent, IDeckAnimationImmediatePlay, IDeckAnimationSetBool, IDeckAnimationSetFloat,IDeckAnimationSetTrigger
     {

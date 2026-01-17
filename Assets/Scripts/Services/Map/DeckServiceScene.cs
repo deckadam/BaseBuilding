@@ -17,6 +17,7 @@ namespace Services.Map
                 return _sceneParent;
             }
 
+            DeckLogger.Inform("Map not found looking at scene");
             _sceneParent = FindObjectOfType<DeckMap>();
             return _sceneParent;
         }

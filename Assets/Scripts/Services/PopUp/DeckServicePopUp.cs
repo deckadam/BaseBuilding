@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Deck.UI;
-using Deck.Utility;
 using Instancing;
-using Services;
 using Sirenix.OdinInspector;
 using UI;
 using UnityEditor;
@@ -11,7 +8,7 @@ using UnityEngine;
 using Utility;
 using Zenject;
 
-namespace Deck.Services.PopUp
+namespace Services.PopUp
 {
     public class DeckServicePopUp : DeckServiceBase
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Deck.Data.Component;
-using Deck.Data.Item;
+using Data.Component;
+using Data.Item;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Deck.Data.ItemDrop
+namespace Data.ItemDrop
 {
     [CreateAssetMenu(fileName = "Deck Data Item Drop", menuName = "Deck/Data/Item Drop", order = 0)]
     public class DeckDataItemDrop : DeckDataComponent

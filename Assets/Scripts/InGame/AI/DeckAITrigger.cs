@@ -1,4 +1,4 @@
-namespace Deck.InGame.AI
+namespace InGame.AI
 {
     public enum DeckAITrigger
     {

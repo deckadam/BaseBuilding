@@ -1,14 +1,12 @@
 using System.Threading;
 using Base;
+using Components.Movement;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Components;
-using Deck.Data.Component;
-using Deck.Utility;
+using Data.Component;
 using UnityEngine;
 using Utility;
 
-namespace Deck.InGame.AI
+namespace InGame.AI.States
 {
     public class DeckAIWander : MonoBehaviour, IDeckAIState
     {

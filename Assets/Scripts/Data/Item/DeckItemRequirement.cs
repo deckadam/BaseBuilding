@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Deck.Data.Item
+namespace Data.Item
 {
     [Serializable]
     public class DeckItemRequirement

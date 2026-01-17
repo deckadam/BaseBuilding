@@ -1,6 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Data.UI;
+﻿using Base;
+using Cysharp.Threading.Tasks;
+using Data.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;

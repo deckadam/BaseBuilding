@@ -1,9 +1,9 @@
-﻿using Deck.Components;
-using Deck.Data.Component;
+﻿using Components.Health;
+using Data.Component;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.Residents
+namespace InGame.Residents
 {
     public class DeckMapObstacle : MonoBehaviour
     {
@@ -11,9 +11,9 @@ namespace Deck.Residents
         [SerializeField] private DeckDataHealth dataHealth;
 
         [Inject]
-        private void Inject(DeckComponentHealth componentHealth)
+        private void Inject(DeckComponentHealth compHealth)
         {
-            this.componentHealth = componentHealth;
+            componentHealth = compHealth;
         }
     }
 }

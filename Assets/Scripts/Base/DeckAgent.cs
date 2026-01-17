@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Components;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Components;
-using Deck.UI.Stats;
 using Instancing;
 using Services;
 using Services.Finder;
@@ -11,6 +9,7 @@ using Services.Map;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
+using UI.Stats;
 using UnityEditor;
 using UnityEngine;
 using Utility;
@@ -190,7 +189,7 @@ namespace Base
 
             if (TryGetDeckComponent<DeckComponentCommandProcessor>(out var commandProcessor))
             {
-                commandProcessor.StartProcessCommands();
+                commandProcessor.StartProcessingCommands();
             }
 
             DeckServiceProvider.GetService<DeckServiceFinder>().RegisterAgent(this);

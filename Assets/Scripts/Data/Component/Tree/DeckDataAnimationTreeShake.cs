@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Data.Component.Tree
+namespace Data.Component.Tree
 {
     [CreateAssetMenu(fileName = "Deck Data Animation Tree Shake", menuName = "Deck/Data/Component/Animation/Tree Shake")]
     public class DeckDataAnimationTreeShake : DeckDataComponent

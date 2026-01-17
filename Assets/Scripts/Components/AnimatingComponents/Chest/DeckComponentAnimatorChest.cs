@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
-using Deck.Base;
-using Deck.Utility;
-using Deck.Utility.Animators;
-using Deck.Utility.Contants;
+using Base;
+using Components.AnimatingComponents.Interfaces;
+using Components.Inventory;
 using Utility;
+using Utility.Animators;
+using Utility.Constants;
 
-namespace Deck.Components
+namespace Components.AnimatingComponents.Chest
 {
     public class DeckComponentAnimatorChest : DeckComponent, IDeckAnimationImmediatePlay
     {

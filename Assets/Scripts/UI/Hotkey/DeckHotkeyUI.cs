@@ -1,8 +1,7 @@
-﻿using Deck.UI.Hotkey.Events;
-using EventManager;
-using UI;
+﻿using EventManager;
+using UI.Hotkey.Events;
 
-namespace Deck.UI.Hotkey
+namespace UI.Hotkey
 {
     public class DeckHotkeyUI : DeckUIBase
     {

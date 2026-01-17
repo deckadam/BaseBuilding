@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Deck.General
+namespace General
 {
 	public interface IDeckObservable<out T>
 	{

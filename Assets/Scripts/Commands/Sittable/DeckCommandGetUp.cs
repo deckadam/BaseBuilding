@@ -1,11 +1,11 @@
 using System.Threading;
+using Base;
+using Components.AnimatingComponents.Interfaces;
+using Components.Movement;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Commands;
-using Deck.Components;
-using Deck.Utility.Constants;
 using Services.Finder;
 using Systems.SystemSave;
+using Utility.Constants;
 
 namespace Commands.Sittable
 {

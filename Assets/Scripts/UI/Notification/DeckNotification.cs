@@ -1,9 +1,9 @@
-﻿using Deck.Base;
+﻿using Base;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace Deck.UI.Notification
+namespace UI.Notification
 {
     public class DeckNotification : DeckUIElement
     {

@@ -1,8 +1,7 @@
 ﻿using Base;
-using Deck.Base;
 using EventManager;
 
-namespace Deck.Services.Selection.Events
+namespace Services.Selection.Events
 {
     public class DeckEventOnAgentPossessed : IDeckEvent
     {

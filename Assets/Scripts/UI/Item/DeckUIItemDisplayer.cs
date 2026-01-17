@@ -1,10 +1,9 @@
 ﻿using System;
-using Deck.Data.Item;
+using Data.Item;
 using TMPro;
-using UI;
 using UnityEngine;
 
-namespace Deck.UI.Item
+namespace UI.Item
 {
     public class DeckUIItemDisplayer : DeckUIWorldDisplay
     {

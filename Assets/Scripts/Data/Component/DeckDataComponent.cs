@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Data.Component
+namespace Data.Component
 {
     public class DeckDataComponent : ScriptableObject
     {

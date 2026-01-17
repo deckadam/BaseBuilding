@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using Deck.InGame.Area;
 using EventManager;
-using Services;
+using InGame.Area;
 using Services.AreaController.Events;
 using UnityEngine;
 
-namespace Deck.Services.AreaController
+namespace Services.AreaController
 {
     public class DeckServiceAreaController : DeckServiceBase
     {

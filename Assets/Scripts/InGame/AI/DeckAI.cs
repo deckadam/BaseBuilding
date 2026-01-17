@@ -1,13 +1,11 @@
 using System.Threading;
 using Base;
 using Cysharp.Threading.Tasks;
-using Deck.Base;
-using Deck.Utility;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Utility;
 
-namespace Deck.InGame.AI
+namespace InGame.AI
 {
     public class DeckAI : MonoBehaviour
     {

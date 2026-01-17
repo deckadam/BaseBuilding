@@ -1,11 +1,9 @@
 ﻿using System;
-using Deck.Utility;
 using TMPro;
-using UI;
 using UnityEngine;
 using Utility;
 
-namespace Deck.UI.Confirmation
+namespace UI.Confirmation
 {
     public class DeckConfirmationPopUp : DeckPopUpBase
     {

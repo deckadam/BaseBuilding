@@ -1,6 +1,6 @@
-﻿using Deck.Data.Item;
+﻿using Data.Item;
 
-namespace Deck.Components
+namespace Components.AnimatingComponents.Interfaces
 {
     public interface IDeckItemItemHolder
     {

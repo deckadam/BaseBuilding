@@ -1,10 +1,10 @@
 ﻿using Base;
-using Deck.Base;
-using Deck.Data.Component.Tree;
+using Components.Health;
+using Data.Component.Tree;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Deck.Components
+namespace Components.AnimatingComponents.Tree
 {
     public class DeckComponentAnimatorHarvestable : DeckComponent
     {

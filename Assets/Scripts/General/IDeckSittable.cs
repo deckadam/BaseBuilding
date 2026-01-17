@@ -1,7 +1,7 @@
-using Deck.Base;
+using Base;
 using UnityEngine;
 
-namespace Deck.General
+namespace General
 {
     public interface IDeckSittable
     {

@@ -1,5 +1,5 @@
-﻿using Deck.Base;
-using Deck.Commands;
+﻿using Base;
+using Commands;
 using Services.Waiter;
 using Systems.SystemInput.Events;
 using Utility;

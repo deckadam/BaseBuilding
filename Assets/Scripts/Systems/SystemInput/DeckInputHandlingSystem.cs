@@ -1,22 +1,25 @@
 ﻿using Base;
+using Components.Inventory;
 using Data.Currency;
-using Deck.Components;
-using Deck.Services.Cam;
-using Deck.Services.PopUp;
-using Deck.Services.Selection;
-using Deck.Utility.MonoBehaviours;
 using GameManager;
 using InGame.Agent.Customer;
+using InGame.Map.Data;
 using Instancing;
 using Services;
+using Services.Camera;
 using Services.Currency;
 using Services.Escapable;
+using Services.ItemVisual;
+using Services.PopUp;
+using Services.Selection;
 using Systems.SystemInput.Events;
 using Systems.SystemSave;
 using UI.Inventory;
+using UI.Stats;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utility;
+using Utility.MonoBehaviours;
 using Zenject;
 
 namespace Systems.SystemInput
@@ -76,19 +79,25 @@ namespace Systems.SystemInput
             var ray = DeckServiceProvider.GetService<DeckServiceCamera>().GetRayFromCamera();
             if (!Physics.Raycast(ray, out var hit)) return;
 
-            if (!hit.transform.TryGetComponentInParent<DeckAgent>(out var agent)) return;
-
-            agent.RequestDestroy();
+            if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
+            {
+                agent.RequestDestroy();
+                return;
+            }
+            else if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisual);
+            }
         }
 
         private void CheckForStatsPopUp()
         {
-            // if (Input.GetKeyDown(KeyCode.C))
-            // {
-            // var newPopUp = Deck.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
-            // newPopUp.Show();
-            // newPopUp.ShowStats(DeckServiceSelection.currentSelection);
-            // }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                var newPopUp = DeckServiceProvider.GetService<DeckServicePopUp>().OpenPopUp<DeckStatsPopUp>();
+                newPopUp.Show();
+                newPopUp.ShowStats(DeckServiceSelection.currentSelection);
+            }
         }
 
         private void SaveCheck()

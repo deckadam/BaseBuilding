@@ -1,34 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Base;
 using Data.Buildable;
 using Data.General;
-using Deck.Base;
-using Deck.Services.Cam;
-using Deck.UI.Notification;
-using Deck.Utility;
-using Deck.Utility.Iterators;
-using Deck.Utility.MonoBehaviours;
 using EventManager;
+using GameManager.Events;
 using InGame.Agent.Building;
+using InGame.Agent.Wall;
+using InGame.Map.Data;
 using Instancing;
+using ItemVisualProviders;
+using Services.Camera;
 using Services.Currency;
+using Services.ItemVisual;
 using Services.Map;
 using Systems.SystemInput.Events;
 using UI.Building.BuildMode;
+using UI.Notification;
 using UnityEngine;
 using Utility;
+using Utility.Iterators;
+using Utility.MonoBehaviours;
 using Zenject;
 
 namespace Services.Building
 {
     public class DeckServiceBuilding : DeckServiceBase
     {
-        [SerializeField] private LayerMask layerMask;
-        [SerializeField] private LayerMask onWallLayerMask;
         private const int LAYER_MASK = 0b_0011_1111_1_1111_1_1111_1111_1111;
         private const float YOffsetForBuildOnGround = 0.1f;
         private const float YOffsetForBuildOnTop = 0.1f;
         private const string WallTag = "Wall";
+
+        [SerializeField] private LayerMask layerMask;
+        [SerializeField] private LayerMask onWallLayerMask;
 
         private readonly Vector3 _cellHalfExtents = Vector3.one / 2.001f;
         private readonly Vector2Int _defaultCellPosition = new(1000000, 1000000);
@@ -65,6 +70,46 @@ namespace Services.Building
             {
                 name = "SilhouetteParent"
             };
+            DeckEventManager.Register<DeckEventOnNewMapCreated>(OnNewMapCreated);
+        }
+
+        public override void DeInitialize()
+        {
+            DeckEventManager.Unregister<DeckEventOnNewMapCreated>(OnNewMapCreated);
+        }
+
+        private void OnNewMapCreated(DeckEventOnNewMapCreated obj)
+        {
+            BuildInRectBulk(obj.mapData.WallBuildable, Vector2Int.zero, obj.mapData.MapSize);
+        }
+
+        private void BuildInRectBulk(DeckBuildable buildable, Vector2Int min, Vector2Int max)
+        {
+            var cellCount = max.x * max.y;
+            var indices = new Vector2Int[max.x * max.y];
+
+            var counter_1 = 0;
+            for (var x = min.x; x < max.x; x++)
+            {
+                for (var y = min.y; y < max.y; y++)
+                {
+                    indices[counter_1++] = new Vector2Int(x, y);
+                }
+            }
+
+            var builtAgents = _instanceProvider.BulkRentAgent<DeckAgentBuilding>(buildable.Agent.PrefabId, cellCount);
+            DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(builtAgents, buildable.ItemVisual.PrefabId, cellCount, indices, out var rentedVisuals);
+
+            var counter_2 = 0;
+            for (var x = min.x; x < max.x; x++)
+            {
+                for (var y = min.y; y < max.y; y++)
+                {
+
+                    builtAgents[counter_2].transform.position = new Vector3(x, 0, y);
+                    builtAgents[counter_2].InitializeBuildingWithVisual(rentedVisuals[counter_2++]);
+                }
+            }
         }
 
         protected override void DrawGizmos()
@@ -338,8 +383,6 @@ namespace Services.Building
                 return;
             }
 
-            Debug.LogError("asd");
-
             if (!_silhouetteParent.activeSelf)
             {
                 _silhouetteParent.gameObject.SetActive(true);
@@ -383,6 +426,33 @@ namespace Services.Building
             _silhouetteParent.transform.position = buildPosition;
         }
 
+        private void ApplyMaterialToSilhouette(Material material)
+        {
+            foreach (var silhouettePiece in _piecesInUse)
+            {
+                foreach (var rend in silhouettePiece.renderers)
+                {
+                    var materials = new Material[_activeBuildable.materialCount];
+                    for (int i = 0; i < _activeBuildable.materialCount; i++)
+                    {
+                        materials[i] = material;
+                    }
+
+                    rend.sharedMaterials = materials;
+                }
+            }
+        }
+
+        private void ReturnAllSilhouettePiecesToPool()
+        {
+            foreach (var silhouettePiece in _piecesInUse)
+            {
+                _silhouetteProvider.ReturnSilhouettePieceToPool(silhouettePiece);
+            }
+
+            _piecesInUse.Clear();
+        }
+
         public void BuildOnWall()
         {
             if (_activeBuildable == null)
@@ -404,7 +474,6 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
             newBuilding.Initialize();
@@ -431,7 +500,6 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
@@ -456,7 +524,6 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = worldPosition;
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
@@ -497,7 +564,6 @@ namespace Services.Building
             foreach (var rectBuildPosition in rectBuildPositions)
             {
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-                newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
@@ -541,17 +607,16 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
         }
-        
+
         public void BuildInCellMultiple()
         {
             if (_activeBuildable == null)
             {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
+                DeckLogger.Error($"Buildable not found {_activeBuildable.name}");
                 return;
             }
 
@@ -572,7 +637,6 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
@@ -616,34 +680,12 @@ namespace Services.Building
             }
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.SetParent(DeckServiceScene.GetMap().transform);
             newBuilding.transform.position = currentCellIndex.ToVector3();
             newBuilding.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
             agentBuildingToBuildOnTop.AddBuildingToTop(newBuilding);
-        }
-
-        private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
-        {
-            var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
-            if (!boxCollider)
-            {
-                DeckLogger.Warning("Collider is not BoxCollider");
-                collidedObject = null;
-                return false;
-            }
-
-            Debug.LogError("Checking");
-            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) != 0)
-            {
-                collidedObject = null;
-                return false;
-            }
-
-            collidedObject = _possibleColliders[0].gameObject;
-            return true;
         }
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
@@ -765,6 +807,26 @@ namespace Services.Building
             return result;
         }
 
+        private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
+        {
+            var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
+            if (!boxCollider)
+            {
+                DeckLogger.Warning("Collider is not BoxCollider");
+                collidedObject = null;
+                return false;
+            }
+
+            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) != 0)
+            {
+                collidedObject = null;
+                return false;
+            }
+
+            collidedObject = _possibleColliders[0].gameObject;
+            return true;
+        }
+
         private bool IsViableBuildCell(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
         {
             var rotatedIndices = indices.GetRotatedIndices(_ninetyDegreeRotationAmount);
@@ -867,7 +929,6 @@ namespace Services.Building
                 {
                     if (itemVisual.CompareTag(WallTag))
                     {
-                        // Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
                         position = hit.point;
                         rotation = hit.normal;
                         return true;
@@ -884,33 +945,6 @@ namespace Services.Building
         {
             return Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
-        }
-
-        private void ApplyMaterialToSilhouette(Material material)
-        {
-            foreach (var silhouettePiece in _piecesInUse)
-            {
-                foreach (var rend in silhouettePiece.renderers)
-                {
-                    var materials = new Material[_activeBuildable.materialCount];
-                    for (int i = 0; i < _activeBuildable.materialCount; i++)
-                    {
-                        materials[i] = material;
-                    }
-
-                    rend.sharedMaterials = materials;
-                }
-            }
-        }
-
-        private void ReturnAllSilhouettePiecesToPool()
-        {
-            foreach (var silhouettePiece in _piecesInUse)
-            {
-                _silhouetteProvider.ReturnSilhouettePieceToPool(silhouettePiece);
-            }
-
-            _piecesInUse.Clear();
         }
 
         private bool PayIfCanAfford()

@@ -1,14 +1,13 @@
-using Deck.InGame.Agent.Furniture;
 using EventManager;
 using InGame.Agent.Furniture;
 
-namespace Deck.Services.Tables.Events
+namespace Services.Tables.Events
 {
     public struct DeckEventOnChairDestroyed : IDeckEvent
     {
-        public DeckAgentAgentChair AgentChair { get; private set; }
+        public DeckAgentChair AgentChair { get; private set; }
 
-        public static DeckEventOnChairDestroyed Create(DeckAgentAgentChair agentChair)
+        public static DeckEventOnChairDestroyed Create(DeckAgentChair agentChair)
         {
             return new DeckEventOnChairDestroyed()
             {

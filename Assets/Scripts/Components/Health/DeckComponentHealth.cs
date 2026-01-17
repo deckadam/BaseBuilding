@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Deck.Base;
-using Deck.Data.Component;
-using Deck.UI.Health;
-using Deck.UI.Stats;
-using Deck.Utility;
-using Deck.Utility.MVC;
+using Data.Component;
 using Instancing;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
+using UI.Health;
+using UI.Stats;
 using UnityEngine;
 using Utility;
+using Utility.MVC;
 using Zenject;
 
-namespace Deck.Components
+namespace Components.Health
 {
     [Serializable]
     public class DeckComponentHealth : DeckComponent

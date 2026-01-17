@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Base;
 using Data.Buildable;
-using Deck.Base;
 using InGame.Agent.Building;
 using Instancing;
 using ItemVisualProviders;

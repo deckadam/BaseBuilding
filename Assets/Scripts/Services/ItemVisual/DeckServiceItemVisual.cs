@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Base;
-using Deck.Base;
 using ItemVisualProviders;
 using UnityEngine;
 using Utility;
@@ -58,23 +57,35 @@ namespace Services.ItemVisual
             return false;
         }
 
-        public bool RequestMultipleItemVisual(DeckAgent agent, DeckId deckId, int count, Vector2Int cellIndex, Vector2Int[] indices, out DeckItemVisual[] result)
+        public bool RequestMultipleItemVisual(DeckAgent[] agents, DeckId deckId, int count, Vector2Int[] indices, out DeckItemVisual[] result)
         {
             if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
             {
-                var tempIndices = new Vector2Int[count];
-                for (var i = 0; i < count; i++)
-                {
-                    tempIndices[i] = cellIndex + indices[i];
-                }
-
                 result = new DeckItemVisual[count];
-                if (itemVisualProvider.RequestMultipleItemVisuals(agent, deckId, tempIndices, out result)) return true;
-                
+                if (itemVisualProvider.RequestBulkItemVisuals(agents, deckId, indices, out result)) return true;
+
                 DeckLogger.Error($"Multiple item visual couldn't be rented");
                 result = null;
                 return false;
+            }
+            else
+            {
+                DeckLogger.Error($"Item visual not found {deckId.ID}");
+                result = null;
+                return false;
+            }
+        }
 
+        public bool RequestMultipleItemVisual(DeckAgent[] agents, DeckId deckId, int count, out DeckItemVisual[] result)
+        {
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
+            {
+                result = new DeckItemVisual[count];
+                if (itemVisualProvider.RequestBulkItemVisuals(agents, deckId, out result)) return true;
+
+                DeckLogger.Error($"Multiple item visual couldn't be rented");
+                result = null;
+                return false;
             }
             else
             {

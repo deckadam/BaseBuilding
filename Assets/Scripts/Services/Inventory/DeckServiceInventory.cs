@@ -4,10 +4,10 @@ namespace Services.Inventory
 {
     public class DeckServiceInventory : DeckServiceBase
     {
-        private DeckInventoryDisplayerCell _cell;
+        private DeckInventoryDisplayCell _cell;
         private DeckInventoryPopUp _hovered;
 
-        public void OnDragBegin(DeckInventoryDisplayerCell cell)
+        public void OnDragBegin(DeckInventoryDisplayCell cell)
         {
             _cell = cell;
         }

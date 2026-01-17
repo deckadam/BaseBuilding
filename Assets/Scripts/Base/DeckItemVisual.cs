@@ -2,17 +2,16 @@
 using UnityEditor;
 #endif
 using System;
-using Base;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
 using Random = UnityEngine.Random;
 
-namespace Deck.Base
+namespace Base
 {
     public class DeckItemVisual : DeckPoolable
     {
-        [Unity.Collections.ReadOnly, SerializeField]
+        [ReadOnly, SerializeField]
         private bool isStatic;
 
         [SerializeField] private Vector3 localEquipRotation;
@@ -82,18 +81,15 @@ namespace Deck.Base
                 {
                     var sizes = boxCollider.bounds.size;
                     size = Mathf.Max(sizes.x, sizes.z) / 2f;
-                    Debug.LogError(sizes);
                 }
                 else if (collider is SphereCollider sphereCollider)
                 {
                     size = sphereCollider.radius / 2f;
-                    Debug.LogError(size);
                 }
                 else if (collider is CapsuleCollider capsuleCollider)
                 {
                     var sizes = capsuleCollider.bounds.size;
                     size = Mathf.Max(sizes.x, sizes.z) / 2f;
-                    Debug.LogError(sizes);
                 }
                 else
                 {

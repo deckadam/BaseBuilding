@@ -1,6 +1,6 @@
 ﻿using EventManager;
 
-namespace Deck.UI.Notification
+namespace UI.Notification
 {
     public class DeckEventNotificationRequested : IDeckEvent
     {

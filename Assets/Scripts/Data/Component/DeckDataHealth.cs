@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Deck.Data.Component
+namespace Data.Component
 {
     [CreateAssetMenu(fileName = "Deck Data Health", menuName = "Deck/Data/Component/Health")]
     public class DeckDataHealth : DeckDataComponent

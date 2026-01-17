@@ -1,11 +1,11 @@
 ﻿using Cinemachine;
-using Deck.Data.Camera;
-using Deck.Services.Building.Events;
+using Data.Camera;
 using EventManager;
+using Services.Building.Events;
 using UnityEngine;
 using Zenject;
 
-namespace Deck.CameraController
+namespace CameraController
 {
     public class DeckFreeRoamCameraController : MonoBehaviour
     {

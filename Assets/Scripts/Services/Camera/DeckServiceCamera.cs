@@ -1,15 +1,13 @@
-﻿using Deck.Utility;
-using Services;
-using UnityEngine;
+﻿using UnityEngine;
 using Utility;
 
-namespace Deck.Services.Cam
+namespace Services.Camera
 {
     public class DeckServiceCamera : DeckServiceBase
     {
         private BoxCollider _generatedCollider;
 
-        private Camera _camera;
+        private UnityEngine.Camera _camera;
         private Plane _groundPlane;
 
         public Vector3 GetCursorWorldPosition()
@@ -41,7 +39,7 @@ namespace Deck.Services.Cam
 
         public override void Initialize()
         {
-            _camera = Camera.main;
+            _camera = UnityEngine.Camera.main;
             _groundPlane = new Plane(Vector3.up, Vector3.zero);
         }
 
@@ -50,7 +48,7 @@ namespace Deck.Services.Cam
             return _camera.ScreenPointToRay(Input.mousePosition);
         }
 
-        public Camera GetCamera()
+        public UnityEngine.Camera GetCamera()
         {
             return _camera;
         }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Deck.Base;
+using Base;
 
-namespace Deck.UI.Stats
+namespace UI.Stats
 {
     public class DeckUIStatContainer : DeckUIElement
     {

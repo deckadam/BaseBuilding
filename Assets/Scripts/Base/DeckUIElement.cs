@@ -1,13 +1,11 @@
 using System;
 using Instancing;
+using UnityEditor;
 using UnityEngine;
 using Utility;
 using Zenject;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-namespace Deck.Base
+namespace Base
 {
     public class DeckUIElement : DeckPoolable
     {
@@ -88,7 +86,7 @@ namespace Deck.Base
         }
 #endif
 
-        public override void OnDespawned()
+        public override void OnDeSpawned()
         {
             if (!_isSpawned)
             {

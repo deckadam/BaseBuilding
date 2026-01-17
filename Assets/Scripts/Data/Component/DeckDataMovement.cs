@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Deck.Data.Component
+namespace Data.Component
 {
     [CreateAssetMenu(fileName = "Deck Data Movement", menuName = "Deck/Data/Component/Movement")]
     public class DeckDataMovement : DeckDataComponent
