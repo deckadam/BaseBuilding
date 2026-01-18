@@ -74,7 +74,7 @@ namespace Systems.SystemInput
 
         private void CheckForDestroyBuilding()
         {
-            if (!Input.GetKeyDown(KeyCode.Delete)) return;
+            if (!Input.GetKey(KeyCode.Delete)) return;
 
             var ray = DeckServiceProvider.GetService<DeckServiceCamera>().GetRayFromCamera();
             if (!Physics.Raycast(ray, out var hit)) return;
@@ -82,7 +82,6 @@ namespace Systems.SystemInput
             if (hit.transform.TryGetComponentInParent<DeckAgent>(out var agent))
             {
                 agent.RequestDestroy();
-                return;
             }
             else if (hit.transform.TryGetComponentInParent<DeckItemVisual>(out var itemVisual))
             {

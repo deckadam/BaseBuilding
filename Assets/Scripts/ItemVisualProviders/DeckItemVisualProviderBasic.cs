@@ -67,38 +67,16 @@ namespace ItemVisualProviders
             return false;
         }
 
-        protected bool BulkRentIfHasItemVisual(DeckId prefabId, int count, out DeckItemVisual[] itemVisuals)
+        protected void BulkRentIfHasItemVisual(DeckId prefabId, int count, out DeckItemVisual[] itemVisuals)
         {
-            if (_supportedItemVisuals.Contains(prefabId.ID))
-            {
-                itemVisuals = _instanceProvider.BulkRentItemVisual(prefabId, count);
-                DeckServiceProvider.GetService<DeckServiceFinder>().BulkRegisterItemVisual(itemVisuals);
-                return true;
-            }
-
-            itemVisuals = default;
-            return false;
+            itemVisuals = _instanceProvider.BulkRentItemVisual(prefabId, count);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RegisterItemVisual(itemVisuals);
         }
 
-        protected bool TryReturnItemVisual(DeckItemVisual itemVisual)
+        protected void TryReturnItemVisual(DeckItemVisual[] itemVisual)
         {
-            if (!_supportedItemVisuals.Contains(itemVisual.PrefabId.ID)) return false;
-
             _instanceProvider.ReturnItemVisual(itemVisual);
             DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
-
-            return true;
-        }
-
-        protected bool TryReturnItemVisual(DeckItemVisual[] itemVisual)
-        {
-            var sample = itemVisual[0];
-            if (!_supportedItemVisuals.Contains(sample.PrefabId.ID)) return false;
-
-            _instanceProvider.ReturnItemVisual(itemVisual);
-            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
-
-            return true;
         }
 
         public HashSet<int> GetSupportedItemVisuals()
@@ -149,15 +127,26 @@ namespace ItemVisualProviders
             throw new Exception("Multiple rent is not implemented for basic provider");
         }
 
-
-        public virtual bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public virtual void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            return TryReturnItemVisual(itemVisual);
+            _instanceProvider.ReturnItemVisual(itemVisual);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
+        }
+        
+        protected void ReturnItemVisualToPool(DeckItemVisual itemVisual)
+        {
+            _instanceProvider.ReturnItemVisual(itemVisual);
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
         }
 
-        public virtual bool ReturnItemVisual(DeckItemVisual[] itemVisuals)
+        protected void ReturnItemVisualToPool(DeckItemVisual[] itemVisuals)
         {
-            return TryReturnItemVisual(itemVisuals);
+            foreach (var itemVisual in itemVisuals)
+            {
+                _instanceProvider.ReturnItemVisual(itemVisual);
+            }
+
+            DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisuals);
         }
     }
 }

@@ -3,6 +3,7 @@ using InGame.Map.Data;
 using Instancing;
 using ItemVisualProviders;
 using ItemVisualProviders.Door;
+using ItemVisualProviders.Wall;
 using Services.Building;
 using Systems.SystemSave;
 using UnityEngine;

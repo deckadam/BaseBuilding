@@ -3,12 +3,11 @@ using System.Linq;
 using Base;
 using EventManager;
 using ItemVisualProviders.Door.Events;
-using Services.Map;
 using UnityEngine;
 using Utility;
 using Utility.Iterators;
 
-namespace ItemVisualProviders
+namespace ItemVisualProviders.Wall
 {
     [CreateAssetMenu(fileName = "DeckItemVisualProviderWall", menuName = "Service/ItemVisualManager/DeckItemVisualProviderWall")]
     public class DeckItemVisualProviderWall : DeckItemVisualProviderBasic
@@ -56,7 +55,7 @@ namespace ItemVisualProviders
         {
             if (_wallCheckSet.Contains(obj.position))
             {
-                TryReturnItemVisual(_activeWalls[obj.position]);
+                ReturnItemVisualToPool(_activeWalls[obj.position]);
                 _activeWalls.Remove(obj.position);
                 _activeWallAgents.Remove(obj.position);
                 _wallCheckSet.Remove(obj.position);
@@ -69,7 +68,7 @@ namespace ItemVisualProviders
             {
                 if (!_activeWalls.TryGetValue(neighbour, out var temp)) continue;
 
-                TryReturnItemVisual(temp);
+                ReturnItemVisualToPool(temp);
                 PlaceItemVisual(neighbour);
             }
         }
@@ -83,16 +82,14 @@ namespace ItemVisualProviders
                 if (!_wallCheckSet.Contains(neighbour))
                     continue;
 
-                TryReturnItemVisual(_activeWalls[neighbour]);
+                ReturnItemVisualToPool(_activeWalls[neighbour]);
                 PlaceWallWithNeighbours(neighbour);
             }
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public override void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            if (!IsSupportedItemVisual(itemVisual)) return false;
-
-            TryReturnItemVisual(itemVisual);
+            ReturnItemVisualToPool(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
 
             _activeWalls.Remove(itemPos);
@@ -105,11 +102,9 @@ namespace ItemVisualProviders
                 if (!_wallCheckSet.Contains(neighbour))
                     continue;
 
-                TryReturnItemVisual(_activeWalls[neighbour]);
+                ReturnItemVisualToPool(_activeWalls[neighbour]);
                 PlaceWallWithNeighbours(neighbour);
             }
-
-            return true;
         }
 
         public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
@@ -165,29 +160,8 @@ namespace ItemVisualProviders
                 _activeWalls[position] = newInstance;
                 itemVisuals[i] = newInstance;
             }
+
             return true;
-        }
-
-        public void RequestFill(Vector2Int minIndex, Vector2Int maxIndex)
-        {
-            for (var x = minIndex.x; x < maxIndex.x; x++)
-            {
-                for (var y = minIndex.y; y < maxIndex.y; y++)
-                {
-                    _wallCheckSet.Add(new Vector2Int(x, y));
-                }
-            }
-
-            var mapTransform = DeckServiceScene.GetMap().transform;
-            for (var x = minIndex.x; x < maxIndex.x; x++)
-            {
-                for (var y = minIndex.y; y < maxIndex.y; y++)
-                {
-                    var itemVisual = PlaceItemVisual(new Vector2Int(x, y), false, false);
-                    itemVisual.transform.SetParent(mapTransform);
-                    itemVisual.transform.position = new Vector3(x, 0, y);
-                }
-            }
         }
 
         private DeckItemVisual PlaceWallWithNeighbours(Vector2Int position)
@@ -197,7 +171,7 @@ namespace ItemVisualProviders
             foreach (var neighbour in neighbours)
             {
                 if (!_wallCheckSet.Contains(neighbour)) continue;
-                TryReturnItemVisual(_activeWalls[neighbour]);
+                ReturnItemVisualToPool(_activeWalls[neighbour]);
                 PlaceItemVisual(neighbour);
             }
 

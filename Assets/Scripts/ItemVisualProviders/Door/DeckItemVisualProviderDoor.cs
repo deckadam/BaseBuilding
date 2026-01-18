@@ -24,23 +24,20 @@ namespace ItemVisualProviders.Door
             _activeDoors = new Dictionary<Vector2Int, DeckItemVisual>();
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public override void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            if (!itemVisual.PrefabId.Equals(doorPrefab.PrefabId)) return false;
-
             var pos = itemVisual.transform.position.ToVector2Int();
             if (!_doorCheckSet.Contains(pos))
             {
                 DeckLogger.Inform("Non registered door tried to return item visual");
-                return false;
+                return;
             }
 
             _doorCheckSet.Remove(pos);
-            TryReturnItemVisual(itemVisual);
+            ReturnItemVisualToPool(itemVisual);
 
             DeckEventOnDoorRemoved.Create(pos).Send();
             _activeDoors.Remove(pos);
-            return true;
         }
 
         public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
@@ -69,7 +66,6 @@ namespace ItemVisualProviders.Door
 
         private Quaternion GetDoorRotation(Vector2Int cellIndex)
         {
-
             var neighbourSet = new bool[4];
             DeckEventOnNeighbourSetRequested.Create(cellIndex, ref neighbourSet).Send();
 

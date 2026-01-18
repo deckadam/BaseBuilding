@@ -23,7 +23,7 @@ namespace Services.Finder
             _itemVisuals[itemVisual.UniqueId.ID] = itemVisual;
         }
 
-        public void BulkRegisterItemVisual(DeckItemVisual[] itemVisual)
+        public void RegisterItemVisual(DeckItemVisual[] itemVisual)
         {
             foreach (var item in itemVisual)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Base;
 using EventManager;
+using ItemVisualProviders.Wall;
 using Services.AreaController.Events;
 using UnityEngine;
 using Utility;
@@ -123,7 +124,7 @@ namespace ItemVisualProviders
                             continue;
                         }
 
-                        TryReturnItemVisual(currentlyPlaced);
+                        ReturnItemVisualToPool(currentlyPlaced);
                     }
 
                     positionsToRemove.Remove(prefabSet.Item2);
@@ -135,7 +136,7 @@ namespace ItemVisualProviders
 
                 foreach (var positionToRemove in positionsToRemove)
                 {
-                    TryReturnItemVisual(existingValues[positionToRemove]);
+                    ReturnItemVisualToPool(existingValues[positionToRemove]);
                     existingValues.Remove(positionToRemove);
                 }
 
@@ -143,18 +144,16 @@ namespace ItemVisualProviders
             }
         }
 
-        public override bool ReturnItemVisual(DeckItemVisual itemVisual)
+        public override void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            if (!IsSupportedItemVisual(itemVisual)) return false;
-
-            TryReturnItemVisual(itemVisual);
+            ReturnItemVisualToPool(itemVisual);
             var itemPos = itemVisual.transform.position.ToVector2Int();
 
             if (_activeWallConnections.TryGetValue(itemPos, out var existingValues))
             {
                 foreach (var deckItemVisual in existingValues)
                 {
-                    TryReturnItemVisual(deckItemVisual.Value);
+                    ReturnItemVisualToPool(deckItemVisual.Value);
                 }
 
                 _activeBarTables.Remove(itemPos);
@@ -163,8 +162,6 @@ namespace ItemVisualProviders
             _activeBarTables.Remove(itemPos);
             _activeBarTableAgents.Remove(itemPos);
             _barTableCheckSet.Remove(itemPos);
-
-            return true;
         }
 
         public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
@@ -189,7 +186,7 @@ namespace ItemVisualProviders
             {
                 if (_barTableCheckSet.Contains(neighbour))
                 {
-                    TryReturnItemVisual(_activeBarTables[neighbour]);
+                    ReturnItemVisualToPool(_activeBarTables[neighbour]);
                     PlaceItemVisual(neighbour);
                 }
 
