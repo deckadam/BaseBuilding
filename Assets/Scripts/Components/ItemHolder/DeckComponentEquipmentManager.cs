@@ -13,14 +13,14 @@ namespace Components.ItemHolder
 {
     public class DeckComponentEquipmentManager : DeckComponent, IDeckItemItemHolder
     {
-        private Dictionary<string, Transform> _bindedTransforms;
+        private Dictionary<string, Transform> _boundTransforms;
         private DeckItemVisual _currentlyEquippedItem;
         private DeckDataItem _currentlyEquippedItemData;
         private string _currentlyEquippedItemState;
 
         protected override void InternalPostInitialize()
         {
-            _bindedTransforms = new Dictionary<string, Transform>();
+            _boundTransforms = new Dictionary<string, Transform>();
             var binders = agent.GetComponentsInChildren<DeckTransformBinder>();
             if (binders.Length == 0)
             {
@@ -48,9 +48,9 @@ namespace Components.ItemHolder
 
         private void AddEquipmentPosition(string temp, DeckTransformBinder binder)
         {
-            if (!_bindedTransforms.ContainsKey(temp))
+            if (!_boundTransforms.ContainsKey(temp))
             {
-                _bindedTransforms[temp] = binder.transform;
+                _boundTransforms[temp] = binder.transform;
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace Components.ItemHolder
 
             var animationName = itemToHold.AnimationName;
 
-            if (_bindedTransforms.TryGetValue(animationName, out var target))
+            if (_boundTransforms.TryGetValue(animationName, out var target))
             {
                 EquipItem(itemToHold, target);
                 SetAnimation(itemToHold);
@@ -92,20 +92,14 @@ namespace Components.ItemHolder
         private void EquipItem(DeckDataItem itemData, Transform target)
         {
             _currentlyEquippedItemData = itemData;
-            if (!DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem))
-            {
-                DeckLogger.Error("Can't get item visual for " + itemData.Name);
-                return;
-            }
+            DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(itemData.Representation.PrefabId, out _currentlyEquippedItem);
 
             _currentlyEquippedItem.transform.SetParent(target, true);
             _currentlyEquippedItem.transform.localPosition = _currentlyEquippedItem.LocalEquipPosition;
             _currentlyEquippedItem.transform.eulerAngles = _currentlyEquippedItem.LocalEquipRotation;
             _currentlyEquippedItem.OnEquip();
         }
-
-        public DeckItemVisual GetEquippedItem() => _currentlyEquippedItem;
-
+        
         public override object GetData()
         {
             if (_currentlyEquippedItem != null)
@@ -127,6 +121,8 @@ namespace Components.ItemHolder
             // var itemData = _binderItem.GetItemWithName(data.equippedItemName);
             // SetItemToHold(itemData);
         }
+        
+        public DeckItemVisual GetEquippedItem() => _currentlyEquippedItem;
 
         [Serializable]
         private struct SaveData

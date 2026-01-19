@@ -34,11 +34,7 @@ namespace Components.ItemDropper
             var item = drop.itemDrop.GetItem();
             for (var i = 0; i < drop.amount; i++)
             {
-                if (!DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem))
-                {
-                    DeckLogger.Error("Item visual not found for id " + item.Representation.PrefabId);
-                    continue;
-                }
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(item.Representation.PrefabId, out var createdItem);
 
                 createdItem.transform.position = agent.transform.position;
                 createdItem.transform.rotation = Random.rotation;

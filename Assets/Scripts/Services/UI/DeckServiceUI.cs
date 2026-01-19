@@ -21,7 +21,7 @@ namespace Services.UI
             var typeOfT = typeof(T);
             var temp = _uiImplementations[typeOfT];
 
-            await DisappearAllWindowsExceptRequired<T>(typeOfT);
+            await DisappearAllWindowsExceptRequired<T>();
 
             if (temp.isAppeared || temp.IsAppearing)
             {
@@ -46,18 +46,18 @@ namespace Services.UI
                 return;
             }
 
-            await DisappearAllWindowsExceptRequired<T>(typeOfT);
+            await DisappearAllWindowsExceptRequired<T>();
 
             await _uiImplementations[typeOfT].Appear();
 
             DeckLogger.UI("Show window " + typeOfT);
         }
 
-        private async UniTask DisappearAllWindowsExceptRequired<T>(Type typeOfT) where T : DeckUIBase
+        private async UniTask DisappearAllWindowsExceptRequired<T>() where T : DeckUIBase
         {
             foreach (var impl in _uiImplementations)
             {
-                if (impl.Value.GetType() != typeOfT)
+                if (impl.Value.GetType() != typeof(T))
                 {
                     await impl.Value.Disappear();
                 }
@@ -81,7 +81,7 @@ namespace Services.UI
             }
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
             foreach (var impl in _uiImplementations)
             {
@@ -105,7 +105,7 @@ namespace Services.UI
             }
         }
 
-        public override void BeforeGameSessionDeinitialized()
+        public override void BeforeGameSessionDeInitialized()
         {
             foreach (var keyValuePair in _uiImplementations)
             {

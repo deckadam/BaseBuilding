@@ -4,16 +4,11 @@ using Base;
 using Data.Buildable;
 using Data.General;
 using EventManager;
-using GameManager.Events;
 using InGame.Agent.Building;
-using InGame.Agent.Wall;
-using InGame.Map.Data;
 using Instancing;
-using ItemVisualProviders;
 using Services.Camera;
 using Services.Currency;
 using Services.ItemVisual;
-using Services.Map;
 using Systems.SystemInput.Events;
 using UI.Building.BuildMode;
 using UI.Notification;
@@ -70,46 +65,6 @@ namespace Services.Building
             {
                 name = "SilhouetteParent"
             };
-            DeckEventManager.Register<DeckEventOnNewMapCreated>(OnNewMapCreated);
-        }
-
-        public override void DeInitialize()
-        {
-            DeckEventManager.Unregister<DeckEventOnNewMapCreated>(OnNewMapCreated);
-        }
-
-        private void OnNewMapCreated(DeckEventOnNewMapCreated obj)
-        {
-            BuildInRectBulk(obj.mapData.WallBuildable, Vector2Int.zero, obj.mapData.MapSize);
-        }
-
-        private void BuildInRectBulk(DeckBuildable buildable, Vector2Int min, Vector2Int max)
-        {
-            var cellCount = max.x * max.y;
-            var indices = new Vector2Int[max.x * max.y];
-
-            var counter_1 = 0;
-            for (var x = min.x; x < max.x; x++)
-            {
-                for (var y = min.y; y < max.y; y++)
-                {
-                    indices[counter_1++] = new Vector2Int(x, y);
-                }
-            }
-
-            var builtAgents = _instanceProvider.BulkRentAgent<DeckAgentBuilding>(buildable.Agent.PrefabId, cellCount);
-            DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(builtAgents, buildable.ItemVisual.PrefabId, cellCount, indices, out var rentedVisuals);
-
-            var counter_2 = 0;
-            for (var x = min.x; x < max.x; x++)
-            {
-                for (var y = min.y; y < max.y; y++)
-                {
-
-                    builtAgents[counter_2].transform.position = new Vector3(x, 0, y);
-                    builtAgents[counter_2].InitializeBuildingWithVisual(rentedVisuals[counter_2++]);
-                }
-            }
         }
 
         protected override void DrawGizmos()
@@ -144,7 +99,7 @@ namespace Services.Building
 
             if (_activeBuildable.RotationMode == DeckRotationMode.Continuous)
             {
-                _silhouetteParent.transform.Rotate(0, evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
+                _silhouetteParent.transform.Rotate(0, -evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
             }
             else if (_activeBuildable.RotationMode == DeckRotationMode.NinetyDegree)
             {
@@ -432,8 +387,8 @@ namespace Services.Building
             {
                 foreach (var rend in silhouettePiece.renderers)
                 {
-                    var materials = new Material[_activeBuildable.materialCount];
-                    for (int i = 0; i < _activeBuildable.materialCount; i++)
+                    var materials = new Material[_activeBuildable.MaterialCount];
+                    for (int i = 0; i < _activeBuildable.MaterialCount; i++)
                     {
                         materials[i] = material;
                     }
@@ -642,6 +597,34 @@ namespace Services.Building
             newBuilding.InitializeBuilding();
         }
 
+        public void BuildInRectBulk(DeckBuildable buildable, Vector2Int min, Vector2Int max)
+        {
+            var cellCount = max.x * max.y;
+            var indices = new Vector2Int[max.x * max.y];
+
+            var counter_1 = 0;
+            for (var x = min.x; x < max.x; x++)
+            {
+                for (var y = min.y; y < max.y; y++)
+                {
+                    indices[counter_1++] = new Vector2Int(x, y);
+                }
+            }
+
+            var builtAgents = _instanceProvider.BulkRentAgent<DeckAgentBuilding>(buildable.Agent.PrefabId, cellCount);
+            DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(builtAgents, buildable.ItemVisual.PrefabId, cellCount, indices, out var rentedVisuals);
+
+            var counter_2 = 0;
+            for (var x = min.x; x < max.x; x++)
+            {
+                for (var y = min.y; y < max.y; y++)
+                {
+                    builtAgents[counter_2].transform.position = new Vector3(x, 0, y);
+                    builtAgents[counter_2].InitializeBuildingWithVisual(rentedVisuals[counter_2++]);
+                }
+            }
+        }
+
         public void BuildWithAccess()
         {
             var currentCellIndex = _cameraService.GetCursorCellIndex();
@@ -690,36 +673,37 @@ namespace Services.Building
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
         {
-            if (_activeBuildable.ItemVisual.Collider is BoxCollider boxCollider)
+            switch (_activeBuildable.ItemVisual.Collider)
             {
-                var size = boxCollider.size;
-                var yOffset = new Vector3(0, boxCollider.size.y / 2f, 0);
-                return Physics.OverlapBoxNonAlloc(position + yOffset, size, _possibleColliders) > 0;
+                case BoxCollider boxCollider:
+                {
+                    var size = boxCollider.size;
+                    var yOffset = new Vector3(0, boxCollider.size.y / 2f, 0);
+                    return Physics.OverlapBoxNonAlloc(position + yOffset, size, _possibleColliders) > 0;
+                }
+                case SphereCollider sphereCollider:
+                {
+                    var radius = sphereCollider.radius;
+                    var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
+                    return Physics.OverlapSphereNonAlloc(position + yOffset, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
+                }
+                case CapsuleCollider capsuleCollider:
+                {
+                    var direction = new Vector3 { [capsuleCollider.direction] = 1 };
+                    var radius = capsuleCollider.radius;
+                    var offset = capsuleCollider.height / 2 - radius;
+                    var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
+                    var localPoint0 = capsuleCollider.center - direction * offset + yOffset;
+                    var localPoint1 = capsuleCollider.center + direction * offset + yOffset;
+                    var point0 = _silhouetteParent.transform.TransformPoint(localPoint0);
+                    var point1 = _silhouetteParent.transform.TransformPoint(localPoint1);
+
+                    return Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
+                }
+                default:
+                    DeckLogger.Error($"Not suppoerted collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
+                    return true;
             }
-
-            if (_activeBuildable.ItemVisual.Collider is SphereCollider sphereCollider)
-            {
-                var radius = sphereCollider.radius;
-                var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
-                return Physics.OverlapSphereNonAlloc(position + yOffset, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
-            }
-
-            if (_activeBuildable.ItemVisual.Collider is CapsuleCollider capsuleCollider)
-            {
-                var direction = new Vector3 { [capsuleCollider.direction] = 1 };
-                var radius = capsuleCollider.radius;
-                var offset = capsuleCollider.height / 2 - radius;
-                var yOffset = new Vector3(0, radius + YOffsetForBuildOnTop, 0);
-                var localPoint0 = capsuleCollider.center - direction * offset + yOffset;
-                var localPoint1 = capsuleCollider.center + direction * offset + yOffset;
-                var point0 = _silhouetteParent.transform.TransformPoint(localPoint0);
-                var point1 = _silhouetteParent.transform.TransformPoint(localPoint1);
-
-                return Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
-            }
-
-            DeckLogger.Error($"Not suppoerted collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
-            return true;
         }
 
         public void ClearAll()
@@ -818,6 +802,12 @@ namespace Services.Building
             }
 
             if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) != 0)
+            {
+                collidedObject = null;
+                return false;
+            }
+
+            if (_possibleColliders[0] == null)
             {
                 collidedObject = null;
                 return false;

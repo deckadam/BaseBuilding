@@ -10,7 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 236d970d31a84e518f5f1afcd987c4a9, type: 3}
-  m_Name: Deck Data Map
+  m_Name: Deck Game Setting Basic
   m_EditorClassIdentifier: 
   mapSize: {x: 50, y: 50}
-  wallBuildable: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  wallType: 0
+  allWallData:
+  - wallType: 0
+    wallBuildable: {fileID: 11400000, guid: 05111e09f9bb36c419e5581bcdbc28f2, type: 2}
+  - wallType: 1
+    wallBuildable: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  - wallType: 2
+    wallBuildable: {fileID: 0}

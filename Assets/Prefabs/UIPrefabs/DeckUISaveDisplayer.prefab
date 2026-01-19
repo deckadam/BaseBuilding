@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1160842831219286453}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -168,7 +167,6 @@ RectTransform:
   m_Children:
   - {fileID: 5643550382969695925}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -225,5 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bf352bdca154ca48ebb971c753ddbdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabId:
+    _id: 47556164
+  rectTransform: {fileID: 1160842831219286453}
   displayText: {fileID: 1394192606023689745}
-  rectTransform: {fileID: 0}

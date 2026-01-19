@@ -3,7 +3,6 @@ using Components.Inventory;
 using Data.Currency;
 using GameManager;
 using InGame.Agent.Customer;
-using InGame.Map.Data;
 using Instancing;
 using Services;
 using Services.Camera;

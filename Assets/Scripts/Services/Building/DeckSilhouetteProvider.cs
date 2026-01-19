@@ -18,7 +18,7 @@ namespace Services.Building
         {
             _buildingData = buildingData;
         }
-        
+
         public DeckSilhouettePiece GetSilhouettePiece(DeckBuildable activeBuildable)
         {
             var silhouetteData = activeBuildable.Silhouette;
@@ -56,7 +56,7 @@ namespace Services.Building
             {
                 var data = silhouetteData[index];
 
-                CreateNewSilhouettePiece(activeBuildable.materialCount, data.GetPosition(), data.GetMesh(), index, pieceParent, newPiece);
+                CreateNewSilhouettePiece(activeBuildable.MaterialCount, data.GetPosition(), data.GetMesh(), index, pieceParent, newPiece);
             }
 
             return newPiece;

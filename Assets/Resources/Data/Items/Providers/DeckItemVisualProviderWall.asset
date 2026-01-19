@@ -25,15 +25,22 @@ MonoBehaviour:
   - {fileID: 6395205563783229675, guid: c283edfe2beb6b7488dfeab336a75cfe, type: 3}
   - {fileID: 6395205563783229675, guid: 667af216e8a0a7645a549f64834598aa, type: 3}
   - {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
-  horizontalPrefab: {fileID: 6395205563783229675, guid: cd877f7acc901234b89a5ab3b3b46f50, type: 3}
-  verticalPrefab: {fileID: 6395205563783229675, guid: 439aa77a5c3bfc04585370963192bf81, type: 3}
-  twoCornerUpperLeftPrefab: {fileID: 6395205563783229675, guid: b5c9f3944b3e83445b2897bdab229b42, type: 3}
-  twoCornerUpperRightPrefab: {fileID: 6395205563783229675, guid: fd26029cbbb9a4d48bd7bd64dd5f9c66, type: 3}
-  twoCornerLowerLeftPrefab: {fileID: 6395205563783229675, guid: 7a0c5cbe791e4c140a3b0da7321fea59, type: 3}
-  twoCornerLowerRightPrefab: {fileID: 6395205563783229675, guid: e229d7932ac05934d8b94d8de7da1ce5, type: 3}
-  threeCornerUpperPrefab: {fileID: 6395205563783229675, guid: c283edfe2beb6b7488dfeab336a75cfe, type: 3}
-  threeCornerLowerPrefab: {fileID: 6395205563783229675, guid: e6a2ddfa4209ff145929006df790f9d9, type: 3}
-  threeCornerLeftPrefab: {fileID: 6395205563783229675, guid: f02f2384e46e16242ba3cb3e582e9ffc, type: 3}
-  threeCornerRightPrefab: {fileID: 6395205563783229675, guid: aaf04180043aa0e478a2ae7b7d54c363, type: 3}
-  fourCornerPrefab: {fileID: 6395205563783229675, guid: 667af216e8a0a7645a549f64834598aa, type: 3}
-  emptyPrefab: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
+  - {fileID: 6395205563783229675, guid: dbf0c99f78d083044a641b87cf097167, type: 3}
+  wallProviderBasic:
+    wallItemVisual: {fileID: 6395205563783229675, guid: dbf0c99f78d083044a641b87cf097167, type: 3}
+  wallProviderFourNeighbour:
+    wallItemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
+    horizontalPrefab: {fileID: 6395205563783229675, guid: cd877f7acc901234b89a5ab3b3b46f50, type: 3}
+    verticalPrefab: {fileID: 6395205563783229675, guid: 439aa77a5c3bfc04585370963192bf81, type: 3}
+    twoCornerUpperLeftPrefab: {fileID: 6395205563783229675, guid: b5c9f3944b3e83445b2897bdab229b42, type: 3}
+    twoCornerUpperRightPrefab: {fileID: 6395205563783229675, guid: fd26029cbbb9a4d48bd7bd64dd5f9c66, type: 3}
+    twoCornerLowerLeftPrefab: {fileID: 6395205563783229675, guid: 7a0c5cbe791e4c140a3b0da7321fea59, type: 3}
+    twoCornerLowerRightPrefab: {fileID: 6395205563783229675, guid: e229d7932ac05934d8b94d8de7da1ce5, type: 3}
+    threeCornerUpperPrefab: {fileID: 6395205563783229675, guid: c283edfe2beb6b7488dfeab336a75cfe, type: 3}
+    threeCornerLowerPrefab: {fileID: 6395205563783229675, guid: e6a2ddfa4209ff145929006df790f9d9, type: 3}
+    threeCornerLeftPrefab: {fileID: 6395205563783229675, guid: f02f2384e46e16242ba3cb3e582e9ffc, type: 3}
+    threeCornerRightPrefab: {fileID: 6395205563783229675, guid: aaf04180043aa0e478a2ae7b7d54c363, type: 3}
+    fourCornerPrefab: {fileID: 6395205563783229675, guid: 667af216e8a0a7645a549f64834598aa, type: 3}
+    emptyPrefab: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
+  wallProviderEightNeighbour:
+    wallItemVisual: {fileID: 0}

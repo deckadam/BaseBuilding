@@ -1,7 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
 using EventManager;
 using GameManager;
-using InGame.Map.Data;
+using GameManager.Data.GameSetting;
+using GameManager.Events;
 using Services;
 using Services.UI;
 using Systems.SystemSave;
@@ -11,7 +12,6 @@ using UI.Saves;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
-using Zenject;
 
 namespace UI.MainMenu
 {
@@ -22,13 +22,6 @@ namespace UI.MainMenu
         [SerializeField] private Button loadSavesButton;
 
         private bool _loadingInProgress;
-        private DeckDataMap _mapData;
-
-        [Inject]
-        private void Inject(DeckDataMap mapData)
-        {
-            _mapData = mapData;
-        }
 
         public override void Initialize()
         {
@@ -60,7 +53,7 @@ namespace UI.MainMenu
             DeckEventOnMainMenuDisappear.Create().Send();
         }
 
-        public async void OnNewGame()
+        public async void OnNewGame(DeckGameSettingBasic gameSettingBasic)
         {
             if (_loadingInProgress)
             {
@@ -70,8 +63,12 @@ namespace UI.MainMenu
             _loadingInProgress = true;
             DeckLogger.Inform("New game starting");
 
-            DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame(_mapData);
+            await DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame();
+            
             DeckEventOnGameSceneLoaded.Create().Send();
+            DeckEventOnGameSettingsLoaded.Create(gameSettingBasic).Send();
+            
+            gameSettingBasic.OnSettingLoadedNewGame();
 
             await UniTask.NextFrame();
             await Disappear();

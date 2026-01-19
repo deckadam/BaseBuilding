@@ -10,6 +10,8 @@ namespace Services.Map
         private const string MapName = "MapScene";
         private static DeckMap _sceneParent;
 
+        private bool _isMapLoaded;
+
         public static DeckMap GetMap()
         {
             if (_sceneParent != null)
@@ -39,6 +41,13 @@ namespace Services.Map
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(MapName));
             DeckServiceProvider.AfterGameSessionInitialized();
             DeckLogger.Map("New map scene loaded");
+
+            _isMapLoaded = true;
+        }
+
+        public bool IsMapLoaded()
+        {
+            return _isMapLoaded;
         }
     }
 }

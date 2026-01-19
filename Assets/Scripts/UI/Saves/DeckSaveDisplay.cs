@@ -13,7 +13,7 @@ using Utility.Constants;
 
 namespace UI.Saves
 {
-    public class DeckSaveDisplayer : DeckUIElement, IPointerClickHandler
+    public class DeckSaveDisplay : DeckUIElement, IPointerClickHandler
     {
         [SerializeField] private TextMeshProUGUI displayText;
 

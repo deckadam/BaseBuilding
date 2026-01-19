@@ -19,9 +19,9 @@ namespace UI
         internal bool IsDisappearing;
 
         [Inject]
-        private void Inject(DeckBinderUI binderUI)
+        private void Inject(DeckBinderUI binder)
         {
-            this.binderUI = binderUI;
+            binderUI = binder;
         }
 
         [Button]
@@ -45,6 +45,9 @@ namespace UI
                 isAppeared = true;
                 canvasGroup.blocksRaycasts = true;
                 canvasGroup.interactable = true;
+
+                OnPreAppear();
+                OnPostAppear();
             }
             else
             {
@@ -52,6 +55,9 @@ namespace UI
                 isAppeared = false;
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.interactable = false;
+
+                OnPreDisappear();
+                OnPostDisappear();
             }
         }
 

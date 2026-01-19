@@ -18,20 +18,20 @@ namespace Services.AreaController
             _areaPositions = new HashSet<Vector2Int>();
         }
 
-        public override void WarmUp()
+        protected override void WarmUp()
         {
-            DeckEventManager.Register<DeckEventOnWallBuild>(OnWallBuild);
-            DeckEventManager.Register<DeckEventOnWallDestroyed>(OnWallDestroyed);
-            DeckEventManager.Register<DeckEventOnDoorBuild>(OnDoorBuild);
-            DeckEventManager.Register<DeckEventOnDoorDestroyed>(OnDoorDestroyed);
+            // DeckEventManager.Register<DeckEventOnWallBuild>(OnWallBuild);
+            // DeckEventManager.Register<DeckEventOnWallDestroyed>(OnWallDestroyed);
+            // DeckEventManager.Register<DeckEventOnDoorBuild>(OnDoorBuild);
+            // DeckEventManager.Register<DeckEventOnDoorDestroyed>(OnDoorDestroyed);
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckEventOnWallBuild>(OnWallBuild);
-            DeckEventManager.Unregister<DeckEventOnWallDestroyed>(OnWallDestroyed);
-            DeckEventManager.Unregister<DeckEventOnDoorBuild>(OnDoorBuild);
-            DeckEventManager.Unregister<DeckEventOnDoorDestroyed>(OnDoorDestroyed);
+            // DeckEventManager.Unregister<DeckEventOnWallBuild>(OnWallBuild);
+            // DeckEventManager.Unregister<DeckEventOnWallDestroyed>(OnWallDestroyed);
+            // DeckEventManager.Unregister<DeckEventOnDoorBuild>(OnDoorBuild);
+            // DeckEventManager.Unregister<DeckEventOnDoorDestroyed>(OnDoorDestroyed);
         }
 
         private void OnDoorBuild(DeckEventOnDoorBuild obj)

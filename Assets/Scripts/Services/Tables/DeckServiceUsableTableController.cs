@@ -27,7 +27,7 @@ namespace Services.Tables
             DeckEventManager.Register<DeckEventOnChairDestroyed>(OnChairDestroyed);
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
             DeckEventManager.Unregister<DeckEventOnTablePlaced>(OnTablePlaced);
             DeckEventManager.Unregister<DeckEventOnTableDestroyed>(OnTableDestroyed);
@@ -139,7 +139,7 @@ namespace Services.Tables
             _usableTables.Clear();
         }
 
-        public override void BeforeGameSessionDeinitialized()
+        public override void BeforeGameSessionDeInitialized()
         {
         }
     }

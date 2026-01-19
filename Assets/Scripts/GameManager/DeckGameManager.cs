@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using Components.Health;
+using Cysharp.Threading.Tasks;
 using Data.Item;
+using GameManager.Data;
 using GameManager.Events;
 using InGame.Agent.Waiter;
-using InGame.Map.Data;
 using Instancing;
 using Services;
 using Services.Building;
 using Services.Finder;
 using Services.Map;
-using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
 using UnityEngine;
-using Utility;
 using Utility.MVC;
 using Zenject;
 
@@ -36,11 +35,10 @@ namespace GameManager
             _loadResolver = loadResolver;
         }
 
-        public async void CreateNewGame(DeckDataMap mapData)
+        public async UniTask CreateNewGame()
         {
             DeckSaveSystem.CreateNewSave();
             await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
-            DeckEventOnNewMapCreated.Create(mapData).Send();
         }
 
         public async void LoadGame()
@@ -55,7 +53,7 @@ namespace GameManager
             DeckServiceProvider.BeforeSaveRequest();
 
             var agents = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgents();
-            var agentDatas = new DeckComponentHolderSaveDatas();
+            var agentData = new DeckComponentHolderSaveDatas();
             foreach (var agent in agents)
             {
                 if (!agent.WillSave)
@@ -63,19 +61,19 @@ namespace GameManager
                     continue;
                 }
 
-                agentDatas.datas.Add(new DeckComponentHolderSaveData
+                agentData.data.Add(new DeckComponentHolderSaveData
                 {
                     uniqueId = agent.UniqueId.ID,
-                    componentDatas = agent.GetSaveData(),
                     prefabId = agent.PrefabId.ID,
                     position = agent.transform.position,
                     rotation = agent.transform.eulerAngles,
                     scale = agent.transform.localScale,
+                    componentDatas = agent.GetComponentData(),
                     additionalData = agent.GetAdditionalData()
                 });
             }
 
-            DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), agentDatas);
+            DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), agentData);
         }
     }
 }

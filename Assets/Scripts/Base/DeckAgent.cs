@@ -38,7 +38,7 @@ namespace Base
 
         protected Transform SelfTransform;
 
-        private bool _alreadyDeinitialized;
+        private bool _alreadyDeInitialized;
         private bool _hasBeenInitialized;
 
         protected DeckInstanceProvider instanceProvider;
@@ -149,6 +149,11 @@ namespace Base
             uniqueId = DeckId.CreateNew();
         }
 
+        public void SetNewUniqueId(int id)
+        {
+            uniqueId = DeckId.CreateNew();
+        }
+
         public void Initialize(int guid)
         {
             if (_hasBeenInitialized)
@@ -199,12 +204,12 @@ namespace Base
 
         private void DeInitialize()
         {
-            if (_alreadyDeinitialized)
+            if (_alreadyDeInitialized)
             {
                 return;
             }
 
-            _alreadyDeinitialized = true;
+            _alreadyDeInitialized = true;
             _hasBeenInitialized = false;
 
             foreach (var deckComponent in components)
@@ -218,7 +223,7 @@ namespace Base
             }
         }
 
-        public List<DeckComponentSaveData> GetSaveData()
+        public List<DeckComponentSaveData> GetComponentData()
         {
             var result = new List<DeckComponentSaveData>();
             foreach (var deckComponent in components)
@@ -333,7 +338,7 @@ namespace Base
             itemVisualInstance.transform.parent = SelfTransform;
             itemVisualInstance.transform.localPosition = Vector3.zero;
         }
-        
+
         public void SetItemVisuals(DeckItemVisual[] newInstances)
         {
             itemVisualInstances = newInstances;

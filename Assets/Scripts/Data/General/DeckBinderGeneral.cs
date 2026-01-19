@@ -1,5 +1,5 @@
-﻿using InGame.Agent.Waiter;
-using InGame.Map.Data;
+﻿using GameManager.Data.GameSetting;
+using InGame.Agent.Waiter;
 using Instancing;
 using ItemVisualProviders;
 using ItemVisualProviders.Door;
@@ -19,7 +19,7 @@ namespace Data.General
         [SerializeField] private DeckItemVisualProviderDoor doorProvider;
         [SerializeField] private DeckAgentWaiter agentWaiterPrefab;
         [SerializeField] private DeckInstanceProvider instanceProvider;
-        [SerializeField] private DeckDataMap mapData;
+        [SerializeField] private DeckGameSettingBasic[] gameSettings;
 
         public override void InstallBindings()
         {
@@ -31,7 +31,6 @@ namespace Data.General
             Container.BindInstance(wallProvider);
             Container.BindInstance(doorProvider);
             Container.BindInstance(instanceProvider);
-            Container.BindInstance(mapData);
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {

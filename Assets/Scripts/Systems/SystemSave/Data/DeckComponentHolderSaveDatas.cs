@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using Base;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Systems.SystemSave.Data
 {
     [Serializable]
     public class DeckComponentHolderSaveDatas
     {
-        public List<DeckComponentHolderSaveData> datas = new();
+        public List<DeckComponentHolderSaveData> data = new();
     }
 
     [Serializable]

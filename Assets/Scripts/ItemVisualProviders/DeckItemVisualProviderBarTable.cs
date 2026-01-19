@@ -166,12 +166,6 @@ namespace ItemVisualProviders
 
         public override bool RequestItemVisual(DeckAgent agent, DeckId prefabId, Vector2Int cellIndex, out DeckItemVisual itemVisual)
         {
-            if (!IsSupportedItemVisual(prefabId))
-            {
-                itemVisual = null;
-                return false;
-            }
-
             _activeBarTableAgents[cellIndex] = agent;
             _barTableCheckSet.Add(cellIndex);
             itemVisual = PlaceBarTableWithNeighbours(cellIndex);

@@ -12,7 +12,8 @@ namespace Systems.SystemSave
 {
     public static class DeckSaveSystem
     {
-        private static readonly string FILE_FORMAT = "MM'.'dd'.'yyyy' 'HH'.'mm'.'ss";
+        private const string FILE_FORMAT = "MM'.'dd'.'yyyy' 'HH'.'mm'.'ss";
+        
         private static SaveData _activeSaveData;
 
         public static void CreateNewSave()
@@ -43,6 +44,7 @@ namespace Systems.SystemSave
                 return;
             }
 
+            Debug.LogError(path);
             var data = ReadData(path);
             _activeSaveData = ConvertToActualData(data);
             DeckLogger.Save("Last save file loaded");
@@ -87,23 +89,24 @@ namespace Systems.SystemSave
         {
             DeckLogger.Save("Trying to get last save file path");
             var saveFiles = GetAllSaveFiles();
-            var splitedFileNames = GetSplitedFileNames(saveFiles);
+            var splitFileNames = GetSplitFileNames(saveFiles);
 
-            if (splitedFileNames == null || !splitedFileNames.Any())
+            if (splitFileNames == null || !splitFileNames.Any())
             {
                 DeckLogger.Save("File path does not exist or does not contain any save file");
                 return null;
             }
 
-            var convertedFileNames = splitedFileNames.Select(item => DateTime.ParseExact(item, FILE_FORMAT, null).ToString(FILE_FORMAT)).ToList();
+            var convertedFileNames = splitFileNames.Select(item => DateTime.ParseExact(item, FILE_FORMAT, null).ToString(FILE_FORMAT)).ToList();
 
             convertedFileNames.Sort();
+            convertedFileNames.Reverse();
 
             DeckLogger.Save("Returning last save file path");
             return convertedFileNames[^1];
         }
 
-        private static string[] GetAllSaveFiles()
+        private static FileInfo[] GetAllSaveFiles()
         {
             if (!Directory.Exists(Application.persistentDataPath))
             {
@@ -113,33 +116,35 @@ namespace Systems.SystemSave
                 return null;
             }
 
-            DeckLogger.Save("Returning all save file paths");
+            var info = new DirectoryInfo(Application.persistentDataPath);
+            var files = info.GetFiles().OrderBy(p => p.CreationTime).Reverse().ToArray();
 
-            return Directory.GetFiles(Application.persistentDataPath);
+            DeckLogger.Save("Returning all save file paths");
+            return files;
         }
 
         public static SaveFile[] GetAllSaves()
         {
             var saveFiles = GetAllSaveFiles();
-            var splitedFileNames = GetSplitedFileNames(saveFiles);
+            var splitedFileNames = GetSplitFileNames(saveFiles);
             var result = new SaveFile[saveFiles.Length];
 
             for (var i = 0; i < saveFiles.Length; i++)
             {
-                result[i] = new SaveFile(saveFiles[i], splitedFileNames[i]);
+                result[i] = new SaveFile(saveFiles[i].FullName, splitedFileNames[i]);
             }
 
             return result;
         }
 
-        private static List<string> GetSplitedFileNames(IEnumerable<string> fileNames)
+        private static List<string> GetSplitFileNames(IEnumerable<FileInfo> fileNames)
         {
             var result = new List<string>();
 
             foreach (var fileName in fileNames)
             {
-                var splitVersion = fileName.Split('\\');
-                var namePart = splitVersion[^1].Substring(0, splitVersion[^1].Length - 4);
+                var splitVersion = fileName.FullName.Split('\\');
+                var namePart = splitVersion[^1][..^4];
                 result.Add(namePart);
             }
 
@@ -195,13 +200,14 @@ namespace Systems.SystemSave
         private static void GetLastSaveFilePath_Editor()
         {
             var lastSaveFilePath = GetLastSaveFilePath();
+            DeckLogger.Inform(lastSaveFilePath);
         }
 
         [MenuItem("Deck/Save/Create dummy save file")]
         private static void CreateDummySaveFile_Editor()
         {
             _activeSaveData = new SaveData();
-            _activeSaveData["Test"] = "lorem ipsum";
+            _activeSaveData["Test"] = "Test";
             var serializedData = GetWritableData();
             File.WriteAllBytes(ConvertToFilePath(GetFileName()), serializedData);
         }
@@ -222,8 +228,8 @@ namespace Systems.SystemSave
 
         public class SaveFile
         {
-            public string path { get; private set; }
-            public string name { get; private set; }
+            public string path { get; }
+            public string name { get; }
 
             public SaveFile(string path, string name)
             {

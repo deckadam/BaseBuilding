@@ -22,7 +22,7 @@ namespace Services.Selection
             DeckEventManager.Register<DeckEventOnCoreAgentCreated>(OnCoreAgentCreated);
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
             _hotKeySelectionHandler.DeInitialize();
             DeckEventManager.Unregister<DeckEventOnCoreAgentDeath>(OnSelectableDeath);

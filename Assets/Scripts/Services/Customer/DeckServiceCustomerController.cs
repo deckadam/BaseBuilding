@@ -26,7 +26,7 @@ namespace Services.Customer
             DeckEventManager.Register<DeckEventOnTableAvailable>(OnTableAvailable);
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
             DeckEventManager.Unregister<DeckEventOnTableAvailable>(OnTableAvailable);
         }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Services.Map;
 using Services.UI;
 using UI.MainMenu;
+using UnityEngine;
 
 namespace Services.Escapable
 {
@@ -13,7 +15,7 @@ namespace Services.Escapable
             _escapables = new List<IDeckEscapable>();
         }
 
-        public override void DeInitialize()
+        protected override void DeInitialize()
         {
             ClearEscapables();
         }
@@ -46,7 +48,7 @@ namespace Services.Escapable
                     _escapables.Remove(escapable);
                 } while (!hasEscaped);
             }
-            else
+            else if(DeckServiceProvider.GetService<DeckServiceScene>().IsMapLoaded())
             {
                 DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIMainMenu>().SwapAppearanceStatus();
             }

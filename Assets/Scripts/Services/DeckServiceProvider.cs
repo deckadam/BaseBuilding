@@ -81,7 +81,7 @@ namespace Services
         {
             foreach (var deckServiceBase in _services)
             {
-                deckServiceBase.Value.BeforeGameSessionDeinitialized();
+                deckServiceBase.Value.BeforeGameSessionDeInitialized();
             }
         }
 

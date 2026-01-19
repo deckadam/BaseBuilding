@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87d3c05581564cda8f667c1f240cac12, type: 3}
   m_Name: Deck Building Data
   m_EditorClassIdentifier: 
-  buildableRotationSpeed: -10
+  buildableRotationSpeed: 10
   availableMaterial: {fileID: 2100000, guid: ec7c1e52de2a44947b83db6e9cd902c8, type: 2}
   unavailableMaterial: {fileID: 2100000, guid: 597899cd44cc57740ac277e90724be51, type: 2}
   accessCellMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}

@@ -10,7 +10,7 @@ namespace UI.Currency
     {
         [SerializeField] private RectTransform container;
 
-        private List<DeckUICurrencyDisplay> _activeDisplayers = new();
+        private List<DeckUICurrencyDisplay> _activeDisplays = new();
         private DeckCurrency[] _currencies;
 
         public override void AfterGameSessionInitialized()
@@ -22,15 +22,15 @@ namespace UI.Currency
                 var newDisplayer = InstanceProvider.RentUIElement<DeckUICurrencyDisplay>();
                 newDisplayer.transform.SetParent(container);
                 newDisplayer.SetCurrency(_currencies[index]);
-                _activeDisplayers.Add(newDisplayer);
+                _activeDisplays.Add(newDisplayer);
             }
         }
 
         public override void BeforeGameSceneUnloaded()
         {
-            foreach (var currencyDisplayer in _activeDisplayers)
+            foreach (var currencyDisplay in _activeDisplays)
             {
-                InstanceProvider.ReturnUIElement(currencyDisplayer);
+                InstanceProvider.ReturnUIElement(currencyDisplay);
             }
         }
     }

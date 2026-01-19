@@ -238,6 +238,10 @@ namespace Instancing
                 {
                     instance.UniqueId.ResetId(true);
                 }
+                else
+                {
+                    instance.SetNewUniqueId(uniqueId);
+                }
 
                 instance.gameObject.SetActive(true);
                 return instance;
@@ -281,6 +285,65 @@ namespace Instancing
                 {
                     var newInstance = CreateNewAgentInstance(prefabId);
                     result[counter++] = (T)newInstance;
+                }
+            }
+
+            return result;
+        }
+
+
+        public DeckAgent[] BulkRentAgent(int prefabId, int[] uniqueIds)
+        {
+            var count = uniqueIds.Length;
+            var result = new DeckAgent[count];
+            var counter = 0;
+
+            if (_agentPool.TryGetValue(prefabId, out var pool) && pool.Count > 0)
+            {
+                while (counter < count)
+                {
+                    if (pool.Count > 0)
+                    {
+                        var instance = pool.Pop();
+                        instance.gameObject.SetActive(true);
+                        var uniqueId = uniqueIds[counter];
+                        if (uniqueId != 0)
+                        {
+                            instance.SetNewUniqueId(uniqueId);
+                        }
+                        else
+                        {
+                            instance.SetNewUniqueId();
+                        }
+
+                        instance.OnSpawned();
+                        result[counter++] = instance;
+                    }
+                    else
+                    {
+                        var newInstance = CreateNewAgentInstance(prefabId);
+                        result[counter++] = newInstance;
+                    }
+                }
+            }
+            else
+            {
+                while (counter < count)
+                {
+                    var newInstance = CreateNewAgentInstance(prefabId);
+
+
+                    var uniqueId = uniqueIds[counter];
+                    if (uniqueId != 0)
+                    {
+                        newInstance.SetNewUniqueId(uniqueId);
+                    }
+                    else
+                    {
+                        newInstance.SetNewUniqueId();
+                    }
+
+                    result[counter++] = newInstance;
                 }
             }
 
@@ -423,6 +486,7 @@ namespace Instancing
 
         public void ReturnItemVisual(DeckItemVisual[] instances)
         {
+            Debug.LogError("Trying to return");
             var sample = instances[0];
             if (!_itemVisualPool.TryGetValue(sample.PrefabId.ID, out var pool))
             {
@@ -503,7 +567,7 @@ namespace Instancing
 
             instance.gameObject.SetActive(false);
             instance.OnDeSpawned();
-            instance.transform.parent = _uiContainer;
+            instance.transform.SetParent(_uiContainer);
             pool.Push(instance);
         }
 

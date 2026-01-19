@@ -41,7 +41,20 @@ namespace InGame.Agent.Building
 
         public void InitializeBuilding()
         {
-            if (buildingData.Indices.Length == 1)
+            if (!buildingData.IsGridBased)
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance);
+                RaiseItemVisualChanged();
+
+                itemVisualInstance.transform.parent = SelfTransform;
+
+                if (setVisualPosition)
+                {
+                    itemVisualInstance.transform.localPosition = Vector3.zero;
+                    itemVisualInstance.transform.localRotation = Quaternion.identity;
+                }
+            }
+            else if (buildingData.Indices.Length == 1)
             {
                 DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
                 RaiseItemVisualChanged();
@@ -54,23 +67,23 @@ namespace InGame.Agent.Building
                     itemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
-            else if (buildingData.Indices.Length > 1)
-            {
-                // DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(this, buildingData.ItemVisual.PrefabId, buildingData.Indices.Length, buildingData.Indices, out itemVisualInstances);
-                // RaiseItemVisualChanged();
-                // SetItemVisuals(itemVisualInstances);
+            // else if (buildingData.Indices.Length > 1)
+            // {
+            // DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(this, buildingData.ItemVisual.PrefabId, buildingData.Indices.Length, buildingData.Indices, out itemVisualInstances);
+            // RaiseItemVisualChanged();
+            // SetItemVisuals(itemVisualInstances);
 
-                // for (var i = 0; i < itemVisualInstances.Length; i++)
-                // {
-                    // var deckItemVisual = itemVisualInstances[i];
-                    // deckItemVisual.transform.parent = SelfTransform;
+            // for (var i = 0; i < itemVisualInstances.Length; i++)
+            // {
+            // var deckItemVisual = itemVisualInstances[i];
+            // deckItemVisual.transform.parent = SelfTransform;
 
-                    // if (!setVisualPosition) continue;
+            // if (!setVisualPosition) continue;
 
-                    // deckItemVisual.transform.localPosition = buildingData.Indices[i].ToVector3();
-                    // deckItemVisual.transform.localRotation = Quaternion.identity;
-                // }
-            }
+            // deckItemVisual.transform.localPosition = buildingData.Indices[i].ToVector3();
+            // deckItemVisual.transform.localRotation = Quaternion.identity;
+            // }
+            // }
 
             InternalAfterBuildingInitialized();
         }

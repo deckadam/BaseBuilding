@@ -21,9 +21,6 @@ MonoBehaviour:
   - mesh: {fileID: -5051245163629413203, guid: 5dc742f3c786b504faae1575116a8d1e, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
-  indices:
-  - {x: 0, y: 0}
-  accessIndices: []
   rotationMode: 100
   icon: {fileID: 0}
   extents: {x: 1, y: 1, z: 1}
@@ -33,3 +30,7 @@ MonoBehaviour:
   buildMode: 500
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1
+  isGridBased: 1
+  indices:
+  - {x: 0, y: 0}
+  accessIndices: []

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Services;
+using Services.Escapable;
 using Services.PopUp;
 using Services.UI;
+using Sirenix.Utilities;
 using Systems.SystemSave;
 using Systems.SystemSave.Events;
 using UI.Confirmation;
@@ -12,22 +14,24 @@ using Utility.Constants;
 
 namespace UI.Saves
 {
-    public class DeckUISaveListing : DeckUIBase
+    public class DeckUISaveListing : DeckUIBase, IDeckEscapable
     {
         [SerializeField] private RectTransform scrollParent;
         [SerializeField] private GridLayoutGroup gridLayoutGroup;
-        private List<DeckSaveDisplayer> _activeDisplays = new();
-        private DeckSaveDisplayer _lastSelectedDisplay;
+        private List<DeckSaveDisplay> _activeDisplays = new();
+        private DeckSaveDisplay _lastSelectedDisplay;
 
         protected override void OnPreAppear()
         {
             _lastSelectedDisplay = null;
             InitializeSaveDisplays();
+            DeckServiceProvider.GetService<DeckServiceEscapable>().RegisterEscapable(this);
+            HasEscaped = false;
         }
 
         private void InitializeSaveDisplays()
         {
-            if (_activeDisplays != null)
+            if (!_activeDisplays.IsNullOrEmpty())
             {
                 InstanceProvider.ReturnUIElement(_activeDisplays);
             }
@@ -40,7 +44,7 @@ namespace UI.Saves
 
             foreach (var saveFile in saveFiles)
             {
-                var newDisplay = InstanceProvider.RentUIElement<DeckSaveDisplayer>();
+                var newDisplay = InstanceProvider.RentUIElement<DeckSaveDisplay>();
                 newDisplay.SetData(saveFile, this);
                 newDisplay.transform.SetParent(scrollParent, false);
                 newDisplay.transform.localPosition = Vector2.zero;
@@ -86,9 +90,17 @@ namespace UI.Saves
             }, null);
         }
 
-        public void SetSelected(DeckSaveDisplayer saveDisplayer)
+        public void SetSelected(DeckSaveDisplay saveDisplay)
         {
-            _lastSelectedDisplay = saveDisplayer;
+            _lastSelectedDisplay = saveDisplay;
         }
+
+        public override void OnEscapeRequested()
+        {
+            base.OnEscapeRequested();
+            HasEscaped = true;
+        }
+
+        public bool HasEscaped { get; private set; }
     }
 }

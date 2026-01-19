@@ -27,11 +27,11 @@ namespace Services
             return 0;
         }
 
-        public virtual void WarmUp()
+        protected virtual void WarmUp()
         {
         }
 
-        public virtual void DeInitialize()
+        protected virtual void DeInitialize()
         {
         }
 
@@ -47,7 +47,7 @@ namespace Services
         {
         }
 
-        public virtual void BeforeGameSessionDeinitialized()
+        public virtual void BeforeGameSessionDeInitialized()
         {
         }
 

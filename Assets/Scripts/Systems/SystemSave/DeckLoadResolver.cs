@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Base;
+using System.Linq;
 using Instancing;
 using Systems.SystemSave.Data;
 using Utility;
@@ -17,10 +17,10 @@ namespace Systems.SystemSave
             _instanceProvider = instanceProvider;
         }
 
-        public void ResolveAndLoad(DeckComponentHolderSaveDatas agentDatas)
+        public void ResolveAndLoad(DeckComponentHolderSaveDatas allAgentData)
         {
-            var resolvedData = new List<(DeckAgent, DeckComponentHolderSaveData)>();
-            foreach (var data in agentDatas.datas)
+            var resolvedData = new Dictionary<int, List<DeckComponentHolderSaveData>>();
+            foreach (var data in allAgentData.data)
             {
                 if (data.prefabId == 0)
                 {
@@ -34,18 +34,33 @@ namespace Systems.SystemSave
                     continue;
                 }
 
-                var agentInstance = _instanceProvider.RentAgent(data.prefabId, data.uniqueId);
-                resolvedData.Add((agentInstance, data));
+                if (resolvedData.TryGetValue(data.prefabId, out var existingList))
+                {
+                    existingList.Add(data);
+                }
+                else
+                {
+                    var newList = new List<DeckComponentHolderSaveData>();
+                    resolvedData[data.prefabId] = newList;
+                    newList.Add(data);
+                }
             }
 
-            foreach (var tuple in resolvedData)
+            foreach (var bulkData in resolvedData)
             {
-                tuple.Item1.LoadData(tuple.Item2);
-            }
+                var ids = bulkData.Value.Select(item => item.uniqueId).ToArray();
+                var agentInstances = _instanceProvider.BulkRentAgent(bulkData.Key, ids);
 
-            foreach (var tuple in resolvedData)
-            {
-                tuple.Item1.AfterLoadingFinished();
+                for (var index = 0; index < agentInstances.Length; index++)
+                {
+                    var agentInstance = agentInstances[index];
+                    agentInstance.LoadData(bulkData.Value[index]);
+                }
+
+                foreach (var agentInstance in agentInstances)
+                {
+                    agentInstance.AfterLoadingFinished();
+                }
             }
         }
     }

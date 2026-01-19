@@ -20,7 +20,7 @@ namespace Base
         public int ID => _id;
 
 
-        private DeckId(bool justShupUp = false)
+        private DeckId(bool justShutUp = false)
         {
             _id = Random.Range(10000000, 99999999);
         }

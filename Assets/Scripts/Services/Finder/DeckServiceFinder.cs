@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Base;
+using Instancing;
+using Zenject;
 
 namespace Services.Finder
 {
@@ -9,6 +11,14 @@ namespace Services.Finder
         private Dictionary<int, DeckAgent> _agents = new();
         private Dictionary<int, DeckItemVisual> _itemVisuals = new();
         private Dictionary<DeckActionTag, HashSet<DeckAgent>> _agentsWithActions = new();
+
+        private DeckInstanceProvider _instanceProvider;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            _instanceProvider = instanceProvider;
+        }
 
         public override void Initialize()
         {
@@ -88,6 +98,22 @@ namespace Services.Finder
         public IEnumerable<DeckAgent> GetAgents()
         {
             return _agents.Values;
+        }
+
+        public override void BeforeGameSessionDeInitialized()
+        {
+            foreach (var agent in _agents.Values)
+            {
+                _instanceProvider.ReturnAgent(agent);
+            }
+
+            foreach (var itemVisual in _itemVisuals.Values)
+            {
+                _instanceProvider.ReturnItemVisual(itemVisual);
+            }
+
+            _agents.Clear();
+            _itemVisuals.Clear();
         }
     }
 }

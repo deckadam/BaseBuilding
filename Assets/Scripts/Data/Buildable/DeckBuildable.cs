@@ -17,28 +17,32 @@ namespace Data.Buildable
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
         [SerializeField] private DeckSilhouetteData[] silhouette;
-        [SerializeField] private Vector2Int[] indices;
-        [SerializeField] private Vector2Int[] accessIndices;
         [SerializeField] private DeckRotationMode rotationMode;
         [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
         [SerializeField] private DeckPrice[] prices;
         [SerializeField] private DeckBuildMode buildMode;
         [SerializeField] private DeckBuildable buildableToPlaceOnTop;
+        [SerializeField] private int materialCount;
+        [SerializeField] private bool isGridBased;
+        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] indices;
+        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] accessIndices;
 
         public DeckRotationMode RotationMode => rotationMode;
         public DeckSilhouetteData[] Silhouette => silhouette;
-        public int materialCount;
-        public Vector2Int[] Indices => indices;
-        public Vector2Int[] AccessIndices => accessIndices;
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
         public string VisibleName => visibleName;
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
+        public int MaterialCount => materialCount;
         public DeckPrice[] Prices => prices;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
+
+        public bool IsGridBased => isGridBased;
+        public Vector2Int[] Indices => indices;
+        public Vector2Int[] AccessIndices => accessIndices;
 
         public DeckId BuildingId
         {
