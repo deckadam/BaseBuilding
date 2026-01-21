@@ -37,7 +37,7 @@ namespace Services.UI
             DeckLogger.UI("UI swap finished  " + typeOfT);
         }
 
-        public async void ShowWindow<T>() where T : DeckUIBase
+        public async UniTask ShowWindow<T>() where T : DeckUIBase
         {
             var typeOfT = typeof(T);
             var temp = _uiImplementations[typeOfT];

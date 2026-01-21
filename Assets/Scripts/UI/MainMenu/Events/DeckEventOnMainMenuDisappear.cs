@@ -2,7 +2,7 @@ using EventManager;
 
 namespace UI.MainMenu.Events
 {
-    public class DeckEventOnMainMenuDisappear : IDeckEvent
+    public struct DeckEventOnMainMenuDisappear : IDeckEvent
     {
         public static DeckEventOnMainMenuDisappear Create()
         {

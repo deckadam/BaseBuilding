@@ -3,7 +3,7 @@ using InGame.Agent.Waiter;
 
 namespace Services.Selection.Events
 {
-    public class DeckEventOnCoreAgentDeath : IDeckEvent
+    public struct DeckEventOnCoreAgentDeath : IDeckEvent
     {
         public DeckAgentWaiter agent { get; private set; }
 

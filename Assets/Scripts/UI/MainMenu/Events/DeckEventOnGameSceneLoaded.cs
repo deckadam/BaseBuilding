@@ -2,7 +2,7 @@ using EventManager;
 
 namespace UI.MainMenu.Events
 {
-    public class DeckEventOnGameSceneLoaded : IDeckEvent
+    public struct DeckEventOnGameSceneLoaded : IDeckEvent
     {
         public static DeckEventOnGameSceneLoaded Create()
         {

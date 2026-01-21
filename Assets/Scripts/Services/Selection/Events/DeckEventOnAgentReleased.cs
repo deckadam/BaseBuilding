@@ -3,7 +3,7 @@ using EventManager;
 
 namespace Services.Selection.Events
 {
-    public class DeckEventOnAgentReleased : IDeckEvent
+    public struct DeckEventOnAgentReleased : IDeckEvent
     {
         public DeckAgent agent { get; private set; }
 

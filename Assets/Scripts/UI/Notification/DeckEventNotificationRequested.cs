@@ -2,7 +2,7 @@
 
 namespace UI.Notification
 {
-    public class DeckEventNotificationRequested : IDeckEvent
+    public struct DeckEventNotificationRequested : IDeckEvent
     {
         public string message { get; private set; }
 

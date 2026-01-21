@@ -392,8 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 980bae04ecce20f48bb51bd2fb1c1e4d, type: 2}
+  _scriptableObjectInstallers: []
   _monoInstallers: []
   _installerPrefabs: []
   _autoRun: 1
@@ -411,7 +410,8 @@ MonoBehaviour:
       m_Calls: []
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
-  _parentContractNames: []
+  _parentContractNames:
+  - MainScene
 --- !u!4 &1310511017
 Transform:
   m_ObjectHideFlags: 0
@@ -708,7 +708,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

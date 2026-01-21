@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Systems.SystemInput.Events
 {
-    public class DeckEventOnMouseMove : IDeckEvent
+    public struct DeckEventOnMouseMove : IDeckEvent
     {
         public Vector3 position { get; private set; }
 

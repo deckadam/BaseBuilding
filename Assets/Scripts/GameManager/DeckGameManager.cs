@@ -38,12 +38,12 @@ namespace GameManager
         public async UniTask CreateNewGame()
         {
             DeckSaveSystem.CreateNewSave();
-            await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
+            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession();
         }
 
         public async void LoadGame()
         {
-            await DeckServiceProvider.GetService<DeckServiceScene>().LoadMap();
+            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession();
             var agentsData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             _loadResolver.ResolveAndLoad(agentsData);
         }

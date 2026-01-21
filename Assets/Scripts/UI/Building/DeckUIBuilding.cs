@@ -34,16 +34,16 @@ namespace UI.Building
 
             _serviceEscapable = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
 
-            DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnEventAppear);
-            DeckEventManager.Register<DeckEventOnMainMenuDisappear>(OnEventAppear);
-            DeckEventManager.Register<DeckEventOnMainMenuAppeared>(OnEventDisappear);
+            DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
+            DeckEventManager.Register<DeckEventOnMainMenuDisappear>(OnMainMenuDisappear);
+            DeckEventManager.Register<DeckEventOnMainMenuAppeared>(OnMainMenuAppeared);
         }
 
         public override void DeInitialize()
         {
-            DeckEventManager.Unregister<DeckEventOnGameSceneLoaded>(OnEventAppear);
-            DeckEventManager.Unregister<DeckEventOnMainMenuDisappear>(OnEventAppear);
-            DeckEventManager.Unregister<DeckEventOnMainMenuAppeared>(OnEventDisappear);
+            DeckEventManager.Unregister<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
+            DeckEventManager.Unregister<DeckEventOnMainMenuDisappear>(OnMainMenuDisappear);
+            DeckEventManager.Unregister<DeckEventOnMainMenuAppeared>(OnMainMenuAppeared);
         }
 
         public void PageOpenRequested(DeckBuildingButton button)
@@ -52,13 +52,28 @@ namespace UI.Building
             _currentButton = button;
         }
 
-        private void OnEventAppear(IDeckEvent _)
+        private void OnGameSceneLoaded(DeckEventOnGameSceneLoaded obj)
+        {
+            OnEventAppear();
+        }
+
+        private void OnMainMenuDisappear(DeckEventOnMainMenuDisappear obj)
+        {
+            OnEventAppear();
+        }
+
+        private void OnMainMenuAppeared(DeckEventOnMainMenuAppeared obj)
+        {
+            OnEventDisappear();
+        }
+        
+        private void OnEventAppear()
         {
             Appear().Forget();
             HasEscaped = false;
         }
 
-        private void OnEventDisappear(IDeckEvent _)
+        private void OnEventDisappear()
         {
             Disappear().Forget();
             HasEscaped = true;

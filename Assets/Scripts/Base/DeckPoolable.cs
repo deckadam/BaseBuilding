@@ -11,10 +11,5 @@ namespace Base
         public virtual void OnDeSpawned()
         {
         }
-
-        private void OnDestroy()
-        {
-            Debug.LogError("OnDestroy");
-        }
     }
 }

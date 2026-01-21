@@ -47,16 +47,23 @@ namespace Systems.SystemInput
             CheckForDestroyBuilding();
             CheckForCurrency();
             CheckForSpawnCustomer();
+            CheckForCameraMovement();
+        }
+
+        private void CheckForCameraMovement()
+        {
+            var horizontal = Input.GetAxis("Horizontal");
+            var vertical = Input.GetAxis("Vertical");
+            DeckEventOnAxisMovement.Create(new Vector2(horizontal, vertical)).Send();
         }
 
         private void CheckForSpawnCustomer()
         {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                var newCustomer = _instanceProvider.RentAgent(_customerAgentPrefab.PrefabId);
-                newCustomer.transform.position = new Vector3(20, 0, 20);
-                newCustomer.Initialize();
-            }
+            if (!Input.GetKeyDown(KeyCode.T)) return;
+
+            var newCustomer = _instanceProvider.RentAgent(_customerAgentPrefab.PrefabId);
+            newCustomer.transform.position = new Vector3(20, 0, 20);
+            newCustomer.Initialize();
         }
 
         private void CheckForCurrency()

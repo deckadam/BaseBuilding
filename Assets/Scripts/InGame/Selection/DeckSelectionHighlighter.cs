@@ -18,8 +18,8 @@ namespace InGame.Selection
         {
             DeckEventManager.Register<DeckEventOnAgentSelected>(OnAgentSelected);
             DeckEventManager.Register<DeckEventOnAgentPossessed>(OnAgentPossessed);
-            DeckEventManager.Register<DeckEventOnAgentReleased>(ClearTarget);
-            DeckEventManager.Register<DeckEventOnSelectionReleased>(ClearTarget);
+            DeckEventManager.Register<DeckEventOnAgentReleased>(OnAgentReleased);
+            DeckEventManager.Register<DeckEventOnSelectionReleased>(OnSelectionReleased);
             _tokenSource = new CancellationTokenSource();
             Follow(_tokenSource.Token);
         }
@@ -29,8 +29,8 @@ namespace InGame.Selection
         {
             DeckEventManager.Unregister<DeckEventOnAgentSelected>(OnAgentSelected);
             DeckEventManager.Unregister<DeckEventOnAgentPossessed>(OnAgentPossessed);
-            DeckEventManager.Unregister<DeckEventOnAgentReleased>(ClearTarget);
-            DeckEventManager.Unregister<DeckEventOnSelectionReleased>(ClearTarget);
+            DeckEventManager.Unregister<DeckEventOnAgentReleased>(OnAgentReleased);
+            DeckEventManager.Unregister<DeckEventOnSelectionReleased>(OnSelectionReleased);
             _tokenSource.Cancel();
             _tokenSource.Dispose();
         }
@@ -58,7 +58,17 @@ namespace InGame.Selection
             transform.localScale = targetSize * Vector3.one;
         }
 
-        private void ClearTarget(IDeckEvent obj)
+        private void OnAgentReleased(DeckEventOnAgentReleased obj)
+        {
+            ClearTarget();
+        }
+        
+        private void OnSelectionReleased(DeckEventOnSelectionReleased obj)
+        {
+            ClearTarget();
+        }
+        
+        private void ClearTarget()
         {
             _target = null;
             transform.position = Vector3.down * 1000f;

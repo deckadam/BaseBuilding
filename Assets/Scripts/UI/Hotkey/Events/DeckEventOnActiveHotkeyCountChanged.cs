@@ -2,7 +2,7 @@
 
 namespace UI.Hotkey.Events
 {
-    public class DeckEventOnActiveHotkeyCountChanged : IDeckEvent
+    public struct DeckEventOnActiveHotkeyCountChanged : IDeckEvent
     {
         public int count { get; private set; }
 

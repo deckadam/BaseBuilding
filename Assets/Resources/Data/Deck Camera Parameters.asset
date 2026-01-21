@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2bd8ae540a04c1c9ddef8368ccfb13d, type: 3}
-  m_Name: Deck Camera Data
+  m_Name: Deck Camera Parameters
   m_EditorClassIdentifier: 
-  getCameraMovementSpeed: 25
-  scrollSpeed: 250
+  cameraMovementSpeed: 25
   minimumHeight: 8
   maximumHeight: 40
+  zoomSpeed: 3
+  zoomMoveTowardsSpeed: 0.6

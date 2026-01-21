@@ -1,7 +1,11 @@
 ﻿using Cinemachine;
 using Data.Camera;
 using EventManager;
+using Services;
 using Services.Building.Events;
+using Services.Camera;
+using Services.Map;
+using Systems.SystemInput.Events;
 using UnityEngine;
 using Zenject;
 
@@ -9,25 +13,41 @@ namespace CameraController
 {
     public class DeckFreeRoamCameraController : MonoBehaviour
     {
-        private DeckBinderCamera _binderCamera;
+        private DeckCameraParameters _cameraParameters;
         private CinemachineVirtualCamera _vCam;
         private CinemachineConfiner _confiner;
+        private Transform _cachedTransform;
+
         private bool _canZoom = true;
+        private float _targetHeight;
+
+        [Inject]
+        private void Inject(DeckCameraParameters cameraParameters)
+        {
+            _cameraParameters = cameraParameters;
+        }
 
         private void Start()
         {
+            _cachedTransform = transform;
             _confiner = GetComponent<CinemachineConfiner>();
             _vCam = GetComponent<CinemachineVirtualCamera>();
-            _confiner.m_BoundingVolume = GameObject.Find("Camera confiner").GetComponent<Collider>();
-            _confiner.m_BoundingVolume.isTrigger = true;
+            _confiner.m_BoundingVolume = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().GetCameraCollider();
+            _targetHeight = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().transform.position.y;
+
             DeckEventManager.Register<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
             DeckEventManager.Register<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
+            DeckEventManager.Register<DeckEventOnAxisMovement>(OnAxisMovement);
+            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
         }
+
 
         private void OnDestroy()
         {
             DeckEventManager.Unregister<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
             DeckEventManager.Unregister<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
+            DeckEventManager.Unregister<DeckEventOnAxisMovement>(OnAxisMovement);
+            DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
         }
 
         private void OnBuildModeStarted(DeckEventOnBuildModeStarted obj)
@@ -40,39 +60,32 @@ namespace CameraController
             _canZoom = true;
         }
 
-        [Inject]
-        private void Inject(DeckBinderCamera binderCamera)
+        private void OnAxisMovement(DeckEventOnAxisMovement obj)
         {
-            _binderCamera = binderCamera;
+            var movement = Vector3.zero;
+            movement += obj.movement.x * Vector3.right;
+            movement += obj.movement.y * Vector3.forward;
+            var deltaPosition = movement * (Time.deltaTime * _cameraParameters.CameraMovementSpeed);
+            _cachedTransform.position += deltaPosition;
+        }
+
+        private void OnMiddleScroll(DeckEventMiddleScroll obj)
+        {
+            if (!_canZoom)
+            {
+                return;
+            }
+
+            _targetHeight -= obj.scrollValue * _cameraParameters.ZoomSpeed;
+            _targetHeight = Mathf.Clamp(_targetHeight, _cameraParameters.MinimumHeight, _cameraParameters.MaximumHeight);
         }
 
         private void Update()
         {
-            var movement = Vector3.zero;
-            movement += Input.GetAxis("Horizontal") * Vector3.right;
-            movement += Input.GetAxis("Vertical") * Vector3.forward;
-
-            if (_canZoom)
-            {
-                var scroll = Input.mouseScrollDelta.y;
-                if (scroll > 0 && transform.position.y > _binderCamera.GetMinimumHeight())
-                {
-                    var limit = transform.position.y - _binderCamera.GetMinimumHeight();
-                    var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
-                    delta = Mathf.Clamp(delta, 0, limit);
-                    transform.position += transform.forward * delta;
-                }
-                else if (scroll < 0 && transform.position.y < _binderCamera.GetMaximumHeight())
-                {
-                    var limit = transform.position.y - _binderCamera.GetMaximumHeight();
-                    var delta = _binderCamera.GetScrollSpeed() * Time.deltaTime * scroll;
-                    delta = Mathf.Clamp(delta, limit, 0);
-                    transform.position += transform.forward * delta;
-                }
-            }
-
-            var deltaPosition = movement * (Time.deltaTime * _binderCamera.GetCameraMovementSpeed());
-            transform.position += deltaPosition;
+            var currentPosition = _cachedTransform.position;
+            var currentHeight = currentPosition.y;
+            var heightDifference = currentHeight - _targetHeight;
+            _cachedTransform.position = Vector3.MoveTowards(currentPosition, currentPosition + _cachedTransform.forward * heightDifference, _cameraParameters.ZoomMoveTowardsSpeed);
         }
     }
 }

@@ -178,7 +178,7 @@ namespace Base
             }
 
             SelfTransform = transform;
-            SelfTransform.SetParent(DeckServiceScene.GetMap().transform, true);
+            SelfTransform.SetParent(DeckServiceSession.GetSession().transform, true);
 
             _hasBeenInitialized = true;
 
