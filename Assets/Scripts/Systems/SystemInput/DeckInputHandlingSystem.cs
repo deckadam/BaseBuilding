@@ -11,6 +11,7 @@ using Services.Escapable;
 using Services.ItemVisual;
 using Services.PopUp;
 using Services.Selection;
+using Services.Timing;
 using Systems.SystemInput.Events;
 using Systems.SystemSave;
 using UI.Inventory;
@@ -48,6 +49,24 @@ namespace Systems.SystemInput
             CheckForCurrency();
             CheckForSpawnCustomer();
             CheckForCameraMovement();
+            CheckForPlayAndPause();
+            CheckForRightClick();
+        }
+
+        private void CheckForRightClick()
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                DeckEventOnRightClick.Create().Send();
+            }
+        }
+
+        private void CheckForPlayAndPause()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                DeckServiceProvider.GetService<DeckServiceTiming>().OnPlayPauseChangeRequested();
+            }
         }
 
         private void CheckForCameraMovement()
@@ -179,6 +198,8 @@ namespace Systems.SystemInput
 
         private void RaycastToGround()
         {
+            var currentMousePosition = Input.mousePosition.ToVector2Int();
+
             if (Input.GetMouseButtonDown(0))
             {
                 if (IsOnUI())
@@ -188,7 +209,7 @@ namespace Systems.SystemInput
                 else
                 {
                     _isInputStartedOnUI = false;
-                    _lastInputPosition = Input.mousePosition.ToVector2Int();
+                    _lastInputPosition = currentMousePosition;
                     DeckEventOnLeftClickDown.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
                 }
             }
@@ -207,14 +228,12 @@ namespace Systems.SystemInput
                 DeckEventMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
             }
 
-            var currentInputPosition = Input.mousePosition.ToVector2Int();
-
-            if (_lastInputPosition == currentInputPosition)
+            if (_lastInputPosition == currentMousePosition)
             {
                 return;
             }
 
-            _lastInputPosition = currentInputPosition;
+            _lastInputPosition = currentMousePosition;
             DeckEventOnMouseMove.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
         }
 

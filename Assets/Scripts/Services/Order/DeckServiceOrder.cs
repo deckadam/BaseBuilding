@@ -27,7 +27,7 @@ namespace Services.Order
             ProcessOrders();
         }
 
-        public override void BeforeGameSessionDeInitialized()
+        public override void BeforeGameSessionDeinitialized()
         {
             _tokenSource?.Cancel();
             _tokenSource?.Dispose();

@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using GameManager.Data.GameSetting;
 using InGame.Map;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utility;
 
@@ -25,7 +27,7 @@ namespace Services.Map
             return _currentSession;
         }
 
-        public async UniTask LoadSession()
+        public async UniTask LoadSession(DeckGameSettingBasic gameSettingBasic)
         {
             var isLoaded = SceneManager.GetSceneByName(SceneName).isLoaded;
             if (isLoaded)
@@ -34,15 +36,16 @@ namespace Services.Map
             }
 
             DeckLogger.Map("New map scene session");
-            await LoadNewSession();
+            await LoadNewSession(gameSettingBasic);
             DeckLogger.Map("New map scene session");
 
             _isSessionActive = true;
         }
 
-        private async Task LoadNewSession()
+        private async Task LoadNewSession(DeckGameSettingBasic gameSettingBasic)
         {
             await SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
+            GetSession().Initialize(gameSettingBasic);
             DeckServiceProvider.BeforeGameSessionInitialized();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneName));
             DeckServiceProvider.AfterGameSessionInitialized();

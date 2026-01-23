@@ -22,5 +22,10 @@ namespace GameManager.Data.GameSetting
             var wallData = allWallData.First(item => item.WallType == wallType);
             DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInRectBulk(wallData.WallBuildable, Vector2Int.zero, mapSize);
         }
+
+        public Vector2Int GetMapSize()
+        {
+            return mapSize;
+        }
     }
 }

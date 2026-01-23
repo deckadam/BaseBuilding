@@ -86,6 +86,7 @@ namespace UI.Building
             public DeckBuildingPage page;
         }
 
+        public bool CanBeEscapedWithRightClick => false;
         public bool HasEscaped { get; private set; }
     }
 }

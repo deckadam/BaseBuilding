@@ -25,8 +25,12 @@ namespace Data.Buildable
         [SerializeField] private DeckBuildable buildableToPlaceOnTop;
         [SerializeField] private int materialCount;
         [SerializeField] private bool isGridBased;
-        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] indices;
-        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] accessIndices;
+
+        [SerializeField, ShowIf(nameof(isGridBased))]
+        private Vector2Int[] indices;
+
+        [SerializeField, ShowIf(nameof(isGridBased))]
+        private Vector2Int[] accessIndices;
 
         public DeckRotationMode RotationMode => rotationMode;
         public DeckSilhouetteData[] Silhouette => silhouette;
@@ -138,6 +142,16 @@ namespace Data.Buildable
         {
             var otherBuildable = other as DeckBuildable;
             return buildingId.Equals(otherBuildable.buildingId);
+        }
+
+        protected bool Equals(DeckBuildable other)
+        {
+            return base.Equals(other) && visibleName == other.visibleName;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), visibleName);
         }
     }
 }

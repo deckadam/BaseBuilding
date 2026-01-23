@@ -94,13 +94,14 @@ namespace UI.Saves
         {
             _lastSelectedDisplay = saveDisplay;
         }
-
+        
         public override void OnEscapeRequested()
         {
             base.OnEscapeRequested();
             HasEscaped = true;
         }
 
+        public bool CanBeEscapedWithRightClick => false;
         public bool HasEscaped { get; private set; }
     }
 }

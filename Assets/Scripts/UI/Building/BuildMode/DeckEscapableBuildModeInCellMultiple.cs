@@ -1,5 +1,5 @@
+using Services;
 using Services.Building;
-using Systems.SystemInput.Events;
 
 namespace UI.Building.BuildMode
 {
@@ -10,21 +10,26 @@ namespace UI.Building.BuildMode
             BuildingService.StartSilhouette(Buildable);
         }
 
-        protected override void InternalOnLeftClickDown(DeckEventOnLeftClickDown obj)
+        protected override void InternalOnLeftClickDown()
         {
         }
 
-        protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
+        protected override void InternalOnLeftClickUp()
         {
-            Services.DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInCell(false);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInCell(false);
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
             BuildingService.UpdateSilhouetteInCell(rotation, false);
         }
 
-        protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
+        protected override void InternalOnMouseMove()
         {
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
             BuildingService.UpdateSilhouetteInCell(rotation, false);
+        }
+
+        protected override void InternalOnBuildModeCanceled()
+        {
+            BuildingService.ClearAll();
         }
     }
 }

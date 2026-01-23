@@ -34,5 +34,7 @@ namespace UI.InGame
             Disappear().Forget();
             HasEscaped = true;
         }
+
+        public bool CanBeEscapedWithRightClick => false;
     }
 }

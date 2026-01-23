@@ -10,10 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3243664932160554566}
   - component: {fileID: 2562318635017719473}
-  - component: {fileID: -3492966242662107729}
   - component: {fileID: 947975532443327887}
-  - component: {fileID: 5508510573184825034}
-  - component: {fileID: -6268047799186721477}
   m_Layer: 0
   m_Name: DeckAgentChest
   m_TagString: Untagged
@@ -28,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1688244125595013509}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2562318635017719473
 MonoBehaviour:
@@ -48,37 +45,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59f25fe0eaea4c6480ae27d53ad962e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPosition: {fileID: 0}
+  itemVisualInstances: []
+  itemVisualInstance: {fileID: 0}
+  isMultiInstance: 0
+  tags: 
   components:
-  - {fileID: -3492966242662107729}
   - {fileID: 947975532443327887}
-  - {fileID: 5508510573184825034}
-  - {fileID: -6268047799186721477}
-  activeSize: 1
-  collider: {fileID: 0}
   willSave: 1
   uniqueId:
     _id: 0
-    IdString: 
   prefabId:
     _id: 16797009
-    IdString: 
-  selfTransform: {fileID: 0}
+  buildingsOnTop: []
   buildingData: {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
-  itemVisualPrefab: {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
---- !u!114 &-3492966242662107729
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688244125595013509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d2bcd4c370245a0b46c56fa52beff69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dataHealth: {fileID: 11400000, guid: 653bd65eb953b3346a1b135d124d07cc, type: 2}
+  onTopOf: {fileID: 0}
+  setVisualPosition: 1
 --- !u!114 &947975532443327887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,30 +70,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78e0e88da2df4894bd8c1aabc724e783, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5508510573184825034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688244125595013509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e289d3f972304deba42e27dcb1808226, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementData: {fileID: 0}
---- !u!114 &-6268047799186721477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1688244125595013509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4569522cdda04721af442ba602b46c57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

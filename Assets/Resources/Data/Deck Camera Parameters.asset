@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bd8ae540a04c1c9ddef8368ccfb13d, type: 3}
   m_Name: Deck Camera Parameters
   m_EditorClassIdentifier: 
-  cameraMovementSpeed: 25
+  cameraMovementSpeedMin: 10
+  cameraMovementSpeedMax: 30
   minimumHeight: 8
   maximumHeight: 40
   zoomSpeed: 3

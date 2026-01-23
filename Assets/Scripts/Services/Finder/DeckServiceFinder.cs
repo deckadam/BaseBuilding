@@ -100,7 +100,7 @@ namespace Services.Finder
             return _agents.Values;
         }
 
-        public override void BeforeGameSessionDeInitialized()
+        public override void BeforeGameSessionDeinitialized()
         {
             foreach (var agent in _agents.Values)
             {

@@ -32,6 +32,7 @@ namespace Commands
             // }
             //
             // _inventory.AddItem(_itemVisual.GetBoundItem());
+            await UniTask.CompletedTask;
             return true;
         }
 

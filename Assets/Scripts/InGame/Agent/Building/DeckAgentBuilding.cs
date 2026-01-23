@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base;
 using Data.Buildable;
 using Services;
+using Services.Building.Events;
 using Services.Currency;
 using Services.Finder;
 using Services.ItemVisual;
@@ -14,10 +15,10 @@ namespace InGame.Agent.Building
 {
     public class DeckAgentBuilding : DeckAgent
     {
+        [SerializeField] private List<DeckAgentBuilding> buildingsOnTop;
         [SerializeField] private DeckBuildable buildingData;
-        [SerializeField] private bool setVisualPosition;
-        [SerializeField] private List<DeckAgentBuilding> buildingsOnTop = new();
         [SerializeField] private DeckAgentBuilding onTopOf;
+        [SerializeField] private bool setVisualPosition = true;
 
         public DeckBuildable BuildingData => buildingData;
 
@@ -37,6 +38,8 @@ namespace InGame.Agent.Building
 
             itemVisualInstance.transform.localPosition = Vector3.zero;
             itemVisualInstance.transform.localRotation = Quaternion.identity;
+
+            InternalAfterBuildingInitialized();
         }
 
         public void InitializeBuilding()
@@ -102,18 +105,8 @@ namespace InGame.Agent.Building
                 onTopOf.RemoveBuildingFromTop(this);
             }
 
-            if (isMultiInstance && itemVisualInstances != null)
-            {
-                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisuals(itemVisualInstances);
-            }
-            else if (itemVisualInstance != null)
-            {
-                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
-            }
-
             DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
-
-            instanceProvider.ReturnAgent(this);
+            DeckEventOnAnythingDestroyed.Create().Send();
         }
 
         public void AddBuildingToTop(DeckAgentBuilding agentBuilding)

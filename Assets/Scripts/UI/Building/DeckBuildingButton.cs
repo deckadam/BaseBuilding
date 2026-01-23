@@ -86,5 +86,7 @@ namespace UI.Building
             Disappear();
             page.Disappear();
         }
+        
+        public bool CanBeEscapedWithRightClick => false;
     }
 }

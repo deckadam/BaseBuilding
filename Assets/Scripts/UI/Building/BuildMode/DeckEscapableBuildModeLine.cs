@@ -16,13 +16,13 @@ namespace UI.Building.BuildMode
             BuildingService.StartSilhouetteRect(Buildable);
         }
 
-        protected override void InternalOnLeftClickDown(DeckEventOnLeftClickDown obj)
+        protected override void InternalOnLeftClickDown()
         {
             _isDown = true;
             _initialCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
         }
 
-        protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
+        protected override void InternalOnLeftClickUp()
         {
             if (!_isDown)
             {
@@ -46,7 +46,7 @@ namespace UI.Building.BuildMode
             BuildingService.BuildInRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
-        protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
+        protected override void InternalOnMouseMove()
         {
             var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
@@ -76,6 +76,11 @@ namespace UI.Building.BuildMode
             {
                 BuildingService.UpdateSilhouetteInCellRect(new[] { currentCellPosition, currentCellPosition });
             }
+        }
+
+        protected override void InternalOnBuildModeCanceled()
+        {
+            BuildingService.ClearAll();
         }
     }
 }

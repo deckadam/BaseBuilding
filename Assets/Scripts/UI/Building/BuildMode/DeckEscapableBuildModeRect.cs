@@ -1,6 +1,6 @@
+using Services;
 using Services.Building;
 using Services.Camera;
-using Systems.SystemInput.Events;
 using UnityEngine;
 
 namespace UI.Building.BuildMode
@@ -17,13 +17,13 @@ namespace UI.Building.BuildMode
             BuildingService.StartSilhouetteRect(Buildable);
         }
 
-        protected override void InternalOnLeftClickDown(DeckEventOnLeftClickDown obj)
+        protected override void InternalOnLeftClickDown()
         {
             _isDown = true;
-            _initialCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            _initialCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
         }
 
-        protected override void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj)
+        protected override void InternalOnLeftClickUp()
         {
             if (!_isDown)
             {
@@ -31,18 +31,18 @@ namespace UI.Building.BuildMode
             }
 
             _isDown = false;
-            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
-            Services.DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
+            var currentCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
-        protected override void InternalOnMouseMove(DeckEventOnMouseMove obj)
+        protected override void InternalOnMouseMove()
         {
             if (!_isDown)
             {
                 return;
             }
 
-            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            var currentCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
             if (_currentCellPosition != currentCellPosition)
             {
@@ -52,6 +52,11 @@ namespace UI.Building.BuildMode
 
             _currentCellPosition = currentCellPosition;
             BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
+        }
+
+        protected override void InternalOnBuildModeCanceled()
+        {
+            BuildingService.ClearAll();
         }
     }
 }

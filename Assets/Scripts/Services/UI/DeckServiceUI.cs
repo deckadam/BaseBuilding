@@ -105,7 +105,7 @@ namespace Services.UI
             }
         }
 
-        public override void BeforeGameSessionDeInitialized()
+        public override void BeforeGameSessionDeinitialized()
         {
             foreach (var keyValuePair in _uiImplementations)
             {

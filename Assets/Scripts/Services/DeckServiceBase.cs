@@ -47,7 +47,7 @@ namespace Services
         {
         }
 
-        public virtual void BeforeGameSessionDeInitialized()
+        public virtual void BeforeGameSessionDeinitialized()
         {
         }
 

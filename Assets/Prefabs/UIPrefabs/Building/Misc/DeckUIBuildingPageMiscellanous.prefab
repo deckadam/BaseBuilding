@@ -65,13 +65,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabId:
     _id: 71617310
-    IdString: 59559007
   rectTransform: {fileID: 5327040660684750421}
   buildables:
   - {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
   - {fileID: 11400000, guid: e93101c5ed9aa914a9c3fb5bcf93b9dd, type: 2}
   - {fileID: 11400000, guid: f994cd9af2402ec4796711f96dbbdcd4, type: 2}
   - {fileID: 11400000, guid: ec7933c1d3b36d74fb268298d485a88b, type: 2}
+  - {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
   container: {fileID: 8582541736764332237}
   canvasGroup: {fileID: 4330169967580350106}
 --- !u!1 &683066293051858034

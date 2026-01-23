@@ -139,7 +139,7 @@ namespace Services.Tables
             _usableTables.Clear();
         }
 
-        public override void BeforeGameSessionDeInitialized()
+        public override void BeforeGameSessionDeinitialized()
         {
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Base;
 using Cysharp.Threading.Tasks;
 using Data.UI;
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Zenject;
@@ -81,7 +82,7 @@ namespace UI
 
             OnPreAppear();
             canvasGroup.alpha = 1f;
-            // await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(1f, binderUI.GetCanvasAppearDuration()).AsyncWaitForCompletion();
 
             isAppeared = true;
             canvasGroup.blocksRaycasts = true;
@@ -103,7 +104,7 @@ namespace UI
             canvasGroup.blocksRaycasts = true;
             OnPreDisappear();
             canvasGroup.alpha = 0f;
-            // await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
+            await canvasGroup.DOFade(0f, binderUI.GetCanvasDisappearDuration()).AsyncWaitForCompletion();
             isAppeared = false;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;

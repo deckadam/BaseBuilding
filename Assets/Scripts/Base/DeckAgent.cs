@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Instancing;
 using Services;
 using Services.Finder;
+using Services.ItemVisual;
 using Services.Map;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
@@ -21,16 +22,15 @@ namespace Base
     {
         public event Action OnItemVisualChanged;
 
+        [SerializeField, ReadOnly] protected DeckItemVisual[] itemVisualInstances;
+        [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
+        [SerializeField, ReadOnly] protected bool isMultiInstance;
+
         [SerializeField] protected DeckActionTag[] tags;
         [SerializeField] private DeckComponent[] components;
         [SerializeField] private bool willSave = true;
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
-
-        [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
-        [SerializeField, ReadOnly] protected DeckItemVisual[] itemVisualInstances;
-
-        [SerializeField, ReadOnly] protected bool isMultiInstance;
 
         public DeckId UniqueId => uniqueId;
         public DeckComponent[] Components => components;
@@ -284,6 +284,18 @@ namespace Base
 
             DeckServiceProvider.GetService<DeckServiceFinder>().RemoveAgent(this);
 
+            if (isMultiInstance && itemVisualInstances != null)
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisuals(itemVisualInstances);
+            }
+            else if (itemVisualInstance != null)
+            {
+                DeckServiceProvider.GetService<DeckServiceItemVisual>().ReturnItemVisual(itemVisualInstance);
+            }
+
+            instanceProvider.ReturnAgent(this);
+
+
             OnAgentDestroyed();
 
             InternalRequestDestroy();
@@ -293,7 +305,6 @@ namespace Base
 
         protected virtual void InternalRequestDestroy()
         {
-            throw new Exception("Not implemented");
         }
 
         protected void RaiseItemVisualChanged()

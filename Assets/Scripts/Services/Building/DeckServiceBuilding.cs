@@ -4,8 +4,11 @@ using Base;
 using Data.Buildable;
 using Data.General;
 using EventManager;
+using GameManager.Data.GameSetting;
+using GameManager.Events;
 using InGame.Agent.Building;
 using Instancing;
+using Services.Building.Events;
 using Services.Camera;
 using Services.Currency;
 using Services.ItemVisual;
@@ -47,6 +50,7 @@ namespace Services.Building
         private bool _isDirty;
         private int _ninetyDegreeRotationAmount;
         private DeckSilhouetteProvider _silhouetteProvider;
+        private DeckGameSettingBasic _gameSetting;
 
         [Inject]
         private void Inject(DeckDataBuilding buildingData, DeckInstanceProvider instanceProvider, DeckSilhouetteProvider silhouetteProvider)
@@ -65,6 +69,18 @@ namespace Services.Building
             {
                 name = "SilhouetteParent"
             };
+
+            DeckEventManager.Register<DeckEventOnGameSettingsLoaded>(OnGameSettingsLoaded);
+        }
+
+        protected override void DeInitialize()
+        {
+            DeckEventManager.Unregister<DeckEventOnGameSettingsLoaded>(OnGameSettingsLoaded);
+        }
+
+        private void OnGameSettingsLoaded(DeckEventOnGameSettingsLoaded obj)
+        {
+            _gameSetting = obj.gameSetting;
         }
 
         protected override void DrawGizmos()
@@ -209,6 +225,11 @@ namespace Services.Building
                 isAvailable = !(_grid.TryGetValue(cellIndex, out var value) && value);
             }
 
+            if (!IsCellInBounds(cellIndex))
+            {
+                isAvailable = false;
+            }
+
             var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -228,6 +249,12 @@ namespace Services.Building
             var isAvailable = true;
             foreach (var mainCell in _activeBuildable.Indices)
             {
+                if (!IsCellInBounds(mainCell))
+                {
+                    isAvailable = false;
+                    break;
+                }
+
                 if (!_grid.TryGetValue(currentCellIndex + mainCell, out var value))
                 {
                     isAvailable = false;
@@ -241,7 +268,7 @@ namespace Services.Building
                 }
             }
 
-            if (isAvailable && !IsViableBuildCell(_activeBuildable.AccessIndices, currentCellIndex))
+            if (isAvailable && (!IsViableBuildCell(currentCellIndex, _activeBuildable.AccessIndices) || IsAccessCellsInBounds(currentCellIndex, _activeBuildable.AccessIndices)))
             {
                 isAvailable = false;
             }
@@ -295,7 +322,12 @@ namespace Services.Building
 
                 _piecesInUse[index].gameObject.transform.position = cellIndex.ToVector3();
 
-                if (isAllCellsFree && !IsViableBuildCell(_activeBuildable.Indices, cellIndex))
+                if (isAllCellsFree && !IsViableBuildCell(cellIndex, _activeBuildable.Indices))
+                {
+                    isAllCellsFree = false;
+                }
+
+                if (!IsCellInBounds(cellIndex))
                 {
                     isAllCellsFree = false;
                 }
@@ -433,6 +465,8 @@ namespace Services.Building
             newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
+            
+            OnAnyBuild(newBuilding);
         }
 
         public void BuildOnTop()
@@ -460,6 +494,8 @@ namespace Services.Building
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
+            
+            OnAnyBuild(newBuilding);
         }
 
         public void BuildFree()
@@ -483,6 +519,8 @@ namespace Services.Building
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
+            
+            OnAnyBuild(newBuilding);
         }
 
         public void BuildInRect(Vector2Int[] positions)
@@ -497,7 +535,12 @@ namespace Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                if (!IsViableBuildCell(_activeBuildable.Indices, rectBuildPosition))
+                if (!IsCellInBounds(rectBuildPosition))
+                {
+                    isAllCellsAvailable = false;
+                }
+
+                if (!IsViableBuildCell(rectBuildPosition, _activeBuildable.Indices))
                 {
                     isAllCellsAvailable = false;
                 }
@@ -522,6 +565,8 @@ namespace Services.Building
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
+                
+                OnAnyBuild(newBuilding);
             }
 
             foreach (var silhouettePiece in _piecesInUse)
@@ -547,6 +592,11 @@ namespace Services.Building
                 return;
             }
 
+            if (!IsCellInBounds(cellIndex))
+            {
+                return;
+            }
+
             _lastCheckedCellIndex = cellIndex;
 
             if (canReplace && _grid.TryGetValue(cellIndex, out var building))
@@ -554,7 +604,7 @@ namespace Services.Building
                 building.RequestDestroy();
             }
 
-            if (!IsViableBuildCell(_activeBuildable.Indices, cellIndex))
+            if (!IsViableBuildCell(cellIndex, _activeBuildable.Indices))
             {
                 return;
             }
@@ -565,6 +615,8 @@ namespace Services.Building
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
+            
+            OnAnyBuild(newBuilding);
         }
 
         public void BuildInCellMultiple()
@@ -582,9 +634,14 @@ namespace Services.Building
                 return;
             }
 
+            if (!IsCellInBounds(cellIndex))
+            {
+                return;
+            }
+
             _lastCheckedCellIndex = cellIndex;
 
-            if (!IsViableBuildCell(_activeBuildable.Indices, cellIndex))
+            if (!IsViableBuildCell(cellIndex, _activeBuildable.Indices))
             {
                 return;
             }
@@ -595,10 +652,19 @@ namespace Services.Building
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
+
+            OnAnyBuild(newBuilding);
         }
 
         public void BuildInRectBulk(DeckBuildable buildable, Vector2Int min, Vector2Int max)
         {
+            if (!IsCellInBounds(min) || !IsCellInBounds(max))
+            {
+                DeckLogger.Error(_gameSetting.GetMapSize());
+                DeckLogger.Error("Can't build out of bounds  " + min + "  " + max);
+                return;
+            }
+
             var cellCount = max.x * max.y;
             var indices = new Vector2Int[max.x * max.y];
 
@@ -622,6 +688,11 @@ namespace Services.Building
                     builtAgents[counter_2].transform.position = new Vector3(x, 0, y);
                     builtAgents[counter_2].InitializeBuildingWithVisual(rentedVisuals[counter_2++]);
                 }
+            }
+
+            foreach (var building in builtAgents)
+            {
+                OnAnyBuild(building);
             }
         }
 
@@ -647,7 +718,7 @@ namespace Services.Building
                 return;
             }
 
-            if (!IsViableBuildCell(_activeBuildable.Indices, currentCellIndex, false))
+            if (!IsViableBuildCell(currentCellIndex, _activeBuildable.Indices, false))
             {
                 return;
             }
@@ -669,6 +740,12 @@ namespace Services.Building
             newBuilding.InitializeBuilding();
 
             agentBuildingToBuildOnTop.AddBuildingToTop(newBuilding);
+            OnAnyBuild(newBuilding);
+        }
+
+        private void OnAnyBuild(DeckAgentBuilding building)
+        {
+            DeckEventOnAnythingBuilt.Create(building).Send();
         }
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
@@ -817,7 +894,7 @@ namespace Services.Building
             return true;
         }
 
-        private bool IsViableBuildCell(Vector2Int[] indices, Vector2Int cellIndex, bool checkIfGridClear = true)
+        private bool IsViableBuildCell(Vector2Int cellIndex, Vector2Int[] indices, bool checkIfGridClear = true)
         {
             var rotatedIndices = indices.GetRotatedIndices(_ninetyDegreeRotationAmount);
             foreach (var index in rotatedIndices)
@@ -947,6 +1024,36 @@ namespace Services.Building
             }
 
             _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+            return true;
+        }
+
+        private bool IsCellInBounds(Vector2Int cell)
+        {
+            var mapSize = _gameSetting.GetMapSize();
+            if (cell.x >= 0 && cell.y >= 0 && cell.x <= mapSize.x && cell.y <= mapSize.y)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+
+        private bool IsAccessCellsInBounds(Vector2Int cell, Vector2Int[] accessCells)
+        {
+            if (!IsCellInBounds(cell))
+            {
+                return false;
+            }
+
+            foreach (var accessCell in accessCells)
+            {
+                if (!IsCellInBounds(accessCell + cell))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
     }

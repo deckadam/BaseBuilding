@@ -29,6 +29,11 @@ namespace Utility
             Debug.Log("#UI#" + log, obj);
         }
 
+        public static void Error(object log)
+        {
+            Debug.Log("#Error#" + log);
+        }
+        
         public static void Error(string log)
         {
             Debug.Log("#Error#" + log);

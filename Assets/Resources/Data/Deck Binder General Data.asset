@@ -21,5 +21,6 @@ MonoBehaviour:
   doorProvider: {fileID: 11400000, guid: 1a0bda4a77760d74a972462831dab50f, type: 2}
   agentWaiterPrefab: {fileID: 2975080952737542289, guid: ddb24fa92697c734da5f3ef5572d21da, type: 3}
   instanceProvider: {fileID: 11400000, guid: 3ceb8937ad55a1b4b9d067df4e4f08f1, type: 2}
-  gameSettings: []
+  gameSettings:
+  - {fileID: 11400000, guid: 6b38ab96477797a44b6b12e3b19a46b3, type: 2}
   cameraParameters: {fileID: 11400000, guid: 980bae04ecce20f48bb51bd2fb1c1e4d, type: 2}

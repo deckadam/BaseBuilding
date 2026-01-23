@@ -63,7 +63,7 @@ namespace UI.MainMenu
             _loadingInProgress = true;
             DeckLogger.Inform("New game starting");
 
-            await DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame();
+            await DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame(gameSettingBasic);
             
             DeckEventOnGameSceneLoaded.Create().Send();
             DeckEventOnGameSettingsLoaded.Create(gameSettingBasic).Send();

@@ -1,6 +1,7 @@
 using System;
 using Data.Buildable;
 using EventManager;
+using Services;
 using Services.Building;
 using Services.Building.Events;
 using Services.Escapable;
@@ -17,6 +18,8 @@ namespace UI.Building.BuildMode
         protected DeckServiceBuilding BuildingService;
         protected DeckBuildable Buildable;
         protected DeckBuildingPage BuildingPage;
+        protected bool _checking;
+
         private Action _onEscape;
         private bool _canMoveBuild;
 
@@ -32,16 +35,18 @@ namespace UI.Building.BuildMode
 
             _onEscape = onEscape;
 
-            DeckEventManager.Register<DeckEventOnLeftClickDown>(InternalOnLeftClickDown);
-            DeckEventManager.Register<DeckEventOnLeftClickUp>(InternalOnLeftClickUp);
-            DeckEventManager.Register<DeckEventOnMouseMove>(InternalOnMouseMove);
+            DeckEventManager.Register<DeckEventOnLeftClickDown>(OnLeftClickDown);
+            DeckEventManager.Register<DeckEventOnLeftClickUp>(OnLeftClickUp);
+            DeckEventManager.Register<DeckEventOnMouseMove>(OnMouseMove);
+            DeckEventManager.Register<DeckEventOnRightClick>(OnRightClick);
 
-            BuildingService = Services.DeckServiceProvider.GetService<DeckServiceBuilding>();
+            BuildingService = DeckServiceProvider.GetService<DeckServiceBuilding>();
             DeckEventOnBuildModeStarted.Create().Send();
 
-            Services.DeckServiceProvider.GetService<DeckServiceEscapable>().RegisterEscapable(this);
+            DeckServiceProvider.GetService<DeckServiceEscapable>().RegisterEscapable(this);
 
             InternalOnInitialize();
+            _checking = true;
         }
 
         public void OnEscapeRequested()
@@ -51,9 +56,10 @@ namespace UI.Building.BuildMode
                 return;
             }
 
-            DeckEventManager.Unregister<DeckEventOnLeftClickDown>(InternalOnLeftClickDown);
-            DeckEventManager.Unregister<DeckEventOnLeftClickUp>(InternalOnLeftClickUp);
-            DeckEventManager.Unregister<DeckEventOnMouseMove>(InternalOnMouseMove);
+            DeckEventManager.Unregister<DeckEventOnLeftClickDown>(OnLeftClickDown);
+            DeckEventManager.Unregister<DeckEventOnLeftClickUp>(OnLeftClickUp);
+            DeckEventManager.Unregister<DeckEventOnMouseMove>(OnMouseMove);
+            DeckEventManager.Unregister<DeckEventOnRightClick>(OnRightClick);
 
             HasEscaped = true;
             _onEscape?.Invoke();
@@ -61,12 +67,45 @@ namespace UI.Building.BuildMode
             DeckEventOnBuildModeStopped.Create().Send();
         }
 
+        private void OnRightClick(DeckEventOnRightClick obj)
+        {
+            _checking = false;
+            InternalOnBuildModeCanceled();
+            OnEscapeRequested();
+        }
+
+        private void OnLeftClickDown(DeckEventOnLeftClickDown obj)
+        {
+            _checking = true;
+            InternalOnLeftClickDown();
+        }
+
+        private void OnLeftClickUp(DeckEventOnLeftClickUp obj)
+        {
+            if (!_checking)
+            {
+                return;
+            }
+
+            InternalOnLeftClickUp();
+        }
+
+        private void OnMouseMove(DeckEventOnMouseMove obj)
+        {
+            if (!_checking)
+            {
+                return;
+            }
+
+            InternalOnMouseMove();
+        }
+
         protected abstract void InternalOnInitialize();
+        protected abstract void InternalOnLeftClickDown();
+        protected abstract void InternalOnLeftClickUp();
+        protected abstract void InternalOnMouseMove();
+        protected abstract void InternalOnBuildModeCanceled();
 
-        protected abstract void InternalOnLeftClickDown(DeckEventOnLeftClickDown obj);
-
-        protected abstract void InternalOnLeftClickUp(DeckEventOnLeftClickUp obj);
-
-        protected abstract void InternalOnMouseMove(DeckEventOnMouseMove obj);
+        public bool CanBeEscapedWithRightClick => true;
     }
 }

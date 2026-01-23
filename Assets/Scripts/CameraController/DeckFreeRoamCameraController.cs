@@ -11,7 +11,7 @@ using Zenject;
 
 namespace CameraController
 {
-    public class DeckFreeRoamCameraController : MonoBehaviour
+    public class DeckFreeRoamCameraController : DeckBaseCameraController
     {
         private DeckCameraParameters _cameraParameters;
         private CinemachineVirtualCamera _vCam;
@@ -20,6 +20,7 @@ namespace CameraController
 
         private bool _canZoom = true;
         private float _targetHeight;
+        private float _zoomRatio;
 
         [Inject]
         private void Inject(DeckCameraParameters cameraParameters)
@@ -27,13 +28,15 @@ namespace CameraController
             _cameraParameters = cameraParameters;
         }
 
-        private void Start()
+        public override void Initialize()
         {
             _cachedTransform = transform;
             _confiner = GetComponent<CinemachineConfiner>();
             _vCam = GetComponent<CinemachineVirtualCamera>();
+
             _confiner.m_BoundingVolume = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().GetCameraCollider();
             _targetHeight = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().transform.position.y;
+            CalculateZoomRatio();
 
             DeckEventManager.Register<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
             DeckEventManager.Register<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
@@ -65,7 +68,8 @@ namespace CameraController
             var movement = Vector3.zero;
             movement += obj.movement.x * Vector3.right;
             movement += obj.movement.y * Vector3.forward;
-            var deltaPosition = movement * (Time.deltaTime * _cameraParameters.CameraMovementSpeed);
+            var speedMultiplier = Mathf.Lerp(_cameraParameters.CameraMovementSpeedMin, _cameraParameters.CameraMovementSpeedMax, _zoomRatio);
+            var deltaPosition = movement * (Time.deltaTime * speedMultiplier);
             _cachedTransform.position += deltaPosition;
         }
 
@@ -78,6 +82,8 @@ namespace CameraController
 
             _targetHeight -= obj.scrollValue * _cameraParameters.ZoomSpeed;
             _targetHeight = Mathf.Clamp(_targetHeight, _cameraParameters.MinimumHeight, _cameraParameters.MaximumHeight);
+
+            CalculateZoomRatio();
         }
 
         private void Update()
@@ -86,6 +92,13 @@ namespace CameraController
             var currentHeight = currentPosition.y;
             var heightDifference = currentHeight - _targetHeight;
             _cachedTransform.position = Vector3.MoveTowards(currentPosition, currentPosition + _cachedTransform.forward * heightDifference, _cameraParameters.ZoomMoveTowardsSpeed);
+        }
+
+        private void CalculateZoomRatio()
+        {
+            var range = _cameraParameters.MaximumHeight - _cameraParameters.MinimumHeight;
+            var offset = _targetHeight - _cameraParameters.MinimumHeight;
+            _zoomRatio = offset / range;
         }
     }
 }

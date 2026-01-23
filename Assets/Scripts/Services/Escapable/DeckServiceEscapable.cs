@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using EventManager;
 using Services.Map;
 using Services.UI;
+using Systems.SystemInput.Events;
 using UI.InGame;
 using UI.MainMenu;
 
@@ -48,7 +50,7 @@ namespace Services.Escapable
                     _escapables.Remove(escapable);
                 } while (!hasEscaped);
             }
-            else if(DeckServiceProvider.GetService<DeckServiceSession>().IsSessionActive())
+            else if (DeckServiceProvider.GetService<DeckServiceSession>().IsSessionActive())
             {
                 DeckServiceProvider.GetService<DeckServiceUI>().GetUI<DeckUIInGame>().SwapAppearanceStatus();
             }

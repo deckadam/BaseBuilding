@@ -3,6 +3,7 @@ using Components.Health;
 using Cysharp.Threading.Tasks;
 using Data.Item;
 using GameManager.Data;
+using GameManager.Data.GameSetting;
 using GameManager.Events;
 using InGame.Agent.Waiter;
 using Instancing;
@@ -28,22 +29,24 @@ namespace GameManager
         }
 
         private DeckLoadResolver _loadResolver;
-
+        private DeckGameSettingBasic _gameSettingBasic;
+        
         [Inject]
-        private void Inject(DeckLoadResolver loadResolver)
+        private void Inject(DeckLoadResolver loadResolver,DeckGameSettingBasic[] gameSettingBasic)
         {
             _loadResolver = loadResolver;
+            _gameSettingBasic = gameSettingBasic[0];
         }
 
-        public async UniTask CreateNewGame()
+        public async UniTask CreateNewGame(DeckGameSettingBasic gameSettingBasic)
         {
             DeckSaveSystem.CreateNewSave();
-            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession();
+            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession(gameSettingBasic);
         }
 
         public async void LoadGame()
         {
-            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession();
+            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession(_gameSettingBasic);
             var agentsData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             _loadResolver.ResolveAndLoad(agentsData);
         }

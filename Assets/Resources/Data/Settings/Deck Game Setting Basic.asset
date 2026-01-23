@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236d970d31a84e518f5f1afcd987c4a9, type: 3}
   m_Name: Deck Game Setting Basic
   m_EditorClassIdentifier: 
-  mapSize: {x: 50, y: 50}
+  mapSize: {x: 50, y: 150}
   wallType: 0
   allWallData:
   - wallType: 0

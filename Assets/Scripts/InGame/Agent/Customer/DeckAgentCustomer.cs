@@ -37,18 +37,18 @@ namespace InGame.Agent.Customer
 
         private async void RequestOrder()
         {
-            return;
-            var destroyToken = gameObject.GetCancellationTokenOnDestroy();
-            while (!destroyToken.IsCancellationRequested)
-            {
-                var result = await UniTask.Delay(10000, cancellationToken: destroyToken).SuppressCancellationThrow();
-                if (result)
-                {
-                    return;
-                }
+            // var destroyToken = gameObject.GetCancellationTokenOnDestroy();
+            // while (!destroyToken.IsCancellationRequested)
+            // {
+                // var result = await UniTask.Delay(10000, cancellationToken: destroyToken).SuppressCancellationThrow();
+                // if (result)
+                // {
+                    // return;
+                // }
 
-                DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
-            }
+                // DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));
+            // }
+            await UniTask.CompletedTask;
         }
     }
 }

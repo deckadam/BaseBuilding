@@ -34,6 +34,7 @@ namespace Data.General
             Container.BindInstance(doorProvider);
             Container.BindInstance(instanceProvider);
             Container.BindInstance(cameraParameters);
+            Container.BindInstance(gameSettings);
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {
