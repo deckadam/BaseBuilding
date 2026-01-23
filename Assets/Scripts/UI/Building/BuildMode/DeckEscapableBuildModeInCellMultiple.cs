@@ -26,10 +26,7 @@ namespace UI.Building.BuildMode
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
             BuildingService.UpdateSilhouetteInCell(rotation, false);
         }
-
-        protected override void InternalOnBuildModeCanceled()
-        {
-            BuildingService.ClearAll();
-        }
+        
+        public override bool ShouldEscapeFullyOnRightClick => false;
     }
 }

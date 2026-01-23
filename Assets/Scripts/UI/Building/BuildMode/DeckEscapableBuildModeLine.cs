@@ -1,15 +1,13 @@
+using Services;
 using Services.Camera;
-using Systems.SystemInput.Events;
 using UnityEngine;
 
 namespace UI.Building.BuildMode
 {
-    public class DeckEscapableBuildModeLine : DeckEscapableBuildMode
+    public class DeckEscapableBuildModeLine : DeckEscapableBuildModePartialCancel
     {
         private Vector2Int _initialCellPosition;
         private Vector2Int _currentCellPosition;
-
-        private bool _isDown;
 
         protected override void InternalOnInitialize()
         {
@@ -19,7 +17,7 @@ namespace UI.Building.BuildMode
         protected override void InternalOnLeftClickDown()
         {
             _isDown = true;
-            _initialCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            _initialCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
         }
 
         protected override void InternalOnLeftClickUp()
@@ -30,7 +28,7 @@ namespace UI.Building.BuildMode
             }
 
             _isDown = false;
-            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            var currentCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
             var delta = currentCellPosition - _initialCellPosition;
 
@@ -48,7 +46,7 @@ namespace UI.Building.BuildMode
 
         protected override void InternalOnMouseMove()
         {
-            var currentCellPosition = Services.DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
+            var currentCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
 
             if (_currentCellPosition == currentCellPosition)
             {
@@ -78,9 +76,6 @@ namespace UI.Building.BuildMode
             }
         }
 
-        protected override void InternalOnBuildModeCanceled()
-        {
-            BuildingService.ClearAll();
-        }
+        public override bool ShouldEscapeFullyOnRightClick => false;
     }
 }

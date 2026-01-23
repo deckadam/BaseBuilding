@@ -24,10 +24,5 @@ namespace UI.Building.BuildMode
         {
             BuildingService.UpdateSilhouetteFree();
         }
-
-        protected override void InternalOnBuildModeCanceled()
-        {
-            BuildingService.ClearAll();
-        }
     }
 }

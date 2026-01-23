@@ -5,12 +5,10 @@ using UnityEngine;
 
 namespace UI.Building.BuildMode
 {
-    public class DeckEscapableBuildModeRect : DeckEscapableBuildMode
+    public class DeckEscapableBuildModeRect : DeckEscapableBuildModePartialCancel
     {
         private Vector2Int _initialCellPosition;
         private Vector2Int _currentCellPosition;
-
-        private bool _isDown;
 
         protected override void InternalOnInitialize()
         {
@@ -54,9 +52,6 @@ namespace UI.Building.BuildMode
             BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
         }
 
-        protected override void InternalOnBuildModeCanceled()
-        {
-            BuildingService.ClearAll();
-        }
+        public override bool ShouldEscapeFullyOnRightClick => false;
     }
 }

@@ -1,5 +1,4 @@
 using Services.Building;
-using Systems.SystemInput.Events;
 
 namespace UI.Building.BuildMode
 {
@@ -23,11 +22,6 @@ namespace UI.Building.BuildMode
         protected override void InternalOnMouseMove()
         {
             BuildingService.UpdateSilhouetteOnWall();
-        }
-
-        protected override void InternalOnBuildModeCanceled()
-        {
-            BuildingService.ClearAll();
         }
     }
 }

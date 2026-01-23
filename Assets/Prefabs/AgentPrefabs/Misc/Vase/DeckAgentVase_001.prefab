@@ -44,19 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e458080b0a4ae4a49a179be0bad487, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPosition: {fileID: 0}
+  itemVisualInstances: []
+  itemVisualInstance: {fileID: 0}
+  isMultiInstance: 0
+  tags: 
   components: []
-  activeSize: 0.25
-  collider: {fileID: 0}
   willSave: 1
   uniqueId:
     _id: 0
-    IdString: 
   prefabId:
     _id: 29241006
-    IdString: 
-  selfTransform: {fileID: 0}
+  buildingsOnTop: []
   buildingData: {fileID: 11400000, guid: f994cd9af2402ec4796711f96dbbdcd4, type: 2}
-  itemVisualPrefab: {fileID: 7699648442756046541, guid: 1e911432e0397af4080d1269a85a3d91, type: 3}
+  onTopOf: {fileID: 0}
   setVisualPosition: 1
-  setVisualRotation: 1

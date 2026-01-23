@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Deck Camera Parameters
   m_EditorClassIdentifier: 
   cameraMovementSpeedMin: 10
-  cameraMovementSpeedMax: 30
+  cameraMovementSpeedMax: 40
   minimumHeight: 8
   maximumHeight: 40
   zoomSpeed: 3

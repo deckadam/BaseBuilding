@@ -19,6 +19,7 @@ namespace UI.Building.BuildMode
         protected DeckBuildable Buildable;
         protected DeckBuildingPage BuildingPage;
         protected bool _checking;
+        protected bool _isDown;
 
         private Action _onEscape;
         private bool _canMoveBuild;
@@ -70,8 +71,15 @@ namespace UI.Building.BuildMode
         private void OnRightClick(DeckEventOnRightClick obj)
         {
             _checking = false;
-            InternalOnBuildModeCanceled();
-            OnEscapeRequested();
+            if (!ShouldEscapeFullyOnRightClick)
+            {
+                PartialCancel();
+            }
+            else
+            {
+                BuildingService.ClearAll();
+                OnEscapeRequested();
+            }
         }
 
         private void OnLeftClickDown(DeckEventOnLeftClickDown obj)
@@ -100,12 +108,16 @@ namespace UI.Building.BuildMode
             InternalOnMouseMove();
         }
 
+        protected virtual void PartialCancel()
+        {
+        }
+
         protected abstract void InternalOnInitialize();
         protected abstract void InternalOnLeftClickDown();
         protected abstract void InternalOnLeftClickUp();
         protected abstract void InternalOnMouseMove();
-        protected abstract void InternalOnBuildModeCanceled();
 
         public bool CanBeEscapedWithRightClick => true;
+        public virtual bool ShouldEscapeFullyOnRightClick => true;
     }
 }

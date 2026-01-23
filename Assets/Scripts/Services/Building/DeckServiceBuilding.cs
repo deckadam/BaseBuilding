@@ -465,7 +465,7 @@ namespace Services.Building
             newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            
+
             OnAnyBuild(newBuilding);
         }
 
@@ -473,16 +473,19 @@ namespace Services.Building
         {
             if (!_activeBuildable)
             {
+                Debug.LogError("0");
                 return;
             }
 
             if (!IsViableToPlaceOnTop(out var buildingToBuildOnTop, out var buildPosition))
             {
+                Debug.LogError("1");
                 return;
             }
 
             if (CollidesWithOtherItemsOnTop(buildPosition))
             {
+                Debug.LogError("2");
                 return;
             }
 
@@ -494,7 +497,7 @@ namespace Services.Building
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
-            
+
             OnAnyBuild(newBuilding);
         }
 
@@ -519,7 +522,7 @@ namespace Services.Building
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            
+
             OnAnyBuild(newBuilding);
         }
 
@@ -565,7 +568,7 @@ namespace Services.Building
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
-                
+
                 OnAnyBuild(newBuilding);
             }
 
@@ -615,7 +618,7 @@ namespace Services.Building
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
-            
+
             OnAnyBuild(newBuilding);
         }
 
@@ -778,9 +781,28 @@ namespace Services.Building
                     return Physics.OverlapCapsuleNonAlloc(point0, point1, radius, _possibleColliders, layerMask, QueryTriggerInteraction.Ignore) > 0;
                 }
                 default:
-                    DeckLogger.Error($"Not suppoerted collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
+                    DeckLogger.Error($"Not supported collider type {_activeBuildable.ItemVisual.Collider.GetType()}");
                     return true;
             }
+        }
+
+        public void PartialClear()
+        {
+            foreach (var piece in _piecesInUse)
+            {
+                _silhouetteProvider.ReturnSilhouettePieceToPool(piece);
+            }
+
+            _piecesInUse.Clear();
+            _rotation = Quaternion.identity;
+
+            if (_silhouetteParent && _silhouetteParent != null && _silhouetteParent.activeInHierarchy)
+            {
+                _silhouetteParent.transform.rotation = Quaternion.identity;
+            }
+
+            _ninetyDegreeRotationAmount = 0;
+            _isDirty = false;
         }
 
         public void ClearAll()
