@@ -106,7 +106,7 @@ namespace InGame.Agent.Building
             }
 
             DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
-            DeckEventOnAnythingDestroyed.Create().Send();
+            DeckEventOnAnythingDestroyed.Create(this).Send();
         }
 
         public void AddBuildingToTop(DeckAgentBuilding agentBuilding)

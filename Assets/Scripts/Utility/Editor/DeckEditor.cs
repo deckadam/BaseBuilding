@@ -17,6 +17,7 @@ namespace Utility.Editor
             DeckEventManager.ClearEvents<DeckEventOnLeftClickDown>();
             DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
             DeckEventManager.ClearEvents<DeckEventOnMouseMove>();
+            DeckEventManager.ClearEvents<DeckEventOnMiddleMouseButtonStatusChange>();
         }
 
 
@@ -63,7 +64,7 @@ namespace Utility.Editor
             var buildableIds = new HashSet<int>();
             foreach (var deckBuildable in buildables)
             {
-                if (!buildableIds.Add(deckBuildable.BuildingId.ID))
+                if (!buildableIds.Add(deckBuildable.Agent.PrefabId.ID))
                 {
                     DeckLogger.Error("Multiple id " + deckBuildable.name, deckBuildable);
                 }

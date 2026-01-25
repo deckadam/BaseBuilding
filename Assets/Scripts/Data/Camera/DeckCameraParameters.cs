@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Data.Camera
 {
@@ -12,6 +11,8 @@ namespace Data.Camera
         [SerializeField] private float maximumHeight;
         [SerializeField] private float zoomSpeed;
         [SerializeField] private float zoomMoveTowardsSpeed;
+        [SerializeField] private float rotationSpeed;
+        [SerializeField] private float rotationSpeedWithKeyboard;
 
         public float CameraMovementSpeedMin => cameraMovementSpeedMin;
         public float CameraMovementSpeedMax => cameraMovementSpeedMax;
@@ -19,5 +20,7 @@ namespace Data.Camera
         public float MaximumHeight => maximumHeight;
         public float ZoomSpeed => zoomSpeed;
         public float ZoomMoveTowardsSpeed => zoomMoveTowardsSpeed;
+        public float RotationSpeed => rotationSpeed;
+        public float RotationSpeedWithKeyboard => rotationSpeedWithKeyboard;
     }
 }

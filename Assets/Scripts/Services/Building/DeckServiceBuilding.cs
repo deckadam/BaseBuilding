@@ -30,6 +30,11 @@ namespace Services.Building
         private const float YOffsetForBuildOnTop = 0.1f;
         private const string WallTag = "Wall";
 
+        private static readonly Quaternion forwardRotation = Quaternion.Euler(0, 180, 0);
+        private static readonly Quaternion backRotation = Quaternion.Euler(0, 0, 0);
+        private static readonly Quaternion leftRotation = Quaternion.Euler(0, 90, 0);
+        private static readonly Quaternion rightRotation = Quaternion.Euler(0, -90, 0);
+
         [SerializeField] private LayerMask layerMask;
         [SerializeField] private LayerMask onWallLayerMask;
 
@@ -360,7 +365,7 @@ namespace Services.Building
                 return;
             }
 
-            if (!IsTargetPointWall(out var buildPosition, out var buildRotation))
+            if (!IsTargetPointWall(out var buildPosition, out var normal))
             {
                 if (_silhouetteParent.activeSelf)
                 {
@@ -370,17 +375,25 @@ namespace Services.Building
                 return;
             }
 
+            if (!IsSideFacingRotation(normal, out var wallRotation))
+            {
+                _silhouetteParent.gameObject.SetActive(false);
+                return;
+            }
+
             if (!_silhouetteParent.activeSelf)
             {
                 _silhouetteParent.gameObject.SetActive(true);
             }
 
-            var material = IsViableToBuildOnWall(buildPosition, out _) ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+            var result = IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation);
+            var material = result ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
+            DeckGUILogger.ins.SetDebugText("Silhouette", buildPosition + "  " + normal + "  " + result);
 
             ApplyMaterialToSilhouette(material);
 
             _silhouetteParent.transform.position = buildPosition;
-            _silhouetteParent.transform.eulerAngles = buildRotation;
+            _silhouetteParent.transform.rotation = wallRotation;
         }
 
         public void UpdateSilhouetteOnTop()
@@ -442,19 +455,22 @@ namespace Services.Building
 
         public void BuildOnWall()
         {
-            if (_activeBuildable == null)
+            if (!CheckActiveBuildable()) return;
+
+            if (!IsTargetPointWall(out var buildPosition, out var normal))
             {
                 return;
             }
 
-            if (!IsTargetPointWall(out var buildPosition, out var buildRotation))
+            if (!IsSideFacingRotation(normal, out var wallRotation))
             {
+                _silhouetteParent.gameObject.SetActive(false);
                 return;
             }
 
-            if (!IsViableToBuildOnWall(buildPosition, out var collidedObject))
+            DeckGUILogger.ins.SetDebugText("Build", buildPosition + "  " + normal);
+            if (!IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation))
             {
-                DeckLogger.Inform("Collides with object", collidedObject);
                 return;
             }
 
@@ -462,7 +478,7 @@ namespace Services.Building
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = buildPosition;
-            newBuilding.transform.rotation = Quaternion.LookRotation(buildRotation * -1);
+            newBuilding.transform.rotation = Quaternion.LookRotation(normal * -1);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
@@ -471,21 +487,15 @@ namespace Services.Building
 
         public void BuildOnTop()
         {
-            if (!_activeBuildable)
-            {
-                Debug.LogError("0");
-                return;
-            }
+            if (!CheckActiveBuildable()) return;
 
             if (!IsViableToPlaceOnTop(out var buildingToBuildOnTop, out var buildPosition))
             {
-                Debug.LogError("1");
                 return;
             }
 
             if (CollidesWithOtherItemsOnTop(buildPosition))
             {
-                Debug.LogError("2");
                 return;
             }
 
@@ -503,10 +513,7 @@ namespace Services.Building
 
         public void BuildFree()
         {
-            if (_activeBuildable == null)
-            {
-                return;
-            }
+            if (!CheckActiveBuildable()) return;
 
             var worldPosition = _cameraService.GetCursorWorldPosition();
 
@@ -528,10 +535,7 @@ namespace Services.Building
 
         public void BuildInRect(Vector2Int[] positions)
         {
-            if (_activeBuildable == null)
-            {
-                return;
-            }
+            if (!CheckActiveBuildable()) return;
 
             var rectBuildPositions = positions.GetRectFromPoints();
             var isAllCellsAvailable = true;
@@ -582,11 +586,7 @@ namespace Services.Building
 
         public void BuildInCell(bool canReplace)
         {
-            if (_activeBuildable == null)
-            {
-                DeckLogger.Warning($"Buildable not found {_activeBuildable.name}");
-                return;
-            }
+            if (!CheckActiveBuildable()) return;
 
             var cellIndex = _cameraService.GetCursorCellIndex();
 
@@ -624,11 +624,7 @@ namespace Services.Building
 
         public void BuildInCellMultiple()
         {
-            if (_activeBuildable == null)
-            {
-                DeckLogger.Error($"Buildable not found {_activeBuildable.name}");
-                return;
-            }
+            if (!CheckActiveBuildable()) return;
 
             var cellIndex = _cameraService.GetCursorCellIndex();
 
@@ -663,8 +659,6 @@ namespace Services.Building
         {
             if (!IsCellInBounds(min) || !IsCellInBounds(max))
             {
-                DeckLogger.Error(_gameSetting.GetMapSize());
-                DeckLogger.Error("Can't build out of bounds  " + min + "  " + max);
                 return;
             }
 
@@ -701,6 +695,8 @@ namespace Services.Building
 
         public void BuildWithAccess()
         {
+            if (!CheckActiveBuildable()) return;
+
             var currentCellIndex = _cameraService.GetCursorCellIndex();
             DeckAgentBuilding agentBuildingToBuildOnTop = null;
             foreach (var mainCell in _activeBuildable.Indices)
@@ -744,11 +740,6 @@ namespace Services.Building
 
             agentBuildingToBuildOnTop.AddBuildingToTop(newBuilding);
             OnAnyBuild(newBuilding);
-        }
-
-        private void OnAnyBuild(DeckAgentBuilding building)
-        {
-            DeckEventOnAnythingBuilt.Create(building).Send();
         }
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
@@ -890,30 +881,22 @@ namespace Services.Building
             return result;
         }
 
-        private bool IsViableToBuildOnWall(Vector3 position, out GameObject collidedObject)
+        private bool IsViableToBuildOnWall(Vector3 position, Vector3 normal, Quaternion rotation)
         {
             var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
             if (!boxCollider)
             {
                 DeckLogger.Warning("Collider is not BoxCollider");
-                collidedObject = null;
                 return false;
             }
 
-            if (Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, Quaternion.identity, onWallLayerMask, QueryTriggerInteraction.Ignore) != 0)
+            var hitCount = Physics.OverlapBoxNonAlloc(position + boxCollider.center, boxCollider.size / 2, _possibleColliders, rotation, onWallLayerMask, QueryTriggerInteraction.Ignore);
+            if (hitCount == 0)
             {
-                collidedObject = null;
                 return false;
             }
 
-            if (_possibleColliders[0] == null)
-            {
-                collidedObject = null;
-                return false;
-            }
-
-            collidedObject = _possibleColliders[0].gameObject;
-            return true;
+            return _possibleColliders[0] != null && _possibleColliders[0].gameObject.activeSelf;
         }
 
         private bool IsViableBuildCell(Vector2Int cellIndex, Vector2Int[] indices, bool checkIfGridClear = true)
@@ -1010,7 +993,7 @@ namespace Services.Building
             return false;
         }
 
-        private bool IsTargetPointWall(out Vector3 position, out Vector3 rotation)
+        private bool IsTargetPointWall(out Vector3 position, out Vector3 normal)
         {
             if (Physics.Raycast(_cameraService.GetRayFromCamera(), out var hit, 1000f, layerMask, QueryTriggerInteraction.Ignore))
             {
@@ -1019,14 +1002,14 @@ namespace Services.Building
                     if (itemVisual.CompareTag(WallTag))
                     {
                         position = hit.point;
-                        rotation = hit.normal;
+                        normal = hit.normal;
                         return true;
                     }
                 }
             }
 
             position = Vector3.zero;
-            rotation = Vector3.zero;
+            normal = Vector3.zero;
             return false;
         }
 
@@ -1077,6 +1060,55 @@ namespace Services.Building
             }
 
             return true;
+        }
+
+        private bool CheckActiveBuildable()
+        {
+            if (_activeBuildable == null)
+            {
+                DeckLogger.Error("Buildable not set");
+                return false;
+            }
+
+            if (_activeBuildable.GetCurrentLimit() <= 0)
+            {
+                DeckEventNotificationRequested.Create("Limit reached").Send();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsSideFacingRotation(Vector3 normal, out Quaternion result)
+        {
+            if (normal == Vector3.forward)
+            {
+                result = forwardRotation;
+                return true;
+            }
+            else if (normal == Vector3.back)
+            {
+                result = backRotation;
+                return true;
+            }
+            else if (normal == Vector3.left)
+            {
+                result = leftRotation;
+                return true;
+            }
+            else if (normal == Vector3.right)
+            {
+                result = rightRotation;
+                return true;
+            }
+
+            result = Quaternion.identity;
+            return false;
+        }
+
+        private void OnAnyBuild(DeckAgentBuilding building)
+        {
+            DeckEventOnAnythingBuilt.Create(building).Send();
         }
     }
 }

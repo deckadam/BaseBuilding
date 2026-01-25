@@ -51,6 +51,50 @@ namespace Systems.SystemInput
             CheckForCameraMovement();
             CheckForPlayAndPause();
             CheckForRightClick();
+            CheckForMiddleMouseButtonClick();
+            CheckForCameraRotation();
+        }
+
+
+        private bool _rotating;
+
+        private void CheckForCameraRotation()
+        {
+            if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.E))
+            {
+                DeckEventOnCameraRotateWithKeyboardStateChanged.Create(true).Send();
+                _rotating = true;
+            }
+
+            var isKeyPressed = false;
+            if (Input.GetKey(KeyCode.Q))
+            {
+                DeckEventOnCameraRotateWithKeyboard.Create(true).Send();
+                isKeyPressed = true;
+            }
+
+            if (Input.GetKey(KeyCode.E))
+            {
+                DeckEventOnCameraRotateWithKeyboard.Create(false).Send();
+                isKeyPressed = true;
+            }
+
+            if (_rotating && !isKeyPressed)
+            {
+                DeckEventOnCameraRotateWithKeyboardStateChanged.Create(false).Send();
+            }
+        }
+
+        private void CheckForMiddleMouseButtonClick()
+        {
+            if (Input.GetMouseButtonDown(2))
+            {
+                DeckEventOnMiddleMouseButtonStatusChange.Create(true).Send();
+            }
+            else if (Input.GetMouseButtonUp(2))
+            {
+                DeckEventOnMiddleMouseButtonStatusChange.Create(false).Send();
+            }
         }
 
         private void CheckForRightClick()
@@ -233,8 +277,8 @@ namespace Systems.SystemInput
                 return;
             }
 
+            DeckEventOnMouseMove.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition(), _lastInputPosition - currentMousePosition).Send();
             _lastInputPosition = currentMousePosition;
-            DeckEventOnMouseMove.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
         }
 
         private bool IsOnUI()

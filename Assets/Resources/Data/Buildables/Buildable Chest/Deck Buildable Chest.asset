@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Chest
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 23778571
   agent: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
   itemVisual: {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
   visibleName: Chest
@@ -37,3 +35,5 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
+  isLimited: 1
+  limit: 3

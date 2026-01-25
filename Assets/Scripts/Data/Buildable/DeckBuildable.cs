@@ -1,6 +1,7 @@
 ﻿using System;
 using Base;
 using Data.Currency;
+using InGame.Agent.Building;
 using Services.Building;
 using Sirenix.OdinInspector;
 using UI.Building.BuildMode;
@@ -12,7 +13,6 @@ namespace Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeField] private DeckId buildingId;
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
@@ -32,6 +32,11 @@ namespace Data.Buildable
         [SerializeField, ShowIf(nameof(isGridBased))]
         private Vector2Int[] accessIndices;
 
+        [SerializeField] private bool isLimited;
+
+        [SerializeField, ShowIf(nameof(isLimited))]
+        private int limit;
+
         public DeckRotationMode RotationMode => rotationMode;
         public DeckSilhouetteData[] Silhouette => silhouette;
         public DeckAgent Agent => agent;
@@ -43,23 +48,13 @@ namespace Data.Buildable
         public DeckPrice[] Prices => prices;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
-
         public bool IsGridBased => isGridBased;
         public Vector2Int[] Indices => indices;
         public Vector2Int[] AccessIndices => accessIndices;
+        public bool IsLimited => isLimited;
+        public int Limit => limit;
 
-        public DeckId BuildingId
-        {
-            get
-            {
-                if (buildingId.IsValid)
-                {
-                    return buildingId;
-                }
-
-                throw new Exception("No valid prefab id " + name);
-            }
-        }
+        private int _currentLimit;
 
         [Button]
         private void OnValidate()
@@ -77,15 +72,20 @@ namespace Data.Buildable
             newItem.agent = agent;
             newItem.visibleName = name;
             newItem.OnValidate();
-            newItem.indices = new[] { Vector2Int.zero };
             newItem.CollectExtentsData();
             newItem.CollectSilhouetteData();
             newItem.buildMode = buildMode;
-            newItem.buildingId = DeckId.CreateNew();
+            newItem.buildableToPlaceOnTop = null;
+
             newItem.prices = new[]
             {
                 new DeckPrice(0, DeckCurrencyType.Money)
             };
+            newItem.indices = new[] { Vector2Int.zero };
+            newItem.accessIndices = new[] { Vector2Int.zero };
+
+            newItem.isLimited = false;
+            newItem.limit = int.MaxValue;
             return newItem;
         }
 
@@ -140,8 +140,8 @@ namespace Data.Buildable
 
         public override bool Equals(object other)
         {
-            var otherBuildable = other as DeckBuildable;
-            return buildingId.Equals(otherBuildable.buildingId);
+            var otherBuildable = other as DeckAgentBuilding;
+            return agent.PrefabId.Equals(otherBuildable.PrefabId);
         }
 
         protected bool Equals(DeckBuildable other)
@@ -152,6 +152,16 @@ namespace Data.Buildable
         public override int GetHashCode()
         {
             return HashCode.Combine(base.GetHashCode(), visibleName);
+        }
+
+        public void SetCurrentLimit(int maxLimit)
+        {
+            _currentLimit = maxLimit;
+        }
+
+        public int GetCurrentLimit()
+        {
+            return _currentLimit;
         }
     }
 }
