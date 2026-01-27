@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Base;
 using Data.Buildable.Data;
+using Data.Buildable.Data.Parameter;
 using Data.Currency;
 using GameManager.Data.GameSetting.Override;
 using InGame.Agent.Building;
 using Services.Building;
 using Sirenix.OdinInspector;
 using UI.Building.BuildMode;
+using UnityEditor;
 using UnityEngine;
 using Utility;
 
@@ -15,14 +19,14 @@ namespace Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable/Deck Data Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [AssetSelector(Paths = "Assets/Resources/Data/Buildables/Buildable Categories")] [SerializeField] private DeckBuildableCategory category;
+        [SerializeReference, TypeFilter(nameof(GetAllParameterTypes))] private List<DeckBuildableParameter> parameters;
+        [ValueDropdown(nameof(GetAllCategories))] [SerializeField] private DeckBuildableCategory category;
 
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
         [SerializeField] private DeckSilhouetteData[] silhouette;
         [SerializeField] private DeckRotationMode rotationMode;
-        [SerializeField] private Sprite icon;
         [SerializeField] private Vector3 extents;
         [SerializeField] private DeckPrice[] prices;
         [SerializeField] private DeckBuildMode buildMode;
@@ -44,7 +48,6 @@ namespace Data.Buildable
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
         public string VisibleName => visibleName;
-        public Sprite Icon => icon;
         public Vector3 Extents => extents;
         public int MaterialCount => materialCount;
         public DeckBuildMode BuildMode => buildMode;
@@ -82,13 +85,14 @@ namespace Data.Buildable
 
         private int _currentLimit;
 
-
         private bool _isLimitOverriden;
         private int _overridenLimit;
 
         private bool _isPriceOverriden;
         private DeckPrice[] _overridenPrice;
 
+
+        private Dictionary<Type, DeckBuildableParameter> _parameters;
 
         [Button]
         private void OnValidate()
@@ -101,7 +105,6 @@ namespace Data.Buildable
         {
             var newItem = CreateInstance<DeckBuildable>();
             newItem.name = name;
-            newItem.icon = icon;
             newItem.itemVisual = representation;
             newItem.agent = agent;
             newItem.visibleName = name;
@@ -121,6 +124,16 @@ namespace Data.Buildable
             newItem.isLimited = false;
             newItem.limit = int.MaxValue;
             return newItem;
+        }
+
+
+        public void Initialize()
+        {
+            _parameters = new Dictionary<Type, DeckBuildableParameter>();
+            foreach (var deckBuildableParameter in parameters)
+            {
+                _parameters.Add(deckBuildableParameter.GetType(), deckBuildableParameter);
+            }
         }
 
         private void CollectExtentsData()
@@ -226,5 +239,36 @@ namespace Data.Buildable
             _isLimitOverriden = false;
             _isPriceOverriden = false;
         }
+
+        public bool TryGetParameter<T>(out T parameter) where T : DeckBuildableParameter
+        {
+            if (!_parameters.TryGetValue(typeof(T), out var val))
+            {
+                DeckLogger.Warning($"Tried to fetch non existent parameter type {typeof(T).Name}");
+                parameter = null;
+                return false;
+            }
+
+            parameter = val as T;
+            return parameter != null;
+        }
+
+        #region Editor Stuff
+
+        private IEnumerable<DeckBuildableCategory> GetAllCategories()
+        {
+            return AssetDatabase.FindAssets($"t:{nameof(DeckBuildableCategory)}")
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<DeckBuildableCategory>)
+                .OrderBy(x => x.name);
+        }
+
+        private IEnumerable<Type> GetAllParameterTypes()
+        {
+            return typeof(DeckBuildableParameter).Assembly.GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(DeckBuildableParameter)) && !t.IsAbstract);
+        }
+
+        #endregion
     }
 }

@@ -38,6 +38,11 @@ namespace Data.General
             Container.BindInstance(cameraParameters);
             Container.BindInstance(gameSettings);
             Container.BindInstance(allBuildables);
+            
+            foreach (var deckBuildable in allBuildables)
+            {
+                deckBuildable.Initialize();
+            }
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscVase_002
   m_EditorClassIdentifier: 
+  parameters:
+  - rid: 213718203870740484
   category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
   agent: {fileID: 5134706524527623977, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
   itemVisual: {fileID: 2219166243080827500, guid: 13cdde138ba143c49a583bab1debdd28, type: 3}
@@ -21,7 +23,6 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
   rotationMode: 0
-  icon: {fileID: 0}
   extents: {x: 0.32801348, y: 0.29977643, z: 0.32801336}
   prices:
   - currencyType: 0
@@ -34,3 +35,10 @@ MonoBehaviour:
   accessIndices: []
   isLimited: 0
   limit: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740484
+      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 21300000, guid: 2e8e59cc47cd9334b884846a2c725970, type: 3}

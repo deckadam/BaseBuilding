@@ -82,7 +82,7 @@ namespace InGame.Agent.Furniture
 
             return DeckSaveUtility.GetSerializedData(new ChairData()
             {
-                sittingHumanoidUniqueId = _humanoid.UniqueId.ID,
+                sittingHumanoidUniqueId = _humanoid.UniqueId.Id,
                 inProcess = _inProcess,
                 isAvailable = _isAvailable
             });

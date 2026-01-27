@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Door
   m_EditorClassIdentifier: 
+  parameters:
+  - rid: 213718203870740483
   category: {fileID: 11400000, guid: 9835f965cac0d5448921e41c90dff8db, type: 2}
   agent: {fileID: -7197348414825284670, guid: c32ff13636e69064cab335d07b740c8f, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
@@ -24,7 +26,6 @@ MonoBehaviour:
     position: {x: 0, y: 0.75, z: 0.35}
     rotation: {x: -0, y: 0, z: 0}
   rotationMode: 0
-  icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5000004, z: 1}
   prices:
   - currencyType: 0
@@ -38,3 +39,10 @@ MonoBehaviour:
   accessIndices: []
   isLimited: 0
   limit: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740483
+      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 21300000, guid: 6234ade793dc53c44966ca1b61274d49, type: 3}

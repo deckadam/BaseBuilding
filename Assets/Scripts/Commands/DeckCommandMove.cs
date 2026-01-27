@@ -32,7 +32,7 @@ namespace Commands
 
         public override string GetSaveData()
         {
-            return DeckSaveUtility.GetSerializedData(new CommandMoveSaveData(_agent.UniqueId.ID, _targetPosition));
+            return DeckSaveUtility.GetSerializedData(new CommandMoveSaveData(_agent.UniqueId.Id, _targetPosition));
         }
 
         public override void LoadSaveData(string saveData)

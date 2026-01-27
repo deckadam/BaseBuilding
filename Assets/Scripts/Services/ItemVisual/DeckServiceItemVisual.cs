@@ -44,7 +44,7 @@ namespace Services.ItemVisual
 
         public void RequestItemVisual(DeckAgent agent, DeckId deckId, out DeckItemVisual result, Vector2Int cellIndex = default)
         {
-            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider) && itemVisualProvider.RequestItemVisual(agent, deckId, cellIndex, out result))
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.Id, out var itemVisualProvider) && itemVisualProvider.RequestItemVisual(agent, deckId, cellIndex, out result))
             {
                 return;
             }
@@ -55,7 +55,7 @@ namespace Services.ItemVisual
 
         public void RequestMultipleItemVisual(DeckAgent[] agents, DeckId deckId, int count, Vector2Int[] indices, out DeckItemVisual[] result)
         {
-            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.Id, out var itemVisualProvider))
             {
                 result = new DeckItemVisual[count];
                 if (itemVisualProvider.RequestBulkItemVisuals(agents, deckId, indices, out result)) return;
@@ -65,13 +65,13 @@ namespace Services.ItemVisual
                 return;
             }
 
-            DeckLogger.Error($"Item visual not found {deckId.ID}");
+            DeckLogger.Error($"Item visual not found {deckId.Id}");
             result = null;
         }
 
         public void RequestMultipleItemVisual(DeckAgent[] agents, DeckId deckId, int count, out DeckItemVisual[] result)
         {
-            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider))
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.Id, out var itemVisualProvider))
             {
                 result = new DeckItemVisual[count];
                 if (itemVisualProvider.RequestBulkItemVisuals(agents, deckId, out result)) return;
@@ -81,13 +81,13 @@ namespace Services.ItemVisual
                 return;
             }
 
-            DeckLogger.Error($"Item visual not found {deckId.ID}");
+            DeckLogger.Error($"Item visual not found {deckId.Id}");
             result = null;
         }
 
         public void RequestItemVisual(DeckId deckId, out DeckItemVisual itemVisual)
         {
-            if (_itemVisualProviderDictionary.TryGetValue(deckId.ID, out var itemVisualProvider) && itemVisualProvider.RequestItemVisual(deckId, out itemVisual))
+            if (_itemVisualProviderDictionary.TryGetValue(deckId.Id, out var itemVisualProvider) && itemVisualProvider.RequestItemVisual(deckId, out itemVisual))
             {
                 return;
             }
@@ -98,7 +98,7 @@ namespace Services.ItemVisual
 
         public void ReturnItemVisual(DeckItemVisual itemVisual)
         {
-            if (_itemVisualProviderDictionary.TryGetValue(itemVisual.PrefabId.ID, out var itemVisualProvider))
+            if (_itemVisualProviderDictionary.TryGetValue(itemVisual.PrefabId.Id, out var itemVisualProvider))
             {
                 itemVisualProvider.ReturnItemVisual(itemVisual);
                 return;
@@ -111,7 +111,7 @@ namespace Services.ItemVisual
         {
             foreach (var itemVisual in itemVisuals)
             {
-                if (_itemVisualProviderDictionary.TryGetValue(itemVisual.PrefabId.ID, out var itemVisualProvider))
+                if (_itemVisualProviderDictionary.TryGetValue(itemVisual.PrefabId.Id, out var itemVisualProvider))
                 {
                     itemVisualProvider.ReturnItemVisual(itemVisual);
                     return;

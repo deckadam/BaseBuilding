@@ -27,7 +27,7 @@ namespace Base
                     return prefabId;
                 }
 
-                throw new Exception("No valid prefab id " + name + " " + prefabId.ID);
+                throw new Exception("No valid prefab id " + name + " " + prefabId.Id);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Base
 
                 if (uiElement.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + "  " + uiElement.prefabId.ID + "  " + name + "   " + uiElement.name);
+                    DeckLogger.Error("Multiple prefab id " + prefabId.Id + "  " + uiElement.prefabId.Id + "  " + name + "   " + uiElement.name);
                 }
             }
 
@@ -90,7 +90,7 @@ namespace Base
         {
             if (!_isSpawned)
             {
-                DeckLogger.Warning("Trying to despawn already despawned object");
+                DeckLogger.Warning("Trying to return to pool already pooled object");
                 return;
             }
 

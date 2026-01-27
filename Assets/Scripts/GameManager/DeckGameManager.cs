@@ -83,8 +83,8 @@ namespace GameManager
 
                 agentData.data.Add(new DeckComponentHolderSaveData
                 {
-                    uniqueId = agent.UniqueId.ID,
-                    prefabId = agent.PrefabId.ID,
+                    uniqueId = agent.UniqueId.Id,
+                    prefabId = agent.PrefabId.Id,
                     position = agent.transform.position,
                     rotation = agent.transform.eulerAngles,
                     scale = agent.transform.localScale,

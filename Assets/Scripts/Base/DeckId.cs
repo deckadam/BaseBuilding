@@ -17,7 +17,7 @@ namespace Base
 
         [OdinSerialize] public string IdString => _id.ToString();
         public bool IsValid => _id != 0;
-        public int ID => _id;
+        public int Id => _id;
 
 
         private DeckId(bool justShutUp = false)

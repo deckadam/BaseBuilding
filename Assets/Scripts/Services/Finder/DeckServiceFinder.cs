@@ -32,15 +32,15 @@ namespace Services.Finder
 
         public void RegisterItemVisual(DeckItemVisual itemVisual)
         {
-            _itemVisualsWithUniqueId[itemVisual.UniqueId.ID] = itemVisual;
+            _itemVisualsWithUniqueId[itemVisual.UniqueId.Id] = itemVisual;
 
-            if (!_itemVisualsWithPrefabId.TryGetValue(itemVisual.PrefabId.ID, out var list))
+            if (!_itemVisualsWithPrefabId.TryGetValue(itemVisual.PrefabId.Id, out var list))
             {
                 list = new HashSet<DeckItemVisual>();
-                _itemVisualsWithPrefabId.Add(itemVisual.PrefabId.ID, list);
+                _itemVisualsWithPrefabId.Add(itemVisual.PrefabId.Id, list);
             }
 
-            _itemVisualsWithPrefabId[itemVisual.PrefabId.ID].Add(itemVisual);
+            _itemVisualsWithPrefabId[itemVisual.PrefabId.Id].Add(itemVisual);
         }
 
         public void RegisterItemVisual(DeckItemVisual[] itemVisuals)
@@ -52,31 +52,31 @@ namespace Services.Finder
 
             foreach (var item in itemVisuals)
             {
-                _itemVisualsWithUniqueId[item.UniqueId.ID] = item;
+                _itemVisualsWithUniqueId[item.UniqueId.Id] = item;
             }
 
             var sample = itemVisuals[0];
-            if (!_itemVisualsWithPrefabId.TryGetValue(sample.PrefabId.ID, out var list))
+            if (!_itemVisualsWithPrefabId.TryGetValue(sample.PrefabId.Id, out var list))
             {
                 list = new HashSet<DeckItemVisual>();
-                _itemVisualsWithPrefabId.Add(sample.PrefabId.ID, list);
+                _itemVisualsWithPrefabId.Add(sample.PrefabId.Id, list);
             }
 
-            _itemVisualsWithPrefabId[sample.PrefabId.ID].AddRange(itemVisuals);
+            _itemVisualsWithPrefabId[sample.PrefabId.Id].AddRange(itemVisuals);
         }
 
         public void RemoveItemVisual(DeckItemVisual itemVisual)
         {
-            _itemVisualsWithUniqueId.Remove(itemVisual.UniqueId.ID);
-            _itemVisualsWithPrefabId[itemVisual.PrefabId.ID].Remove(itemVisual);
+            _itemVisualsWithUniqueId.Remove(itemVisual.UniqueId.Id);
+            _itemVisualsWithPrefabId[itemVisual.PrefabId.Id].Remove(itemVisual);
         }
 
         public void RemoveItemVisual(DeckItemVisual[] itemVisual)
         {
             foreach (var instance in itemVisual)
             {
-                _itemVisualsWithUniqueId.Remove(instance.UniqueId.ID);
-                _itemVisualsWithPrefabId[instance.PrefabId.ID].Remove(instance);
+                _itemVisualsWithUniqueId.Remove(instance.UniqueId.Id);
+                _itemVisualsWithPrefabId[instance.PrefabId.Id].Remove(instance);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Services.Finder
 
         public bool TryGetItemVisualsWithPrefabId(DeckId prefabId, out IReadOnlyCollection<DeckItemVisual> itemVisuals)
         {
-            if (!_itemVisualsWithPrefabId.TryGetValue(prefabId.ID, out var list))
+            if (!_itemVisualsWithPrefabId.TryGetValue(prefabId.Id, out var list))
             {
                 itemVisuals = null;
                 return false;
@@ -104,26 +104,26 @@ namespace Services.Finder
 
         public void RegisterAgent(DeckAgent agent)
         {
-            _agentsWithUniqueId[agent.UniqueId.ID] = agent;
+            _agentsWithUniqueId[agent.UniqueId.Id] = agent;
             var tags = agent.GetTags();
             foreach (var deckActionTag in tags)
             {
                 _agentsWithActions[deckActionTag].Add(agent);
             }
 
-            if (!_agentsWithPrefabId.TryGetValue(agent.PrefabId.ID, out var list))
+            if (!_agentsWithPrefabId.TryGetValue(agent.PrefabId.Id, out var list))
             {
                 list = new HashSet<DeckAgent>();
-                _agentsWithPrefabId.Add(agent.PrefabId.ID, list);
+                _agentsWithPrefabId.Add(agent.PrefabId.Id, list);
             }
 
-            _agentsWithPrefabId[agent.PrefabId.ID].Add(agent);
+            _agentsWithPrefabId[agent.PrefabId.Id].Add(agent);
         }
 
         public void RemoveAgent(DeckAgent agent)
         {
-            _agentsWithUniqueId.Remove(agent.UniqueId.ID);
-            _agentsWithPrefabId[agent.PrefabId.ID].Remove(agent);
+            _agentsWithUniqueId.Remove(agent.UniqueId.Id);
+            _agentsWithPrefabId[agent.PrefabId.Id].Remove(agent);
 
             var tags = agent.GetTags();
             foreach (var deckActionTag in tags)
@@ -149,7 +149,7 @@ namespace Services.Finder
 
         public bool TryGetAgentsWithPrefabId(DeckId prefabId, out IReadOnlyCollection<DeckAgent> agents)
         {
-            if (!_agentsWithPrefabId.TryGetValue(prefabId.ID, out var list))
+            if (!_agentsWithPrefabId.TryGetValue(prefabId.Id, out var list))
             {
                 agents = null;
                 return false;

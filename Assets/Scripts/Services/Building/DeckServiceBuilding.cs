@@ -476,13 +476,13 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = Quaternion.LookRotation(normal * -1);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         public void BuildOnTop()
@@ -501,14 +501,14 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = buildPosition;
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
 
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         public void BuildFree()
@@ -524,13 +524,13 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = worldPosition;
             newBuilding.transform.rotation = _rotation;
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         public void BuildInRect(Vector2Int[] positions)
@@ -568,12 +568,12 @@ namespace Services.Building
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
-                var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+                var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
                 newBuilding.transform.position = rectBuildPosition.ToVector3();
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
 
-                OnAnyBuild(newBuilding);
+                AnythingBuilt(newBuilding);
             }
 
             foreach (var silhouettePiece in _piecesInUse)
@@ -614,12 +614,12 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         public void BuildInCellMultiple()
@@ -647,12 +647,12 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = cellIndex.ToVector3();
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         public void BuildInRectBulk(DeckBuildable buildable, Vector2Int min, Vector2Int max)
@@ -689,7 +689,7 @@ namespace Services.Building
 
             foreach (var building in builtAgents)
             {
-                OnAnyBuild(building);
+                AnythingBuilt(building);
             }
         }
 
@@ -732,14 +732,14 @@ namespace Services.Building
                 return;
             }
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.ID).GetComponent<DeckAgentBuilding>();
+            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
             newBuilding.transform.position = currentCellIndex.ToVector3();
             newBuilding.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
             agentBuildingToBuildOnTop.AddBuildingToTop(newBuilding);
-            OnAnyBuild(newBuilding);
+            AnythingBuilt(newBuilding);
         }
 
         private bool CollidesWithOtherItemsOnTop(Vector3 position)
@@ -1106,7 +1106,7 @@ namespace Services.Building
             return false;
         }
 
-        private void OnAnyBuild(DeckAgentBuilding building)
+        private void AnythingBuilt(DeckAgentBuilding building)
         {
             DeckEventOnAnythingBuilt.Create(building).Send();
         }

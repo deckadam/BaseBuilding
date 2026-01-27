@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Wall Four Neighbours
   m_EditorClassIdentifier: 
+  parameters:
+  - rid: 213718203870740481
   category: {fileID: 11400000, guid: 9835f965cac0d5448921e41c90dff8db, type: 2}
   agent: {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
@@ -21,7 +23,6 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
   rotationMode: 100
-  icon: {fileID: 0}
   extents: {x: 0.3, y: 1.5, z: 0.30000013}
   prices:
   - currencyType: 0
@@ -35,3 +36,10 @@ MonoBehaviour:
   accessIndices: []
   isLimited: 0
   limit: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740481
+      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 21300000, guid: ad2d5b01412c1c5419448b71816d9da4, type: 3}

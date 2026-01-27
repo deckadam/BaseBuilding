@@ -131,7 +131,7 @@ namespace Base
 
                 if (itemVisualComponent.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Multiple prefab id " + prefabId.ID + " " + name + itemVisualComponent.name);
+                    DeckLogger.Error("Multiple prefab id " + prefabId.Id + " " + name + itemVisualComponent.name);
                 }
             }
 

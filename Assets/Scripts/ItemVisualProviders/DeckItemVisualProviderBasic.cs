@@ -42,7 +42,7 @@ namespace ItemVisualProviders
             _supportedItemVisuals = new HashSet<int>();
             foreach (var deckItemVisual in itemVisualSets)
             {
-                _supportedItemVisuals.Add(deckItemVisual.PrefabId.ID);
+                _supportedItemVisuals.Add(deckItemVisual.PrefabId.Id);
             }
 
             InternalOnInitialize();
@@ -55,7 +55,7 @@ namespace ItemVisualProviders
 
         protected bool RentIfHasItemVisual(DeckId prefabId, out DeckItemVisual itemVisual)
         {
-            if (_supportedItemVisuals.Contains(prefabId.ID))
+            if (_supportedItemVisuals.Contains(prefabId.Id))
             {
                 itemVisual = _instanceProvider.RentItemVisual(prefabId);
                 itemVisual.gameObject.SetActive(true);

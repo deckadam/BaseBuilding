@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscPainting_002
   m_EditorClassIdentifier: 
+  parameters:
+  - rid: 213718203870740486
   category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
   agent: {fileID: 8560112403335899720, guid: dae428684df5f124582b8a01b6b434c5, type: 3}
   itemVisual: {fileID: 5825906728500267455, guid: 5ccd89d355c1ea94085c6355b1e9fa40, type: 3}
@@ -21,7 +23,6 @@ MonoBehaviour:
     position: {x: 0, y: 0.0075, z: -0.00032799455}
     rotation: {x: -0, y: 0, z: 0}
   rotationMode: 100
-  icon: {fileID: 0}
   extents: {x: 0.7, y: 1, z: 0.07490201}
   prices:
   - currencyType: 0
@@ -34,3 +35,10 @@ MonoBehaviour:
   accessIndices: []
   isLimited: 0
   limit: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740486
+      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 21300000, guid: 14ed87178aa71f447836599b0dade0b8, type: 3}

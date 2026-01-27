@@ -128,7 +128,7 @@ namespace InGame.Agent.Building
             for (var index = 0; index < buildingsOnTop.Count; index++)
             {
                 var deckBuilding = buildingsOnTop[index];
-                buildingsOnTopIds[index] = deckBuilding.UniqueId.ID;
+                buildingsOnTopIds[index] = deckBuilding.UniqueId.Id;
             }
 
             var layerData = new BuildingAdditionalData()

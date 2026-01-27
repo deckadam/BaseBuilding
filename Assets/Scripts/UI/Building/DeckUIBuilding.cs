@@ -47,8 +47,6 @@ namespace UI.Building
                 {
                     category.Add(deckBuildable);
                 }
-
-                Debug.LogError(deckBuildable.Category.name);
             }
 
             foreach (var buildingSet in _buildingSets)

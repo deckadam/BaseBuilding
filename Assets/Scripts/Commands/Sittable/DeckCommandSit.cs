@@ -43,7 +43,7 @@ namespace Commands.Sittable
 
         public override string GetSaveData()
         {
-            return DeckSaveUtility.GetSerializedData(new DeckCommandSitSaveData(_target.UniqueId.ID, _sittable.UniqueId.ID));
+            return DeckSaveUtility.GetSerializedData(new DeckCommandSitSaveData(_target.UniqueId.Id, _sittable.UniqueId.Id));
         }
 
         public override void LoadSaveData(string data)

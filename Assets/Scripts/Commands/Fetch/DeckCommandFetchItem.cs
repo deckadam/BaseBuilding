@@ -35,7 +35,7 @@ namespace Commands.Fetch
 
         public override string GetSaveData()
         {
-            return DeckSaveUtility.GetSerializedData(new CommandFetchSaveData(_fetcher.UniqueId.ID, _fetchPosition, _fetcher.UniqueId.ID));
+            return DeckSaveUtility.GetSerializedData(new CommandFetchSaveData(_fetcher.UniqueId.Id, _fetchPosition, _fetcher.UniqueId.Id));
         }
 
         public override void LoadSaveData(string saveData)

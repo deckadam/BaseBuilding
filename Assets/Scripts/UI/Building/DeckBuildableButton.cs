@@ -1,13 +1,18 @@
 using Base;
 using Data.Buildable;
+using Data.Buildable.Data.Parameter;
+using Data.Buildable.Data.Parameter.Implementations;
 using EventManager;
+using Instancing;
 using Services;
 using Services.Building.Events;
 using Services.Finder;
 using TMPro;
+using UI.Generic.PriceText;
 using UI.MainMenu.Events;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace UI.Building
 {
@@ -15,22 +20,39 @@ namespace UI.Building
     {
         [SerializeField] private Image icon;
         [SerializeField] private Button button;
+        [SerializeField] private RectTransform priceTextContainer;
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI priceText;
         [SerializeField] private TextMeshProUGUI limitText;
 
         private DeckBuildable _buildable;
         private DeckBuildingPage _buildingPage;
+        private DeckInstanceProvider _instanceProvider;
         private int _maxLimit;
+
+        [Inject]
+        private void Inject(DeckInstanceProvider instanceProvider)
+        {
+            _instanceProvider = instanceProvider;
+        }
 
         public void Initialize(DeckBuildingPage buildingPage, DeckBuildable buildable)
         {
             _buildingPage = buildingPage;
             _buildable = buildable;
-            icon.sprite = _buildable.Icon;
+            
+            if (_buildable.TryGetParameter<DeckBuildableParameterIcon>(out var iconParameter))
+            {
+                icon.sprite = iconParameter.Icon;
+            }
+
             nameText.text = buildable.VisibleName;
-            //TODO: Multiple price support
-            priceText.text = buildable.Prices[0].Amount.ToString();
+
+            foreach (var deckPrice in buildable.Prices)
+            {
+                var newPriceDisplay = _instanceProvider.RentUIElement<DeckUIPriceDisplay>();
+                newPriceDisplay.Initialize(deckPrice, priceTextContainer);
+            }
 
             DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
             DeckEventManager.Register<DeckEventOnAnythingBuilt>(OnAnythingBuilt);

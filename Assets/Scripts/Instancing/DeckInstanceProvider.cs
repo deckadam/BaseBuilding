@@ -176,8 +176,8 @@ namespace Instancing
             _agentByType = new Dictionary<Type, DeckId>();
             foreach (var agent in agents)
             {
-                _agentDictionary[agent.PrefabId.ID] = agent;
-                _agentPool[agent.PrefabId.ID] = new Stack<DeckAgent>();
+                _agentDictionary[agent.PrefabId.Id] = agent;
+                _agentPool[agent.PrefabId.Id] = new Stack<DeckAgent>();
                 _agentByType[agent.GetType()] = agent.PrefabId;
             }
 
@@ -186,8 +186,8 @@ namespace Instancing
             _itemVisualByType = new Dictionary<Type, DeckId>();
             foreach (var itemVisual in itemVisuals)
             {
-                _itemVisualDictionary[itemVisual.PrefabId.ID] = itemVisual;
-                _itemVisualPool[itemVisual.PrefabId.ID] = new Stack<DeckItemVisual>();
+                _itemVisualDictionary[itemVisual.PrefabId.Id] = itemVisual;
+                _itemVisualPool[itemVisual.PrefabId.Id] = new Stack<DeckItemVisual>();
                 _itemVisualByType[itemVisual.GetType()] = itemVisual.PrefabId;
             }
 
@@ -196,8 +196,8 @@ namespace Instancing
             _uiElementByType = new Dictionary<Type, DeckId>();
             foreach (var uiElement in uiElements)
             {
-                _uiElementDictionary[uiElement.PrefabId.ID] = uiElement;
-                _uiElementPool[uiElement.PrefabId.ID] = new Stack<DeckUIElement>();
+                _uiElementDictionary[uiElement.PrefabId.Id] = uiElement;
+                _uiElementPool[uiElement.PrefabId.Id] = new Stack<DeckUIElement>();
                 _uiElementByType[uiElement.GetType()] = uiElement.PrefabId;
             }
 
@@ -219,7 +219,7 @@ namespace Instancing
 
         public DeckAgent RentAgent(DeckId id, int uniqueId = 0)
         {
-            return RentAgent(id.ID, uniqueId);
+            return RentAgent(id.Id, uniqueId);
         }
 
         public DeckAgent RentAgent<T>(int uniqueId = 0) where T : DeckAgent
@@ -252,7 +252,7 @@ namespace Instancing
 
         public T[] BulkRentAgent<T>(DeckId prefabId, int count) where T : DeckAgent
         {
-            return BulkRentAgent<T>(prefabId.ID, count);
+            return BulkRentAgent<T>(prefabId.Id, count);
         }
 
         public T[] BulkRentAgent<T>(int prefabId, int count) where T : DeckAgent
@@ -371,7 +371,7 @@ namespace Instancing
 
         public void ReturnAgent(DeckAgent instance)
         {
-            if (!_agentPool.TryGetValue(instance.PrefabId.ID, out var pool))
+            if (!_agentPool.TryGetValue(instance.PrefabId.Id, out var pool))
             {
                 DeckLogger.Error("Unregistered agent tried to return");
                 return;
@@ -385,12 +385,12 @@ namespace Instancing
 
         public DeckItemVisual RentItemVisual(DeckId id, int uniqueId = 0)
         {
-            return RentItemVisual(id.ID, uniqueId);
+            return RentItemVisual(id.Id, uniqueId);
         }
 
         public DeckItemVisual[] BulkRentItemVisual(DeckId id, int count)
         {
-            return BulkRentItemVisual(id.ID, count);
+            return BulkRentItemVisual(id.Id, count);
         }
 
         public T RentItemVisual<T>(int uniqueId = 0) where T : DeckItemVisual
@@ -472,7 +472,7 @@ namespace Instancing
 
         public void ReturnItemVisual(DeckItemVisual instance)
         {
-            if (!_itemVisualPool.TryGetValue(instance.PrefabId.ID, out var pool))
+            if (!_itemVisualPool.TryGetValue(instance.PrefabId.Id, out var pool))
             {
                 DeckLogger.Error("Unsubscribed item tried to return");
                 return;
@@ -488,7 +488,7 @@ namespace Instancing
         {
             Debug.LogError("Trying to return");
             var sample = instances[0];
-            if (!_itemVisualPool.TryGetValue(sample.PrefabId.ID, out var pool))
+            if (!_itemVisualPool.TryGetValue(sample.PrefabId.Id, out var pool))
             {
                 DeckLogger.Error("Unsubscribed item tried to return");
                 return;
@@ -505,12 +505,56 @@ namespace Instancing
 
         public DeckUIElement RentUIElement(Type t)
         {
-            return RentUIElement(_uiElementByType[t].ID);
+            return RentUIElement(_uiElementByType[t].Id);
         }
 
         public T RentUIElement<T>() where T : DeckUIElement
         {
-            return (T)RentUIElement(_uiElementByType[typeof(T)].ID);
+            return (T)RentUIElement(_uiElementByType[typeof(T)].Id);
+        }
+
+        public T[] RentUIElement<T>(int count) where T : DeckUIElement
+        {
+            var prefabId = _uiElementByType[typeof(T)].Id;
+            var result = new T[count];
+            var counter = 0;
+
+            if (_uiElementPool.TryGetValue(prefabId, out var pool) && pool.Count > 0)
+            {
+                while (counter < count)
+                {
+                    if (pool.Count > 0)
+                    {
+                        var instance = pool.Pop() as T;
+                        instance.gameObject.SetActive(true);
+                        instance.OnSpawned();
+                        result[counter++] = instance;
+                    }
+                    else
+                    {
+                        var uiElementPrefab = GetUIElementById(prefabId);
+                        var newInstance = _container.InstantiatePrefab(uiElementPrefab).GetComponent<T>();
+
+                        newInstance.gameObject.SetActive(true);
+                        newInstance.OnSpawned();
+                        result[counter++] = newInstance;
+                    }
+                }
+            }
+            else
+            {
+                while (counter < count)
+                {
+                    var uiElementPrefab = GetUIElementById(prefabId);
+                    var newInstance = _container.InstantiatePrefab(uiElementPrefab).GetComponent<T>();
+
+                    newInstance.gameObject.SetActive(true);
+                    newInstance.OnSpawned();
+                    result[counter++] = newInstance;
+                }
+            }
+
+            return result;
         }
 
         private DeckUIElement RentUIElement(int prefabId)
@@ -523,8 +567,8 @@ namespace Instancing
                 return instance;
             }
 
-            var agentPrefab = GetUIElementById(prefabId);
-            var newInstance = _container.InstantiatePrefab(agentPrefab).GetComponent<DeckUIElement>();
+            var uiElementPrefab = GetUIElementById(prefabId);
+            var newInstance = _container.InstantiatePrefab(uiElementPrefab).GetComponent<DeckUIElement>();
 
             newInstance.gameObject.SetActive(true);
             newInstance.OnSpawned();
@@ -541,7 +585,7 @@ namespace Instancing
             }
 
             var sample = instances[0];
-            var sampleId = sample.PrefabId.ID;
+            var sampleId = sample.PrefabId.Id;
             if (!_uiElementPool.TryGetValue(sampleId, out var pool))
             {
                 DeckLogger.Error("Unsubscribed UI element tried to return");
@@ -559,7 +603,7 @@ namespace Instancing
 
         public void ReturnUIElement(DeckUIElement instance)
         {
-            if (!_uiElementPool.TryGetValue(instance.PrefabId.ID, out var pool))
+            if (!_uiElementPool.TryGetValue(instance.PrefabId.Id, out var pool))
             {
                 DeckLogger.Error("Unsubscribed UI element tried to return");
                 return;

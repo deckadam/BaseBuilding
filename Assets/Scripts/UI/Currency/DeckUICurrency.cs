@@ -19,10 +19,10 @@ namespace UI.Currency
             for (var index = 0; index < _currencies.Length; index++)
             {
                 _currencies[index] = DeckCurrency.Create(_currencies[index]);
-                var newDisplayer = InstanceProvider.RentUIElement<DeckUICurrencyDisplay>();
-                newDisplayer.transform.SetParent(container);
-                newDisplayer.SetCurrency(_currencies[index]);
-                _activeDisplays.Add(newDisplayer);
+                var newDisplay = InstanceProvider.RentUIElement<DeckUICurrencyDisplay>();
+                newDisplay.transform.SetParent(container);
+                newDisplay.SetCurrency(_currencies[index]);
+                _activeDisplays.Add(newDisplay);
             }
         }
 

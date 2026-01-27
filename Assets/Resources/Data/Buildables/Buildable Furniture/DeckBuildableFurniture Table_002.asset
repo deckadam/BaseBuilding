@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableFurniture Table_002
   m_EditorClassIdentifier: 
+  parameters:
+  - rid: 213718203870740488
   category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
   agent: {fileID: -4123667621523898490, guid: 8a73920817637764e8e56772168c1475, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 9288e8735d2794747aefea2649c54cec, type: 3}
@@ -21,7 +23,6 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
   rotationMode: 0
-  icon: {fileID: 0}
   extents: {x: 1.68185, y: 1, z: 1.68185}
   prices:
   - currencyType: 0
@@ -34,3 +35,10 @@ MonoBehaviour:
   accessIndices: []
   isLimited: 0
   limit: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740488
+      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 21300000, guid: 9f135a8a3b1b5d64ea0181305433f033, type: 3}

@@ -36,7 +36,7 @@ namespace Utility.Editor
             var agentHashSet = new HashSet<int>();
             foreach (var agent in instanceProvider.GetAgents())
             {
-                if (!agentHashSet.Add(agent.PrefabId.ID))
+                if (!agentHashSet.Add(agent.PrefabId.Id))
                 {
                     DeckLogger.Error("Multiple id " + agent.name);
                 }
@@ -45,7 +45,7 @@ namespace Utility.Editor
             var itemVisualHashSet = new HashSet<int>();
             foreach (var itemVisual in instanceProvider.GetItemVisuals())
             {
-                if (!itemVisualHashSet.Add(itemVisual.PrefabId.ID))
+                if (!itemVisualHashSet.Add(itemVisual.PrefabId.Id))
                 {
                     DeckLogger.Error("Multiple id " + itemVisual.name);
                 }
@@ -54,7 +54,7 @@ namespace Utility.Editor
             var uiElements = new HashSet<int>();
             foreach (var uiElement in instanceProvider.GetUIElements())
             {
-                if (!uiElements.Add(uiElement.PrefabId.ID))
+                if (!uiElements.Add(uiElement.PrefabId.Id))
                 {
                     DeckLogger.Error("Multiple id " + uiElement.name);
                 }
@@ -64,7 +64,7 @@ namespace Utility.Editor
             var buildableIds = new HashSet<int>();
             foreach (var deckBuildable in buildables)
             {
-                if (!buildableIds.Add(deckBuildable.Agent.PrefabId.ID))
+                if (!buildableIds.Add(deckBuildable.Agent.PrefabId.Id))
                 {
                     DeckLogger.Error("Multiple id " + deckBuildable.name, deckBuildable);
                 }

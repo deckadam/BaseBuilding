@@ -93,7 +93,7 @@ namespace Base
 
                 if (agentComponent.prefabId.Equals(prefabId))
                 {
-                    DeckLogger.Error("Duplicate prefab id " + prefabId.ID + " " + name + " " + agentComponent.name, gameObject);
+                    DeckLogger.Error("Duplicate prefab id " + prefabId.Id + " " + name + " " + agentComponent.name, gameObject);
                 }
             }
 

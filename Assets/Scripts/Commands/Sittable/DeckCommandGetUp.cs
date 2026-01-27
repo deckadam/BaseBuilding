@@ -31,7 +31,7 @@ namespace Commands.Sittable
 
         public override string GetSaveData()
         {
-            return DeckSaveUtility.GetSerializedData(new DeckCommandGetUpSaveData(_target.PrefabId.ID));
+            return DeckSaveUtility.GetSerializedData(new DeckCommandGetUpSaveData(_target.PrefabId.Id));
         }
 
         public override void LoadSaveData(string saveData)

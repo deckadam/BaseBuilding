@@ -69,7 +69,7 @@ namespace Components.Health
             {
                 if (canKill)
                 {
-                    DeckLogger.Component("Requesting death on " + agent.UniqueId.ID);
+                    DeckLogger.Component("Requesting death on " + agent.UniqueId.Id);
                     ReleaseHealthBar();
                     _currentHealth = 0;
                     agent.RequestDestroy();
