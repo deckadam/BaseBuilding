@@ -6,10 +6,10 @@ namespace UI.Building.BuildingSets.DeckBuildingWallsAndDoors
 {
     public class DeckBuildingPageWallsAndDoors : DeckBuildingPage
     {
-        public DeckBuildable doorBuildable;
-
         private readonly Quaternion horizontalDoorRotation = Quaternion.Euler(0, 90, 0);
 
+        public DeckBuildable doorBuildable;
+        
         private DeckServiceCamera _serviceCamera;
 
         protected override void InternalInitialize()

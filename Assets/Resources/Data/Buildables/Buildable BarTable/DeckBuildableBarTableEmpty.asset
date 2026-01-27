@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableBarTableEmpty
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 31009739
+  category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
   agent: {fileID: 5416249728217735771, guid: c787730401ece2c48b9aa3519ba610ff, type: 3}
   itemVisual: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
   visibleName: BarTableEmpty
@@ -34,3 +33,5 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
+  isLimited: 0
+  limit: 0

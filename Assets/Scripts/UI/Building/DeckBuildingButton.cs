@@ -1,5 +1,6 @@
 using Base;
 using DG.Tweening;
+using Services;
 using Services.Escapable;
 using Services.UI;
 using UnityEngine;
@@ -11,18 +12,15 @@ namespace UI.Building
     {
         [SerializeField] private float movementDuration;
         [SerializeField] private Ease movementEase;
-
         [SerializeField] private Vector2 appearPosition;
         [SerializeField] private Vector2 disappearPosition;
-
         [SerializeField] protected Image background;
 
         public bool HasEscaped { get; private set; } = true;
 
-        protected DeckUIBuilding uiBuilding;
-        protected DeckBuildingPage page;
-
         private DeckServiceEscapable _escapableService;
+        private DeckUIBuilding _uiBuilding;
+        private DeckBuildingPage _page;
         private bool _isAppeared;
 
         public DeckBuildingButton(bool hasEscaped)
@@ -36,23 +34,18 @@ namespace UI.Building
 
         public void Initialize(DeckUIBuilding uiBuilding, DeckBuildingPage page)
         {
-            this.uiBuilding = uiBuilding;
-            this.page = page;
-            _escapableService = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
-            OnInitialize();
-        }
-
-        protected virtual void OnInitialize()
-        {
+            _uiBuilding = uiBuilding;
+            _page = page;
+            _escapableService = DeckServiceProvider.GetService<DeckServiceEscapable>();
         }
 
         public void OnClick()
         {
-            uiBuilding.PageOpenRequested(this);
+            _uiBuilding.PageOpenRequested(this);
             _escapableService.RegisterEscapable(this);
 
             Appear();
-            page.Appear();
+            _page.Appear();
         }
 
         private void Appear()
@@ -84,9 +77,9 @@ namespace UI.Building
         public void OnEscapeRequested()
         {
             Disappear();
-            page.Disappear();
+            _page.Disappear();
         }
-        
+
         public bool CanBeEscapedWithRightClick => false;
     }
 }

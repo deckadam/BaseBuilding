@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Door
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 47830427
+  category: {fileID: 11400000, guid: 9835f965cac0d5448921e41c90dff8db, type: 2}
   agent: {fileID: -7197348414825284670, guid: c32ff13636e69064cab335d07b740c8f, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 180c45f0387369d4e843175dab2f8b93, type: 3}
   visibleName: Door
@@ -37,3 +36,5 @@ MonoBehaviour:
   indices:
   - {x: 0, y: 0}
   accessIndices: []
+  isLimited: 0
+  limit: 0

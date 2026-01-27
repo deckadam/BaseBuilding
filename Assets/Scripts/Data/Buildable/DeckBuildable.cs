@@ -1,6 +1,8 @@
 ﻿using System;
 using Base;
+using Data.Buildable.Data;
 using Data.Currency;
+using GameManager.Data.GameSetting.Override;
 using InGame.Agent.Building;
 using Services.Building;
 using Sirenix.OdinInspector;
@@ -10,9 +12,11 @@ using Utility;
 
 namespace Data.Buildable
 {
-    [CreateAssetMenu(menuName = "Deck/Data/Buildable", fileName = "Deck Data Buildable")]
+    [CreateAssetMenu(menuName = "Deck/Data/Buildable/Deck Data Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
+        [AssetSelector(Paths = "Assets/Resources/Data/Buildables/Buildable Categories")] [SerializeField] private DeckBuildableCategory category;
+
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
@@ -26,17 +30,15 @@ namespace Data.Buildable
         [SerializeField] private int materialCount;
         [SerializeField] private bool isGridBased;
 
-        [SerializeField, ShowIf(nameof(isGridBased))]
-        private Vector2Int[] indices;
+        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] indices;
 
-        [SerializeField, ShowIf(nameof(isGridBased))]
-        private Vector2Int[] accessIndices;
+        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] accessIndices;
 
         [SerializeField] private bool isLimited;
 
-        [SerializeField, ShowIf(nameof(isLimited))]
-        private int limit;
+        [SerializeField, ShowIf(nameof(isLimited))] private int limit;
 
+        public DeckBuildableCategory Category => category;
         public DeckRotationMode RotationMode => rotationMode;
         public DeckSilhouetteData[] Silhouette => silhouette;
         public DeckAgent Agent => agent;
@@ -45,16 +47,48 @@ namespace Data.Buildable
         public Sprite Icon => icon;
         public Vector3 Extents => extents;
         public int MaterialCount => materialCount;
-        public DeckPrice[] Prices => prices;
         public DeckBuildMode BuildMode => buildMode;
         public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
         public bool IsGridBased => isGridBased;
         public Vector2Int[] Indices => indices;
         public Vector2Int[] AccessIndices => accessIndices;
         public bool IsLimited => isLimited;
-        public int Limit => limit;
+
+        public DeckPrice[] Prices
+        {
+            get
+            {
+                if (_isPriceOverriden)
+                {
+                    return _overridenPrice;
+                }
+
+                return prices;
+            }
+        }
+
+        public int Limit
+        {
+            get
+            {
+                if (_isLimitOverriden)
+                {
+                    return _overridenLimit;
+                }
+
+                return limit;
+            }
+        }
 
         private int _currentLimit;
+
+
+        private bool _isLimitOverriden;
+        private int _overridenLimit;
+
+        private bool _isPriceOverriden;
+        private DeckPrice[] _overridenPrice;
+
 
         [Button]
         private void OnValidate()
@@ -162,6 +196,35 @@ namespace Data.Buildable
         public int GetCurrentLimit()
         {
             return _currentLimit;
+        }
+
+        public void ApplyOverride(DeckGameSettingBuildableOverride buildableOverride)
+        {
+            if (buildableOverride.OverrideLimit)
+            {
+                _isLimitOverriden = true;
+                _overridenLimit = buildableOverride.OverridenLimit;
+            }
+            else
+            {
+                _isLimitOverriden = false;
+            }
+
+            if (buildableOverride.OverridePrice)
+            {
+                _isPriceOverriden = true;
+                _overridenPrice = buildableOverride.OverridenPrice;
+            }
+            else
+            {
+                _isPriceOverriden = false;
+            }
+        }
+
+        public void ResetOverrides()
+        {
+            _isLimitOverriden = false;
+            _isPriceOverriden = false;
         }
     }
 }

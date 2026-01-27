@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck_Buildable_Room_001
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 62322473
+  category: {fileID: 11400000, guid: 438c69d26f23eef45952678c64238c7d, type: 2}
   agent: {fileID: 6079846305064869096, guid: a20e0a9bd00af6c4182fa99a68a517ee, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
   visibleName: Room
@@ -41,3 +40,5 @@ MonoBehaviour:
   - {x: 1, y: 2}
   - {x: 2, y: 2}
   accessIndices: []
+  isLimited: 0
+  limit: 0

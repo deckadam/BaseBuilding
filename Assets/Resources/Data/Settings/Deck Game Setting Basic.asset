@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236d970d31a84e518f5f1afcd987c4a9, type: 3}
   m_Name: Deck Game Setting Basic
   m_EditorClassIdentifier: 
+  gameSettingName: Basic
   mapSize: {x: 50, y: 150}
   wallType: 0
   allWallData:
@@ -21,3 +22,9 @@ MonoBehaviour:
     wallBuildable: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
   - wallType: 2
     wallBuildable: {fileID: 0}
+  buildableOverrides:
+  - buildable: {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
+    overrideLimit: 1
+    overridenLimit: 5
+    overridePrice: 0
+    overridenPrice: []

@@ -33,10 +33,10 @@ namespace UI.MainMenu
             DeckEventManager.Unregister<DeckEventOnLoadRequested>(OnLoadRequested);
         }
 
-        private void OnLoadRequested(DeckEventOnLoadRequested obj)
+        private async void OnLoadRequested(DeckEventOnLoadRequested obj)
         {
             DeckSaveSystem.LoadFromPath(obj.saveFile.path);
-            DeckServiceProvider.GetService<DeckGameManager>().LoadGame();
+            await DeckServiceProvider.GetService<DeckGameManager>().LoadGame();
             Disappear().Forget();
         }
 
@@ -64,10 +64,11 @@ namespace UI.MainMenu
             DeckLogger.Inform("New game starting");
 
             await DeckServiceProvider.GetService<DeckGameManager>().CreateNewGame(gameSettingBasic);
+
             
             DeckEventOnGameSceneLoaded.Create().Send();
             DeckEventOnGameSettingsLoaded.Create(gameSettingBasic).Send();
-            
+
             gameSettingBasic.OnSettingLoadedNewGame();
 
             await UniTask.NextFrame();
@@ -88,8 +89,10 @@ namespace UI.MainMenu
             _loadingInProgress = true;
 
             DeckSaveSystem.LoadLastSaveData();
-            DeckServiceProvider.GetService<DeckGameManager>().LoadGame();
+            var gameSetting = await DeckServiceProvider.GetService<DeckGameManager>().LoadGame();
             DeckEventOnGameSceneLoaded.Create().Send();
+            DeckEventOnGameSettingsLoaded.Create(gameSetting).Send();
+
 
             await UniTask.NextFrame();
             await Disappear();

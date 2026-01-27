@@ -1,4 +1,5 @@
 using System.Linq;
+using GameManager.Data.GameSetting.Override;
 using Services;
 using Services.Building;
 using UnityEngine;
@@ -8,9 +9,12 @@ namespace GameManager.Data.GameSetting
     [CreateAssetMenu(menuName = "Deck/Data/General/Game Settings", fileName = "Deck Game Setting Basic")]
     public class DeckGameSettingBasic : ScriptableObject
     {
+        [SerializeField] private string gameSettingName;
         [SerializeField] private Vector2Int mapSize;
         [SerializeField] private DeckWallType wallType;
         [SerializeField] private DeckWallData[] allWallData;
+
+        [SerializeField] private DeckGameSettingBuildableOverride[] buildableOverrides;
 
         public DeckWallType GetWallType()
         {
@@ -26,6 +30,19 @@ namespace GameManager.Data.GameSetting
         public Vector2Int GetMapSize()
         {
             return mapSize;
+        }
+
+        public string GetGameSettingName()
+        {
+            return gameSettingName;
+        }
+
+        public void ApplyOverrides()
+        {
+            foreach (var deckGameSettingBuildableOverride in buildableOverrides)
+            {
+                deckGameSettingBuildableOverride.Buildable.ApplyOverride(deckGameSettingBuildableOverride);
+            }
         }
     }
 }

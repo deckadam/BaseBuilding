@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableBarTableCoffeeMachine
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 56538382
+  category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
   agent: {fileID: 4801856471697237134, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
   itemVisual: {fileID: 1953440713801673427, guid: 34ff637d1da956249881fc8d381f81ce, type: 3}
   visibleName: CoffeeMachine
@@ -21,16 +20,19 @@ MonoBehaviour:
   - mesh: {fileID: -462981019419857548, guid: cffc70602dba1a248ad41d2cdac60872, type: 3}
     position: {x: 0, y: 1, z: 0}
     rotation: {x: -0, y: 0, z: 0}
-  indices:
-  - {x: 0, y: 0}
-  accessIndices:
-  - {x: 1, y: 0}
   rotationMode: 1
   icon: {fileID: 0}
-  extents: {x: 0.46314493, y: 1.2339036, z: 0.84729004}
+  extents: {x: 0.46254116, y: 1.2648616, z: 0.84729016}
   prices:
   - currencyType: 0
     amount: 0
   buildMode: 600
   buildableToPlaceOnTop: {fileID: 11400000, guid: dfdfaa63580cc4045b2a6e6958ef7733, type: 2}
   materialCount: 1
+  isGridBased: 0
+  indices:
+  - {x: 0, y: 0}
+  accessIndices:
+  - {x: 1, y: 0}
+  isLimited: 0
+  limit: 0

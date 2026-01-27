@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base;
 using EventManager;
 using GameManager;
+using GameManager.Data;
 using GameManager.Events;
 using Instancing;
 using ItemVisualProviders.Door.Events;

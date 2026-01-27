@@ -7,11 +7,11 @@ namespace GameManager.Events
     {
         public DeckGameSettingBasic gameSetting { get; private set; }
 
-        public static DeckEventOnGameSettingsLoaded Create(DeckGameSettingBasic mapData)
+        public static DeckEventOnGameSettingsLoaded Create(DeckGameSettingBasic gameSetting)
         {
             return new DeckEventOnGameSettingsLoaded
             {
-                gameSetting = mapData
+                gameSetting = gameSetting
             };
         }
     }

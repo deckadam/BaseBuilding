@@ -1,4 +1,4 @@
-namespace GameManager
+namespace GameManager.Data
 {
     public enum DeckWallType
     {

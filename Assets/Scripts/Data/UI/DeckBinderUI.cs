@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UI.Building.Data;
+using UnityEngine;
 using Zenject;
 
 namespace Data.UI
@@ -8,10 +10,12 @@ namespace Data.UI
     {
         [SerializeField] private float canvasAppearDuration;
         [SerializeField] private float canvasDisappearDuration;
+        [SerializeField] private List<DeckBuildingSet> buildingSets;
 
         public override void InstallBindings()
         {
             Container.BindInstance(this);
+            Container.BindInstance(buildingSets);
         }
 
         public float GetCanvasAppearDuration() => canvasAppearDuration;

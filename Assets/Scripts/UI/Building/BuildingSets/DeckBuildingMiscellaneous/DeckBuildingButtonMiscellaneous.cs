@@ -1,4 +1,4 @@
-namespace UI.Building.BuildingSets.DeckBuidlingMiscellaneous
+namespace UI.Building.BuildingSets.DeckBuildingMiscellaneous
 {
     public class DeckBuildingButtonMiscellaneous:DeckBuildingButton
     {

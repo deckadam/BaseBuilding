@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Components.Health;
 using Cysharp.Threading.Tasks;
+using Data.Buildable;
 using Data.Item;
-using GameManager.Data;
 using GameManager.Data.GameSetting;
-using GameManager.Events;
-using InGame.Agent.Waiter;
-using Instancing;
 using Services;
-using Services.Building;
 using Services.Finder;
 using Services.Map;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
 using UnityEngine;
+using Utility.Constants;
 using Utility.MVC;
 using Zenject;
 
@@ -29,26 +27,45 @@ namespace GameManager
         }
 
         private DeckLoadResolver _loadResolver;
-        private DeckGameSettingBasic _gameSettingBasic;
-        
+        private DeckGameSettingBasic[] _settings;
+        private DeckGameSettingBasic _currentSetting;
+        private DeckBuildable[] _allBuildables;
+
         [Inject]
-        private void Inject(DeckLoadResolver loadResolver,DeckGameSettingBasic[] gameSettingBasic)
+        private void Inject(DeckLoadResolver loadResolver, DeckGameSettingBasic[] gameSettingBasic, DeckBuildable[] allBuildables)
         {
             _loadResolver = loadResolver;
-            _gameSettingBasic = gameSettingBasic[0];
+            _settings = gameSettingBasic;
+            _allBuildables = allBuildables;
         }
 
         public async UniTask CreateNewGame(DeckGameSettingBasic gameSettingBasic)
         {
+            foreach (var deckBuildable in _allBuildables)
+            {
+                deckBuildable.ResetOverrides();
+            }
+
+            _currentSetting = gameSettingBasic;
+            _currentSetting.ApplyOverrides();
             DeckSaveSystem.CreateNewSave();
             await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession(gameSettingBasic);
         }
 
-        public async void LoadGame()
+        public async UniTask<DeckGameSettingBasic> LoadGame()
         {
-            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession(_gameSettingBasic);
+            foreach (var deckBuildable in _allBuildables)
+            {
+                deckBuildable.ResetOverrides();
+            }
+
+            var gameSettingName = DeckSaveSystem.GetData<string>(DeckConstantsSave.GameSettingKey);
+            _currentSetting = _settings.First(item => gameSettingName == item.GetGameSettingName());
+            _currentSetting.ApplyOverrides();
+            await DeckServiceProvider.GetService<DeckServiceSession>().LoadSession(_currentSetting);
             var agentsData = DeckSaveSystem.GetData<DeckComponentHolderSaveDatas>(nameof(DeckComponentHolderSaveDatas));
             _loadResolver.ResolveAndLoad(agentsData);
+            return _currentSetting;
         }
 
         public void GatherSaveData()
@@ -77,6 +94,7 @@ namespace GameManager
             }
 
             DeckSaveSystem.SetData(nameof(DeckComponentHolderSaveDatas), agentData);
+            DeckSaveSystem.SetData(DeckConstantsSave.GameSettingKey, _currentSetting.GetGameSettingName());
         }
     }
 }

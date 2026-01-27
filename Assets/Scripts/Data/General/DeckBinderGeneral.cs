@@ -1,4 +1,5 @@
-﻿using Data.Camera;
+﻿using Data.Buildable;
+using Data.Camera;
 using GameManager.Data.GameSetting;
 using InGame.Agent.Waiter;
 using Instancing;
@@ -22,6 +23,7 @@ namespace Data.General
         [SerializeField] private DeckInstanceProvider instanceProvider;
         [SerializeField] private DeckGameSettingBasic[] gameSettings;
         [SerializeField] private DeckCameraParameters cameraParameters;
+        [SerializeField] private DeckBuildable[] allBuildables;
 
         public override void InstallBindings()
         {
@@ -35,6 +37,7 @@ namespace Data.General
             Container.BindInstance(instanceProvider);
             Container.BindInstance(cameraParameters);
             Container.BindInstance(gameSettings);
+            Container.BindInstance(allBuildables);
 
             foreach (var deckItemVisualProviderBasic in itemVisualProviders)
             {

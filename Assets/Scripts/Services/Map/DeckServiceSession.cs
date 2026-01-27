@@ -27,7 +27,7 @@ namespace Services.Map
             return _currentSession;
         }
 
-        public async UniTask LoadSession(DeckGameSettingBasic gameSettingBasic)
+        public async UniTask LoadSession(DeckGameSettingBasic gameSetting)
         {
             var isLoaded = SceneManager.GetSceneByName(SceneName).isLoaded;
             if (isLoaded)
@@ -35,8 +35,7 @@ namespace Services.Map
                 await UnloadCurrentSession();
             }
 
-            DeckLogger.Map("New map scene session");
-            await LoadNewSession(gameSettingBasic);
+            await LoadNewSession(gameSetting);
             DeckLogger.Map("New map scene session");
 
             _isSessionActive = true;

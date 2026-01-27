@@ -46,8 +46,6 @@ namespace UI.Building
 
         private void OnGameSceneLoaded(DeckEventOnGameSceneLoaded obj)
         {
-            Debug.LogError("Session loaded");
-
             if (_buildable.IsLimited)
             {
                 var builtCount = 0;

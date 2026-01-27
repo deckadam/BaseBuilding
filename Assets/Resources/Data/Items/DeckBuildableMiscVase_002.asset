@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscVase_002
   m_EditorClassIdentifier: 
-  buildingId:
-    _id: 92685157
+  category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
   agent: {fileID: 5134706524527623977, guid: cece464b602a447448b4efd1f7f4f1ae, type: 3}
   itemVisual: {fileID: 2219166243080827500, guid: 13cdde138ba143c49a583bab1debdd28, type: 3}
   visibleName: Vase_002
@@ -21,8 +20,6 @@ MonoBehaviour:
   - mesh: {fileID: 7621110691213229938, guid: 09f4323ee23118d4fbb958bc95a18922, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
-  indices: []
-  accessIndices: []
   rotationMode: 0
   icon: {fileID: 0}
   extents: {x: 0.32801348, y: 0.29977643, z: 0.32801336}
@@ -32,3 +29,8 @@ MonoBehaviour:
   buildMode: 300
   buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1
+  isGridBased: 0
+  indices: []
+  accessIndices: []
+  isLimited: 0
+  limit: 0

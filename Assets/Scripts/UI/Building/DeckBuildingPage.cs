@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Base;
 using Data.Buildable;
+using Services;
 using Services.Building;
 using Services.Escapable;
 using UI.Building.BuildMode;
@@ -11,7 +12,6 @@ namespace UI.Building
 {
     public class DeckBuildingPage : DeckUIElement
     {
-        [SerializeField] protected List<DeckBuildable> buildables;
         [SerializeField] protected RectTransform container;
         [SerializeField] protected CanvasGroup canvasGroup;
 
@@ -19,6 +19,7 @@ namespace UI.Building
 
         private DeckEscapableBuildMode escapableBuildMode;
         private DeckServiceEscapable escapableService;
+        private List<DeckBuildable> _buildables;
 
         private void OnDestroy()
         {
@@ -30,14 +31,15 @@ namespace UI.Building
             canvasGroup ??= GetComponent<CanvasGroup>();
         }
 
-        public void Initialize()
+        public void Initialize(List<DeckBuildable> buildables)
         {
+            _buildables = buildables;
             canvasGroup.interactable = false;
             canvasGroup.alpha = 0f;
             gameObject.SetActive(false);
 
-            escapableService = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
-            BuildingService = Services.DeckServiceProvider.GetService<DeckServiceBuilding>();
+            escapableService = DeckServiceProvider.GetService<DeckServiceEscapable>();
+            BuildingService = DeckServiceProvider.GetService<DeckServiceBuilding>();
 
             foreach (var buildable in buildables)
             {
@@ -68,14 +70,6 @@ namespace UI.Building
             gameObject.SetActive(false);
         }
 
-        public void AddBuildable(DeckBuildable buildingData)
-        {
-            buildables.RemoveAll(item => item == null);
-            buildables.Add(buildingData);
-
-            DeckLogger.Inform("Buildable :" + buildingData.VisibleName + "  is added to building list.  " + GetType());
-        }
-
         public void OnBuildableSelected(DeckBuildable buildable)
         {
             if (escapableBuildMode != null)
@@ -101,5 +95,15 @@ namespace UI.Building
         protected virtual void InternalInitialize()
         {
         }
+
+#if UNITY_EDITOR
+        public void AddBuildable(DeckBuildable buildingData)
+        {
+            _buildables.RemoveAll(item => item == null);
+            _buildables.Add(buildingData);
+
+            DeckLogger.Inform("Buildable :" + buildingData.VisibleName + "  is added to building list.  " + GetType());
+        }
+#endif
     }
 }

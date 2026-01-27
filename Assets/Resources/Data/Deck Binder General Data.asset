@@ -24,3 +24,19 @@ MonoBehaviour:
   gameSettings:
   - {fileID: 11400000, guid: 6b38ab96477797a44b6b12e3b19a46b3, type: 2}
   cameraParameters: {fileID: 11400000, guid: 980bae04ecce20f48bb51bd2fb1c1e4d, type: 2}
+  allBuildables:
+  - {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
+  - {fileID: 11400000, guid: 5cc29bac58af771419393ba9a41a06a4, type: 2}
+  - {fileID: 11400000, guid: 05111e09f9bb36c419e5581bcdbc28f2, type: 2}
+  - {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
+  - {fileID: 11400000, guid: 23806c8269e02cd4c8793d68667d66b1, type: 2}
+  - {fileID: 11400000, guid: 66c476e740cc1074f85df9b49824bd37, type: 2}
+  - {fileID: 11400000, guid: dfdfaa63580cc4045b2a6e6958ef7733, type: 2}
+  - {fileID: 11400000, guid: fcecd0616c929d6438ba26a5da4e2a5b, type: 2}
+  - {fileID: 11400000, guid: 474edb263dd37134283f7840aa603453, type: 2}
+  - {fileID: 11400000, guid: 7c259c88abf2bb44ca64fb004c4bd56c, type: 2}
+  - {fileID: 11400000, guid: 1c14826bc0419c94c9cf8cab6c826fac, type: 2}
+  - {fileID: 11400000, guid: 6f0a9a37577b51d4c92d2b1c9fecc0e5, type: 2}
+  - {fileID: 11400000, guid: e93101c5ed9aa914a9c3fb5bcf93b9dd, type: 2}
+  - {fileID: 11400000, guid: f994cd9af2402ec4796711f96dbbdcd4, type: 2}
+  - {fileID: 11400000, guid: ec7933c1d3b36d74fb268298d485a88b, type: 2}

@@ -1,38 +1,69 @@
-using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Data.Buildable;
+using Data.Buildable.Data;
 using EventManager;
+using Services;
 using Services.Escapable;
 using Services.UI;
+using UI.Building.Data;
 using UI.MainMenu.Events;
 using UnityEngine;
+using Zenject;
 
 namespace UI.Building
 {
     public class DeckUIBuilding : DeckUIBase, IDeckEscapable
     {
-        [SerializeField] private List<BuildingSet> buildingSets;
         [SerializeField] private RectTransform buttonsContainer;
         [SerializeField] private RectTransform pagesContainer;
 
         private DeckServiceEscapable _serviceEscapable;
         private DeckBuildingButton _currentButton;
 
+        private List<DeckBuildingSet> _buildingSets;
+        private DeckBuildable[] _buildables;
+
+        private Dictionary<DeckBuildableCategory, List<DeckBuildable>> _categories;
+
+        [Inject]
+        private void Inject(List<DeckBuildingSet> buildingSets, DeckBuildable[] buildables)
+        {
+            _buildingSets = buildingSets;
+            _buildables = buildables;
+        }
+
         public override void Initialize()
         {
-            foreach (var buildingSet in buildingSets)
+            _categories = new Dictionary<DeckBuildableCategory, List<DeckBuildable>>();
+            foreach (var deckBuildable in _buildables)
             {
-                var page = InstanceProvider.RentUIElement(buildingSet.page.GetType()).GetComponent<DeckBuildingPage>();
+                if (!_categories.TryGetValue(deckBuildable.Category, out var category))
+                {
+                    category = new List<DeckBuildable> { deckBuildable };
+                    _categories[deckBuildable.Category] = category;
+                }
+                else
+                {
+                    category.Add(deckBuildable);
+                }
+
+                Debug.LogError(deckBuildable.Category.name);
+            }
+
+            foreach (var buildingSet in _buildingSets)
+            {
+                var page = InstanceProvider.RentUIElement(buildingSet.Page.GetType()).GetComponent<DeckBuildingPage>();
                 page.rectTransform.SetParent(pagesContainer, false);
 
-                var button = InstanceProvider.RentUIElement(buildingSet.button.GetType()).GetComponent<DeckBuildingButton>();
+                var button = InstanceProvider.RentUIElement(buildingSet.Button.GetType()).GetComponent<DeckBuildingButton>();
                 button.rectTransform.SetParent(buttonsContainer, false);
 
-                page.Initialize();
+                page.Initialize(_categories[buildingSet.Category]);
                 button.Initialize(this, page);
             }
 
-            _serviceEscapable = Services.DeckServiceProvider.GetService<DeckServiceEscapable>();
+            _serviceEscapable = DeckServiceProvider.GetService<DeckServiceEscapable>();
 
             DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
             DeckEventManager.Register<DeckEventOnMainMenuDisappear>(OnMainMenuDisappear);
@@ -66,7 +97,7 @@ namespace UI.Building
         {
             OnEventDisappear();
         }
-        
+
         private void OnEventAppear()
         {
             Appear().Forget();
@@ -77,13 +108,6 @@ namespace UI.Building
         {
             Disappear().Forget();
             HasEscaped = true;
-        }
-
-        [Serializable]
-        private struct BuildingSet
-        {
-            public DeckBuildingButton button;
-            public DeckBuildingPage page;
         }
 
         public bool CanBeEscapedWithRightClick => false;

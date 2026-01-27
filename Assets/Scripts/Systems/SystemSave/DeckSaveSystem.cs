@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 using Utility;
+using Debug = UnityEngine.Debug;
 using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace Systems.SystemSave
@@ -13,7 +15,7 @@ namespace Systems.SystemSave
     public static class DeckSaveSystem
     {
         private const string FILE_FORMAT = "MM'.'dd'.'yyyy' 'HH'.'mm'.'ss";
-        
+
         private static SaveData _activeSaveData;
 
         public static void CreateNewSave()
@@ -98,10 +100,7 @@ namespace Systems.SystemSave
             }
 
             var convertedFileNames = splitFileNames.Select(item => DateTime.ParseExact(item, FILE_FORMAT, null).ToString(FILE_FORMAT)).ToList();
-
             convertedFileNames.Sort();
-            convertedFileNames.Reverse();
-
             DeckLogger.Save("Returning last save file path");
             return convertedFileNames[^1];
         }
@@ -196,6 +195,14 @@ namespace Systems.SystemSave
         #region Test
 
 #if UNITY_EDITOR
+
+        [MenuItem("Deck/Save/Open Save File Directory")]
+        private static void OpenSaveFileDirectory()
+        {
+            Process.Start(new ProcessStartInfo { FileName = Application.persistentDataPath, UseShellExecute = true });
+            DeckLogger.Inform("Opening save file location");
+        }
+
         [MenuItem("Deck/Save/Get last save file path")]
         private static void GetLastSaveFilePath_Editor()
         {
@@ -206,8 +213,11 @@ namespace Systems.SystemSave
         [MenuItem("Deck/Save/Create dummy save file")]
         private static void CreateDummySaveFile_Editor()
         {
-            _activeSaveData = new SaveData();
-            _activeSaveData["Test"] = "Test";
+            _activeSaveData = new SaveData
+            {
+                ["Test"] = "Test"
+            };
+
             var serializedData = GetWritableData();
             File.WriteAllBytes(ConvertToFilePath(GetFileName()), serializedData);
         }
