@@ -1,4 +1,4 @@
-namespace UI.Building.BuildMode
+namespace UI.Building.BuildMode.OnTopWithAccessArea
 {
     public class DeckEscapableBuildModeBuildOnTopWithAccessArea : DeckEscapableBuildMode
     {
@@ -17,6 +17,11 @@ namespace UI.Building.BuildMode
         }
 
         protected override void InternalOnMouseMove()
+        {
+            BuildingService.UpdateSilhouetteWithAccess();
+        }
+
+        protected override void InternalOnMiddleScroll()
         {
             BuildingService.UpdateSilhouetteWithAccess();
         }

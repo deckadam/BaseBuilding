@@ -51,7 +51,7 @@ namespace CameraController
             DeckEventManager.Register<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
             DeckEventManager.Register<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
             DeckEventManager.Register<DeckEventOnAxisMovement>(OnAxisMovement);
-            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
+            DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll);
             DeckEventManager.Register<DeckEventOnMiddleMouseButtonStatusChange>(OnMiddleMouseButtonStatusChanged);
             DeckEventManager.Register<DeckEventOnCameraRotateWithKeyboard>(OnCameraRotateRequested);
             DeckEventManager.Register<DeckEventOnCameraRotateWithKeyboardStateChanged>(OnCameraRotateStarted);
@@ -62,7 +62,7 @@ namespace CameraController
             DeckEventManager.Unregister<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
             DeckEventManager.Unregister<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
             DeckEventManager.Unregister<DeckEventOnAxisMovement>(OnAxisMovement);
-            DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
+            DeckEventManager.Unregister<DeckEventOnMiddleScroll>(OnMiddleScroll);
             DeckEventManager.Unregister<DeckEventOnMiddleMouseButtonStatusChange>(OnMiddleMouseButtonStatusChanged);
             DeckEventManager.Unregister<DeckEventOnMouseMove>(OnMouseMove);
             DeckEventManager.Unregister<DeckEventOnCameraRotateWithKeyboard>(OnCameraRotateRequested);
@@ -161,7 +161,7 @@ namespace CameraController
             _cachedTransform.position += deltaPosition;
         }
 
-        private void OnMiddleScroll(DeckEventMiddleScroll obj)
+        private void OnMiddleScroll(DeckEventOnMiddleScroll obj)
         {
             if (!_canZoom)
             {

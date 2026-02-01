@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parameters:
   - rid: 213718203870740481
+  - rid: 213718271242534938
   category: {fileID: 11400000, guid: 9835f965cac0d5448921e41c90dff8db, type: 2}
   agent: {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
@@ -22,20 +23,12 @@ MonoBehaviour:
   - mesh: {fileID: -5495902117074765545, guid: fd693bc5e37ab9840bb65ab5fbc7d303, type: 3}
     position: {x: 0, y: 0, z: 0}
     rotation: {x: -0, y: 0, z: 0}
-  rotationMode: 100
   extents: {x: 0.3, y: 1.5, z: 0.30000013}
-  prices:
-  - currencyType: 0
-    amount: 25
-  buildMode: 400
-  buildableToPlaceOnTop: {fileID: 0}
   materialCount: 1
   isGridBased: 1
   indices:
   - {x: 0, y: 0}
   accessIndices: []
-  isLimited: 0
-  limit: 0
   references:
     version: 2
     RefIds:
@@ -43,3 +36,11 @@ MonoBehaviour:
       type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:
         icon: {fileID: 21300000, guid: ad2d5b01412c1c5419448b71816d9da4, type: 3}
+    - rid: 213718271242534938
+      type: {class: DeckBuildableParameterBuildModeGridBased, ns: Data.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
+      data:
+        data:
+          buildMode: 400
+          indices:
+          - {x: 0, y: 0}
+          accessIndices: []

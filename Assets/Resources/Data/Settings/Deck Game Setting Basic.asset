@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236d970d31a84e518f5f1afcd987c4a9, type: 3}
   m_Name: Deck Game Setting Basic
   m_EditorClassIdentifier: 
+  isTestRun: 1
   gameSettingName: Basic
   mapSize: {x: 50, y: 150}
   wallType: 0
@@ -24,7 +25,19 @@ MonoBehaviour:
     wallBuildable: {fileID: 0}
   buildableOverrides:
   - buildable: {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
-    overrideLimit: 1
-    overridenLimit: 5
-    overridePrice: 0
-    overridenPrice: []
+    parameters:
+    - rid: 213718203870740498
+    - rid: 213718203870740499
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718203870740498
+      type: {class: DeckBuildableParameterLimited, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        limit: 3
+    - rid: 213718203870740499
+      type: {class: DeckBuildableParameterPrice, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        prices:
+        - currencyType: 0
+          amount: 15

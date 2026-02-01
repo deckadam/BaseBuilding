@@ -3,7 +3,7 @@ using Services.Building;
 using Services.Camera;
 using UnityEngine;
 
-namespace UI.Building.BuildMode
+namespace UI.Building.BuildMode.Rect
 {
     public class DeckEscapableBuildModeRect : DeckEscapableBuildModePartialCancel
     {
@@ -50,6 +50,11 @@ namespace UI.Building.BuildMode
 
             _currentCellPosition = currentCellPosition;
             BuildingService.UpdateSilhouetteInCellRect(new[] { _initialCellPosition, currentCellPosition });
+        }
+
+        protected override void InternalOnMiddleScroll()
+        {
+            
         }
 
         public override bool ShouldEscapeFullyOnRightClick => false;

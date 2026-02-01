@@ -1,17 +1,10 @@
 using Services;
 using Services.Building;
 
-namespace UI.Building.BuildMode
+namespace UI.Building.BuildMode.InCellMultiple
 {
-    public class DeckEscapableBuildModeInCell : DeckEscapableBuildMode
+    public class DeckEscapableBuildModeInCellMultiple : DeckEscapableBuildMode
     {
-        private bool _canReplace;
-
-        public DeckEscapableBuildModeInCell(bool canReplace)
-        {
-            _canReplace = canReplace;
-        }
-
         protected override void InternalOnInitialize()
         {
             BuildingService.StartSilhouette(Buildable);
@@ -23,15 +16,22 @@ namespace UI.Building.BuildMode
 
         protected override void InternalOnLeftClickUp()
         {
-            DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInCell(_canReplace);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInCell(false);
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
-            BuildingService.UpdateSilhouetteInCell(rotation, _canReplace);
+            BuildingService.UpdateSilhouetteInCell(rotation, false);
         }
 
         protected override void InternalOnMouseMove()
         {
             var rotation = BuildingPage.GetBuildableRotation(Buildable);
-            BuildingService.UpdateSilhouetteInCell(rotation, _canReplace);
+            BuildingService.UpdateSilhouetteInCell(rotation, false);
         }
+
+        protected override void InternalOnMiddleScroll()
+        {
+            
+        }
+
+        public override bool ShouldEscapeFullyOnRightClick => false;
     }
 }

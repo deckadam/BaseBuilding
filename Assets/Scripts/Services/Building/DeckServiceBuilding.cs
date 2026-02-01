@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Base;
 using Data.Buildable;
+using Data.Buildable.Data.Parameter.Implementations;
+using Data.Buildable.Data.Parameter.Implementations.Build;
+using Data.Currency;
 using Data.General;
 using EventManager;
 using GameManager.Data.GameSetting;
@@ -9,6 +13,7 @@ using GameManager.Events;
 using InGame.Agent.Building;
 using Instancing;
 using Services.Building.Events;
+using Services.Building.Tester;
 using Services.Camera;
 using Services.Currency;
 using Services.ItemVisual;
@@ -57,6 +62,19 @@ namespace Services.Building
         private DeckSilhouetteProvider _silhouetteProvider;
         private DeckGameSettingBasic _gameSetting;
 
+        private bool _isMiddleScrollRegistered;
+
+
+        private bool _hasBuildMode;
+        private bool _isGridBased;
+        private DeckBuildableParameterBuildMode _parameterBuildMode;
+
+        private DeckBuildableParameterBuildModeGridBased _parameterBuildModeGridBased;
+        private DeckGridBasedData _currentGridBasedData;
+
+        private bool _hasRotationMode;
+        private DeckRotationMode _rotationMode;
+
         [Inject]
         private void Inject(DeckDataBuilding buildingData, DeckInstanceProvider instanceProvider, DeckSilhouetteProvider silhouetteProvider)
         {
@@ -74,6 +92,7 @@ namespace Services.Building
             {
                 name = "SilhouetteParent"
             };
+            _silhouetteParent.AddComponent<SilhouetteParent>();
 
             DeckEventManager.Register<DeckEventOnGameSettingsLoaded>(OnGameSettingsLoaded);
         }
@@ -111,29 +130,46 @@ namespace Services.Building
             }
         }
 
-        private void OnMiddleScroll(DeckEventMiddleScroll evt)
+        private void OnMiddleScroll(DeckEventOnMiddleScroll evt)
         {
             if (!_activeBuildable)
             {
                 return;
             }
 
-            if (_activeBuildable.RotationMode == DeckRotationMode.Continuous)
+            if (_hasRotationMode)
             {
-                _silhouetteParent.transform.Rotate(0, -evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
-            }
-            else if (_activeBuildable.RotationMode == DeckRotationMode.NinetyDegree)
-            {
-                if (evt.scrollValue > 0)
+                switch (_rotationMode)
                 {
-                    _ninetyDegreeRotationAmount--;
-                }
-                else
-                {
-                    _ninetyDegreeRotationAmount++;
-                }
+                    case DeckRotationMode.Continuous:
+                        _silhouetteParent.transform.Rotate(0, -evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
+                        break;
+                    case DeckRotationMode.NinetyDegree:
+                    {
+                        if (evt.scrollValue > 0)
+                        {
+                            _ninetyDegreeRotationAmount--;
+                        }
+                        else
+                        {
+                            _ninetyDegreeRotationAmount++;
+                        }
 
-                _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
+                        _ninetyDegreeRotationAmount = _ninetyDegreeRotationAmount switch
+                        {
+                            < 0 => 3,
+                            > 3 => 0,
+                            _ => _ninetyDegreeRotationAmount
+                        };
+
+                        _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
+                        break;
+                    }
+                    case DeckRotationMode.None:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             _rotation = _silhouetteParent.transform.rotation;
@@ -142,39 +178,50 @@ namespace Services.Building
         public void StartSilhouette(DeckBuildable buildable)
         {
             _isDirty = true;
+
+            if (_isMiddleScrollRegistered)
+            {
+                DeckEventManager.Unregister<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
+                _isMiddleScrollRegistered = false;
+            }
+
+            if (!CollectParameterData(buildable))
+            {
+                return;
+            }
+
             _activeBuildable = buildable;
             _rotation = Quaternion.identity;
 
-            var hasIndices = false;
-            if (buildable.Indices != null)
+            if (_isGridBased)
             {
-                foreach (var buildableIndex in buildable.Indices)
+                if (_currentGridBasedData.Indices != null)
                 {
-                    hasIndices = true;
-                    var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
-                    _piecesInUse.Add(newPiece);
+                    foreach (var buildableIndex in _currentGridBasedData.Indices)
+                    {
+                        var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
+                        _piecesInUse.Add(newPiece);
 
-                    newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
-                    newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
-                    newPiece.gameObject.transform.localRotation = _rotation;
+                        newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+                        newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
+                        newPiece.gameObject.transform.localRotation = _rotation;
+                    }
+                }
+
+                if (_currentGridBasedData.AccessIndices != null)
+                {
+                    foreach (var buildableIndex in _currentGridBasedData.AccessIndices)
+                    {
+                        var newPiece = _silhouetteProvider.GetAccessAreaSilhouettePiece();
+                        _piecesInUse.Add(newPiece);
+
+                        newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
+                        newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
+                        newPiece.gameObject.transform.localRotation = _rotation;
+                    }
                 }
             }
-
-            if (buildable.AccessIndices != null)
-            {
-                foreach (var buildableIndex in buildable.AccessIndices)
-                {
-                    hasIndices = true;
-                    var newPiece = _silhouetteProvider.GetAccessAreaSilhouettePiece();
-                    _piecesInUse.Add(newPiece);
-
-                    newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
-                    newPiece.gameObject.transform.localPosition = buildableIndex.ToVector3();
-                    newPiece.gameObject.transform.localRotation = _rotation;
-                }
-            }
-
-            if (!hasIndices)
+            else
             {
                 var newPiece = _silhouetteProvider.GetSilhouettePiece(_activeBuildable);
                 _piecesInUse.Add(newPiece);
@@ -184,7 +231,11 @@ namespace Services.Building
                 newPiece.gameObject.transform.localRotation = _rotation;
             }
 
-            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
+            if (_hasRotationMode && !_isMiddleScrollRegistered && _rotationMode != DeckRotationMode.None)
+            {
+                DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
+                _isMiddleScrollRegistered = true;
+            }
 
             if (!_silhouetteParent.activeSelf)
             {
@@ -194,6 +245,11 @@ namespace Services.Building
 
         public void StartSilhouetteRect(DeckBuildable buildable)
         {
+            if (!CollectParameterData(buildable))
+            {
+                return;
+            }
+
             _isDirty = true;
             _activeBuildable = buildable;
             _rotation = Quaternion.identity;
@@ -206,7 +262,11 @@ namespace Services.Building
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
 
-            DeckEventManager.Register<DeckEventMiddleScroll>(OnMiddleScroll);
+            if (!_isMiddleScrollRegistered && _hasRotationMode && _rotationMode != DeckRotationMode.None)
+            {
+                DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
+                _isMiddleScrollRegistered = true;
+            }
 
             if (!_silhouetteParent.activeSelf)
             {
@@ -216,9 +276,49 @@ namespace Services.Building
             UpdateSilhouetteInCellRect(new[] { cellIndex, cellIndex });
         }
 
+        private bool CollectParameterData(DeckBuildable buildable)
+        {
+            if (buildable.TryGetParameter(out DeckBuildableParameterRotationMode parameterRotationMode))
+            {
+                _hasRotationMode = true;
+                _rotationMode = parameterRotationMode.GetPrimitiveValue<DeckRotationMode>();
+            }
+            else
+            {
+                _hasRotationMode = false;
+                _rotationMode = DeckRotationMode.None;
+            }
+
+            if (buildable.TryGetParameter(out _parameterBuildModeGridBased))
+            {
+                _hasBuildMode = true;
+                _isGridBased = true;
+                _currentGridBasedData = _parameterBuildModeGridBased.GetValue<DeckGridBasedData>();
+                return true;
+            }
+            else if (buildable.TryGetParameter(out _parameterBuildMode))
+            {
+                _hasBuildMode = true;
+                _isGridBased = false;
+                return true;
+            }
+            else
+            {
+                _hasBuildMode = false;
+                _parameterBuildMode = null;
+                _parameterBuildModeGridBased = null;
+                _currentGridBasedData = null;
+                _isGridBased = false;
+                _hasRotationMode = false;
+                _rotationMode = DeckRotationMode.None;
+                DeckLogger.Error("No build mode parameter attached");
+                return false;
+            }
+        }
+
         public void UpdateSilhouetteInCell(Quaternion rotation, bool canReplace)
         {
-            if (!_activeBuildable)
+            if (!HasGridBasedBuildMode())
             {
                 return;
             }
@@ -235,6 +335,11 @@ namespace Services.Building
                 isAvailable = false;
             }
 
+            if (!IsCollidingWithAnotherObjectCell(_activeBuildable, cellIndex))
+            {
+                isAvailable = false;
+            }
+
             var material = isAvailable ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -245,14 +350,14 @@ namespace Services.Building
 
         public void UpdateSilhouetteWithAccess()
         {
-            if (!_activeBuildable)
+            if (!HasGridBasedBuildMode())
             {
                 return;
             }
 
             var currentCellIndex = _cameraService.GetCursorCellIndex();
             var isAvailable = true;
-            foreach (var mainCell in _activeBuildable.Indices)
+            foreach (var mainCell in _currentGridBasedData.Indices)
             {
                 if (!IsCellInBounds(mainCell))
                 {
@@ -266,14 +371,19 @@ namespace Services.Building
                     break;
                 }
 
-                if (!value.BuildingData.ItemVisual.PrefabId.Equals(_activeBuildable.BuildableToPlaceOnTop.ItemVisual.PrefabId))
+                if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
+                {
+                    return;
+                }
+
+                if (!value.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
                 {
                     isAvailable = false;
                     break;
                 }
             }
 
-            if (isAvailable && (!IsViableBuildCell(currentCellIndex, _activeBuildable.AccessIndices) || IsAccessCellsInBounds(currentCellIndex, _activeBuildable.AccessIndices)))
+            if (isAvailable && (!IsViableBuildCell(currentCellIndex, _currentGridBasedData.AccessIndices) || !IsAccessCellsInBounds(currentCellIndex, _currentGridBasedData.AccessIndices)))
             {
                 isAvailable = false;
             }
@@ -288,7 +398,7 @@ namespace Services.Building
 
         public void UpdateSilhouetteInCellRect(Vector2Int[] cells)
         {
-            if (!_activeBuildable)
+            if (!HasGridBasedBuildMode())
             {
                 return;
             }
@@ -327,7 +437,7 @@ namespace Services.Building
 
                 _piecesInUse[index].gameObject.transform.position = cellIndex.ToVector3();
 
-                if (isAllCellsFree && !IsViableBuildCell(cellIndex, _activeBuildable.Indices))
+                if (isAllCellsFree && !IsViableBuildCell(cellIndex, _currentGridBasedData.Indices))
                 {
                     isAllCellsFree = false;
                 }
@@ -388,7 +498,6 @@ namespace Services.Building
 
             var result = IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation);
             var material = result ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
-            DeckGUILogger.ins.SetDebugText("Silhouette", buildPosition + "  " + normal + "  " + result);
 
             ApplyMaterialToSilhouette(material);
 
@@ -468,7 +577,6 @@ namespace Services.Building
                 return;
             }
 
-            DeckGUILogger.ins.SetDebugText("Build", buildPosition + "  " + normal);
             if (!IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation))
             {
                 return;
@@ -547,7 +655,7 @@ namespace Services.Building
                     isAllCellsAvailable = false;
                 }
 
-                if (!IsViableBuildCell(rectBuildPosition, _activeBuildable.Indices))
+                if (!IsViableBuildCell(rectBuildPosition, _currentGridBasedData.Indices))
                 {
                     isAllCellsAvailable = false;
                 }
@@ -564,7 +672,10 @@ namespace Services.Building
                 return;
             }
 
-            if (!PayIfCanAfford()) return;
+            if (!PayIfCanAfford())
+            {
+                return;
+            }
 
             foreach (var rectBuildPosition in rectBuildPositions)
             {
@@ -586,6 +697,11 @@ namespace Services.Building
 
         public void BuildInCell(bool canReplace)
         {
+            if (!HasGridBasedBuildMode())
+            {
+                return;
+            }
+
             if (!CheckActiveBuildable()) return;
 
             var cellIndex = _cameraService.GetCursorCellIndex();
@@ -600,6 +716,11 @@ namespace Services.Building
                 return;
             }
 
+            if (!IsCollidingWithAnotherObjectCell(_activeBuildable, cellIndex))
+            {
+                return;
+            }
+
             _lastCheckedCellIndex = cellIndex;
 
             if (canReplace && _grid.TryGetValue(cellIndex, out var building))
@@ -607,7 +728,7 @@ namespace Services.Building
                 building.RequestDestroy();
             }
 
-            if (!IsViableBuildCell(cellIndex, _activeBuildable.Indices))
+            if (!IsViableBuildCell(cellIndex, _currentGridBasedData.Indices))
             {
                 return;
             }
@@ -624,7 +745,15 @@ namespace Services.Building
 
         public void BuildInCellMultiple()
         {
-            if (!CheckActiveBuildable()) return;
+            if (!HasGridBasedBuildMode())
+            {
+                return;
+            }
+
+            if (!CheckActiveBuildable())
+            {
+                return;
+            }
 
             var cellIndex = _cameraService.GetCursorCellIndex();
 
@@ -640,7 +769,7 @@ namespace Services.Building
 
             _lastCheckedCellIndex = cellIndex;
 
-            if (!IsViableBuildCell(cellIndex, _activeBuildable.Indices))
+            if (!IsViableBuildCell(cellIndex, _currentGridBasedData.Indices))
             {
                 return;
             }
@@ -695,18 +824,28 @@ namespace Services.Building
 
         public void BuildWithAccess()
         {
+            if (!HasGridBasedBuildMode())
+            {
+                return;
+            }
+
             if (!CheckActiveBuildable()) return;
 
             var currentCellIndex = _cameraService.GetCursorCellIndex();
             DeckAgentBuilding agentBuildingToBuildOnTop = null;
-            foreach (var mainCell in _activeBuildable.Indices)
+            foreach (var mainCell in _currentGridBasedData.Indices)
             {
                 if (!_grid.TryGetValue(currentCellIndex + mainCell, out agentBuildingToBuildOnTop))
                 {
                     return;
                 }
 
-                if (!agentBuildingToBuildOnTop.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
+                if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
+                {
+                    return;
+                }
+
+                if (!agentBuildingToBuildOnTop.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
                 {
                     return;
                 }
@@ -717,12 +856,13 @@ namespace Services.Building
                 return;
             }
 
-            if (!IsViableBuildCell(currentCellIndex, _activeBuildable.Indices, false))
+
+            if (!IsViableBuildCell(currentCellIndex, _currentGridBasedData.Indices, false))
             {
                 return;
             }
 
-            if (!IsViableAccessCell(_activeBuildable.AccessIndices, currentCellIndex))
+            if (!IsViableAccessCell(_currentGridBasedData.AccessIndices, currentCellIndex))
             {
                 return;
             }
@@ -804,9 +944,10 @@ namespace Services.Building
                 return;
             }
 
-            if (_activeBuildable)
+            if (_isMiddleScrollRegistered)
             {
-                DeckEventManager.Unregister<DeckEventMiddleScroll>(OnMiddleScroll);
+                _isMiddleScrollRegistered = false;
+                DeckEventManager.Unregister<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
             }
 
             _activeBuildable = null;
@@ -933,9 +1074,17 @@ namespace Services.Building
                         return false;
                     }
 
-                    if (_activeBuildable.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea && _possibleColliders[0].gameObject.TryGetComponentInParent<DeckAgentBuilding>(out var building))
+                    if (_hasBuildMode &&
+                        _isGridBased &&
+                        _currentGridBasedData.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea &&
+                        _possibleColliders[0].gameObject.TryGetComponentInParent<DeckAgentBuilding>(out var building))
                     {
-                        if (!building.BuildingData.Equals(_activeBuildable.BuildableToPlaceOnTop))
+                        if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
+                        {
+                            return true;
+                        }
+
+                        if (!building.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
                         {
                             return false;
                         }
@@ -1019,16 +1168,28 @@ namespace Services.Building
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
         }
 
+        private bool IsCollidingWithAnotherObjectCell(DeckBuildable buildable, Vector2Int cellPosition)
+        {
+            return Physics.OverlapBoxNonAlloc(cellPosition.ToVector3() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), _cellHalfExtents,
+                _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
+        }
+
         private bool PayIfCanAfford()
         {
-            if (!_currencyService.CanAfford(_activeBuildable.Prices))
+            if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
+            {
+                return true;
+            }
+
+            var prices = priceParameter.GetValue<DeckPrice[]>();
+            if (!_currencyService.CanAfford(prices))
             {
                 DeckEventNotificationRequested.Create("Cant afford").Send();
                 ReturnAllSilhouettePiecesToPool();
                 return false;
             }
 
-            _currencyService.ChangeValueRelative(_activeBuildable.Prices, false);
+            _currencyService.ChangeValueRelative(prices, false);
             return true;
         }
 
@@ -1064,15 +1225,24 @@ namespace Services.Building
 
         private bool CheckActiveBuildable()
         {
-            if (_activeBuildable == null)
+            if (!_hasBuildMode)
             {
-                DeckLogger.Error("Buildable not set");
                 return false;
             }
 
-            if (_activeBuildable.GetCurrentLimit() <= 0)
+            if (_activeBuildable.TryGetParameter(out DeckBuildableParameterLimited parameter) && parameter.GetPrimitiveValue<int>() <= 0)
             {
                 DeckEventNotificationRequested.Create("Limit reached").Send();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool HasGridBasedBuildMode()
+        {
+            if (!_hasBuildMode || !_isGridBased)
+            {
                 return false;
             }
 

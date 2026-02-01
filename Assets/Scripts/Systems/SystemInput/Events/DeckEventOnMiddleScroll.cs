@@ -2,13 +2,13 @@ using EventManager;
 
 namespace Systems.SystemInput.Events
 {
-    public struct DeckEventMiddleScroll:IDeckEvent
+    public struct DeckEventOnMiddleScroll:IDeckEvent
     {
         public float scrollValue { get; private set; }
         
-        public static DeckEventMiddleScroll Create(float scrollValue)
+        public static DeckEventOnMiddleScroll Create(float scrollValue)
         {
-            return new DeckEventMiddleScroll
+            return new DeckEventOnMiddleScroll
             {
                 scrollValue = scrollValue
             };

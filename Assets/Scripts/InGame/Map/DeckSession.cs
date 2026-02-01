@@ -13,9 +13,9 @@ namespace InGame.Map
 
         private DeckBaseCameraController[] _cameraControllers;
 
-        public void Initialize(DeckGameSettingBasic gameSettingBasic)
+        public void Initialize(DeckGameSettingBasic gameSetting)
         {
-            var mapSize = gameSettingBasic.GetMapSize();
+            var mapSize = gameSetting.GetMapSize();
 
             var max = Mathf.Max(mapSize.x, mapSize.y);
 
@@ -28,7 +28,10 @@ namespace InGame.Map
 
             navMeshSurface.transform.position = ground.position;
             navMeshSurface.size = mapBoundCollider.size;
-            navMeshSurface.BuildNavMesh();
+            if (!gameSetting.IsTestRun())
+            {
+                navMeshSurface.BuildNavMesh();
+            }
 
             _cameraControllers = FindObjectsOfType<DeckBaseCameraController>();
             foreach (var cameraController in _cameraControllers)

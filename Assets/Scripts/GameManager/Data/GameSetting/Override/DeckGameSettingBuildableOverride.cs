@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Data.Buildable;
-using Data.Currency;
+using Data.Buildable.Data.Parameter;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,19 +11,9 @@ namespace GameManager.Data.GameSetting.Override
     public struct DeckGameSettingBuildableOverride
     {
         [SerializeField] private DeckBuildable buildable;
-
-        [SerializeField] private bool overrideLimit;
-        [SerializeField, ShowIf(nameof(overrideLimit))] private int overridenLimit;
-
-        [SerializeField] private bool overridePrice;
-        [SerializeField, ShowIf(nameof(overridePrice))] private DeckPrice[] overridenPrice;
+        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
 
         public DeckBuildable Buildable => buildable;
-        
-        public bool OverrideLimit => overrideLimit;
-        public int OverridenLimit => overridenLimit;
-
-        public bool OverridePrice => overridePrice;
-        public DeckPrice[] OverridenPrice => overridenPrice;
+        public List<DeckBuildableParameter> Parameters => parameters;
     }
 }

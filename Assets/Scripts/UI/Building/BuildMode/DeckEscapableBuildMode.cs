@@ -18,11 +18,11 @@ namespace UI.Building.BuildMode
         protected DeckServiceBuilding BuildingService;
         protected DeckBuildable Buildable;
         protected DeckBuildingPage BuildingPage;
-        protected bool _checking;
         protected bool _isDown;
 
         private Action _onEscape;
         private bool _canMoveBuild;
+        private bool _checking;
 
         public void Initialize(Action onEscape, DeckBuildable buildable, DeckBuildingPage buildingPage)
         {
@@ -40,6 +40,7 @@ namespace UI.Building.BuildMode
             DeckEventManager.Register<DeckEventOnLeftClickUp>(OnLeftClickUp);
             DeckEventManager.Register<DeckEventOnMouseMove>(OnMouseMove);
             DeckEventManager.Register<DeckEventOnRightClick>(OnRightClick);
+            DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll);
 
             BuildingService = DeckServiceProvider.GetService<DeckServiceBuilding>();
             DeckEventOnBuildModeStarted.Create().Send();
@@ -61,6 +62,7 @@ namespace UI.Building.BuildMode
             DeckEventManager.Unregister<DeckEventOnLeftClickUp>(OnLeftClickUp);
             DeckEventManager.Unregister<DeckEventOnMouseMove>(OnMouseMove);
             DeckEventManager.Unregister<DeckEventOnRightClick>(OnRightClick);
+            DeckEventManager.Unregister<DeckEventOnMiddleScroll>(OnMiddleScroll);
 
             HasEscaped = true;
             _onEscape?.Invoke();
@@ -108,6 +110,16 @@ namespace UI.Building.BuildMode
             InternalOnMouseMove();
         }
 
+        private void OnMiddleScroll(DeckEventOnMiddleScroll obj)
+        {
+            if (!_checking)
+            {
+                return;
+            }
+
+            InternalOnMiddleScroll();
+        }
+
         protected virtual void PartialCancel()
         {
         }
@@ -116,6 +128,7 @@ namespace UI.Building.BuildMode
         protected abstract void InternalOnLeftClickDown();
         protected abstract void InternalOnLeftClickUp();
         protected abstract void InternalOnMouseMove();
+        protected abstract void InternalOnMiddleScroll();
 
         public bool CanBeEscapedWithRightClick => true;
         public virtual bool ShouldEscapeFullyOnRightClick => true;

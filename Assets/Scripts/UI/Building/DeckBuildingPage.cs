@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using Base;
 using Data.Buildable;
+using Data.Buildable.Data.Parameter;
+using Data.Buildable.Data.Parameter.Implementations;
+using Data.Buildable.Data.Parameter.Implementations.Build;
 using Services;
 using Services.Building;
 using Services.Escapable;
@@ -77,8 +80,21 @@ namespace UI.Building
                 escapableService.RemoveEscapable(escapableBuildMode);
             }
 
-            escapableBuildMode = DeckEscapableBuildModeProvider.GetEscapableBuildMode(buildable.BuildMode);
-            escapableBuildMode.Initialize(OnEscapeRequested, buildable, this);
+            if (buildable.TryGetParameter(out DeckBuildableParameterBuildMode parameterBuildMode))
+            {
+                escapableBuildMode = DeckEscapableBuildModeProvider.GetEscapableBuildMode(parameterBuildMode.GetPrimitiveValue<DeckBuildMode>());
+                escapableBuildMode.Initialize(OnEscapeRequested, buildable, this);
+                return;
+            }
+
+            if (buildable.TryGetParameter(out DeckBuildableParameterBuildModeGridBased parameterBuildModeGridBased))
+            {
+                escapableBuildMode = DeckEscapableBuildModeProvider.GetEscapableBuildMode(parameterBuildModeGridBased.GetValue<DeckGridBasedData>().BuildMode);
+                escapableBuildMode.Initialize(OnEscapeRequested, buildable, this);
+                return;
+            }
+
+            DeckLogger.Error("No build mode parameter added");
         }
 
         public virtual Quaternion GetBuildableRotation(DeckBuildable buildable)

@@ -1,7 +1,7 @@
 using Base;
 using Data.Buildable;
-using Data.Buildable.Data.Parameter;
 using Data.Buildable.Data.Parameter.Implementations;
+using Data.Currency;
 using EventManager;
 using Instancing;
 using Services;
@@ -29,6 +29,7 @@ namespace UI.Building
         private DeckBuildingPage _buildingPage;
         private DeckInstanceProvider _instanceProvider;
         private int _maxLimit;
+        private bool _isLimited;
 
         [Inject]
         private void Inject(DeckInstanceProvider instanceProvider)
@@ -40,18 +41,31 @@ namespace UI.Building
         {
             _buildingPage = buildingPage;
             _buildable = buildable;
-            
-            if (_buildable.TryGetParameter<DeckBuildableParameterIcon>(out var iconParameter))
+
+            if (_buildable.TryGetParameter(out DeckBuildableParameterIcon iconParameter))
             {
-                icon.sprite = iconParameter.Icon;
+                icon.sprite = iconParameter.GetValue<Sprite>();
             }
 
             nameText.text = buildable.VisibleName;
 
-            foreach (var deckPrice in buildable.Prices)
+            if (_buildable.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
             {
-                var newPriceDisplay = _instanceProvider.RentUIElement<DeckUIPriceDisplay>();
-                newPriceDisplay.Initialize(deckPrice, priceTextContainer);
+                foreach (var deckPrice in priceParameter.GetValue<DeckPrice[]>())
+                {
+                    var newPriceDisplay = _instanceProvider.RentUIElement<DeckUIPriceDisplay>();
+                    newPriceDisplay.Initialize(deckPrice, priceTextContainer);
+                }
+            }
+
+            if (_buildable.TryGetParameter(out DeckBuildableParameterLimited _))
+            {
+                _isLimited = true;
+            }
+            else
+            {
+                limitText.gameObject.SetActive(false);
+                return;
             }
 
             DeckEventManager.Register<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
@@ -61,6 +75,11 @@ namespace UI.Building
 
         private void OnDestroy()
         {
+            if (!_isLimited)
+            {
+                return;
+            }
+
             DeckEventManager.Unregister<DeckEventOnGameSceneLoaded>(OnGameSceneLoaded);
             DeckEventManager.Unregister<DeckEventOnAnythingBuilt>(OnAnythingBuilt);
             DeckEventManager.Unregister<DeckEventOnAnythingDestroyed>(OnAnythingDestroyed);
@@ -68,7 +87,7 @@ namespace UI.Building
 
         private void OnGameSceneLoaded(DeckEventOnGameSceneLoaded obj)
         {
-            if (_buildable.IsLimited)
+            if (_buildable.TryGetParameter(out DeckBuildableParameterLimited parameterLimited))
             {
                 var builtCount = 0;
                 if (DeckServiceProvider.GetService<DeckServiceFinder>().TryGetAgentsWithPrefabId(_buildable.Agent.PrefabId, out var agents))
@@ -76,9 +95,10 @@ namespace UI.Building
                     builtCount = agents.Count;
                 }
 
+                var limit = parameterLimited.GetMaxLimit();
                 limitText.gameObject.SetActive(true);
-                limitText.text = (_buildable.Limit - builtCount).ToString();
-                _maxLimit = _buildable.Limit - builtCount;
+                limitText.text = (limit - builtCount).ToString();
+                _maxLimit = limit - builtCount;
                 AdjustButtonStatus();
             }
             else
@@ -120,7 +140,11 @@ namespace UI.Building
             }
 
             limitText.text = _maxLimit.ToString();
-            _buildable.SetCurrentLimit(_maxLimit);
+
+            if (_buildable.TryGetParameter(out DeckBuildableParameterLimited parameter))
+            {
+                parameter.SetCurrentLimit(_maxLimit);
+            }
         }
     }
 }

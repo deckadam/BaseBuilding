@@ -9,6 +9,7 @@ namespace GameManager.Data.GameSetting
     [CreateAssetMenu(menuName = "Deck/Data/General/Game Settings", fileName = "Deck Game Setting Basic")]
     public class DeckGameSettingBasic : ScriptableObject
     {
+        [SerializeField] private bool isTestRun;
         [SerializeField] private string gameSettingName;
         [SerializeField] private Vector2Int mapSize;
         [SerializeField] private DeckWallType wallType;
@@ -43,6 +44,11 @@ namespace GameManager.Data.GameSetting
             {
                 deckGameSettingBuildableOverride.Buildable.ApplyOverride(deckGameSettingBuildableOverride);
             }
+        }
+
+        public bool IsTestRun()
+        {
+            return isTestRun;
         }
     }
 }

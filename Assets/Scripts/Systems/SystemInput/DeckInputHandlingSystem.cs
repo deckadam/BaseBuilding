@@ -269,7 +269,7 @@ namespace Systems.SystemInput
 
             if (Input.mouseScrollDelta.y != 0)
             {
-                DeckEventMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
+                DeckEventOnMiddleScroll.Create(Input.mouseScrollDelta.y).Send();
             }
 
             if (_lastInputPosition == currentMousePosition)

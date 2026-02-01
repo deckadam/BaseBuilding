@@ -1,7 +1,7 @@
 using Services;
 using Services.Building;
 
-namespace UI.Building.BuildMode
+namespace UI.Building.BuildMode.Free
 {
     public class DeckEscapableBuildModeFree : DeckEscapableBuildMode
     {
@@ -21,6 +21,11 @@ namespace UI.Building.BuildMode
         }
 
         protected override void InternalOnMouseMove()
+        {
+            BuildingService.UpdateSilhouetteFree();
+        }
+
+        protected override void InternalOnMiddleScroll()
         {
             BuildingService.UpdateSilhouetteFree();
         }

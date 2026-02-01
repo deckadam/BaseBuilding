@@ -6,6 +6,7 @@ namespace Data.Buildable.Data.Parameter
         Price = 200,
         BuildMode = 300,
         Limited = 400,
-        BuildableToPlaceOnTop = 10000
+        RotationMode = 500,
+        BuildableToPlaceOnTop = 10000,
     }
 }

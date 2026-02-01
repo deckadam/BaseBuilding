@@ -1,8 +1,8 @@
 using Services.Building;
 
-namespace UI.Building.BuildMode
+namespace UI.Building.BuildMode.OnSurface
 {
-    public class DeckEscapableBuildModeOnWall : DeckEscapableBuildMode
+    public class DeckEscapableBuildModeOnSurface : DeckEscapableBuildMode
     {
         protected override void InternalOnInitialize()
         {
@@ -22,6 +22,11 @@ namespace UI.Building.BuildMode
         protected override void InternalOnMouseMove()
         {
             BuildingService.UpdateSilhouetteOnWall();
+        }
+
+        protected override void InternalOnMiddleScroll()
+        {
+            
         }
     }
 }

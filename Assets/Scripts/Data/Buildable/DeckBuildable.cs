@@ -4,13 +4,9 @@ using System.Linq;
 using Base;
 using Data.Buildable.Data;
 using Data.Buildable.Data.Parameter;
-using Data.Currency;
 using GameManager.Data.GameSetting.Override;
-using InGame.Agent.Building;
 using Services.Building;
 using Sirenix.OdinInspector;
-using UI.Building.BuildMode;
-using UnityEditor;
 using UnityEngine;
 using Utility;
 
@@ -19,81 +15,27 @@ namespace Data.Buildable
     [CreateAssetMenu(menuName = "Deck/Data/Buildable/Deck Data Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeReference, TypeFilter(nameof(GetAllParameterTypes))] private List<DeckBuildableParameter> parameters;
-        [ValueDropdown(nameof(GetAllCategories))] [SerializeField] private DeckBuildableCategory category;
+        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
+        [ValueDropdown("@Utility.Resource.DeckResourceLocator.GetAllCategories()")] [SerializeField] private DeckBuildableCategory category;
 
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
         [SerializeField] private DeckSilhouetteData[] silhouette;
-        [SerializeField] private DeckRotationMode rotationMode;
         [SerializeField] private Vector3 extents;
-        [SerializeField] private DeckPrice[] prices;
-        [SerializeField] private DeckBuildMode buildMode;
-        [SerializeField] private DeckBuildable buildableToPlaceOnTop;
         [SerializeField] private int materialCount;
-        [SerializeField] private bool isGridBased;
-
-        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] indices;
-
-        [SerializeField, ShowIf(nameof(isGridBased))] private Vector2Int[] accessIndices;
-
-        [SerializeField] private bool isLimited;
-
-        [SerializeField, ShowIf(nameof(isLimited))] private int limit;
 
         public DeckBuildableCategory Category => category;
-        public DeckRotationMode RotationMode => rotationMode;
         public DeckSilhouetteData[] Silhouette => silhouette;
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
         public string VisibleName => visibleName;
         public Vector3 Extents => extents;
         public int MaterialCount => materialCount;
-        public DeckBuildMode BuildMode => buildMode;
-        public DeckBuildable BuildableToPlaceOnTop => buildableToPlaceOnTop;
-        public bool IsGridBased => isGridBased;
-        public Vector2Int[] Indices => indices;
-        public Vector2Int[] AccessIndices => accessIndices;
-        public bool IsLimited => isLimited;
-
-        public DeckPrice[] Prices
-        {
-            get
-            {
-                if (_isPriceOverriden)
-                {
-                    return _overridenPrice;
-                }
-
-                return prices;
-            }
-        }
-
-        public int Limit
-        {
-            get
-            {
-                if (_isLimitOverriden)
-                {
-                    return _overridenLimit;
-                }
-
-                return limit;
-            }
-        }
-
-        private int _currentLimit;
-
-        private bool _isLimitOverriden;
-        private int _overridenLimit;
-
-        private bool _isPriceOverriden;
-        private DeckPrice[] _overridenPrice;
-
 
         private Dictionary<Type, DeckBuildableParameter> _parameters;
 
+#if UNITY_EDITOR
         [Button]
         private void OnValidate()
         {
@@ -101,7 +43,7 @@ namespace Data.Buildable
             CollectExtentsData();
         }
 
-        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent, DeckBuildMode buildMode)
+        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent)
         {
             var newItem = CreateInstance<DeckBuildable>();
             newItem.name = name;
@@ -111,29 +53,7 @@ namespace Data.Buildable
             newItem.OnValidate();
             newItem.CollectExtentsData();
             newItem.CollectSilhouetteData();
-            newItem.buildMode = buildMode;
-            newItem.buildableToPlaceOnTop = null;
-
-            newItem.prices = new[]
-            {
-                new DeckPrice(0, DeckCurrencyType.Money)
-            };
-            newItem.indices = new[] { Vector2Int.zero };
-            newItem.accessIndices = new[] { Vector2Int.zero };
-
-            newItem.isLimited = false;
-            newItem.limit = int.MaxValue;
             return newItem;
-        }
-
-
-        public void Initialize()
-        {
-            _parameters = new Dictionary<Type, DeckBuildableParameter>();
-            foreach (var deckBuildableParameter in parameters)
-            {
-                _parameters.Add(deckBuildableParameter.GetType(), deckBuildableParameter);
-            }
         }
 
         private void CollectExtentsData()
@@ -174,6 +94,17 @@ namespace Data.Buildable
                 silhouette[i] = new DeckSilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
             }
         }
+#endif
+
+        public void Initialize()
+        {
+            _parameters = new Dictionary<Type, DeckBuildableParameter>();
+            foreach (var deckBuildableParameter in parameters)
+            {
+                deckBuildableParameter.ResetOverride();
+                _parameters.Add(deckBuildableParameter.GetType(), deckBuildableParameter);
+            }
+        }
 
         public void SetAgent(DeckAgent agentPrefab)
         {
@@ -187,8 +118,8 @@ namespace Data.Buildable
 
         public override bool Equals(object other)
         {
-            var otherBuildable = other as DeckAgentBuilding;
-            return agent.PrefabId.Equals(otherBuildable.PrefabId);
+            var obj = other as DeckBuildable;
+            return obj.agent.PrefabId.Equals(agent.PrefabId);
         }
 
         protected bool Equals(DeckBuildable other)
@@ -201,50 +132,28 @@ namespace Data.Buildable
             return HashCode.Combine(base.GetHashCode(), visibleName);
         }
 
-        public void SetCurrentLimit(int maxLimit)
-        {
-            _currentLimit = maxLimit;
-        }
-
-        public int GetCurrentLimit()
-        {
-            return _currentLimit;
-        }
-
         public void ApplyOverride(DeckGameSettingBuildableOverride buildableOverride)
         {
-            if (buildableOverride.OverrideLimit)
+            foreach (var buildableOverrideParameter in buildableOverride.Parameters)
             {
-                _isLimitOverriden = true;
-                _overridenLimit = buildableOverride.OverridenLimit;
-            }
-            else
-            {
-                _isLimitOverriden = false;
-            }
-
-            if (buildableOverride.OverridePrice)
-            {
-                _isPriceOverriden = true;
-                _overridenPrice = buildableOverride.OverridenPrice;
-            }
-            else
-            {
-                _isPriceOverriden = false;
+                var match = parameters.First(item => item.ParameterType == buildableOverrideParameter.ParameterType);
+                match.ApplyOverride(buildableOverrideParameter);
             }
         }
 
         public void ResetOverrides()
         {
-            _isLimitOverriden = false;
-            _isPriceOverriden = false;
+            foreach (var parameter in parameters)
+            {
+                parameter.ResetOverride();
+            }
         }
 
         public bool TryGetParameter<T>(out T parameter) where T : DeckBuildableParameter
         {
             if (!_parameters.TryGetValue(typeof(T), out var val))
             {
-                DeckLogger.Warning($"Tried to fetch non existent parameter type {typeof(T).Name}");
+                DeckLogger.Inform($"Tried to fetch non existent parameter type {typeof(T).Name}  {visibleName}");
                 parameter = null;
                 return false;
             }
@@ -253,22 +162,9 @@ namespace Data.Buildable
             return parameter != null;
         }
 
-        #region Editor Stuff
-
-        private IEnumerable<DeckBuildableCategory> GetAllCategories()
+        public T GetParameter<T>() where T : DeckBuildableParameter
         {
-            return AssetDatabase.FindAssets($"t:{nameof(DeckBuildableCategory)}")
-                .Select(AssetDatabase.GUIDToAssetPath)
-                .Select(AssetDatabase.LoadAssetAtPath<DeckBuildableCategory>)
-                .OrderBy(x => x.name);
+            return _parameters[typeof(T)] as T;
         }
-
-        private IEnumerable<Type> GetAllParameterTypes()
-        {
-            return typeof(DeckBuildableParameter).Assembly.GetTypes()
-                .Where(t => t.IsSubclassOf(typeof(DeckBuildableParameter)) && !t.IsAbstract);
-        }
-
-        #endregion
     }
 }

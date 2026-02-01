@@ -11,7 +11,7 @@ namespace Utility
         {
             return Vector3.Distance(origin, destination);
         }
-        
+
         public static Vector3 ToVector3(this Vector2Int position)
         {
             return new Vector3(position.x, 0, position.y);

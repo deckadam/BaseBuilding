@@ -13,7 +13,7 @@ namespace Utility.Editor
         [MenuItem("Deck/Clear Listeners")]
         private static void ClearListeners()
         {
-            DeckEventManager.ClearEvents<DeckEventMiddleScroll>();
+            DeckEventManager.ClearEvents<DeckEventOnMiddleScroll>();
             DeckEventManager.ClearEvents<DeckEventOnLeftClickDown>();
             DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
             DeckEventManager.ClearEvents<DeckEventOnMouseMove>();

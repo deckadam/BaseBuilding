@@ -1,4 +1,12 @@
 using System;
+using UI.Building.BuildMode.Free;
+using UI.Building.BuildMode.InCell;
+using UI.Building.BuildMode.InCellMultiple;
+using UI.Building.BuildMode.Line;
+using UI.Building.BuildMode.OnSurface;
+using UI.Building.BuildMode.OnTop;
+using UI.Building.BuildMode.OnTopWithAccessArea;
+using UI.Building.BuildMode.Rect;
 
 namespace UI.Building.BuildMode
 {
@@ -15,7 +23,7 @@ namespace UI.Building.BuildMode
                 DeckBuildMode.InCellCanReplace => new DeckEscapableBuildModeInCell(true),
                 DeckBuildMode.InCellMultiple => new DeckEscapableBuildModeInCellMultiple(),
                 DeckBuildMode.OnTop => new DeckEscapableBuildModeOnTop(),
-                DeckBuildMode.OnWall => new DeckEscapableBuildModeOnWall(),
+                DeckBuildMode.OnWall => new DeckEscapableBuildModeOnSurface(),
                 DeckBuildMode.BuildOnTopWithAccessArea => new DeckEscapableBuildModeBuildOnTopWithAccessArea(),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };

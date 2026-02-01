@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Base;
 using Data.Buildable;
+using Data.Buildable.Data.Parameter.Implementations;
+using Data.Buildable.Data.Parameter.Implementations.Build;
+using Data.Currency;
 using Services;
 using Services.Building.Events;
 using Services.Currency;
@@ -44,7 +47,7 @@ namespace InGame.Agent.Building
 
         public void InitializeBuilding()
         {
-            if (!buildingData.IsGridBased)
+            if (!buildingData.TryGetParameter(out DeckBuildableParameterBuildModeGridBased parameterBuildModeGridBased))
             {
                 DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance);
                 RaiseItemVisualChanged();
@@ -57,7 +60,7 @@ namespace InGame.Agent.Building
                     itemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
-            else if (buildingData.Indices.Length == 1)
+            else if (parameterBuildModeGridBased.GetValue<DeckGridBasedData>().Indices.Length == 1)
             {
                 DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance, SelfTransform.position.ToVector2Int());
                 RaiseItemVisualChanged();
@@ -70,6 +73,7 @@ namespace InGame.Agent.Building
                     itemVisualInstance.transform.localRotation = Quaternion.identity;
                 }
             }
+
             // else if (buildingData.Indices.Length > 1)
             // {
             // DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestMultipleItemVisual(this, buildingData.ItemVisual.PrefabId, buildingData.Indices.Length, buildingData.Indices, out itemVisualInstances);
@@ -105,7 +109,11 @@ namespace InGame.Agent.Building
                 onTopOf.RemoveBuildingFromTop(this);
             }
 
-            DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(buildingData.Prices, true);
+            if (buildingData.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
+            {
+                DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(priceParameter.GetValue<DeckPrice[]>(), true);
+            }
+
             DeckEventOnAnythingDestroyed.Create(this).Send();
         }
 
