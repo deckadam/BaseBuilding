@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Data.Buildable;
-using Data.Buildable.Data.Parameter;
+using Services.Building.Buildable;
+using Services.Building.Buildable.Data.Parameter;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

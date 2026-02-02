@@ -13,6 +13,7 @@ namespace Data.Camera
         [SerializeField] private float zoomMoveTowardsSpeed;
         [SerializeField] private float rotationSpeed;
         [SerializeField] private float rotationSpeedWithKeyboard;
+        [SerializeField] private float rotationResetSpeed;
 
         public float CameraMovementSpeedMin => cameraMovementSpeedMin;
         public float CameraMovementSpeedMax => cameraMovementSpeedMax;
@@ -22,5 +23,6 @@ namespace Data.Camera
         public float ZoomMoveTowardsSpeed => zoomMoveTowardsSpeed;
         public float RotationSpeed => rotationSpeed;
         public float RotationSpeedWithKeyboard => rotationSpeedWithKeyboard;
+        public float RotationResetSpeed => rotationResetSpeed;
     }
 }

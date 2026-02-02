@@ -1,5 +1,5 @@
 using System;
-using Data.Buildable.Data;
+using Services.Building.Buildable.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

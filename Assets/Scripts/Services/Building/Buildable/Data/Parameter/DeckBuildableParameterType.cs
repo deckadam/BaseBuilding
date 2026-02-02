@@ -1,4 +1,4 @@
-namespace Data.Buildable.Data.Parameter
+namespace Services.Building.Buildable.Data.Parameter
 {
     public enum DeckBuildableParameterType
     {

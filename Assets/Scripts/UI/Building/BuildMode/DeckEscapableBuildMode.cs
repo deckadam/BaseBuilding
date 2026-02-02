@@ -1,8 +1,8 @@
 using System;
-using Data.Buildable;
 using EventManager;
 using Services;
 using Services.Building;
+using Services.Building.Buildable;
 using Services.Building.Events;
 using Services.Escapable;
 using Services.UI;
@@ -72,7 +72,6 @@ namespace UI.Building.BuildMode
 
         private void OnRightClick(DeckEventOnRightClick obj)
         {
-            _checking = false;
             if (!ShouldEscapeFullyOnRightClick)
             {
                 PartialCancel();
@@ -82,12 +81,15 @@ namespace UI.Building.BuildMode
                 BuildingService.ClearAll();
                 OnEscapeRequested();
             }
+
+            _checking = false;
         }
 
         private void OnLeftClickDown(DeckEventOnLeftClickDown obj)
         {
             _checking = true;
             InternalOnLeftClickDown();
+            OnPartialContinue();
         }
 
         private void OnLeftClickUp(DeckEventOnLeftClickUp obj)
@@ -121,6 +123,10 @@ namespace UI.Building.BuildMode
         }
 
         protected virtual void PartialCancel()
+        {
+        }
+
+        protected virtual void OnPartialContinue()
         {
         }
 

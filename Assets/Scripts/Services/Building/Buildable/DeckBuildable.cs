@@ -2,37 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Data.Buildable.Data;
-using Data.Buildable.Data.Parameter;
 using GameManager.Data.GameSetting.Override;
-using Services.Building;
+using Services.Building.Buildable.Data;
+using Services.Building.Buildable.Data.Parameter;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
 
-namespace Data.Buildable
+namespace Services.Building.Buildable
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable/Deck Data Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
         [ValueDropdown("@Utility.Resource.DeckResourceLocator.GetAllCategories()")] [SerializeField] private DeckBuildableCategory category;
-
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
-        [SerializeField] private DeckSilhouetteData[] silhouette;
-        [SerializeField] private Vector3 extents;
-        [SerializeField] private int materialCount;
+        [SerializeField] private DeckBuildableSilhouette silhouetteData;
+        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
 
         public DeckBuildableCategory Category => category;
-        public DeckSilhouetteData[] Silhouette => silhouette;
         public DeckAgent Agent => agent;
         public DeckItemVisual ItemVisual => itemVisual;
         public string VisibleName => visibleName;
-        public Vector3 Extents => extents;
-        public int MaterialCount => materialCount;
-
+        public DeckBuildableSilhouette SilhouetteData => silhouetteData;
         private Dictionary<Type, DeckBuildableParameter> _parameters;
 
 #if UNITY_EDITOR
@@ -43,7 +36,7 @@ namespace Data.Buildable
             CollectExtentsData();
         }
 
-        public static DeckBuildable Create(string name, Sprite icon, DeckItemVisual representation, DeckAgent agent)
+        public static DeckBuildable Create(string name, DeckItemVisual representation, DeckAgent agent)
         {
             var newItem = CreateInstance<DeckBuildable>();
             newItem.name = name;
@@ -51,12 +44,11 @@ namespace Data.Buildable
             newItem.agent = agent;
             newItem.visibleName = name;
             newItem.OnValidate();
-            newItem.CollectExtentsData();
             newItem.CollectSilhouetteData();
             return newItem;
         }
 
-        private void CollectExtentsData()
+        private Vector3 CollectExtentsData()
         {
             if (itemVisual == null)
             {
@@ -69,7 +61,7 @@ namespace Data.Buildable
                 bounds.Encapsulate(renderer.bounds);
             }
 
-            extents = bounds.size;
+            return bounds.size;
         }
 
         private void CollectSilhouetteData()
@@ -87,12 +79,13 @@ namespace Data.Buildable
 
 
             var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
-            silhouette = new DeckSilhouetteData[filters.Length];
+            var tempSilhouette = new DeckSilhouetteData[filters.Length];
             for (var i = 0; i < filters.Length; i++)
             {
                 var filter = filters[i];
-                silhouette[i] = new DeckSilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
+                tempSilhouette[i] = new DeckSilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
             }
+            silhouetteData = new DeckBuildableSilhouette(tempSilhouette,CollectExtentsData(),1);
         }
 #endif
 
@@ -165,6 +158,25 @@ namespace Data.Buildable
         public T GetParameter<T>() where T : DeckBuildableParameter
         {
             return _parameters[typeof(T)] as T;
+        }
+    }
+
+    [Serializable]
+    public struct DeckBuildableSilhouette
+    {
+        [SerializeField] private DeckSilhouetteData[] silhouette;
+        [SerializeField] private Vector3 extents;
+        [SerializeField] private int materialCount;
+
+        public DeckSilhouetteData[] Silhouette => silhouette;
+        public Vector3 Extents => extents;
+        public int MaterialCount => materialCount;
+
+        public DeckBuildableSilhouette(DeckSilhouetteData[] silhouette, Vector3 extents, int materialCount)
+        {
+            this.silhouette = silhouette;
+            this.extents = extents;
+            this.materialCount = materialCount;
         }
     }
 }

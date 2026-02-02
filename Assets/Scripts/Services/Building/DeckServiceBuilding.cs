@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Data.Buildable;
-using Data.Buildable.Data.Parameter.Implementations;
-using Data.Buildable.Data.Parameter.Implementations.Build;
 using Data.Currency;
 using Data.General;
 using EventManager;
@@ -12,6 +9,9 @@ using GameManager.Data.GameSetting;
 using GameManager.Events;
 using InGame.Agent.Building;
 using Instancing;
+using Services.Building.Buildable;
+using Services.Building.Buildable.Data.Parameter.Implementations;
+using Services.Building.Buildable.Data.Parameter.Implementations.Build;
 using Services.Building.Events;
 using Services.Building.Tester;
 using Services.Camera;
@@ -541,8 +541,8 @@ namespace Services.Building
             {
                 foreach (var rend in silhouettePiece.renderers)
                 {
-                    var materials = new Material[_activeBuildable.MaterialCount];
-                    for (int i = 0; i < _activeBuildable.MaterialCount; i++)
+                    var materials = new Material[_activeBuildable.SilhouetteData.MaterialCount];
+                    for (int i = 0; i < _activeBuildable.SilhouetteData.MaterialCount; i++)
                     {
                         materials[i] = material;
                     }
@@ -1164,13 +1164,13 @@ namespace Services.Building
 
         private bool IsCollidingWithAnotherObject(DeckBuildable buildable, Vector3 worldPosition)
         {
-            return Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.Extents / 2f,
+            return Physics.OverlapBoxNonAlloc(worldPosition + new Vector3(0, buildable.SilhouetteData.Extents.y / 2f + YOffsetForBuildOnGround, 0), buildable.SilhouetteData.Extents / 2f,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
         }
 
         private bool IsCollidingWithAnotherObjectCell(DeckBuildable buildable, Vector2Int cellPosition)
         {
-            return Physics.OverlapBoxNonAlloc(cellPosition.ToVector3() + new Vector3(0, buildable.Extents.y / 2f + YOffsetForBuildOnGround, 0), _cellHalfExtents,
+            return Physics.OverlapBoxNonAlloc(cellPosition.ToVector3() + new Vector3(0, buildable.SilhouetteData.Extents.y / 2f + YOffsetForBuildOnGround, 0), _cellHalfExtents,
                 _possibleColliders, _rotation, layerMask, QueryTriggerInteraction.Ignore) == 0;
         }
 
@@ -1241,12 +1241,7 @@ namespace Services.Building
 
         private bool HasGridBasedBuildMode()
         {
-            if (!_hasBuildMode || !_isGridBased)
-            {
-                return false;
-            }
-
-            return true;
+            return _hasBuildMode && _isGridBased;
         }
 
         private bool IsSideFacingRotation(Vector3 normal, out Quaternion result)

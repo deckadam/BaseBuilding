@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: DeckBuildableBarTableEmpty
   m_EditorClassIdentifier: 
   parameters:
-  - rid: 213718203870740493
-  - rid: 213718271242534935
+  - rid: 213718271242534959
+  - rid: 213718271242534974
+  - rid: 213718271242534981
   category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
   agent: {fileID: 5416249728217735771, guid: c787730401ece2c48b9aa3519ba610ff, type: 3}
   itemVisual: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
@@ -26,20 +27,29 @@ MonoBehaviour:
   extents: {x: 1, y: 1, z: 1}
   materialCount: 1
   isGridBased: 1
+  silhouetteData:
+    silhouette: []
+    extents: {x: 0, y: 0, z: 0}
+    materialCount: 0
   indices:
   - {x: 0, y: 0}
-  accessIndices: []
   references:
     version: 2
     RefIds:
-    - rid: 213718203870740493
-      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+    - rid: 213718271242534959
+      type: {class: DeckBuildableParameterIcon, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:
-        icon: {fileID: 21300000, guid: 2e8e59cc47cd9334b884846a2c725970, type: 3}
-    - rid: 213718271242534935
-      type: {class: DeckBuildableParameterBuildModeGridBased, ns: Data.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
+        icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - rid: 213718271242534974
+      type: {class: DeckBuildableParameterPrice, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:
-        data:
+        prices:
+        - currencyType: 0
+          amount: 0
+    - rid: 213718271242534981
+      type: {class: DeckBuildableParameterBuildModeGridBased, ns: Services.Building.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
+      data:
+        gridBasedData:
           buildMode: 500
           indices:
           - {x: 0, y: 0}

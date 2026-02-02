@@ -20,3 +20,4 @@ MonoBehaviour:
   zoomMoveTowardsSpeed: 1.2
   rotationSpeed: 20
   rotationSpeedWithKeyboard: 10
+  rotationResetSpeed: 12000

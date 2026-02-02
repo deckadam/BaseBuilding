@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Data.Buildable.Data.Parameter.Implementations
+namespace Services.Building.Buildable.Data.Parameter.Implementations
 {
     [Serializable]
     public class DeckBuildableParameterBuildOnTop : DeckBuildableParameter

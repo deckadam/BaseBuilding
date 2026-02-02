@@ -1,4 +1,6 @@
-﻿using Cinemachine;
+﻿using System.Threading;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
 using Data.Camera;
 using EventManager;
 using Services;
@@ -28,6 +30,7 @@ namespace CameraController
         private float _zoomRatio;
         private bool _rotatingCamera;
         private float _currentRotation;
+        private CancellationTokenSource _cancellationToken;
 
         [Inject]
         private void Inject(DeckCameraParameters cameraParameters)
@@ -55,6 +58,7 @@ namespace CameraController
             DeckEventManager.Register<DeckEventOnMiddleMouseButtonStatusChange>(OnMiddleMouseButtonStatusChanged);
             DeckEventManager.Register<DeckEventOnCameraRotateWithKeyboard>(OnCameraRotateRequested);
             DeckEventManager.Register<DeckEventOnCameraRotateWithKeyboardStateChanged>(OnCameraRotateStarted);
+            DeckEventManager.Register<DeckEventOnCameraRotationResetRequested>(OnCameraRotationResetRequested);
         }
 
         private void OnDestroy()
@@ -67,6 +71,54 @@ namespace CameraController
             DeckEventManager.Unregister<DeckEventOnMouseMove>(OnMouseMove);
             DeckEventManager.Unregister<DeckEventOnCameraRotateWithKeyboard>(OnCameraRotateRequested);
             DeckEventManager.Unregister<DeckEventOnCameraRotateWithKeyboardStateChanged>(OnCameraRotateStarted);
+            DeckEventManager.Unregister<DeckEventOnCameraRotationResetRequested>(OnCameraRotationResetRequested);
+        }
+
+        private void OnCameraRotationResetRequested(DeckEventOnCameraRotationResetRequested obj)
+        {
+            _cancellationToken = new CancellationTokenSource();
+            ResetRotation();
+        }
+
+        private async void ResetRotation()
+        {
+            var token = _cancellationToken.Token;
+            while (true)
+            {
+                var yAngle = _cachedTransform.rotation.eulerAngles.y;
+                if (yAngle >= 180)
+                {
+                    if (yAngle > 359.99f)
+                    {
+                        break;
+                    }
+
+                    var dist = 360 - yAngle;
+                    dist /= 360;
+                    DeckGUILogger.ins.SetDebugText("Dist", dist);
+                    RotateCamera(Mathf.Lerp(_cameraParameters.RotationResetSpeed, 0, 1 - dist) * Time.deltaTime);
+                }
+                else
+                {
+                    if (yAngle < 0.01f)
+                    {
+                        break;
+                    }
+
+                    var dist = yAngle / 360f;
+                    DeckGUILogger.ins.SetDebugText("Dist", dist);
+                    RotateCamera(Mathf.Lerp(-_cameraParameters.RotationResetSpeed, 0, 1 - dist) * Time.deltaTime);
+                }
+
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                await UniTask.Yield();
+            }
+
+            _cachedTransform.rotation = Quaternion.Euler(75, 0, 0);
         }
 
         private void OnCameraRotateStarted(DeckEventOnCameraRotateWithKeyboardStateChanged obj)
@@ -80,11 +132,23 @@ namespace CameraController
             {
                 _rotatingCamera = false;
             }
+
+            CancelReset();
+        }
+
+        private void CancelReset()
+        {
+            if (_cancellationToken == null) return;
+            _cancellationToken.Cancel();
+            _cancellationToken.Dispose();
+            _cancellationToken = null;
         }
 
         private void OnCameraRotateRequested(DeckEventOnCameraRotateWithKeyboard obj)
         {
             RotateCamera(obj.direction ? _cameraParameters.RotationSpeedWithKeyboard : -_cameraParameters.RotationSpeedWithKeyboard);
+
+            CancelReset();
         }
 
         private void OnMouseMove(DeckEventOnMouseMove obj)
@@ -105,6 +169,8 @@ namespace CameraController
 
         private void OnMiddleMouseButtonStatusChanged(DeckEventOnMiddleMouseButtonStatusChange obj)
         {
+            CancelReset();
+
             _rotatingCamera = obj.status;
 
             if (_rotatingCamera)

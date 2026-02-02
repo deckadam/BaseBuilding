@@ -1,10 +1,13 @@
-﻿using Base;
+﻿using System;
+using Base;
 using Components.Inventory;
 using Data.Currency;
+using EventManager;
 using GameManager;
 using InGame.Agent.Customer;
 using Instancing;
 using Services;
+using Services.Building.Events;
 using Services.Camera;
 using Services.Currency;
 using Services.Escapable;
@@ -28,6 +31,7 @@ namespace Systems.SystemInput
     {
         private float _lastPressTime;
         private DeckInstanceProvider _instanceProvider;
+        private bool _isBuilding;
 
         [SerializeField] private DeckAgentCustomer _customerAgentPrefab;
 
@@ -35,6 +39,28 @@ namespace Systems.SystemInput
         private void Inject(DeckInstanceProvider instanceProvider)
         {
             _instanceProvider = instanceProvider;
+        }
+
+        private void Start()
+        {
+            DeckEventManager.Register<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
+            DeckEventManager.Register<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
+        }
+
+        private void OnDestroy()
+        {
+            DeckEventManager.Unregister<DeckEventOnBuildModeStarted>(OnBuildModeStarted);
+            DeckEventManager.Unregister<DeckEventOnBuildModeStopped>(OnBuildModeStopped);
+        }
+
+        private void OnBuildModeStarted(DeckEventOnBuildModeStarted obj)
+        {
+            _isBuilding = true;
+        }
+
+        private void OnBuildModeStopped(DeckEventOnBuildModeStopped obj)
+        {
+            _isBuilding = false;
         }
 
         private void Update()
@@ -53,6 +79,15 @@ namespace Systems.SystemInput
             CheckForRightClick();
             CheckForMiddleMouseButtonClick();
             CheckForCameraRotation();
+            CheckForCameraRotationReset();
+        }
+
+        private void CheckForCameraRotationReset()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                DeckEventOnCameraRotationResetRequested.Create().Send();
+            }
         }
 
 
@@ -143,6 +178,11 @@ namespace Systems.SystemInput
 
         private void CheckForDestroyBuilding()
         {
+            if (_isBuilding)
+            {
+                return;
+            }
+
             if (!Input.GetKey(KeyCode.Delete)) return;
 
             var ray = DeckServiceProvider.GetService<DeckServiceCamera>().GetRayFromCamera();

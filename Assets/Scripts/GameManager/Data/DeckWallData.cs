@@ -1,5 +1,5 @@
 using System;
-using Data.Buildable;
+using Services.Building.Buildable;
 using UnityEngine;
 
 namespace GameManager.Data

@@ -1,7 +1,7 @@
 using UI.Building.BuildMode;
 using UnityEngine;
 
-namespace Data.Buildable.Data.Parameter.Implementations
+namespace Services.Building.Buildable.Data.Parameter.Implementations
 {
     public class DeckBuildableParameterRotationMode : DeckBuildableParameter
     {

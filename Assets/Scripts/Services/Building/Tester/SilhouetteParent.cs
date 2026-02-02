@@ -6,7 +6,6 @@ namespace Services.Building.Tester
     {
         private void OnDisable()
         {
-            Debug.LogError("Disable");
         }
     }
 }

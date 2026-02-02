@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Data.Buildable;
 using Data.General;
+using Services.Building.Buildable;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Zenject;
@@ -21,7 +21,7 @@ namespace Services.Building
 
         public DeckSilhouettePiece GetSilhouettePiece(DeckBuildable activeBuildable)
         {
-            var silhouetteData = activeBuildable.Silhouette;
+            var silhouetteData = activeBuildable.SilhouetteData.Silhouette;
 
             if (!_pieceInPool.TryGetValue(silhouetteData.Length, out var pool))
             {
@@ -56,7 +56,7 @@ namespace Services.Building
             {
                 var data = silhouetteData[index];
 
-                CreateNewSilhouettePiece(activeBuildable.MaterialCount, data.GetPosition(), data.GetMesh(), index, pieceParent, newPiece);
+                CreateNewSilhouettePiece(activeBuildable.SilhouetteData.MaterialCount, data.GetPosition(), data.GetMesh(), index, pieceParent, newPiece);
             }
 
             return newPiece;
@@ -106,12 +106,16 @@ namespace Services.Building
                 return piece;
             }
 
-            var newGameObject = new GameObject();
-            newGameObject.name = "1";
-            var newPiece = new DeckSilhouettePiece();
-            newPiece.gameObject = newGameObject;
-            newPiece.renderers = new MeshRenderer[1];
-            newPiece.filters = new MeshFilter[1];
+            var newGameObject = new GameObject
+            {
+                name = "1"
+            };
+            var newPiece = new DeckSilhouettePiece
+            {
+                gameObject = newGameObject,
+                renderers = new MeshRenderer[1],
+                filters = new MeshFilter[1]
+            };
 
             CreateNewSilhouettePiece(1, Vector3.zero, _buildingData.GetAccessCellMesh(), 0, newGameObject, newPiece);
             return newPiece;

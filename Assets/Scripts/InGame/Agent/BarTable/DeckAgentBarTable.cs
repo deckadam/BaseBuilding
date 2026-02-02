@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
-using Data.Buildable.Data.Parameter.Implementations.Build;
 using InGame.Agent.Building;
 using Services;
 using Services.Building;
+using Services.Building.Buildable.Data.Parameter.Implementations.Build;
 using Utility;
 
 namespace InGame.Agent.BarTable

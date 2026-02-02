@@ -42,6 +42,7 @@ namespace UI.Building.BuildMode.Line
             }
 
             BuildingService.BuildInRect(new[] { _initialCellPosition, currentCellPosition });
+            PartialCancel();
         }
 
         protected override void InternalOnMouseMove()

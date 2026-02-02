@@ -2,7 +2,7 @@ using System;
 using Data.Currency;
 using UnityEngine;
 
-namespace Data.Buildable.Data.Parameter.Implementations
+namespace Services.Building.Buildable.Data.Parameter.Implementations
 {
     [Serializable]
     public class DeckBuildableParameterPrice : DeckBuildableParameter

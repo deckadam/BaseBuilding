@@ -31,6 +31,7 @@ namespace UI.Building.BuildMode.Rect
             _isDown = false;
             var currentCellPosition = DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorCellIndex();
             DeckServiceProvider.GetService<DeckServiceBuilding>().BuildInRect(new[] { _initialCellPosition, currentCellPosition });
+            PartialCancel();
         }
 
         protected override void InternalOnMouseMove()
@@ -54,7 +55,6 @@ namespace UI.Building.BuildMode.Rect
 
         protected override void InternalOnMiddleScroll()
         {
-            
         }
 
         public override bool ShouldEscapeFullyOnRightClick => false;

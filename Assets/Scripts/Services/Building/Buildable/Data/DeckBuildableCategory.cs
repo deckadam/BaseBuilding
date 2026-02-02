@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Data.Buildable.Data
+namespace Services.Building.Buildable.Data
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable/Buildable Category", fileName = "Deck Data Buildable Category")]
     public class DeckBuildableCategory : ScriptableObject

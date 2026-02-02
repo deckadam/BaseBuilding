@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.Buildable.Data;
-using Data.Buildable.Data.Parameter;
+using Services.Building.Buildable.Data;
+using Services.Building.Buildable.Data.Parameter;
 using UnityEditor;
 
 namespace Utility.Resource

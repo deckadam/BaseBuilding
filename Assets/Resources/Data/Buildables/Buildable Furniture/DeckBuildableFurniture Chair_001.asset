@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: DeckBuildableFurniture Chair_001
   m_EditorClassIdentifier: 
   parameters:
-  - rid: 213718203870740492
-  - rid: 213718271242534931
-  - rid: 213718271242534916
+  - rid: 213718271242534947
+  - rid: 213718271242534962
+  - rid: 213718271242534984
+  - rid: 213718271242534993
   category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
   agent: {fileID: -4123667621523898490, guid: 1bfe988f2fcd6ab48804a7f7660d675a, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
@@ -27,20 +28,29 @@ MonoBehaviour:
   extents: {x: 0.6006887, y: 1.0013404, z: 0.6489512}
   materialCount: 1
   isGridBased: 0
+  silhouetteData:
+    silhouette: []
+    extents: {x: 0, y: 0, z: 0}
+    materialCount: 0
   indices: []
-  accessIndices: []
   references:
     version: 2
     RefIds:
-    - rid: 213718203870740492
-      type: {class: DeckBuildableParameterIcon, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+    - rid: 213718271242534947
+      type: {class: DeckBuildableParameterIcon, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:
-        icon: {fileID: 21300000, guid: 2a03ffe0f1e9a024f905e6cdec609009, type: 3}
-    - rid: 213718271242534916
-      type: {class: DeckBuildableParameterRotationMode, ns: Data.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+        icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - rid: 213718271242534962
+      type: {class: DeckBuildableParameterPrice, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:
-        rotationMode: 0
-    - rid: 213718271242534931
-      type: {class: DeckBuildableParameterBuildMode, ns: Data.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
+        prices:
+        - currencyType: 0
+          amount: 0
+    - rid: 213718271242534984
+      type: {class: DeckBuildableParameterBuildMode, ns: Services.Building.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
       data:
         buildMode: 0
+    - rid: 213718271242534993
+      type: {class: DeckBuildableParameterRotationMode, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        rotationMode: 0

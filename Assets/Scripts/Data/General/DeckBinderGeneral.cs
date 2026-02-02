@@ -1,5 +1,4 @@
-﻿using Data.Buildable;
-using Data.Camera;
+﻿using Data.Camera;
 using GameManager.Data.GameSetting;
 using InGame.Agent.Waiter;
 using Instancing;
@@ -7,6 +6,7 @@ using ItemVisualProviders;
 using ItemVisualProviders.Door;
 using ItemVisualProviders.Wall;
 using Services.Building;
+using Services.Building.Buildable;
 using Systems.SystemSave;
 using UnityEngine;
 using Zenject;

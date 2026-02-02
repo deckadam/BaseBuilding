@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Data.Buildable;
-using Data.Buildable.Data;
 using EventManager;
 using Services;
+using Services.Building.Buildable;
+using Services.Building.Buildable.Data;
 using Services.Escapable;
 using Services.UI;
 using UI.Building.Data;

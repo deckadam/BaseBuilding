@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Base;
-using Data.Buildable;
 using InGame.Agent.Building;
 using Instancing;
 using ItemVisualProviders;
+using Services.Building.Buildable;
 using UI.Building;
 using UI.Building.BuildingSets;
 using UI.Building.BuildingSets.DeckBuildingBarTable;
@@ -140,7 +140,7 @@ namespace Data.Item.Editor
             buildingPrefab.SetTags(_tags.ToArray());
             buildingPrefab.SetNewUniqueId();
 
-            var buildingData = DeckBuildable.Create(_nameSuffix, _icon, itemVisualPrefab, buildingPrefab);
+            var buildingData = DeckBuildable.Create(_nameSuffix, itemVisualPrefab, buildingPrefab);
             AssetDatabase.CreateAsset(buildingData, assetName);
 
             buildingPrefab.SetBuildingData(buildingData);

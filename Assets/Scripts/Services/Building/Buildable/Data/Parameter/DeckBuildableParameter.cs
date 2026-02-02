@@ -1,6 +1,6 @@
 using System;
 
-namespace Data.Buildable.Data.Parameter
+namespace Services.Building.Buildable.Data.Parameter
 {
     [Serializable]
     public abstract class DeckBuildableParameter
