@@ -73,8 +73,8 @@ namespace Services.Tables
                 var tableSize = usableTable.Value.agentTable.GetItemVisual().GetSize();
                 var chairSize = agentChair.GetItemVisual().GetSize();
 
-                var distance = tableTransform.position.Distance(agentChair.transform.position) - tableSize - chairSize;
-                var dotProduct = Vector3.Dot(agentChair.transform.forward, (tableTransform.position - agentChair.transform.position).normalized);
+                var distance = tableTransform.position.Distance(agentChair.GetPosition()) - tableSize - chairSize;
+                var dotProduct = Vector3.Dot(agentChair.transform.forward, (tableTransform.position - agentChair.GetPosition()).normalized);
 
                 if (!(distance < tableConnectionDistance)) continue;
                 if (dotProduct <= tableConnectionDotProduct) continue;

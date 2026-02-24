@@ -49,7 +49,7 @@ namespace ItemVisualProviders.Wall
 
         private void OnGameSettingsLoaded(DeckEventOnGameSettingsLoaded obj)
         {
-            _activeWallProvider = obj.gameSetting.GetWallType() switch
+            _activeWallProvider = obj.gameSetting.WallType switch
             {
                 DeckWallType.Cube => wallProviderBasic,
                 DeckWallType.FourNeighbour => wallProviderFourNeighbour,

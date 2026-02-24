@@ -12,26 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscPainting_001
   m_EditorClassIdentifier: 
-  parameters:
-  - rid: 213718271242534953
-  - rid: 213718271242534968
-  - rid: 213718271242534988
   category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
   agent: {fileID: 8560112403335899720, guid: 2217c718c9960c24e8394e779bd16f63, type: 3}
   itemVisual: {fileID: 5825906728500267455, guid: b6b77ac6f5cb6594780c7535e4f901e5, type: 3}
   visibleName: Painting
-  silhouette:
-  - mesh: {fileID: -1604111204389538973, guid: 6c67d39c38fe01b44980ca63a254f902, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 0.7, y: 1.0028238, z: 0.075722866}
-  materialCount: 2
-  isGridBased: 0
   silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
+    silhouette:
+    - mesh: {fileID: -1604111204389538973, guid: 6c67d39c38fe01b44980ca63a254f902, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 0.7, y: 1.0028238, z: 0.075722866}
+    materialCount: 1
+  parameters:
+  - rid: 213718271242534953
+  - rid: 213718271242534968
+  - rid: 213718271242534988
   references:
     version: 2
     RefIds:

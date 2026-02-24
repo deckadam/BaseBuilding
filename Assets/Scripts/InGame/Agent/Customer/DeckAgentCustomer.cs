@@ -29,8 +29,7 @@ namespace InGame.Agent.Customer
             await UniTask.Delay(2000);
             EnqueueCommand(new DeckCommandGetUp(this));
 
-            var leaveCommand = new DeckCommandMove(new Vector3(20, 0, 0), this);
-            leaveCommand.OnCompleted += RequestDestroy;
+            var leaveCommand = new DeckCommandMove(new Vector3(20, 0, 0), this).RegisterToOnCompleted(RequestDestroy);
 
             EnqueueCommand(leaveCommand);
         }

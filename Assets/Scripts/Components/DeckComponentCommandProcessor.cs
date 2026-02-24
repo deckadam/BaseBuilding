@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using Base;
 using Commands;
@@ -50,6 +51,7 @@ namespace Components
                     else
                     {
                         _activeCommand.OnCompleted?.Invoke();
+                        _activeCommand.OnCompletedWithAgent?.Invoke(agent);
                     }
 
                     _activeCommand = null;
@@ -133,7 +135,7 @@ namespace Components
             for (var index = 0; index < data.commandDatas.Length; index++)
             {
                 //Rider beni bi sal be
-                var command = (DeckCommand)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(Type.GetType(data.commandTypes[index]));
+                var command = (DeckCommand)FormatterServices.GetUninitializedObject(Type.GetType(data.commandTypes[index]));
                 command.LoadSaveData(data.commandDatas[index]);
                 _waitingCommands.Enqueue(command);
             }

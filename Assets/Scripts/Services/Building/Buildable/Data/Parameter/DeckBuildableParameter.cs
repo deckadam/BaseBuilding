@@ -22,11 +22,6 @@ namespace Services.Building.Buildable.Data.Parameter
             _isOverridden = false;
         }
 
-        public object GetValue()
-        {
-            return GetValueInternal();
-        }
-
         public T GetValue<T>() where T : class
         {
             return _isOverridden ? _overrideValue.GetValueInternal() as T : GetValueInternal() as T;

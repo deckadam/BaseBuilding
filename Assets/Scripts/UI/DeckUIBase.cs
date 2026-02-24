@@ -16,6 +16,7 @@ namespace UI
         [SerializeField] protected CanvasGroup canvasGroup;
         [SerializeField] protected bool isAppearedOnStartUp;
         [SerializeField] internal bool isAppeared;
+        
         internal bool IsAppearing;
         internal bool IsDisappearing;
 

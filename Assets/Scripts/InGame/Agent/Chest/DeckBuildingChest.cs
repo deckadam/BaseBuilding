@@ -10,5 +10,10 @@ namespace InGame.Agent.Chest
         {
             DeckEventOnMainChestBuilt.Create(this).Send();
         }
+
+        public override void OnDeSpawned()
+        {
+            DeckEventOnMainChestDestroyed.Create(this).Send();
+        }
     }
 }

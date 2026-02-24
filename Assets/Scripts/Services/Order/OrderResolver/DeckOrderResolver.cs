@@ -35,7 +35,7 @@ namespace Services.Order.OrderResolver
             var foundAgent = false;
             foreach (var deckAgent in agents)
             {
-                var tempDistance = Vector3.Distance(waiter.transform.position, deckAgent.transform.position);
+                var tempDistance = Vector3.Distance(waiter.GetPosition(), deckAgent.GetPosition());
                 if (tempDistance < currentDistance)
                 {
                     foundAgent = true;

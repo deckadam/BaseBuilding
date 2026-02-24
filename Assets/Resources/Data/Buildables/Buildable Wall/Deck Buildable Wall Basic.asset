@@ -12,27 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Wall Basic
   m_EditorClassIdentifier: 
-  parameters:
-  - rid: 213718271242534956
-  - rid: 213718271242534971
-  - rid: 213718271242534979
   category: {fileID: 11400000, guid: 9835f965cac0d5448921e41c90dff8db, type: 2}
   agent: {fileID: 6079846305064869096, guid: 666ab9e505eef2145a34a093c2baf715, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: dbf0c99f78d083044a641b87cf097167, type: 3}
   visibleName: Wall
-  silhouette:
-  - mesh: {fileID: -4457607245505209530, guid: 3e93bcfbc370dab4081c72b8043bf208, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 1, y: 2, z: 0.99999994}
-  materialCount: 1
-  isGridBased: 1
   silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices:
-  - {x: 0, y: 0}
+    silhouette:
+    - mesh: {fileID: -4457607245505209530, guid: 3e93bcfbc370dab4081c72b8043bf208, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 1, y: 2, z: 0.99999994}
+    materialCount: 1
+  parameters:
+  - rid: 213718271242534956
+  - rid: 213718271242534971
+  - rid: 213718271242534979
   references:
     version: 2
     RefIds:

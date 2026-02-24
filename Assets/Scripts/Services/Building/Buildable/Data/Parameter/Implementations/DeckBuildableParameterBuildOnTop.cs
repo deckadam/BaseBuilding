@@ -9,7 +9,7 @@ namespace Services.Building.Buildable.Data.Parameter.Implementations
         public override DeckBuildableParameterType ParameterType => DeckBuildableParameterType.BuildableToPlaceOnTop;
 
         [SerializeField] private DeckBuildable agentToBuildOnTop;
-
+        
         protected override object GetValueInternal()
         {
             return agentToBuildOnTop;

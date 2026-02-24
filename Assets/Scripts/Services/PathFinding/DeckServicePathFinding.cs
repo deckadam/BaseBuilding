@@ -80,7 +80,7 @@ namespace Services.PathFinding
                 return;
             }
 
-            _pathFindingAgent.SetDestination(_mainChest.transform.position);
+            _pathFindingAgent.SetDestination(_mainChest.GetPosition());
 
             await UniTask.WaitWhile(() => _pathFindingAgent.pathPending);
 

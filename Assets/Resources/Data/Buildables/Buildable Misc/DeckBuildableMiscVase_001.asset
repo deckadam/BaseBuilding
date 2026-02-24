@@ -12,27 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableMiscVase_001
   m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
+  agent: {fileID: 6039933870208135139, guid: 20eacc8f14835b545ac26d5472813e9c, type: 3}
+  itemVisual: {fileID: 7699648442756046541, guid: 1e911432e0397af4080d1269a85a3d91, type: 3}
+  visibleName: Vase
+  silhouetteData:
+    silhouette:
+    - mesh: {fileID: 2534964839176971238, guid: 4bc49ce1f3b16ea408f207ccbdda6370, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 0.7515066, y: 0.5008529, z: 0.7515066}
+    materialCount: 1
   parameters:
   - rid: 213718271242534954
   - rid: 213718271242534969
   - rid: 213718271242534989
   - rid: 213718271242534997
-  category: {fileID: 11400000, guid: 940297664caebf141a9f11b65cddc4df, type: 2}
-  agent: {fileID: 6039933870208135139, guid: 20eacc8f14835b545ac26d5472813e9c, type: 3}
-  itemVisual: {fileID: 7699648442756046541, guid: 1e911432e0397af4080d1269a85a3d91, type: 3}
-  visibleName: Vase
-  silhouette:
-  - mesh: {fileID: 2534964839176971238, guid: 4bc49ce1f3b16ea408f207ccbdda6370, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 0.7515066, y: 0.5008529, z: 0.7515066}
-  materialCount: 1
-  isGridBased: 0
-  silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
   references:
     version: 2
     RefIds:

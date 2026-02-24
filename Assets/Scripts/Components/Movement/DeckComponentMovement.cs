@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Base;
 using Cysharp.Threading.Tasks;
 using Data.Component;
@@ -6,6 +7,7 @@ using Systems.SystemSave;
 using UI.Stats;
 using UnityEngine;
 using UnityEngine.AI;
+using Utility;
 
 namespace Components.Movement
 {
@@ -17,9 +19,12 @@ namespace Components.Movement
 
         [SerializeField] private DeckDataMovement movementData;
 
+        private Action onDestinationReached;
+
         private NavMeshAgent _navMeshAgent;
         private bool _hasInitialized;
         private bool _static;
+        private bool _hasDestination;
 
         protected override void InternalPreInitialize()
         {
@@ -72,7 +77,7 @@ namespace Components.Movement
             }
         }
 
-        public bool SetDestination(Vector3 target, float desiredDistance = 0f)
+        public bool SetDestination(Vector3 target, Action onDestinationReached = null, float desiredDistance = 0f)
         {
             if (!_static)
             {
@@ -84,7 +89,9 @@ namespace Components.Movement
                 _navMeshAgent.SetDestination(target);
             }
 
-            var distance = Vector3.Distance(agent.transform.position, _navMeshAgent.destination);
+            _hasDestination = true;
+            this.onDestinationReached = onDestinationReached;
+            var distance = Vector3.Distance(agent.GetPosition(), _navMeshAgent.destination);
             return distance > desiredDistance;
         }
 
@@ -164,7 +171,7 @@ namespace Components.Movement
 
             return new DeckStatGroup(new[]
             {
-                new DeckStat(MOVEMENT_SPEED_STAT_NAME, movementData.MovementSpeed.ToString(), MOVEMENT_SPEED_STAT_DESCRIPTION)
+                new DeckStat(MOVEMENT_SPEED_STAT_NAME, movementData.MovementSpeed.ToString(CultureInfo.InvariantCulture), MOVEMENT_SPEED_STAT_DESCRIPTION)
             }, this);
         }
 
@@ -187,12 +194,30 @@ namespace Components.Movement
         public void SetDisabled()
         {
             _navMeshAgent.enabled = false;
+            _hasDestination = false;
         }
 
         public void SetEnabled()
         {
             _navMeshAgent.enabled = true;
+            _hasDestination = false;
         }
+
+        private void Update()
+        {
+            if (!_hasDestination) return;
+            if (!(Vector3.Distance(transform.position, _navMeshAgent.destination) < movementData.StoppingDistance)) return;
+
+            onDestinationReached?.Invoke();
+            onDestinationReached = null;
+            _hasDestination = false;
+        }
+
+        public bool PathPending()
+        {
+            return _navMeshAgent.pathPending || _navMeshAgent.pathStatus != NavMeshPathStatus.PathComplete;
+        }
+
 
         [Serializable]
         public struct DeckMovementComponentData

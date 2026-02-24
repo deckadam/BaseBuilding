@@ -2,6 +2,7 @@ using System.Linq;
 using GameManager.Data.GameSetting.Override;
 using Services;
 using Services.Building;
+using Services.Raid.Data;
 using UnityEngine;
 
 namespace GameManager.Data.GameSetting
@@ -14,13 +15,13 @@ namespace GameManager.Data.GameSetting
         [SerializeField] private Vector2Int mapSize;
         [SerializeField] private DeckWallType wallType;
         [SerializeField] private DeckWallData[] allWallData;
-
+        [SerializeField] private DeckDataRaid[] raidData;
         [SerializeField] private DeckGameSettingBuildableOverride[] buildableOverrides;
-
-        public DeckWallType GetWallType()
-        {
-            return wallType;
-        }
+        [SerializeField] private float totalLootDuration;
+        
+        public DeckWallType WallType => wallType;
+        public DeckDataRaid[] RaidData => raidData;
+        public float TotalLootDuration => totalLootDuration;
 
         public void OnSettingLoadedNewGame()
         {

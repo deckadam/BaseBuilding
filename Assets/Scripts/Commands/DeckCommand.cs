@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Base;
 using Cysharp.Threading.Tasks;
 
 namespace Commands
@@ -7,12 +8,24 @@ namespace Commands
     public class DeckCommand
     {
         public Action OnCompleted;
+        public Action<DeckAgent> OnCompletedWithAgent;
 
-        public DeckCommand()
+        protected DeckCommand()
         {
-            
         }
-        
+
+        public DeckCommand RegisterToOnCompleted(Action onCompleted)
+        {
+            OnCompleted += onCompleted;
+            return this;
+        }
+
+        public DeckCommand RegisterToOnCompleted(Action<DeckAgent> onCompleted)
+        {
+            OnCompletedWithAgent += onCompleted;
+            return this;
+        }
+
         public virtual UniTask<bool> ProcessCommand(CancellationToken token)
         {
             return default;

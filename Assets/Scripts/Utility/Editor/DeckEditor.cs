@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using EventManager;
+using GameManager.Events;
 using Instancing;
 using Services.Building.Buildable;
+using Services.Raid.Events;
 using Systems.SystemInput.Events;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +20,8 @@ namespace Utility.Editor
             DeckEventManager.ClearEvents<DeckEventOnLeftClickUp>();
             DeckEventManager.ClearEvents<DeckEventOnMouseMove>();
             DeckEventManager.ClearEvents<DeckEventOnMiddleMouseButtonStatusChange>();
+            DeckEventManager.ClearEvents<DeckEventOnRaidStartRequested>();
+            DeckEventManager.ClearEvents<DeckEventOnGameSettingsLoaded>();
         }
 
 

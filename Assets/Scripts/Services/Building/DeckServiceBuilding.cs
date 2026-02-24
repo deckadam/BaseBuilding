@@ -10,6 +10,7 @@ using GameManager.Events;
 using InGame.Agent.Building;
 using Instancing;
 using Services.Building.Buildable;
+using Services.Building.Buildable.Data;
 using Services.Building.Buildable.Data.Parameter.Implementations;
 using Services.Building.Buildable.Data.Parameter.Implementations.Build;
 using Services.Building.Events;
@@ -64,16 +65,17 @@ namespace Services.Building
 
         private bool _isMiddleScrollRegistered;
 
-
         private bool _hasBuildMode;
         private bool _isGridBased;
-        private DeckBuildableParameterBuildMode _parameterBuildMode;
 
         private DeckBuildableParameterBuildModeGridBased _parameterBuildModeGridBased;
         private DeckGridBasedData _currentGridBasedData;
 
-        private bool _hasRotationMode;
         private DeckRotationMode _rotationMode;
+
+        private DeckBuildableParameterAccessor<DeckBuildableParameterBuildOnTop> _buildOnTopParameterAccessor;
+        private DeckBuildableParameterAccessor<DeckBuildableParameterPrice> _priceParameterAccessor;
+        private DeckBuildableParameterAccessor<DeckBuildableParameterLimited> _limitedPriceParameterAccessor;
 
         [Inject]
         private void Inject(DeckDataBuilding buildingData, DeckInstanceProvider instanceProvider, DeckSilhouetteProvider silhouetteProvider)
@@ -137,39 +139,36 @@ namespace Services.Building
                 return;
             }
 
-            if (_hasRotationMode)
+            switch (_rotationMode)
             {
-                switch (_rotationMode)
+                case DeckRotationMode.Continuous:
+                    _silhouetteParent.transform.Rotate(0, -evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
+                    break;
+                case DeckRotationMode.NinetyDegree:
                 {
-                    case DeckRotationMode.Continuous:
-                        _silhouetteParent.transform.Rotate(0, -evt.scrollValue * _buildingData.GetBuildableRotationSpeed(), 0);
-                        break;
-                    case DeckRotationMode.NinetyDegree:
+                    if (evt.scrollValue > 0)
                     {
-                        if (evt.scrollValue > 0)
-                        {
-                            _ninetyDegreeRotationAmount--;
-                        }
-                        else
-                        {
-                            _ninetyDegreeRotationAmount++;
-                        }
-
-                        _ninetyDegreeRotationAmount = _ninetyDegreeRotationAmount switch
-                        {
-                            < 0 => 3,
-                            > 3 => 0,
-                            _ => _ninetyDegreeRotationAmount
-                        };
-
-                        _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
-                        break;
+                        _ninetyDegreeRotationAmount--;
                     }
-                    case DeckRotationMode.None:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    else
+                    {
+                        _ninetyDegreeRotationAmount++;
+                    }
+
+                    _ninetyDegreeRotationAmount = _ninetyDegreeRotationAmount switch
+                    {
+                        < 0 => 3,
+                        > 3 => 0,
+                        _ => _ninetyDegreeRotationAmount
+                    };
+
+                    _silhouetteParent.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
+                    break;
                 }
+                case DeckRotationMode.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             _rotation = _silhouetteParent.transform.rotation;
@@ -231,7 +230,7 @@ namespace Services.Building
                 newPiece.gameObject.transform.localRotation = _rotation;
             }
 
-            if (_hasRotationMode && !_isMiddleScrollRegistered && _rotationMode != DeckRotationMode.None)
+            if (_rotationMode != DeckRotationMode.None && !_isMiddleScrollRegistered && _rotationMode != DeckRotationMode.None)
             {
                 DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
                 _isMiddleScrollRegistered = true;
@@ -262,7 +261,7 @@ namespace Services.Building
             newPiece.gameObject.transform.SetParent(_silhouetteParent.transform);
             newPiece.gameObject.transform.localPosition = cellIndex.ToVector3();
 
-            if (!_isMiddleScrollRegistered && _hasRotationMode && _rotationMode != DeckRotationMode.None)
+            if (!_isMiddleScrollRegistered && _rotationMode != DeckRotationMode.None && _rotationMode != DeckRotationMode.None)
             {
                 DeckEventManager.Register<DeckEventOnMiddleScroll>(OnMiddleScroll, DeckEventPriority.High);
                 _isMiddleScrollRegistered = true;
@@ -278,16 +277,10 @@ namespace Services.Building
 
         private bool CollectParameterData(DeckBuildable buildable)
         {
-            if (buildable.TryGetParameter(out DeckBuildableParameterRotationMode parameterRotationMode))
-            {
-                _hasRotationMode = true;
-                _rotationMode = parameterRotationMode.GetPrimitiveValue<DeckRotationMode>();
-            }
-            else
-            {
-                _hasRotationMode = false;
-                _rotationMode = DeckRotationMode.None;
-            }
+            _rotationMode = buildable.TryGetParameter(out DeckBuildableParameterRotationMode parameterRotationMode) ? parameterRotationMode.GetPrimitiveValue<DeckRotationMode>() : DeckRotationMode.None;
+            _buildOnTopParameterAccessor = new DeckBuildableParameterAccessor<DeckBuildableParameterBuildOnTop>(buildable);
+            _priceParameterAccessor = new DeckBuildableParameterAccessor<DeckBuildableParameterPrice>(buildable);
+            _limitedPriceParameterAccessor = new DeckBuildableParameterAccessor<DeckBuildableParameterLimited>(buildable);
 
             if (buildable.TryGetParameter(out _parameterBuildModeGridBased))
             {
@@ -296,7 +289,7 @@ namespace Services.Building
                 _currentGridBasedData = _parameterBuildModeGridBased.GetValue<DeckGridBasedData>();
                 return true;
             }
-            else if (buildable.TryGetParameter(out _parameterBuildMode))
+            else if (buildable.TryGetParameter(out DeckBuildableParameterBuildMode _))
             {
                 _hasBuildMode = true;
                 _isGridBased = false;
@@ -305,12 +298,9 @@ namespace Services.Building
             else
             {
                 _hasBuildMode = false;
-                _parameterBuildMode = null;
                 _parameterBuildModeGridBased = null;
                 _currentGridBasedData = null;
                 _isGridBased = false;
-                _hasRotationMode = false;
-                _rotationMode = DeckRotationMode.None;
                 DeckLogger.Error("No build mode parameter attached");
                 return false;
             }
@@ -371,12 +361,7 @@ namespace Services.Building
                     break;
                 }
 
-                if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
-                {
-                    return;
-                }
-
-                if (!value.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
+                if (!_buildOnTopParameterAccessor.HasReference || !value.BuildingData.Equals(_buildOnTopParameterAccessor.GetValue<DeckBuildable>()))
                 {
                     isAvailable = false;
                     break;
@@ -496,7 +481,7 @@ namespace Services.Building
                 _silhouetteParent.gameObject.SetActive(true);
             }
 
-            var result = IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation);
+            var result = IsViableToBuildOnWall(buildPosition + normal * -0.1f, wallRotation);
             var material = result ? _buildingData.GetAvailableMaterial() : _buildingData.GetUnavailableMaterial();
 
             ApplyMaterialToSilhouette(material);
@@ -577,7 +562,7 @@ namespace Services.Building
                 return;
             }
 
-            if (!IsViableToBuildOnWall(buildPosition + normal * -0.1f, normal, wallRotation))
+            if (!IsViableToBuildOnWall(buildPosition + normal * -0.1f, wallRotation))
             {
                 return;
             }
@@ -585,8 +570,8 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = buildPosition;
-            newBuilding.transform.rotation = Quaternion.LookRotation(normal * -1);
+            newBuilding.SetPosition(buildPosition);
+            newBuilding.SetRotation(Quaternion.LookRotation(normal * -1));
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
@@ -610,8 +595,8 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = buildPosition;
-            newBuilding.transform.rotation = _rotation;
+            newBuilding.SetPosition(buildPosition);
+            newBuilding.SetRotation(_rotation);
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
             buildingToBuildOnTop.AddBuildingToTop(newBuilding);
@@ -632,13 +617,20 @@ namespace Services.Building
 
             if (!PayIfCanAfford()) return;
 
-            var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = worldPosition;
-            newBuilding.transform.rotation = _rotation;
-            newBuilding.Initialize();
-            newBuilding.InitializeBuilding();
+            var builtAgent = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id);
+            builtAgent.SetPosition(worldPosition);
+            builtAgent.SetRotation(_rotation);
+            builtAgent.Initialize();
+            if (builtAgent.TryGetComponent<DeckAgentBuilding>(out var buildingComp))
+            {
+                buildingComp.InitializeBuilding();
+            }
+            else if (builtAgent.TryGetComponent<DeckAgentHumanoid>(out var humanoidComp))
+            {
+                humanoidComp.InitializeHumanoid();
+            }
 
-            AnythingBuilt(newBuilding);
+            AnythingBuilt(builtAgent);
         }
 
         public void BuildInRect(Vector2Int[] positions)
@@ -680,7 +672,7 @@ namespace Services.Building
             foreach (var rectBuildPosition in rectBuildPositions)
             {
                 var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-                newBuilding.transform.position = rectBuildPosition.ToVector3();
+                newBuilding.SetPosition(rectBuildPosition.ToVector3());
                 newBuilding.Initialize();
                 newBuilding.InitializeBuilding();
 
@@ -736,7 +728,7 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = cellIndex.ToVector3();
+            newBuilding.SetPosition(cellIndex.ToVector3());
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
@@ -777,7 +769,7 @@ namespace Services.Building
             if (!PayIfCanAfford()) return;
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = cellIndex.ToVector3();
+            newBuilding.SetPosition(cellIndex.ToVector3());
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
@@ -811,7 +803,7 @@ namespace Services.Building
             {
                 for (var y = min.y; y < max.y; y++)
                 {
-                    builtAgents[counter_2].transform.position = new Vector3(x, 0, y);
+                    builtAgents[counter_2].SetPosition(new Vector3(x, 0, y));
                     builtAgents[counter_2].InitializeBuildingWithVisual(rentedVisuals[counter_2++]);
                 }
             }
@@ -840,12 +832,7 @@ namespace Services.Building
                     return;
                 }
 
-                if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
-                {
-                    return;
-                }
-
-                if (!agentBuildingToBuildOnTop.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
+                if (!_buildOnTopParameterAccessor.HasReference || !agentBuildingToBuildOnTop.BuildingData.Equals(_buildOnTopParameterAccessor.GetValue<DeckBuildable>()))
                 {
                     return;
                 }
@@ -873,8 +860,8 @@ namespace Services.Building
             }
 
             var newBuilding = _instanceProvider.RentAgent(_activeBuildable.Agent.PrefabId.Id).GetComponent<DeckAgentBuilding>();
-            newBuilding.transform.position = currentCellIndex.ToVector3();
-            newBuilding.transform.rotation = Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0);
+            newBuilding.SetPosition(currentCellIndex.ToVector3());
+            newBuilding.SetRotation(Quaternion.Euler(0, 90 * _ninetyDegreeRotationAmount, 0));
             newBuilding.Initialize();
             newBuilding.InitializeBuilding();
 
@@ -1022,7 +1009,7 @@ namespace Services.Building
             return result;
         }
 
-        private bool IsViableToBuildOnWall(Vector3 position, Vector3 normal, Quaternion rotation)
+        private bool IsViableToBuildOnWall(Vector3 position, Quaternion rotation)
         {
             var boxCollider = _activeBuildable.ItemVisual.Collider as BoxCollider;
             if (!boxCollider)
@@ -1079,12 +1066,12 @@ namespace Services.Building
                         _currentGridBasedData.BuildMode == DeckBuildMode.BuildOnTopWithAccessArea &&
                         _possibleColliders[0].gameObject.TryGetComponentInParent<DeckAgentBuilding>(out var building))
                     {
-                        if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterBuildOnTop buildOnTopParameter))
+                        if (!_buildOnTopParameterAccessor.HasReference)
                         {
                             return true;
                         }
 
-                        if (!building.BuildingData.Equals(buildOnTopParameter.GetValue<DeckBuildable>()))
+                        if (!building.BuildingData.Equals(_buildOnTopParameterAccessor.GetValue<DeckBuildable>()))
                         {
                             return false;
                         }
@@ -1176,12 +1163,12 @@ namespace Services.Building
 
         private bool PayIfCanAfford()
         {
-            if (!_activeBuildable.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
+            if (!_priceParameterAccessor.HasReference)
             {
                 return true;
             }
 
-            var prices = priceParameter.GetValue<DeckPrice[]>();
+            var prices = _priceParameterAccessor.GetValue<DeckPrice[]>();
             if (!_currencyService.CanAfford(prices))
             {
                 DeckEventNotificationRequested.Create("Cant afford").Send();
@@ -1196,14 +1183,8 @@ namespace Services.Building
         private bool IsCellInBounds(Vector2Int cell)
         {
             var mapSize = _gameSetting.GetMapSize();
-            if (cell.x >= 0 && cell.y >= 0 && cell.x <= mapSize.x && cell.y <= mapSize.y)
-            {
-                return true;
-            }
-
-            return false;
+            return cell.x >= 0 && cell.y >= 0 && cell.x <= mapSize.x && cell.y <= mapSize.y;
         }
-
 
         private bool IsAccessCellsInBounds(Vector2Int cell, Vector2Int[] accessCells)
         {
@@ -1230,7 +1211,7 @@ namespace Services.Building
                 return false;
             }
 
-            if (_activeBuildable.TryGetParameter(out DeckBuildableParameterLimited parameter) && parameter.GetPrimitiveValue<int>() <= 0)
+            if (_limitedPriceParameterAccessor.HasReference && _limitedPriceParameterAccessor.GetPrimitiveValue<int>() <= 0)
             {
                 DeckEventNotificationRequested.Create("Limit reached").Send();
                 return false;
@@ -1271,7 +1252,7 @@ namespace Services.Building
             return false;
         }
 
-        private void AnythingBuilt(DeckAgentBuilding building)
+        private void AnythingBuilt(DeckAgent building)
         {
             DeckEventOnAnythingBuilt.Create(building).Send();
         }

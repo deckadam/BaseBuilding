@@ -17,14 +17,14 @@ namespace InGame.Agent.Door
             await UniTask.Yield();
             DeckEventOnDoorBuild.Create(transform.position.ToVector2Int()).Send();
             _data = BuildingData.GetParameter<DeckBuildableParameterBuildModeGridBased>().GetValue<DeckGridBasedData>();
-            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(transform.position.ToVector2Int(), _data.Indices, this);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(GetPosition().ToVector2Int(), _data.Indices, this);
         }
 
         protected override void OnAgentDestroyed()
         {
-            var cellPosition = transform.position.ToVector2Int();
+            var cellPosition = GetPosition().ToVector2Int();
             DeckEventOnDoorDestroyed.Create(cellPosition).Send();
-            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), _data.Indices);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(cellPosition, _data.Indices);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CameraController;
 using GameManager.Data.GameSetting;
+using Services.Raid.Tools;
 using Unity.AI.Navigation;
 using UnityEngine;
 
@@ -8,13 +9,18 @@ namespace InGame.Map
     public class DeckSession : MonoBehaviour
     {
         [SerializeField] private NavMeshSurface navMeshSurface;
+        [SerializeField] private DeckRaidStartPoint raidStartPoint;
         [SerializeField] private BoxCollider mapBoundCollider;
         [SerializeField] private Transform ground;
 
+        public DeckRaidStartPoint RaidStartPoint => raidStartPoint;
+
         private DeckBaseCameraController[] _cameraControllers;
+        private DeckGameSettingBasic _currentGameSetting;
 
         public void Initialize(DeckGameSettingBasic gameSetting)
         {
+            _currentGameSetting = gameSetting;
             var mapSize = gameSetting.GetMapSize();
 
             var max = Mathf.Max(mapSize.x, mapSize.y);
@@ -43,6 +49,11 @@ namespace InGame.Map
         public Collider GetCameraCollider()
         {
             return mapBoundCollider;
+        }
+
+        public DeckGameSettingBasic GetGameSetting()
+        {
+            return _currentGameSetting;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace GameManager
                 {
                     uniqueId = agent.UniqueId.Id,
                     prefabId = agent.PrefabId.Id,
-                    position = agent.transform.position,
+                    position = agent.GetPosition(),
                     rotation = agent.transform.eulerAngles,
                     scale = agent.transform.localScale,
                     componentDatas = agent.GetComponentData(),

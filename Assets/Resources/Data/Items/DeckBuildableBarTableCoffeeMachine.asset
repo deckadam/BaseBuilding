@@ -12,28 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableBarTableCoffeeMachine
   m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
+  agent: {fileID: 4801856471697237134, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
+  itemVisual: {fileID: 1953440713801673427, guid: 34ff637d1da956249881fc8d381f81ce, type: 3}
+  visibleName: CoffeeMachine
+  silhouetteData:
+    silhouette:
+    - mesh: {fileID: -462981019419857548, guid: cffc70602dba1a248ad41d2cdac60872, type: 3}
+      position: {x: 0, y: 1, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 0.46254116, y: 1.2648616, z: 0.84729016}
+    materialCount: 1
   parameters:
   - rid: 213718271242534949
   - rid: 213718271242534964
   - rid: 213718271242534976
   - rid: 213718271242534982
   - rid: 213718271242534999
-  category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
-  agent: {fileID: 4801856471697237134, guid: 0362883fe9bf7874eaa03eb04868a443, type: 3}
-  itemVisual: {fileID: 1953440713801673427, guid: 34ff637d1da956249881fc8d381f81ce, type: 3}
-  visibleName: CoffeeMachine
-  silhouette:
-  - mesh: {fileID: -462981019419857548, guid: cffc70602dba1a248ad41d2cdac60872, type: 3}
-    position: {x: 0, y: 1, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 0.46254116, y: 1.2648616, z: 0.84729016}
-  materialCount: 1
-  isGridBased: 0
-  silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
   references:
     version: 2
     RefIds:
@@ -55,7 +50,7 @@ MonoBehaviour:
           indices:
           - {x: 0, y: 0}
           accessIndices:
-          - {x: 0, y: 1}
+          - {x: 1, y: 0}
     - rid: 213718271242534982
       type: {class: DeckBuildableParameterBuildOnTop, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
       data:

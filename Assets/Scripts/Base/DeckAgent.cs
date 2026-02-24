@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Components;
 using Cysharp.Threading.Tasks;
+using General;
 using Instancing;
 using Services;
 using Services.Finder;
@@ -18,7 +19,7 @@ using Zenject;
 
 namespace Base
 {
-    public class DeckAgent : DeckPoolable
+    public class DeckAgent : DeckPoolable, IDeckTranslatable
     {
         public event Action OnItemVisualChanged;
 
@@ -63,6 +64,7 @@ namespace Base
         }
 
 #if UNITY_EDITOR
+        [Button]
         public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
@@ -87,6 +89,11 @@ namespace Base
                 }
 
                 if (agentComponent.GetInstanceID() == GetInstanceID())
+                {
+                    continue;
+                }
+
+                if (agentComponent == this)
                 {
                     continue;
                 }
@@ -295,7 +302,6 @@ namespace Base
 
             instanceProvider.ReturnAgent(this);
 
-
             OnAgentDestroyed();
 
             InternalRequestDestroy();
@@ -386,6 +392,61 @@ namespace Base
         public virtual string GetAdditionalData()
         {
             return string.Empty;
+        }
+
+        public Vector3 GetPosition()
+        {
+            return SelfTransform.position;
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            SelfTransform.position = position;
+        }
+
+        public void SetPosition(IDeckTranslatable positioner)
+        {
+            SelfTransform.position = positioner.GetPosition();
+        }
+
+        public Quaternion GetRotation()
+        {
+            return SelfTransform.rotation;
+        }
+
+        public Vector3 GetRotationEuler()
+        {
+            return SelfTransform.eulerAngles;
+        }
+
+        public void SetRotation(Vector3 rotation)
+        {
+            SelfTransform.eulerAngles = rotation;
+        }
+
+        public void SetRotation(Quaternion rotation)
+        {
+            SelfTransform.rotation = rotation;
+        }
+
+        public void SetRotation(IDeckTranslatable rotater)
+        {
+            SelfTransform.rotation = rotater.GetRotation();
+        }
+
+        public Vector3 GetScale()
+        {
+            return SelfTransform.localScale;
+        }
+
+        public void SetScale(Vector3 scale)
+        {
+            SelfTransform.localScale = scale;
+        }
+
+        public void SetScale(IDeckTranslatable scaler)
+        {
+            SelfTransform.localScale = scaler.GetScale();
         }
     }
 }

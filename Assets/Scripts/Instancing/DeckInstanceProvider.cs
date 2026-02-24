@@ -38,14 +38,11 @@ namespace Instancing
         private Transform _uiContainer;
 
 #if UNITY_EDITOR
+
         [DidReloadScripts]
         [Button]
         private static void OnScriptsReloaded()
         {
-            var instanceCreator = Resources.Load<DeckInstanceProvider>("Data/Deck Instance Provider");
-            instanceCreator.itemVisuals = new List<DeckItemVisual>();
-
-            instanceCreator.agents = new List<DeckAgent>();
             EditorInitialize();
         }
 
@@ -87,7 +84,7 @@ namespace Instancing
         private static void EditorInitialize()
         {
             var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
-            instanceProvider.agents = new List<DeckAgent>();
+            instanceProvider.agents.Clear();
             var agents = Resources.FindObjectsOfTypeAll(typeof(DeckAgent));
             var distinctAgents = agents.Select(item => item).Distinct();
             foreach (var agent in distinctAgents)
@@ -110,7 +107,7 @@ namespace Instancing
                 }
             }
 
-            instanceProvider.itemVisuals = new List<DeckItemVisual>();
+            instanceProvider.itemVisuals.Clear();
             var itemVisuals = Resources.FindObjectsOfTypeAll(typeof(DeckItemVisual));
             var distinctItemVisuals = itemVisuals.Select(item => item).Distinct();
             foreach (var itemVisual in distinctItemVisuals)
@@ -133,26 +130,25 @@ namespace Instancing
                 }
             }
 
-            instanceProvider.uiElements = new List<DeckUIElement>();
+            instanceProvider.uiElements.Clear();
             var uiElements = Resources.FindObjectsOfTypeAll(typeof(DeckUIElement));
             var distinctUiElements = uiElements.Select(item => item).Distinct();
             foreach (var uiElement in distinctUiElements)
             {
-                if (!PrefabUtility.IsPartOfPrefabAsset(uiElement))
+                var temp = uiElement as DeckUIElement;
+                if (PrefabUtility.GetPrefabAssetType(uiElement) == PrefabAssetType.NotAPrefab || PrefabUtility.IsOutermostPrefabInstanceRoot(temp.gameObject))
                 {
                     continue;
                 }
 
-                var instance = (DeckUIElement)uiElement;
-
-                if (!string.IsNullOrEmpty(instance.gameObject.scene.name))
+                if (!string.IsNullOrEmpty(temp.gameObject.scene.name))
                 {
                     continue;
                 }
 
-                if (!instanceProvider.uiElements.Any(item => item.PrefabId.Equals(instance.PrefabId)))
+                if (!instanceProvider.uiElements.Any(item => item.PrefabId.Equals(temp.PrefabId)))
                 {
-                    instanceProvider.uiElements.Add(instance);
+                    instanceProvider.uiElements.Add(temp);
                 }
             }
 
@@ -222,9 +218,9 @@ namespace Instancing
             return RentAgent(id.Id, uniqueId);
         }
 
-        public DeckAgent RentAgent<T>(int uniqueId = 0) where T : DeckAgent
+        public T RentAgent<T>(int uniqueId = 0) where T : DeckAgent
         {
-            return RentAgent(_agentByType[typeof(T)], uniqueId);
+            return RentAgent(_agentByType[typeof(T)], uniqueId) as T;
         }
 
         public DeckAgent RentAgent(int prefabId, int uniqueId = 0)

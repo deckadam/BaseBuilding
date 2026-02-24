@@ -25,8 +25,14 @@ namespace Commands
         {
             var componentMovement = _agent.GetDeckComponent<DeckComponentMovement>();
             componentMovement.SetDestination(_targetPosition);
-            await UniTask.NextFrame(token);
+
+            while (componentMovement.PathPending())
+            {
+                await UniTask.Yield();
+            }
+
             await UniTask.WaitUntil(() => componentMovement.ReachedToDestination(), cancellationToken: token);
+
             return true;
         }
 

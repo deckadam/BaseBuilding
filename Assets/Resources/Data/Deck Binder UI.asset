@@ -30,3 +30,6 @@ MonoBehaviour:
   - category: {fileID: 11400000, guid: 438c69d26f23eef45952678c64238c7d, type: 2}
     button: {fileID: -8058635555420699225, guid: 53594910e72e4554e920ff90f44a623c, type: 3}
     page: {fileID: 429786604705594565, guid: 9fd4a288e21678c4f8328d15d2e575f3, type: 3}
+  - category: {fileID: 11400000, guid: 375d375e59002cd4c847137cf8a8d990, type: 2}
+    button: {fileID: 6905810452175096246, guid: ca9e80c9abbec9e4b8c6cb5d4e4e698a, type: 3}
+    page: {fileID: 2743536138830366345, guid: f3bc3d446e639cf478fc3d5d8dfe8e41, type: 3}

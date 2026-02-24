@@ -160,7 +160,7 @@ namespace Systems.SystemInput
             if (!Input.GetKeyDown(KeyCode.T)) return;
 
             var newCustomer = _instanceProvider.RentAgent(_customerAgentPrefab.PrefabId);
-            newCustomer.transform.position = new Vector3(20, 0, 20);
+            newCustomer.SetPosition(new Vector3(20, 0, 20));
             newCustomer.Initialize();
         }
 

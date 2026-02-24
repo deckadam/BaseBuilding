@@ -12,27 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableFurniture Chair_001
   m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
+  agent: {fileID: -4123667621523898490, guid: 1bfe988f2fcd6ab48804a7f7660d675a, type: 3}
+  itemVisual: {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
+  visibleName: Chair
+  silhouetteData:
+    silhouette:
+    - mesh: {fileID: -6294142247649171743, guid: ce8f25ea99618b849a978fd96e1fa705, type: 3}
+      position: {x: 0.000022832297, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 0.6006887, y: 1.0013404, z: 0.6489512}
+    materialCount: 1
   parameters:
   - rid: 213718271242534947
   - rid: 213718271242534962
   - rid: 213718271242534984
   - rid: 213718271242534993
-  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
-  agent: {fileID: -4123667621523898490, guid: 1bfe988f2fcd6ab48804a7f7660d675a, type: 3}
-  itemVisual: {fileID: 6395205563783229675, guid: ea6c28aa2df5f574f8047c5e8399f504, type: 3}
-  visibleName: Chair
-  silhouette:
-  - mesh: {fileID: -6294142247649171743, guid: ce8f25ea99618b849a978fd96e1fa705, type: 3}
-    position: {x: 0.000022832297, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 0.6006887, y: 1.0013404, z: 0.6489512}
-  materialCount: 1
-  isGridBased: 0
-  silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
   references:
     version: 2
     RefIds:

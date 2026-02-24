@@ -12,27 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableBarTableEmpty
   m_EditorClassIdentifier: 
-  parameters:
-  - rid: 213718271242534959
-  - rid: 213718271242534974
-  - rid: 213718271242534981
   category: {fileID: 11400000, guid: 867d00633d8c8094d8ecbbc0ad5b956c, type: 2}
   agent: {fileID: 5416249728217735771, guid: c787730401ece2c48b9aa3519ba610ff, type: 3}
   itemVisual: {fileID: 4347336297822648076, guid: 2e9718a39cce0e743b01e737f4802ac1, type: 3}
   visibleName: BarTableEmpty
-  silhouette:
-  - mesh: {fileID: -5051245163629413203, guid: 5dc742f3c786b504faae1575116a8d1e, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 1, y: 1, z: 1}
-  materialCount: 1
-  isGridBased: 1
   silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices:
-  - {x: 0, y: 0}
+    silhouette:
+    - mesh: {fileID: -5051245163629413203, guid: 5dc742f3c786b504faae1575116a8d1e, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 1, y: 1, z: 1}
+    materialCount: 1
+  parameters:
+  - rid: 213718271242534959
+  - rid: 213718271242534974
+  - rid: 213718271242534981
   references:
     version: 2
     RefIds:

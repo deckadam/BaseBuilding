@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
+  m_Name: DeckBuildableSoldier
+  m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 375d375e59002cd4c847137cf8a8d990, type: 2}
+  agent: {fileID: 7462497514235910834, guid: 8051394f5eb2c0b45a7bac9c3fac8e1d, type: 3}
+  itemVisual: {fileID: 7699648442756046541, guid: a41435d7349ba2e41a7b2202c7050b84, type: 3}
+  visibleName: Soldier
+  silhouetteData:
+    silhouette: []
+    extents: {x: 0, y: 0, z: 0}
+    materialCount: 1
+  parameters:
+  - rid: 213718271242534959
+  - rid: 213718271242534974
+  - rid: 213718271242534981
+  references:
+    version: 2
+    RefIds:
+    - rid: 213718271242534959
+      type: {class: DeckBuildableParameterIcon, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        icon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - rid: 213718271242534974
+      type: {class: DeckBuildableParameterPrice, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        prices:
+        - currencyType: 0
+          amount: 5
+    - rid: 213718271242534981
+      type: {class: DeckBuildableParameterBuildModeGridBased, ns: Services.Building.Buildable.Data.Parameter.Implementations.Build, asm: Assembly-CSharp}
+      data:
+        gridBasedData:
+          buildMode: 0
+          indices:
+          - {x: 0, y: 0}
+          accessIndices: []

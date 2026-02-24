@@ -12,32 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck Buildable Chest
   m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
+  agent: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
+  itemVisual: {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
+  visibleName: Chest
+  silhouetteData:
+    silhouette:
+    - mesh: {fileID: 2959467708922500008, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    - mesh: {fileID: 4293751317952506913, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
+      position: {x: -0.00000003774895, y: 1.0009878, z: 0.5}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 1.0000002, y: 1.0532095, z: 1.0000002}
+    materialCount: 1
   parameters:
   - rid: 213718271242534945
   - rid: 213718271242534960
   - rid: 213718271242534975
   - rid: 213718271242534991
   - rid: 213718271242534998
-  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
-  agent: {fileID: 2562318635017719473, guid: 5945d71e33bcc914d87416c08f631a33, type: 3}
-  itemVisual: {fileID: 7699648442756046541, guid: f8d7aab37b9845d478878cb7bc2d0f9b, type: 3}
-  visibleName: Chest
-  silhouette:
-  - mesh: {fileID: 2959467708922500008, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  - mesh: {fileID: 4293751317952506913, guid: af7b9476666fc3543a0bb12c9f82836b, type: 3}
-    position: {x: -0.00000003774895, y: 1.0009878, z: 0.5}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 1.0000002, y: 1.0532095, z: 1.0000002}
-  materialCount: 1
-  isGridBased: 1
-  silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices:
-  - {x: 0, y: 0}
   references:
     version: 2
     RefIds:

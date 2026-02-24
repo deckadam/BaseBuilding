@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236d970d31a84e518f5f1afcd987c4a9, type: 3}
   m_Name: Deck Game Setting Basic
   m_EditorClassIdentifier: 
-  isTestRun: 1
+  isTestRun: 0
   gameSettingName: Basic
   mapSize: {x: 50, y: 150}
   wallType: 0
@@ -23,13 +23,25 @@ MonoBehaviour:
     wallBuildable: {fileID: 11400000, guid: a33b9187514265347bedbf42a7004d0c, type: 2}
   - wallType: 2
     wallBuildable: {fileID: 0}
+  raidData:
+  - raiderCount: 5
   buildableOverrides:
   - buildable: {fileID: 11400000, guid: 0e4ae1f4cc23df042b898fe97f0c8e22, type: 2}
     parameters:
-    - rid: -2
-    - rid: -2
+    - rid: 213718271242535000
+    - rid: 213718271242535001
+  totalLootDuration: 3
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 213718271242535000
+      type: {class: DeckBuildableParameterLimited, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        limit: 5
+        currentLimit: 4
+    - rid: 213718271242535001
+      type: {class: DeckBuildableParameterPrice, ns: Services.Building.Buildable.Data.Parameter.Implementations, asm: Assembly-CSharp}
+      data:
+        prices:
+        - currencyType: 0
+          amount: 5

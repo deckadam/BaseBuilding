@@ -122,7 +122,7 @@ namespace ItemVisualProviders
             _instanceProvider.ReturnItemVisual(itemVisual);
             DeckServiceProvider.GetService<DeckServiceFinder>().RemoveItemVisual(itemVisual);
         }
-        
+
         protected void ReturnItemVisualToPool(DeckItemVisual itemVisual)
         {
             _instanceProvider.ReturnItemVisual(itemVisual);

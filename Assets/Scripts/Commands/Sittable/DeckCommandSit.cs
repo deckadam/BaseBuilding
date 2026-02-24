@@ -24,13 +24,13 @@ namespace Commands.Sittable
 
         public override async UniTask<bool> ProcessCommand(CancellationToken token)
         {
-            await new DeckCommandMove(_sittable.transform.position, _target).ProcessCommand(token);
+            await new DeckCommandMove(_sittable.GetPosition(), _target).ProcessCommand(token);
 
             var sittable = _sittable.GetComponent<IDeckSittable>();
 
             _target.GetDeckComponent<DeckComponentMovement>().SetDisabled();
-            _target.transform.position = _sittable.transform.TransformPoint(sittable.GetSitPosition());
-            _target.transform.rotation = _sittable.transform.rotation;
+            _target.SetPosition(_sittable.transform.TransformPoint(sittable.GetSitPosition()));
+            _target.SetRotation(_sittable.transform.rotation);
 
             var animatorHumanoid = _target.GetDeckComponent<IDeckAnimationSetTrigger>();
             animatorHumanoid.Trigger(DeckConstantsAnimation.Sit);

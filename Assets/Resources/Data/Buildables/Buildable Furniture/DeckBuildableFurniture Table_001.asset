@@ -12,27 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: DeckBuildableFurniture Table_001
   m_EditorClassIdentifier: 
+  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
+  agent: {fileID: -4123667621523898490, guid: 8830b8231e1803f4fb031892fd2b0467, type: 3}
+  itemVisual: {fileID: 6395205563783229675, guid: 6ab5c165dfab7304da8a2a037521096c, type: 3}
+  visibleName: Table
+  silhouetteData:
+    silhouette:
+    - mesh: {fileID: -6125760726888084266, guid: 4bbe435fcede879488e1a8236baeae3f, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 1.9470375, y: 0.99999994, z: 1.9470375}
+    materialCount: 1
   parameters:
   - rid: 213718271242534950
   - rid: 213718271242534965
   - rid: 213718271242534986
   - rid: 213718271242534995
-  category: {fileID: 11400000, guid: 7fa27cfbe21a1bf498e8290691f20174, type: 2}
-  agent: {fileID: -4123667621523898490, guid: 8830b8231e1803f4fb031892fd2b0467, type: 3}
-  itemVisual: {fileID: 6395205563783229675, guid: 6ab5c165dfab7304da8a2a037521096c, type: 3}
-  visibleName: Table
-  silhouette:
-  - mesh: {fileID: -6125760726888084266, guid: 4bbe435fcede879488e1a8236baeae3f, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 1.9470375, y: 0.99999994, z: 1.9470375}
-  materialCount: 1
-  isGridBased: 0
-  silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
   references:
     version: 2
     RefIds:

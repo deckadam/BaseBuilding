@@ -45,6 +45,28 @@ namespace InGame.Agent.Building
             InternalAfterBuildingInitialized();
         }
 
+        protected sealed override void InternalRequestDestroy()
+        {
+            foreach (var deckBuilding in buildingsOnTop)
+            {
+                deckBuilding.RequestDestroy();
+            }
+
+            buildingsOnTop.Clear();
+
+            if (onTopOf != null)
+            {
+                onTopOf.RemoveBuildingFromTop(this);
+            }
+
+            if (buildingData.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
+            {
+                DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(priceParameter.GetValue<DeckPrice[]>(), true);
+            }
+
+            DeckEventOnAnythingDestroyed.Create(this).Send();
+        }
+
         public void InitializeBuilding()
         {
             if (!buildingData.TryGetParameter(out DeckBuildableParameterBuildModeGridBased parameterBuildModeGridBased))
@@ -93,28 +115,6 @@ namespace InGame.Agent.Building
             // }
 
             InternalAfterBuildingInitialized();
-        }
-
-        protected sealed override void InternalRequestDestroy()
-        {
-            foreach (var deckBuilding in buildingsOnTop)
-            {
-                deckBuilding.RequestDestroy();
-            }
-
-            buildingsOnTop.Clear();
-
-            if (onTopOf != null)
-            {
-                onTopOf.RemoveBuildingFromTop(this);
-            }
-
-            if (buildingData.TryGetParameter(out DeckBuildableParameterPrice priceParameter))
-            {
-                DeckServiceProvider.GetService<DeckServiceCurrency>().ChangeValueRelative(priceParameter.GetValue<DeckPrice[]>(), true);
-            }
-
-            DeckEventOnAnythingDestroyed.Create(this).Send();
         }
 
         public void AddBuildingToTop(DeckAgentBuilding agentBuilding)

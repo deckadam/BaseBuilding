@@ -65,14 +65,12 @@ namespace Services.Order
                     continue;
                 }
 
-                var order = DeckOrderResolver.GetCommandFromOrder(orderToProcess, availableWaiter);
+                var order = DeckOrderResolver.GetCommandFromOrder(orderToProcess, availableWaiter).RegisterToOnCompleted(orderToProcess.OnOrderCompleted);
                 if (order == null)
                 {
                     _waiterService.RegisterAvailableWaiter(availableWaiter);
                     continue;
                 }
-
-                order.OnCompleted = orderToProcess.OnOrderCompleted;
 
                 availableWaiter.ProcessOrder(order);
             }

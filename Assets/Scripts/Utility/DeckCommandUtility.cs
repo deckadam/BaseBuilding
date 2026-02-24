@@ -7,9 +7,9 @@ namespace Utility
 {
     public static class DeckCommandUtility
     {
-        public static async UniTask<bool> AwaitTillDestinationIsReached(DeckComponentMovement traverser, Transform to, float desiredDistance, CancellationToken token)
+        public static async UniTask<bool> AwaitTillDestinationIsReached(DeckComponentMovement componentMovement, Transform to, float desiredDistance, CancellationToken token)
         {
-            var isCanceled = await UniTask.WaitWhile(() => traverser.SetDestination(to.position, desiredDistance), cancellationToken: token).SuppressCancellationThrow();
+            var isCanceled = await UniTask.WaitWhile(() => componentMovement.SetDestination(to.position, desiredDistance: desiredDistance), cancellationToken: token).SuppressCancellationThrow();
             return isCanceled;
         }
     }

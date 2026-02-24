@@ -15,12 +15,12 @@ namespace InGame.Agent.Room
         {
             await UniTask.Yield();
             _data = BuildingData.GetParameter<DeckBuildableParameterBuildModeGridBased>().GetValue<DeckGridBasedData>();
-            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(transform.position.ToVector2Int(), _data.Indices, this);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsOccupied(GetPosition().ToVector2Int(), _data.Indices, this);
         }
 
         protected override void OnAgentDestroyed()
         {
-            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(transform.position.ToVector2Int(), _data.Indices);
+            DeckServiceProvider.GetService<DeckServiceBuilding>().SetCellsUnoccupied(GetPosition().ToVector2Int(), _data.Indices);
         }
     }
 }

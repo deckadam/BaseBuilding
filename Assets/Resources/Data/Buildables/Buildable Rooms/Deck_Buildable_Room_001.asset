@@ -12,26 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9363118fb80b4e94a3f78ca74b737734, type: 3}
   m_Name: Deck_Buildable_Room_001
   m_EditorClassIdentifier: 
-  parameters:
-  - rid: 213718271242534955
-  - rid: 213718271242534970
-  - rid: 213718271242534978
   category: {fileID: 11400000, guid: 438c69d26f23eef45952678c64238c7d, type: 2}
   agent: {fileID: 6079846305064869096, guid: a20e0a9bd00af6c4182fa99a68a517ee, type: 3}
   itemVisual: {fileID: 6395205563783229675, guid: 33adc428621dafa42982e9ac69180d4a, type: 3}
   visibleName: Room
-  silhouette:
-  - mesh: {fileID: -5495902117074765545, guid: fd693bc5e37ab9840bb65ab5fbc7d303, type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: -0, y: 0, z: 0}
-  extents: {x: 0.3, y: 1.5, z: 0.30000013}
-  materialCount: 1
-  isGridBased: 0
   silhouetteData:
-    silhouette: []
-    extents: {x: 0, y: 0, z: 0}
-    materialCount: 0
-  indices: []
+    silhouette:
+    - mesh: {fileID: -5495902117074765545, guid: fd693bc5e37ab9840bb65ab5fbc7d303, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    extents: {x: 0.3, y: 1.5, z: 0.30000013}
+    materialCount: 1
+  parameters:
+  - rid: 213718271242534955
+  - rid: 213718271242534970
+  - rid: 213718271242534978
   references:
     version: 2
     RefIds:
