@@ -108,7 +108,7 @@ namespace Services.Building
 
             var newGameObject = new GameObject
             {
-                name = "1"
+                name = "AccessAreaSilhouette"
             };
             var newPiece = new DeckSilhouettePiece
             {

@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using InGame.Agent.Raid;
 using Services;
 using Services.Finder;
+using Services.Raid;
 using Systems.SystemSave;
 using UnityEngine;
 
@@ -33,32 +34,34 @@ namespace Commands
                 _currentLootDuration += Time.deltaTime;
             }
 
+            DeckServiceProvider.GetService<DeckServiceRaid>().GetRaidController().OnChestLooted();
+
             return true;
         }
 
         public override string GetSaveData()
         {
-            return DeckSaveUtility.GetSerializedData(new CommandLootChestSaveData(_targetChest.UniqueId.Id, _lootingAgent.UniqueId.Id, _totalLootDuration, _currentLootDuration));
+            return DeckSaveUtility.GetSerializedData(new DeckCommandLootChestSaveData(_targetChest.UniqueId.Id, _lootingAgent.UniqueId.Id, _totalLootDuration, _currentLootDuration));
         }
 
         public override void LoadSaveData(string saveData)
         {
-            var loadedData = DeckSaveUtility.GetDeserializedData<CommandLootChestSaveData>(saveData);
+            var loadedData = DeckSaveUtility.GetDeserializedData<DeckCommandLootChestSaveData>(saveData);
             _targetChest = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.targetChestId);
-            _lootingAgent = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent(loadedData.raiderId) as DeckAgentRaider;
+            _lootingAgent = DeckServiceProvider.GetService<DeckServiceFinder>().GetAgent<DeckAgentRaider>(loadedData.raiderId);
             _totalLootDuration = loadedData.totalLootDuration;
             _currentLootDuration = loadedData.currentLootDuration;
         }
 
         [Serializable]
-        private struct CommandLootChestSaveData
+        public struct DeckCommandLootChestSaveData
         {
             public int targetChestId;
             public int raiderId;
             public float totalLootDuration;
             public float currentLootDuration;
 
-            public CommandLootChestSaveData(int targetChestId, int raiderId, float totalLootDuration, float currentLootDuration)
+            public DeckCommandLootChestSaveData(int targetChestId, int raiderId, float totalLootDuration, float currentLootDuration)
             {
                 this.targetChestId = targetChestId;
                 this.raiderId = raiderId;

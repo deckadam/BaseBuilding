@@ -19,7 +19,6 @@ namespace Base
         public bool IsValid => _id != 0;
         public int Id => _id;
 
-
         private DeckId(bool justShutUp = false)
         {
             _id = Random.Range(10000000, 99999999);
@@ -29,7 +28,7 @@ namespace Base
         {
             if (!int.TryParse(id, out var intId))
             {
-                throw new Exception($"Invalid id {id}");
+                throw new Exception($"Bullshit input {id}");
             }
 
             _id = intId;
@@ -54,14 +53,6 @@ namespace Base
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is not DeckId deckId)
-                return false;
-
-            return deckId._id == _id;
-        }
-
         public bool Equals(DeckId other)
         {
             return _id == other._id;
@@ -69,9 +60,10 @@ namespace Base
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(_id, IdString);
+            return _id;
         }
 
         public static explicit operator string(DeckId id) => id.ToString();
+        public static explicit operator int(DeckId id) => id.Id;
     }
 }

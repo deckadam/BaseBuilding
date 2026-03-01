@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Base;
+using InGame.Agent.Chest;
 using Instancing;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using UnityEngine;
 using Zenject;
 
 namespace Services.Finder
@@ -20,6 +23,12 @@ namespace Services.Finder
         private void Inject(DeckInstanceProvider instanceProvider)
         {
             _instanceProvider = instanceProvider;
+        }
+
+        [Button]
+        private void Test(int id)
+        {
+            Debug.LogError(GetAgent(id) );
         }
 
         public override void Initialize()
@@ -135,6 +144,11 @@ namespace Services.Finder
         public DeckAgent GetAgent(int uniqueId)
         {
             return _agentsWithUniqueId[uniqueId];
+        }
+        
+        public T GetAgent<T>(int uniqueId) where T: DeckAgent
+        {
+            return _agentsWithUniqueId[uniqueId] as T;
         }
 
         public HashSet<DeckAgent> GetAgentsWithTag(DeckActionTag tag)

@@ -8,6 +8,7 @@ using Services;
 using Services.Finder;
 using Services.ItemVisual;
 using Services.Map;
+using Services.Raid;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
@@ -41,6 +42,8 @@ namespace Base
 
         private bool _alreadyDeInitialized;
         private bool _hasBeenInitialized;
+
+        private bool _isSpawned;
 
         protected DeckInstanceProvider instanceProvider;
 
@@ -158,7 +161,7 @@ namespace Base
 
         public void SetNewUniqueId(int id)
         {
-            uniqueId = DeckId.CreateNew();
+            uniqueId = new DeckId(id);
         }
 
         public void Initialize(int guid)
@@ -185,10 +188,27 @@ namespace Base
             }
 
             SelfTransform = transform;
-            SelfTransform.SetParent(DeckServiceSession.GetSession().transform, true);
 
             _hasBeenInitialized = true;
 
+            OnSpawned();
+
+            AfterInitialize();
+        }
+
+        protected virtual void AfterInitialize()
+        {
+        }
+
+        public override void OnSpawned()
+        {
+            if (_isSpawned)
+            {
+                return;
+            }
+
+            SelfTransform.SetParent(DeckServiceSession.GetSession().GetSelfTransform(), true);
+            _isSpawned = true;
             foreach (var deckComponent in components)
             {
                 deckComponent.PreInitialize(this);
@@ -205,8 +225,7 @@ namespace Base
             }
 
             DeckServiceProvider.GetService<DeckServiceFinder>().RegisterAgent(this);
-
-            AfterInitializationCompleted();
+            AfterSpawned();
         }
 
         private void DeInitialize()
@@ -219,6 +238,17 @@ namespace Base
             _alreadyDeInitialized = true;
             _hasBeenInitialized = false;
 
+            OnDeSpawned();
+        }
+
+        public sealed override void OnDeSpawned()
+        {
+            if (!_isSpawned)
+            {
+                return;
+            }
+
+            _isSpawned = false;
             foreach (var deckComponent in components)
             {
                 deckComponent.DeInitialize();
@@ -228,7 +258,14 @@ namespace Base
             {
                 commandProcessor.StopExecutions();
             }
+
+            InternalOnDeSpawned();
         }
+
+        protected virtual void InternalOnDeSpawned()
+        {
+        }
+
 
         public List<DeckComponentSaveData> GetComponentData()
         {
@@ -257,6 +294,7 @@ namespace Base
             SelfTransform.position = data.position;
             SelfTransform.eulerAngles = data.rotation;
             SelfTransform.localScale = data.scale;
+
 
             await UniTask.NextFrame();
 
@@ -345,7 +383,7 @@ namespace Base
         {
         }
 
-        protected virtual void AfterInitializationCompleted()
+        protected virtual void AfterSpawned()
         {
         }
 
@@ -389,7 +427,7 @@ namespace Base
             return tags;
         }
 
-        public virtual string GetAdditionalData()
+        public virtual object GetAdditionalData()
         {
             return string.Empty;
         }
@@ -399,12 +437,12 @@ namespace Base
             return SelfTransform.position;
         }
 
-        public void SetPosition(Vector3 position)
+        public virtual void SetPosition(Vector3 position)
         {
             SelfTransform.position = position;
         }
 
-        public void SetPosition(IDeckTranslatable positioner)
+        public virtual void SetPosition(IDeckTranslatable positioner)
         {
             SelfTransform.position = positioner.GetPosition();
         }

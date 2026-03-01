@@ -89,7 +89,7 @@ namespace GameManager
                     rotation = agent.transform.eulerAngles,
                     scale = agent.transform.localScale,
                     componentDatas = agent.GetComponentData(),
-                    additionalData = agent.GetAdditionalData()
+                    additionalData = DeckSaveUtility.GetSerializedData(agent.GetAdditionalData())
                 });
             }
 

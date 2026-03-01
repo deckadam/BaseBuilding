@@ -1,43 +1,112 @@
+using System;
 using Base;
+using Commands;
 using Services;
+using Services.Map;
 using Services.Raid;
+using Sirenix.OdinInspector;
+using Systems.SystemSave;
 using UnityEngine;
+using Utility;
 
 namespace InGame.Agent.Raid
 {
     public class DeckAgentRaider : DeckAgentHumanoid
     {
-        private static readonly int StartAI = Animator.StringToHash("Start");
-        private static readonly int LootingChest = Animator.StringToHash("LootChest");
-        private static readonly int GuardingLooter = Animator.StringToHash("GuardLooter");
-        private static readonly int RunAway = Animator.StringToHash("RunAway");
+        [ReadOnly, SerializeField] private DeckEnumRaiderState currentRaiderState;
 
-        [SerializeField] private Animator aiController;
+        private DeckAgentRaidController _raidController;
+        private DeckServiceSession _serviceSession;
+        private DeckServiceRaid _serviceRaid;
+
+        protected override void InternalOnDeSpawned()
+        {
+            SetState(DeckEnumRaiderState.NotInitialized);
+        }
+
+        private void Initialize()
+        {
+            _serviceRaid = DeckServiceProvider.GetService<DeckServiceRaid>();
+            _serviceSession = DeckServiceProvider.GetService<DeckServiceSession>();
+            _raidController = _serviceRaid.GetRaidController();
+        }
 
         public void EnterStateInitial()
         {
-            aiController.SetTrigger(StartAI);
+            SetState(DeckEnumRaiderState.MoveTowardsChest);
+            _raidController.RegisterRaider(this);
+            var chest = DeckServiceProvider.GetService<DeckServiceRaid>().GetMainChest();
+            AddCommand(new DeckCommandMove(chest.GetPosition(), this).RegisterToOnCompleted(_raidController.OnRaiderReachedToChest));
         }
 
-        public void EnterStateLootingChest()
+        public void EnterStateLootingChest(float startDuration = 0f)
         {
-            aiController.Play(LootingChest);
+            SetState(DeckEnumRaiderState.LootingChest);
+            var gameSetting = _serviceSession.GetCurrentSession().GetGameSetting();
+            AddCommand(new DeckCommandLootChest(_serviceRaid.GetMainChest(), this, gameSetting.TotalLootDuration - startDuration));
+            currentRaiderState = DeckEnumRaiderState.LootingChest;
         }
 
         public void EnterStateGuardingLooter()
         {
-            aiController.Play(GuardingLooter);
+            SetState(DeckEnumRaiderState.GuardLooter);
+            var guardingAgents = _raidController.GetGuardingAgents();
+            var lootingAgent = _raidController.GetLootingRaider();
+            AddCommand(new DeckCommandStayOnGuardDuringLoot(guardingAgents, lootingAgent));
         }
 
         public void EnterStateRunAway()
         {
-            aiController.Play(RunAway);
+            SetState(DeckEnumRaiderState.RunAway);
+            var startingPoint = _serviceSession.GetCurrentSession().RaidStartPoint;
+            AddCommand(new DeckCommandMove(startingPoint.GetPosition(), this).RegisterToOnCompleted(OnRunAwayFinished), true);
         }
 
-        public void OnRunAwayFinished()
+        private void OnRunAwayFinished()
         {
-            DeckServiceProvider.GetService<DeckServiceRaid>().GetRaidController().OnRaiderRanAway(this);
+            SetState(DeckEnumRaiderState.Finished);
+            _raidController.OnRaiderRanAway(this);
             RequestDestroy();
+        }
+
+        public DeckEnumRaiderState GetCurrentState()
+        {
+            return currentRaiderState;
+        }
+
+        public void SetState(DeckEnumRaiderState state)
+        {
+            currentRaiderState = state;
+        }
+
+        public void ForceState(DeckEnumRaiderState state, string currentStateSaveData)
+        {
+            Initialize();
+            switch (state)
+            {
+                case DeckEnumRaiderState.NotInitialized:
+                    EnterStateInitial();
+                    break;
+                case DeckEnumRaiderState.MoveTowardsChest:
+                    EnterStateInitial();
+                    break;
+                case DeckEnumRaiderState.LootingChest:
+                    var convertedData = DeckSaveUtility.GetDeserializedData<DeckCommandLootChest.DeckCommandLootChestSaveData>(currentStateSaveData);
+                    EnterStateLootingChest(convertedData.currentLootDuration);
+                    break;
+                case DeckEnumRaiderState.GuardLooter:
+                    EnterStateGuardingLooter();
+                    break;
+                case DeckEnumRaiderState.RunAway:
+                    EnterStateRunAway();
+                    break;
+                case DeckEnumRaiderState.Finished:
+                    DeckLogger.Error("Finished raider should not be still active");
+                    break;
+
+                default:
+                    throw new Exception($"Unknown raider state {state}");
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace UI.Raid
     public class DeckUIStartRaid : DeckUIBase
     {
         [SerializeField] private Button startRaidButton;
-        
+
         private DeckBuildingChest _currentMainChest;
         private bool _isRaidInProgress;
         private bool _hasRaidTarget;
@@ -51,11 +51,13 @@ namespace UI.Raid
         private void OnRaidStarted(DeckEventOnRaidStarted obj)
         {
             _isRaidInProgress = true;
+            startRaidButton.interactable = false;
         }
 
         private void OnRaidEnded(DeckEventOnRaidEnded obj)
         {
             _isRaidInProgress = false;
+            startRaidButton.interactable = _hasRaidTarget;
         }
 
         public override async void AfterGameSessionInitialized()

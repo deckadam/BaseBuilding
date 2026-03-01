@@ -7,7 +7,8 @@ using Systems.SystemSave;
 using UI.Stats;
 using UnityEngine;
 using UnityEngine.AI;
-using Utility;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Components.Movement
 {
@@ -218,6 +219,10 @@ namespace Components.Movement
             return _navMeshAgent.pathPending || _navMeshAgent.pathStatus != NavMeshPathStatus.PathComplete;
         }
 
+        public void Warp(Vector3 position)
+        {
+            _navMeshAgent.Warp(position);
+        }
 
         [Serializable]
         public struct DeckMovementComponentData

@@ -129,7 +129,7 @@ namespace InGame.Agent.Building
             agentBuilding.onTopOf = null;
         }
 
-        public sealed override string GetAdditionalData()
+        public sealed override object GetAdditionalData()
         {
             var buildingsOnTopIds = new int[buildingsOnTop.Count];
 
@@ -145,7 +145,7 @@ namespace InGame.Agent.Building
                 internalAdditionalData = InternalGetAdditionalBuildingData()
             };
 
-            return DeckSaveUtility.GetSerializedData(layerData);
+            return layerData;
         }
 
         protected sealed override void LoadAdditionalData(string data)

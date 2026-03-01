@@ -17,7 +17,13 @@ MonoBehaviour:
   itemVisual: {fileID: 7699648442756046541, guid: a41435d7349ba2e41a7b2202c7050b84, type: 3}
   visibleName: Soldier
   silhouetteData:
-    silhouette: []
+    silhouette:
+    - mesh: {fileID: 2497106002754787046, guid: a613501f0b79f974b9918c64b5661ef6, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
+    - mesh: {fileID: 6796121518194019630, guid: a613501f0b79f974b9918c64b5661ef6, type: 3}
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: -0, y: 0, z: 0}
     extents: {x: 0, y: 0, z: 0}
     materialCount: 1
   parameters:

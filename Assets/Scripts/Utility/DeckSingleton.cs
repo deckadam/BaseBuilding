@@ -4,7 +4,7 @@ namespace Utility
 {
     public class DeckSingleton<T> : MonoBehaviour where T : DeckSingleton<T>
     {
-        private static volatile T Instance;
+        private static T Instance;
 
         private bool _isInitialized;
 

@@ -158,6 +158,12 @@ namespace Instancing
         }
 #endif
 
+        [Button]
+        private void Test(int prefabId)
+        {
+            Debug.LogError(_agentPool[prefabId].Count);
+        }
+
         [Inject]
         private void Inject(DiContainer container)
         {
@@ -229,6 +235,8 @@ namespace Instancing
             {
                 var instance = pool.Pop();
                 instance.OnSpawned();
+
+                Debug.LogError("renting " + instance.name);
 
                 if (uniqueId == 0)
                 {
@@ -326,19 +334,8 @@ namespace Instancing
             {
                 while (counter < count)
                 {
-                    var newInstance = CreateNewAgentInstance(prefabId);
-
-
                     var uniqueId = uniqueIds[counter];
-                    if (uniqueId != 0)
-                    {
-                        newInstance.SetNewUniqueId(uniqueId);
-                    }
-                    else
-                    {
-                        newInstance.SetNewUniqueId();
-                    }
-
+                    var newInstance = CreateNewAgentInstance(prefabId,uniqueId);
                     result[counter++] = newInstance;
                 }
             }

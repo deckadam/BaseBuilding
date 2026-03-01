@@ -1,12 +1,12 @@
 using System;
 using Commands;
 using Components;
+using Components.Movement;
+using General;
 using Services;
 using Services.Building.Buildable;
-using Services.Building.Buildable.Data.Parameter.Implementations.Build;
 using Services.ItemVisual;
 using UnityEngine;
-using Utility;
 
 namespace Base
 {
@@ -14,6 +14,17 @@ namespace Base
     {
         [SerializeField] private DeckBuildable buildingData;
         public Action<DeckAgentHumanoid> OnDeath;
+
+        public void InitializeHumanoid()
+        {
+            DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance);
+            RaiseItemVisualChanged();
+
+            itemVisualInstance.transform.parent = SelfTransform;
+
+            itemVisualInstance.transform.localPosition = Vector3.zero;
+            itemVisualInstance.transform.localRotation = Quaternion.identity;
+        }
 
         public void AddCommand(DeckCommand command, bool isInterruptingCommand = false)
         {
@@ -31,21 +42,6 @@ namespace Base
             }
         }
 
-        public void InitializeHumanoid()
-        {
-            if (!buildingData.TryGetParameter(out DeckBuildableParameterBuildModeGridBased parameterBuildModeGridBased))
-            {
-                DeckServiceProvider.GetService<DeckServiceItemVisual>().RequestItemVisual(this, buildingData.ItemVisual.PrefabId, out itemVisualInstance);
-                RaiseItemVisualChanged();
-
-                itemVisualInstance.transform.parent = SelfTransform;
-
-                itemVisualInstance.transform.localPosition = Vector3.zero;
-                itemVisualInstance.transform.localRotation = Quaternion.identity;
-            }
-        }
-
-
         public void OnWaiting()
         {
             InternalOnWaiting();
@@ -58,11 +54,10 @@ namespace Base
         protected sealed override void InternalRequestDestroy()
         {
             InternalHumanoidDespawnRequested();
-            instanceProvider.ReturnAgent(this);
             OnDeath?.Invoke(this);
         }
 
-        protected sealed override void AfterInitializationCompleted()
+        protected sealed override void AfterSpawned()
         {
             InternalHumanoidSpawnRequested();
         }
@@ -73,6 +68,18 @@ namespace Base
 
         protected virtual void InternalHumanoidSpawnRequested()
         {
+        }
+
+        public override void SetPosition(Vector3 position)
+        {
+            var movementComponent = GetDeckComponent<DeckComponentMovement>();
+            movementComponent.Warp(position);
+        }
+
+        public override void SetPosition(IDeckTranslatable positioner)
+        {
+            var movementComponent = GetDeckComponent<DeckComponentMovement>();
+            movementComponent.Warp(positioner.GetPosition());
         }
     }
 }

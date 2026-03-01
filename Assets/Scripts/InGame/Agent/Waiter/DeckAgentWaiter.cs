@@ -12,7 +12,7 @@ namespace InGame.Agent.Waiter
         {
             Services.DeckServiceProvider.GetService<DeckServiceWaiter>().RemoveAvailableWaiter(this);
         }
-
+    
         protected override void InternalHumanoidSpawnRequested()
         {
             DeckEventOnCoreAgentCreated.Create(this).Send();

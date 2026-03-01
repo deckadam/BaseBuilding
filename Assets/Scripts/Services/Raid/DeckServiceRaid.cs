@@ -71,7 +71,7 @@ namespace Services.Raid
             _currentRaidController.GenerateRaid(obj.mainChest);
         }
 
-        internal void   OnRaidEnded(bool result)
+        internal void OnRaidEnded(bool result)
         {
             if (!_isRaidOnProgress)
             {
@@ -101,6 +101,11 @@ namespace Services.Raid
         public DeckBuildingChest GetMainChest()
         {
             return _mainChest;
+        }
+
+        public void SetForceRaidStartedStatus()
+        {
+            _isRaidOnProgress = true;
         }
     }
 }

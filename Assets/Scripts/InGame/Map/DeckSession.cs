@@ -18,8 +18,11 @@ namespace InGame.Map
         private DeckBaseCameraController[] _cameraControllers;
         private DeckGameSettingBasic _currentGameSetting;
 
+        private Transform _selfTransform;
+
         public void Initialize(DeckGameSettingBasic gameSetting)
         {
+            _selfTransform = transform;
             _currentGameSetting = gameSetting;
             var mapSize = gameSetting.GetMapSize();
 
@@ -54,6 +57,11 @@ namespace InGame.Map
         public DeckGameSettingBasic GetGameSetting()
         {
             return _currentGameSetting;
+        }
+
+        public Transform GetSelfTransform()
+        {
+            return _selfTransform;
         }
     }
 }

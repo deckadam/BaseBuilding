@@ -78,14 +78,23 @@ namespace Services.Building.Buildable
             }
 
 
-            var filters = itemVisual.GetComponentsInChildren<MeshFilter>();
-            var tempSilhouette = new DeckSilhouetteData[filters.Length];
-            for (var i = 0; i < filters.Length; i++)
+            var meshFilters = itemVisual.GetComponentsInChildren<MeshFilter>();
+            var skinnedMeshRenderers = itemVisual.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+            var tempSilhouette = new DeckSilhouetteData[meshFilters.Length + skinnedMeshRenderers.Length];
+            var lastIndex = 0;
+
+            foreach (var meshFilter in meshFilters)
             {
-                var filter = filters[i];
-                tempSilhouette[i] = new DeckSilhouetteData(filter.sharedMesh, filter.transform.position, filter.transform.eulerAngles);
+                tempSilhouette[lastIndex++] = new DeckSilhouetteData(meshFilter.sharedMesh, meshFilter.transform.position, meshFilter.transform.eulerAngles);
             }
-            silhouetteData = new DeckBuildableSilhouette(tempSilhouette,CollectExtentsData(),1);
+
+            foreach (var skinnedMeshRenderer in skinnedMeshRenderers)
+            {
+                tempSilhouette[lastIndex++] = new DeckSilhouetteData(skinnedMeshRenderer.sharedMesh, skinnedMeshRenderer.transform.position, skinnedMeshRenderer.transform.eulerAngles);
+            }
+
+            silhouetteData = new DeckBuildableSilhouette(tempSilhouette, CollectExtentsData(), 1);
         }
 #endif
 
