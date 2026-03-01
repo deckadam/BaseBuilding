@@ -39,18 +39,16 @@ namespace Components
                 if (_waitingCommands.Count > 0)
                 {
                     _waiting = false;
-                    _activeCommand = _waitingCommands.Dequeue();
                     _hasActiveCommand = true;
-                    var status = await _activeCommand.ProcessCommand(linkedTokenSource.Token).SuppressCancellationThrow();
+                    var localRef = _waitingCommands.Dequeue();
+                    _activeCommand = localRef;
 
-                    if (status.IsCanceled)
+                    var status = await localRef.ProcessCommand(linkedTokenSource.Token).SuppressCancellationThrow();
+
+                    if (!status.IsCanceled)
                     {
-                        DeckLogger.Command("Canceled");
-                    }
-                    else
-                    {
-                        _activeCommand.OnCompleted?.Invoke();
-                        _activeCommand.OnCompletedWithAgent?.Invoke(agent);
+                        localRef.OnCompleted?.Invoke();
+                        localRef.OnCompletedWithAgent?.Invoke(agent);
                     }
 
                     _hasActiveCommand = false;
@@ -90,11 +88,11 @@ namespace Components
             _taskExecutionTokenSource?.Dispose();
             _taskExecutionTokenSource = new CancellationTokenSource();
             _waitingCommands.Enqueue(command);
+            StartProcessingCommands();
         }
 
-        public object GetCurrentCommandSaveData()
+        public string GetCurrentCommandSaveData()
         {
-            Debug.LogError(name);
             return _activeCommand.GetSaveData();
         }
     }

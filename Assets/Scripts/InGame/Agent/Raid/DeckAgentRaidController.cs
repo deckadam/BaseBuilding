@@ -53,15 +53,16 @@ namespace Services.Raid
             _mainChest = mainChest;
 
             var raid = _gameSetting.RaidData.GetRandom();
+            _requiredRaiderCount = raid.RaiderCount;
 
             var startPoint = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().RaidStartPoint;
             for (var i = 0; i < raid.RaiderCount; i++)
             {
                 var raiderInstance = instanceProvider.RentAgent<DeckAgentRaider>();
                 raiderInstance.SetPosition(startPoint.GetPosition());
+                raiderInstance.Initialize();
             }
 
-            _requiredRaiderCount = raid.RaiderCount;
             DeckEventOnRaidStarted.Create().Send();
         }
 
@@ -96,7 +97,7 @@ namespace Services.Raid
             {
                 var currentDistance = Vector3.Distance(_mainChest.GetPosition(), raider.GetPosition());
                 if (!(currentDistance < distance)) continue;
-                
+
                 distance = currentDistance;
                 _lootingRaider = temp;
             }
@@ -157,7 +158,8 @@ namespace Services.Raid
             var counter = 0;
             foreach (var raider in _activeRaiders)
             {
-                var commandSaveData = DeckSaveUtility.GetSerializedData(raider.GetDeckComponent<DeckComponentCommandProcessor>().GetCurrentCommandSaveData());
+                var commandSaveData = raider.GetDeckComponent<DeckComponentCommandProcessor>().GetCurrentCommandSaveData();
+                Debug.LogError(commandSaveData);
                 individualData[counter++] = new IndividualRaiderData(raider.GetCurrentState(), commandSaveData, raider.UniqueId.Id);
             }
 

@@ -178,7 +178,7 @@ namespace Components.Movement
 
         public bool ReachedToDestination()
         {
-            return _navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance;
+            return Vector3.Distance(_navMeshAgent.destination, transform.position) <= _navMeshAgent.stoppingDistance;
         }
 
         public void SetRotation(Quaternion rotation)

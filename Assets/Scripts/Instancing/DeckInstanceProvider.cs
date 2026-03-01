@@ -236,8 +236,6 @@ namespace Instancing
                 var instance = pool.Pop();
                 instance.OnSpawned();
 
-                Debug.LogError("renting " + instance.name);
-
                 if (uniqueId == 0)
                 {
                     instance.UniqueId.ResetId(true);

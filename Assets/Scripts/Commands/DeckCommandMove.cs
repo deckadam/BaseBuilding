@@ -31,6 +31,7 @@ namespace Commands
                 await UniTask.Yield();
             }
 
+            
             await UniTask.WaitUntil(() => componentMovement.ReachedToDestination(), cancellationToken: token);
 
             return true;

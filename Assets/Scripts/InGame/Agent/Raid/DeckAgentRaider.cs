@@ -24,23 +24,24 @@ namespace InGame.Agent.Raid
             SetState(DeckEnumRaiderState.NotInitialized);
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             _serviceRaid = DeckServiceProvider.GetService<DeckServiceRaid>();
             _serviceSession = DeckServiceProvider.GetService<DeckServiceSession>();
             _raidController = _serviceRaid.GetRaidController();
+            _raidController.RegisterRaider(this);
         }
 
         public void EnterStateInitial()
         {
             SetState(DeckEnumRaiderState.MoveTowardsChest);
-            _raidController.RegisterRaider(this);
             var chest = DeckServiceProvider.GetService<DeckServiceRaid>().GetMainChest();
             AddCommand(new DeckCommandMove(chest.GetPosition(), this).RegisterToOnCompleted(_raidController.OnRaiderReachedToChest));
         }
 
         public void EnterStateLootingChest(float startDuration = 0f)
         {
+            Debug.LogError(startDuration);
             SetState(DeckEnumRaiderState.LootingChest);
             var gameSetting = _serviceSession.GetCurrentSession().GetGameSetting();
             AddCommand(new DeckCommandLootChest(_serviceRaid.GetMainChest(), this, gameSetting.TotalLootDuration - startDuration));
@@ -74,7 +75,7 @@ namespace InGame.Agent.Raid
             return currentRaiderState;
         }
 
-        public void SetState(DeckEnumRaiderState state)
+        private void SetState(DeckEnumRaiderState state)
         {
             currentRaiderState = state;
         }
