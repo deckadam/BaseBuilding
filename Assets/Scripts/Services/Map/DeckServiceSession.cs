@@ -43,7 +43,7 @@ namespace Services.Map
 
         private async Task LoadNewSession(DeckGameSettingBasic gameSettingBasic)
         {
-            await SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
+            await SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive).ToUniTask();
             GetSession().Initialize(gameSettingBasic);
             DeckServiceProvider.BeforeGameSessionInitialized();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(SceneName));
@@ -54,7 +54,7 @@ namespace Services.Map
         {
             DeckLogger.Map("Map scene unloading");
             DeckServiceProvider.BeforeGameSceneUnloaded();
-            await SceneManager.UnloadSceneAsync(SceneName);
+            await SceneManager.UnloadSceneAsync(SceneName).ToUniTask();
             DeckLogger.Map("Map scene unloaded");
         }
 
