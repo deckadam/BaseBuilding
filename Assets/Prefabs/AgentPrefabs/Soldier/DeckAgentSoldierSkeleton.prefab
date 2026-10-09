@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2050337467971167272}
   - component: {fileID: 7960608074221257257}
   m_Layer: 0
-  m_Name: DeckAgentSoldierBasic
+  m_Name: DeckAgentSoldierSkeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,12 +46,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1148684047048518090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0fc5a8ab63147899aaa736fb8c2026f, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a2dff9746a140a983a3c8c6105b4aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemVisualInstances: []
   itemVisualInstance: {fileID: 0}
   isMultiInstance: 0
+  allData:
+  - {fileID: 11400000, guid: 7291f840f1fedfa448eb02214d193fa9, type: 2}
+  - {fileID: 11400000, guid: 90a4d83f055d7124988a643bf7952906, type: 2}
+  - {fileID: 11400000, guid: cca4fd7d7d4ecf044900118c8053f4c1, type: 2}
+  - {fileID: 11400000, guid: 299c5309a8af3274a864cc4ff1f45167, type: 2}
   tags: 
   components:
   - {fileID: 3556156121060120959}
@@ -76,7 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e289d3f972304deba42e27dcb1808226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementData: {fileID: 11400000, guid: 9a4f9225f0a21b34bbf0c57ca0b01ed6, type: 2}
 --- !u!114 &9081069096760779906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2bcd4c370245a0b46c56fa52beff69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHealth: {fileID: 11400000, guid: dc6023562db55b8459df10e67dddb333, type: 2}
   _currentHealth: 0
 --- !u!114 &4361275764151054013
 MonoBehaviour:
@@ -103,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0581085ccc9e4b9f99cbb740fc63da2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataDamage: {fileID: 11400000, guid: 6d14e0233c3da4a489a5c842ebf616bd, type: 2}
 --- !u!114 &2050337467971167272
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d05297634d7a4b23a2c485b0829430b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasActiveCommand: 0
 --- !u!195 &7960608074221257257
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.pixelwizards.navmeshcomponents": "https://github.com/PixelWizards/navmesh-components.git",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.spriteshape": "10.0.2",
     "com.unity.2d.tilemap": "1.0.0",

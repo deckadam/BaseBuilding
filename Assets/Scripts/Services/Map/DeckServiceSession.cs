@@ -23,7 +23,7 @@ namespace Services.Map
             }
 
             DeckLogger.Inform("Session not found looking at scene");
-            _currentSession = FindObjectOfType<DeckSession>();
+            _currentSession = FindAnyObjectByType<DeckSession>();
             return _currentSession;
         }
 

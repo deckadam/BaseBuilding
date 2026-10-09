@@ -15,7 +15,7 @@ MonoBehaviour:
   category: {fileID: 11400000, guid: 375d375e59002cd4c847137cf8a8d990, type: 2}
   agent: {fileID: 7462497514235910834, guid: 8051394f5eb2c0b45a7bac9c3fac8e1d, type: 3}
   itemVisual: {fileID: 7699648442756046541, guid: a41435d7349ba2e41a7b2202c7050b84, type: 3}
-  visibleName: Soldier
+  visibleName: Skeleton
   silhouetteData:
     silhouette:
     - mesh: {fileID: 2497106002754787046, guid: a613501f0b79f974b9918c64b5661ef6, type: 3}

@@ -41,7 +41,6 @@ namespace InGame.Agent.Raid
 
         public void EnterStateLootingChest(float startDuration = 0f)
         {
-            Debug.LogError(startDuration);
             SetState(DeckEnumRaiderState.LootingChest);
             var gameSetting = _serviceSession.GetCurrentSession().GetGameSetting();
             AddCommand(new DeckCommandLootChest(_serviceRaid.GetMainChest(), this, gameSetting.TotalLootDuration - startDuration));

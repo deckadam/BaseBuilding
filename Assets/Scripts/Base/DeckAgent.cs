@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Components;
 using Cysharp.Threading.Tasks;
+using Data.Agent;
 using General;
 using Instancing;
 using Services;
 using Services.Finder;
 using Services.ItemVisual;
 using Services.Map;
-using Services.Raid;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
@@ -28,6 +28,7 @@ namespace Base
         [SerializeField, ReadOnly] protected DeckItemVisual itemVisualInstance;
         [SerializeField, ReadOnly] protected bool isMultiInstance;
 
+        [SerializeField] private DeckDataAgent[] allData;
         [SerializeField] protected DeckActionTag[] tags;
         [SerializeField] private DeckComponent[] components;
         [SerializeField] private bool willSave = true;
@@ -40,6 +41,7 @@ namespace Base
 
         protected Transform SelfTransform;
 
+        private Dictionary<Type, DeckDataAgent> _allData;
         private bool _alreadyDeInitialized;
         private bool _hasBeenInitialized;
 
@@ -191,6 +193,13 @@ namespace Base
 
             _hasBeenInitialized = true;
 
+            _allData = new Dictionary<Type, DeckDataAgent>();
+            foreach (var deckDataAgent in allData)
+            {
+                Debug.LogError(deckDataAgent.GetType());
+                _allData.Add(deckDataAgent.GetType(), deckDataAgent);
+            }
+            
             OnSpawned();
 
             AfterInitialize();
@@ -425,6 +434,12 @@ namespace Base
         public DeckActionTag[] GetTags()
         {
             return tags;
+        }
+
+        public T GetAgentData<T>() where T : DeckDataAgent
+        {
+            Debug.LogError(typeof(T));
+            return _allData[typeof(T)] as T;
         }
 
         public virtual object GetAdditionalData()

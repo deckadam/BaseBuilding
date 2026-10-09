@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data.Component;
 using Data.Item;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Data.ItemDrop
+namespace Data.Agent
 {
     [CreateAssetMenu(fileName = "Deck Data Item Drop", menuName = "Deck/Data/Item Drop", order = 0)]
-    public class DeckDataItemDrop : DeckDataComponent
+    public class DeckDataItemDrop : DeckDataAgent
     {
         [SerializeField] private ItemDrop[] dropables;
 

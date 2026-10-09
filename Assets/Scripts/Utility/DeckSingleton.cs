@@ -13,7 +13,7 @@ namespace Utility
             get
             {
                 if (Instance != null) return Instance;
-                Instance = FindObjectOfType(typeof(T)) as T;
+                Instance = FindAnyObjectByType(typeof(T)) as T;
 
                 if (Instance == null)
                 {

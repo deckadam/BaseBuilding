@@ -83,7 +83,12 @@ namespace Instancing
         [MenuItem("Deck/Collect Instances")]
         private static void EditorInitialize()
         {
-            var instanceProvider = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>()[0];
+            var result = Resources.FindObjectsOfTypeAll<DeckInstanceProvider>();
+            if (result.IsNullOrEmpty())
+            {
+                return;
+            }
+            var instanceProvider = result[0];
             instanceProvider.agents.Clear();
             var agents = Resources.FindObjectsOfTypeAll(typeof(DeckAgent));
             var distinctAgents = agents.Select(item => item).Distinct();

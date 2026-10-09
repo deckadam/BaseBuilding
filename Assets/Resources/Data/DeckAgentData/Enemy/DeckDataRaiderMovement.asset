@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf7288c92a484467807b9196284c080d, type: 3}
-  m_Name: DeckRaiderHealthData
+  m_Script: {fileID: 11500000, guid: 172f0a94972c466fb6f1d86db5d70491, type: 3}
+  m_Name: DeckDataRaiderMovement
   m_EditorClassIdentifier: 
-  health: 3
-  tags: 01000000
+  movementSpeed: 10
+  acceleration: 100
+  angularSpeed: 600
+  stoppingDistance: 2

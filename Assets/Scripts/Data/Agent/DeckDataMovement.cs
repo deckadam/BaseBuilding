@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Data.Component
+namespace Data.Agent
 {
     [CreateAssetMenu(fileName = "Deck Data Movement", menuName = "Deck/Data/Component/Movement")]
-    public class DeckDataMovement : DeckDataComponent
+    public class DeckDataMovement : DeckDataAgent
     {
         [SerializeField] private float movementSpeed;
         [SerializeField] private float acceleration;

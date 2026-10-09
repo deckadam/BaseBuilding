@@ -4,9 +4,8 @@ using Components.Health;
 using Components.Inventory;
 using Components.ItemHolder;
 using Cysharp.Threading.Tasks;
-using Data.Component;
+using Data.Agent;
 using UI.Notification;
-using UnityEngine;
 using Utility;
 
 namespace Components.DamageDealer
@@ -14,10 +13,16 @@ namespace Components.DamageDealer
     [Serializable]
     public class DeckComponentDamageDealer : DeckComponent
     {
-        [SerializeField] private DeckDataDamage dataDamage;
+        private DeckDataDamage _dataDamage;
+
         public Action<int> OnDamageDealRequested;
 
         private bool _canAttack = true;
+
+        protected override void InternalPreInitialize()
+        {
+            _dataDamage = agent.GetAgentData<DeckDataDamage>();
+        }
 
         public void DealDamage(DeckAgent target)
         {
@@ -55,16 +60,16 @@ namespace Components.DamageDealer
             equipmentManager.SetItemToHold(requiredItem);
 
             // agent.AddCommand(new DeckCommandDealDamage(GetFinalDamageValue(),
-                    // dataDamage.GetAttackRange(),
-                    // this,
-                    // healthComponent,
-                    // continuous: true),
-                // true);
+            // dataDamage.GetAttackRange(),
+            // this,
+            // healthComponent,
+            // continuous: true),
+            // true);
         }
 
         public void OnAttackStart()
         {
-            OnDamageDealRequested?.Invoke(dataDamage.GetAttackDuration());
+            OnDamageDealRequested?.Invoke(_dataDamage.GetAttackDuration());
         }
 
         public bool CanAttack() => _canAttack;
@@ -72,14 +77,14 @@ namespace Components.DamageDealer
         public async void OnAttack()
         {
             _canAttack = false;
-            await UniTask.Delay(dataDamage.GetAttackDuration());
+            await UniTask.Delay(_dataDamage.GetAttackDuration());
             _canAttack = true;
         }
 
         //Modifiers will apply here
         private int GetFinalDamageValue()
         {
-            return dataDamage.GetDamageAmount();
+            return _dataDamage.GetDamageAmount();
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Data.Component
+namespace Data.Agent
 {
     [CreateAssetMenu(fileName = "Deck Data Health", menuName = "Deck/Data/Component/Health")]
-    public class DeckDataHealth : DeckDataComponent
+    public class DeckDataHealth : DeckDataAgent
     {
         [SerializeField] private int health;
         [SerializeField] private List<DeckActionTag> tags;

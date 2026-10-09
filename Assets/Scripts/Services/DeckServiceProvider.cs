@@ -20,7 +20,7 @@ namespace Services
 
             foreach (var typeRef in classes)
             {
-                var instance = Object.FindObjectOfType(typeRef) as DeckServiceBase;
+                var instance = Object.FindAnyObjectByType(typeRef) as DeckServiceBase;
                 if (instance == null)
                 {
                     DeckLogger.Warning(typeRef.Name + "  service type not instantiated in scene");

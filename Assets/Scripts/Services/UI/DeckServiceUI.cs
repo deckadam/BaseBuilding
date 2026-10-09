@@ -70,7 +70,7 @@ namespace Services.UI
 
             foreach (var typeRef in implementations)
             {
-                var instance = FindObjectOfType(typeRef) as DeckUIBase;
+                var instance = FindAnyObjectByType(typeRef) as DeckUIBase;
                 if (instance == null)
                 {
                     continue;

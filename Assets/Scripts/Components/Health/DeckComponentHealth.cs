@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Data.Component;
+using Data.Agent;
 using Instancing;
 using Sirenix.OdinInspector;
 using Systems.SystemSave;
@@ -21,7 +21,7 @@ namespace Components.Health
         private const string HEALTH_STAT_DESCRIPTION = "Current health of the agent";
         private const string HEALTH_STAT_NAME = "Health";
 
-        [SerializeField] private DeckDataHealth dataHealth;
+        private DeckDataHealth _dataHealth;
 
         [ReadOnly, SerializeField] private int _currentHealth;
 
@@ -42,8 +42,9 @@ namespace Components.Health
 
         protected override void InternalPreInitialize()
         {
-            _limitHealth = dataHealth.Health;
-            _currentHealth = dataHealth.Health;
+            _dataHealth = agent.GetAgentData<DeckDataHealth>();
+            _limitHealth = _dataHealth.Health;
+            _currentHealth = _dataHealth.Health;
 
             _healthController = DeckMVC<DeckComponentHealth, IEnumerable<DeckComponentHealth>>.GetController();
             _healthController.GetModel().AddData(this);
@@ -51,7 +52,7 @@ namespace Components.Health
 
         public bool CanBeDamagedByAnyOfTags(List<DeckActionTag> tags)
         {
-            return tags.Select(t => dataHealth.HasTag(t)).Any(result => result);
+            return tags.Select(t => _dataHealth.HasTag(t)).Any(result => result);
         }
 
         public override void DeInitialize()
@@ -159,7 +160,7 @@ namespace Components.Health
 
         public List<DeckActionTag> GetDamagingTags()
         {
-            return dataHealth.GetTags();
+            return _dataHealth.GetTags();
         }
 
         public override DeckStatGroup GetStatGroup()

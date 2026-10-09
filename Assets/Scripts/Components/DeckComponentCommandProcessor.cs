@@ -27,6 +27,7 @@ namespace Components
             _taskExecutionTokenSource?.Cancel();
             _taskExecutionTokenSource?.Dispose();
             _taskExecutionTokenSource = null;
+            _waitingCommands.Clear();
         }
 
         public async void StartProcessingCommands()

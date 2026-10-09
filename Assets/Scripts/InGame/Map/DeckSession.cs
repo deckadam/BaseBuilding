@@ -42,7 +42,7 @@ namespace InGame.Map
                 navMeshSurface.BuildNavMesh();
             }
 
-            _cameraControllers = FindObjectsOfType<DeckBaseCameraController>();
+            _cameraControllers = FindObjectsByType<DeckBaseCameraController>(FindObjectsSortMode.None);
             foreach (var cameraController in _cameraControllers)
             {
                 cameraController.Initialize();

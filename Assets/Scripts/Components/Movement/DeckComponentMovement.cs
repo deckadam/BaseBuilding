@@ -2,10 +2,9 @@
 using System.Globalization;
 using Base;
 using Cysharp.Threading.Tasks;
-using Data.Component;
+using Data.Agent;
 using Systems.SystemSave;
 using UI.Stats;
-using UnityEngine;
 using UnityEngine.AI;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -18,7 +17,7 @@ namespace Components.Movement
         private const string MOVEMENT_SPEED_STAT_NAME = "Movement Speed";
         private const string MOVEMENT_SPEED_STAT_DESCRIPTION = "Agents movement speed towards a target";
 
-        [SerializeField] private DeckDataMovement movementData;
+        private DeckDataMovement _movementData;
 
         private Action onDestinationReached;
 
@@ -43,20 +42,21 @@ namespace Components.Movement
             }
 
             _navMeshAgent = result;
+            _movementData = agent.GetAgentData<DeckDataMovement>();
             SetOriginalSpeed();
         }
 
         public void SetOriginalSpeed()
         {
-            if (_static || movementData == null)
+            if (_static || _movementData == null)
             {
                 return;
             }
 
-            _navMeshAgent.speed = movementData.MovementSpeed;
-            _navMeshAgent.acceleration = movementData.Acceleration;
-            _navMeshAgent.angularSpeed = movementData.AngularSpeed;
-            _navMeshAgent.stoppingDistance = movementData.StoppingDistance;
+            _navMeshAgent.speed = _movementData.MovementSpeed;
+            _navMeshAgent.acceleration = _movementData.Acceleration;
+            _navMeshAgent.angularSpeed = _movementData.AngularSpeed;
+            _navMeshAgent.stoppingDistance = _movementData.StoppingDistance;
         }
 
         public void SetModifiedSpeed(float newSpeed = -1f, float newAcceleration = -1f, float newAngularSpeed = -1f)
@@ -113,7 +113,7 @@ namespace Components.Movement
         {
             if (newStatus)
             {
-                _navMeshAgent.speed = movementData.MovementSpeed;
+                _navMeshAgent.speed = _movementData.MovementSpeed;
             }
             else
             {
@@ -172,7 +172,7 @@ namespace Components.Movement
 
             return new DeckStatGroup(new[]
             {
-                new DeckStat(MOVEMENT_SPEED_STAT_NAME, movementData.MovementSpeed.ToString(CultureInfo.InvariantCulture), MOVEMENT_SPEED_STAT_DESCRIPTION)
+                new DeckStat(MOVEMENT_SPEED_STAT_NAME, _movementData.MovementSpeed.ToString(CultureInfo.InvariantCulture), MOVEMENT_SPEED_STAT_DESCRIPTION)
             }, this);
         }
 
@@ -207,7 +207,7 @@ namespace Components.Movement
         private void Update()
         {
             if (!_hasDestination) return;
-            if (!(Vector3.Distance(transform.position, _navMeshAgent.destination) < movementData.StoppingDistance)) return;
+            if (!(Vector3.Distance(transform.position, _navMeshAgent.destination) < _movementData.StoppingDistance)) return;
 
             onDestinationReached?.Invoke();
             onDestinationReached = null;

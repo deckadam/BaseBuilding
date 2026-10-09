@@ -54,7 +54,11 @@ MonoBehaviour:
   itemVisualInstances: []
   itemVisualInstance: {fileID: 0}
   isMultiInstance: 0
-  tags: 
+  allData:
+  - {fileID: 11400000, guid: 6d14e0233c3da4a489a5c842ebf616bd, type: 2}
+  - {fileID: 11400000, guid: dc6023562db55b8459df10e67dddb333, type: 2}
+  - {fileID: 11400000, guid: 9a4f9225f0a21b34bbf0c57ca0b01ed6, type: 2}
+  tags: 64000000
   components:
   - {fileID: 438014476637800885}
   - {fileID: 5840971329052955599}
@@ -65,7 +69,8 @@ MonoBehaviour:
     _id: 0
   prefabId:
     _id: 56004177
-  aiController: {fileID: 8017151189786081761}
+  buildingData: {fileID: 0}
+  currentRaiderState: 0
 --- !u!114 &438014476637800885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,7 +83,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e289d3f972304deba42e27dcb1808226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementData: {fileID: 11400000, guid: 9a4f9225f0a21b34bbf0c57ca0b01ed6, type: 2}
 --- !u!114 &5840971329052955599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2bcd4c370245a0b46c56fa52beff69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHealth: {fileID: 11400000, guid: dc6023562db55b8459df10e67dddb333, type: 2}
   _currentHealth: 0
 --- !u!114 &8501801674491397165
 MonoBehaviour:
@@ -105,7 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0581085ccc9e4b9f99cbb740fc63da2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataDamage: {fileID: 11400000, guid: 6d14e0233c3da4a489a5c842ebf616bd, type: 2}
 --- !u!114 &-8007485740852387135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d05297634d7a4b23a2c485b0829430b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasActiveCommand: 0
 --- !u!195 &5513616443761142661
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -142,7 +145,7 @@ NavMeshAgent:
   m_ObstacleAvoidanceType: 4
 --- !u!95 &8017151189786081761
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -156,6 +159,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1

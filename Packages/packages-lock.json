@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.pixelwizards.navmeshcomponents": {
-      "version": "https://github.com/PixelWizards/navmesh-components.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "82a68afc255bdbff1f213f13d3bdb04317197a61"
-    },
     "com.unity.2d.common": {
       "version": "9.0.2",
       "depth": 1,

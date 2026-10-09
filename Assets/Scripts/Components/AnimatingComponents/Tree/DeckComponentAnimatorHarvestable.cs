@@ -1,6 +1,5 @@
 ﻿using Base;
 using Components.Health;
-using Data.Component.Tree;
 using DG.Tweening;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ namespace Components.AnimatingComponents.Tree
 {
     public class DeckComponentAnimatorHarvestable : DeckComponent
     {
-        [SerializeField] private DeckDataAnimationTreeShake shakeDataAnimation;
+        // [SerializeField] private DeckDataAnimationTreeShake shakeDataAnimation;
         private Transform _cachedHolderTransform;
         private Tween _activeTween;
 
@@ -28,7 +27,7 @@ namespace Components.AnimatingComponents.Tree
         private void OnOnDamageTaken(DeckAgent damageDealer)
         {
             _activeTween?.Kill();
-            _activeTween = _cachedHolderTransform.DOShakeRotation(shakeDataAnimation.GetShakeAnimationDuration(), shakeDataAnimation.GetShakeAnimationStrength(), shakeDataAnimation.GetShakeAnimationVibrato()).SetEase(shakeDataAnimation.GetShakeAnimationEase());
+            // _activeTween = _cachedHolderTransform.DOShakeRotation(shakeDataAnimation.GetShakeAnimationDuration(), shakeDataAnimation.GetShakeAnimationStrength(), shakeDataAnimation.GetShakeAnimationVibrato()).SetEase(shakeDataAnimation.GetShakeAnimationEase());
         }
     }
 }
