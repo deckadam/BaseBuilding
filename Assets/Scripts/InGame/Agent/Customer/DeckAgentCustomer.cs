@@ -4,7 +4,6 @@ using Commands.Sittable;
 using Cysharp.Threading.Tasks;
 using Services;
 using Services.Order;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace InGame.Agent.Customer
@@ -18,7 +17,6 @@ namespace InGame.Agent.Customer
             RequestOrder();
         }
 
-        [Button]
         private void Test()
         {
             DeckServiceProvider.GetService<DeckServiceOrder>().RegisterNewOrder(DeckRuntimeOrder.Create(order, this, OnOrderCompleted));

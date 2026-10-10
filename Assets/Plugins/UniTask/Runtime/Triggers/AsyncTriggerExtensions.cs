@@ -1,13 +1,23 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 using System.Threading;
-using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
+using Cysharp.Threading.Tasks.Triggers;
 
 namespace Cysharp.Threading.Tasks
 {
     public static class UniTaskCancellationExtensions
     {
+#if UNITY_2022_2_OR_NEWER
+
+        /// <summary>This CancellationToken is canceled when the MonoBehaviour will be destroyed.</summary>
+        public static CancellationToken GetCancellationTokenOnDestroy(this MonoBehaviour monoBehaviour)
+        {
+            return monoBehaviour.destroyCancellationToken;
+        }
+
+#endif
+
         /// <summary>This CancellationToken is canceled when the MonoBehaviour will be destroyed.</summary>
         public static CancellationToken GetCancellationTokenOnDestroy(this GameObject gameObject)
         {
@@ -17,13 +27,14 @@ namespace Cysharp.Threading.Tasks
         /// <summary>This CancellationToken is canceled when the MonoBehaviour will be destroyed.</summary>
         public static CancellationToken GetCancellationTokenOnDestroy(this Component component)
         {
-            return component.GetAsyncDestroyTrigger().CancellationToken;
-        }
+#if UNITY_2022_2_OR_NEWER
+            if (component is MonoBehaviour mb)
+            {
+                return mb.destroyCancellationToken;
+            }
+#endif
 
-        /// <summary>This CancellationToken is canceled when the MonoBehaviour will be destroyed.</summary>
-        public static CancellationTokenSource GetCancellationSourceTokenOnDestroy(this Component component)
-        {
-            return component.GetAsyncDestroyTrigger().CancellationTokenSource;
+            return component.GetAsyncDestroyTrigger().CancellationToken;
         }
     }
 }
@@ -88,3 +99,4 @@ namespace Cysharp.Threading.Tasks.Triggers
         }
     }
 }
+

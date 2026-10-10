@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
-using Cinemachine;
 
-[SaveDuringPlay] [AddComponentMenu("")] // Hide in menu
-public class ApplyCorrections : CinemachineExtension
+
+[Unity.Cinemachine.SaveDuringPlay] [AddComponentMenu("")] // Hide in menu
+public class ApplyCorrections : Unity.Cinemachine.CinemachineExtension
 {
     protected override void PostPipelineStageCallback(
-        CinemachineVirtualCameraBase vcam,
-        CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
+        Unity.Cinemachine.CinemachineVirtualCameraBase vcam,
+        Unity.Cinemachine.CinemachineCore.Stage stage, ref Unity.Cinemachine.CameraState state, float deltaTime)
     {
-        if (stage == CinemachineCore.Stage.Finalize)
+        if (stage == Unity.Cinemachine.CinemachineCore.Stage.Finalize)
         {
-            vcam.transform.position = state.CorrectedPosition;
-            state.RawPosition = state.CorrectedPosition;
+            vcam.transform.position = state.PositionCorrection;
+            state.RawPosition = state.PositionCorrection;
             state.PositionCorrection = Vector3.zero;
-            state.RawOrientation = state.CorrectedOrientation;
+            state.RawOrientation = state.OrientationCorrection;
             state.OrientationCorrection = Quaternion.identity;
         }
     }

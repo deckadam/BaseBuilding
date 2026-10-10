@@ -16,12 +16,6 @@ namespace Cysharp.Threading.Tasks.Triggers
         {
             return component.gameObject.GetAsyncDestroyTrigger();
         }
-
-
-        public static AsyncDestroyTrigger GetAsyncDestroyTriggerSource(this Component component)
-        {
-            return GetOrAddComponent<AsyncDestroyTrigger>(component.gameObject);
-        }
     }
 
     [DisallowMultipleComponent]
@@ -38,32 +32,12 @@ namespace Cysharp.Threading.Tasks.Triggers
                 if (cancellationTokenSource == null)
                 {
                     cancellationTokenSource = new CancellationTokenSource();
+                    if (!awakeCalled)
+                    {
+                        PlayerLoopHelper.AddAction(PlayerLoopTiming.Update, new AwakeMonitor(this));
+                    }
                 }
-
-                if (!awakeCalled)
-                {
-                    PlayerLoopHelper.AddAction(PlayerLoopTiming.Update, new AwakeMonitor(this));
-                }
-
                 return cancellationTokenSource.Token;
-            }
-        }
-
-        public CancellationTokenSource CancellationTokenSource
-        {
-            get
-            {
-                if (cancellationTokenSource == null)
-                {
-                    cancellationTokenSource = new CancellationTokenSource();
-                }
-
-                if (!awakeCalled)
-                {
-                    PlayerLoopHelper.AddAction(PlayerLoopTiming.Update, new AwakeMonitor(this));
-                }
-
-                return cancellationTokenSource;
             }
         }
 
@@ -107,15 +81,15 @@ namespace Cysharp.Threading.Tasks.Triggers
 
             public bool MoveNext()
             {
-                if (trigger.called) return false;
+                if (trigger.called || trigger.awakeCalled) return false;
                 if (trigger == null)
                 {
                     trigger.OnDestroy();
                     return false;
                 }
-
                 return true;
             }
         }
     }
 }
+

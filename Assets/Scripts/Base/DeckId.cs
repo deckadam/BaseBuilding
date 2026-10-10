@@ -1,6 +1,4 @@
 using System;
-using Sirenix.OdinInspector;
-using Sirenix.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,12 +8,12 @@ namespace Base
     public struct DeckId
     {
 #if UNITY_EDITOR
-        [ShowInInspector] public string StringId => _id.ToString();
+        public string StringId => _id.ToString();
 #endif
 
         [SerializeField, HideInInspector] private int _id;
 
-        [OdinSerialize] public string IdString => _id.ToString();
+        public string IdString => _id.ToString();
         public bool IsValid => _id != 0;
         public int Id => _id;
 
@@ -44,7 +42,6 @@ namespace Base
             return new DeckId(false);
         }
 
-        [Button]
         public void ResetId(bool force = false)
         {
             if (_id == 0 || force)

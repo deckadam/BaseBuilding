@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
 using Utility;
 using Debug = UnityEngine.Debug;
-using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace Systems.SystemSave
 {
@@ -66,12 +64,12 @@ namespace Systems.SystemSave
 
         private static SaveData ConvertToActualData(byte[] data)
         {
-            return SerializationUtility.DeserializeValue<SaveData>(data, DataFormat.JSON);
+            return OdinSerializer.SerializationUtility.DeserializeValue<SaveData>(data, OdinSerializer.DataFormat.JSON);
         }
 
         private static byte[] GetWritableData()
         {
-            return SerializationUtility.SerializeValue(_activeSaveData, DataFormat.JSON);
+            return OdinSerializer.SerializationUtility.SerializeValue(_activeSaveData, OdinSerializer.DataFormat.JSON);
         }
 
         private static byte[] ReadData(string path)

@@ -4,8 +4,8 @@ using Commands;
 using Services;
 using Services.Map;
 using Services.Raid;
-using Sirenix.OdinInspector;
 using Systems.SystemSave;
+using Unity.Collections;
 using UnityEngine;
 using Utility;
 
@@ -13,7 +13,7 @@ namespace InGame.Agent.Raid
 {
     public class DeckAgentRaider : DeckAgentHumanoid
     {
-        [ReadOnly, SerializeField] private DeckEnumRaiderState currentRaiderState;
+        [SerializeField, ReadOnly] private DeckEnumRaiderState currentRaiderState;
 
         private DeckAgentRaidController _raidController;
         private DeckServiceSession _serviceSession;

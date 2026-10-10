@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Instancing;
-using Sirenix.OdinInspector;
 using UI;
 using UnityEditor;
 using UnityEngine;
 using Utility;
+using Utility.Attribute;
 using Zenject;
 
 namespace Services.PopUp

@@ -2,7 +2,7 @@
 using UnityEditor;
 #endif
 using System;
-using Sirenix.OdinInspector;
+using Unity.Collections;
 using UnityEngine;
 using Utility;
 using Random = UnityEngine.Random;
@@ -11,8 +11,7 @@ namespace Base
 {
     public class DeckItemVisual : DeckPoolable
     {
-        [ReadOnly, SerializeField]
-        private bool isStatic;
+        [SerializeField, ReadOnly] private bool isStatic;
 
         [SerializeField] private Vector3 localEquipRotation;
         [SerializeField] private Vector3 localEquipPosition;
@@ -72,7 +71,6 @@ namespace Base
             _hasInitialized = true;
         }
 
-        [Button]
         private void CalculateSize()
         {
             if (collider != null)
@@ -99,7 +97,6 @@ namespace Base
         }
 
 #if UNITY_EDITOR
-        [Button]
         public void OnValidate()
         {
             rigidbody = GetComponent<Rigidbody>();
@@ -124,7 +121,7 @@ namespace Base
                     continue;
                 }
 
-                if (itemVisualComponent.GetInstanceID() == GetInstanceID())
+                if (itemVisualComponent.GetEntityId() == GetEntityId())
                 {
                     continue;
                 }

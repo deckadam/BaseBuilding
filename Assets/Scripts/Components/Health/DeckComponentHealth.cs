@@ -4,10 +4,10 @@ using System.Linq;
 using Base;
 using Data.Agent;
 using Instancing;
-using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using UI.Health;
 using UI.Stats;
+using Unity.Collections;
 using UnityEngine;
 using Utility;
 using Utility.MVC;
@@ -23,7 +23,7 @@ namespace Components.Health
 
         private DeckDataHealth _dataHealth;
 
-        [ReadOnly, SerializeField] private int _currentHealth;
+        [SerializeField,ReadOnly] private int _currentHealth;
 
         private DeckMVCController<DeckComponentHealth, IEnumerable<DeckComponentHealth>> _healthController;
         private DeckHealthBar _healthBar;

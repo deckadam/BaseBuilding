@@ -5,21 +5,23 @@ using Base;
 using GameManager.Data.GameSetting.Override;
 using Services.Building.Buildable.Data;
 using Services.Building.Buildable.Data.Parameter;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
+using Utility.Attribute;
 
 namespace Services.Building.Buildable
 {
     [CreateAssetMenu(menuName = "Deck/Data/Buildable/Deck Data Buildable", fileName = "Deck Data Buildable")]
     public class DeckBuildable : ScriptableObject
     {
-        [ValueDropdown("@Utility.Resource.DeckResourceLocator.GetAllCategories()")] [SerializeField] private DeckBuildableCategory category;
+        // [ValueDropdown("@Utility.Resource.DeckResourceLocator.GetAllCategories()")] 
+        [SerializeField] private DeckBuildableCategory category;
         [SerializeField] private DeckAgent agent;
         [SerializeField] private DeckItemVisual itemVisual;
         [SerializeField] private string visibleName;
         [SerializeField] private DeckBuildableSilhouette silhouetteData;
-        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
+        // [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
+        [SerializeReference] private List<DeckBuildableParameter> parameters;
 
         public DeckBuildableCategory Category => category;
         public DeckAgent Agent => agent;

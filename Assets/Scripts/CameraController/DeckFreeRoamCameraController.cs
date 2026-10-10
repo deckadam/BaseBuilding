@@ -1,5 +1,6 @@
-﻿using System.Threading;
-using Cinemachine;
+﻿using System;
+using System.Threading;
+
 using Cysharp.Threading.Tasks;
 using Data.Camera;
 using EventManager;
@@ -8,6 +9,7 @@ using Services.Building.Events;
 using Services.Camera;
 using Services.Map;
 using Systems.SystemInput.Events;
+using Unity.Cinemachine;
 using UnityEngine;
 using Utility;
 using Zenject;
@@ -18,8 +20,8 @@ namespace CameraController
     {
         private readonly Vector3 ViewPortMiddle = new(0.5f, 0.5f, 0);
         private DeckCameraParameters _cameraParameters;
-        private CinemachineVirtualCamera _vCam;
-        private CinemachineConfiner _confiner;
+        private CinemachineCamera _vCam;
+        private CinemachineConfiner3D _confiner;
         private Transform _cachedTransform;
 
         private Vector3 _center;
@@ -41,11 +43,11 @@ namespace CameraController
         public override void Initialize()
         {
             _cachedTransform = transform;
-            _confiner = GetComponent<CinemachineConfiner>();
-            _vCam = GetComponent<CinemachineVirtualCamera>();
+            _confiner = GetComponent<CinemachineConfiner3D>();
+            _vCam = GetComponent<CinemachineCamera>();
             _camera = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera();
 
-            _confiner.m_BoundingVolume = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().GetCameraCollider();
+            _confiner.BoundingVolume = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().GetCameraCollider();
             _targetHeight = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().transform.position.y;
             CalculateZoomRatio();
 

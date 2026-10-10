@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using Utility;
+using Utility.Attribute;
 using Zenject;
 
 namespace Instancing
@@ -40,13 +39,11 @@ namespace Instancing
 #if UNITY_EDITOR
 
         [DidReloadScripts]
-        [Button]
         private static void OnScriptsReloaded()
         {
             EditorInitialize();
         }
 
-        [Button]
         private void OnValidate()
         {
             EditorInitialize();
@@ -88,6 +85,7 @@ namespace Instancing
             {
                 return;
             }
+
             var instanceProvider = result[0];
             instanceProvider.agents.Clear();
             var agents = Resources.FindObjectsOfTypeAll(typeof(DeckAgent));
@@ -338,7 +336,7 @@ namespace Instancing
                 while (counter < count)
                 {
                     var uniqueId = uniqueIds[counter];
-                    var newInstance = CreateNewAgentInstance(prefabId,uniqueId);
+                    var newInstance = CreateNewAgentInstance(prefabId, uniqueId);
                     result[counter++] = newInstance;
                 }
             }

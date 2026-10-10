@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Services.Building.Buildable;
 using Services.Building.Buildable.Data.Parameter;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GameManager.Data.GameSetting.Override
@@ -11,7 +10,7 @@ namespace GameManager.Data.GameSetting.Override
     public struct DeckGameSettingBuildableOverride
     {
         [SerializeField] private DeckBuildable buildable;
-        [SerializeReference, TypeFilter("@Utility.Resource.DeckResourceLocator.GetAllParameterTypes()")] private List<DeckBuildableParameter> parameters;
+        [SerializeReference] private List<DeckBuildableParameter> parameters;
 
         public DeckBuildable Buildable => buildable;
         public List<DeckBuildableParameter> Parameters => parameters;

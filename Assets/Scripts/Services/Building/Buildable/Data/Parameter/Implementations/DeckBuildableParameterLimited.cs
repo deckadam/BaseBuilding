@@ -1,5 +1,5 @@
 using System;
-using Sirenix.OdinInspector;
+using Unity.Collections;
 using UnityEngine;
 
 namespace Services.Building.Buildable.Data.Parameter.Implementations
@@ -10,8 +10,7 @@ namespace Services.Building.Buildable.Data.Parameter.Implementations
         public override DeckBuildableParameterType ParameterType => DeckBuildableParameterType.Limited;
 
         [SerializeField] private int limit;
-
-        [ReadOnly, SerializeField] private int currentLimit;
+        [SerializeField, ReadOnly] private int currentLimit;
 
         protected override object GetValueInternal()
         {

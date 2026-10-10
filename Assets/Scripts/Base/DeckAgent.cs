@@ -9,10 +9,10 @@ using Services;
 using Services.Finder;
 using Services.ItemVisual;
 using Services.Map;
-using Sirenix.OdinInspector;
 using Systems.SystemSave;
 using Systems.SystemSave.Data;
 using UI.Stats;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 using Utility;
@@ -69,7 +69,6 @@ namespace Base
         }
 
 #if UNITY_EDITOR
-        [Button]
         public void OnValidate()
         {
             components = GetComponents<DeckComponent>();
@@ -93,7 +92,7 @@ namespace Base
                     continue;
                 }
 
-                if (agentComponent.GetInstanceID() == GetInstanceID())
+                if (agentComponent.GetEntityId() == GetEntityId())
                 {
                     continue;
                 }
@@ -199,7 +198,7 @@ namespace Base
                 Debug.LogError(deckDataAgent.GetType());
                 _allData.Add(deckDataAgent.GetType(), deckDataAgent);
             }
-            
+
             OnSpawned();
 
             AfterInitialize();

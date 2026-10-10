@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Base;
-using InGame.Agent.Chest;
 using Instancing;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
+using Utility;
 using Zenject;
 
 namespace Services.Finder
@@ -23,12 +21,6 @@ namespace Services.Finder
         private void Inject(DeckInstanceProvider instanceProvider)
         {
             _instanceProvider = instanceProvider;
-        }
-
-        [Button]
-        private void Test(int id)
-        {
-            Debug.LogError(GetAgent(id) );
         }
 
         public override void Initialize()
@@ -71,7 +63,7 @@ namespace Services.Finder
                 _itemVisualsWithPrefabId.Add(sample.PrefabId.Id, list);
             }
 
-            _itemVisualsWithPrefabId[sample.PrefabId.Id].AddRange(itemVisuals);
+            _itemVisualsWithPrefabId[sample.PrefabId.Id].UnionWith(itemVisuals);
         }
 
         public void RemoveItemVisual(DeckItemVisual itemVisual)
@@ -145,8 +137,8 @@ namespace Services.Finder
         {
             return _agentsWithUniqueId[uniqueId];
         }
-        
-        public T GetAgent<T>(int uniqueId) where T: DeckAgent
+
+        public T GetAgent<T>(int uniqueId) where T : DeckAgent
         {
             return _agentsWithUniqueId[uniqueId] as T;
         }

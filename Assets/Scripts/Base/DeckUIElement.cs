@@ -62,7 +62,7 @@ namespace Base
                     continue;
                 }
 
-                if (uiElement.GetInstanceID() == GetInstanceID())
+                if (uiElement.GetEntityId() == GetEntityId())
                 {
                     continue;
                 }
