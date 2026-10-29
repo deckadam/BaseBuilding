@@ -11,10 +11,10 @@ public class ApplyCorrections : Unity.Cinemachine.CinemachineExtension
         if (stage == Unity.Cinemachine.CinemachineCore.Stage.Finalize)
         {
             vcam.transform.position = state.PositionCorrection;
-            state.RawPosition = state.PositionCorrection;
-            state.PositionCorrection = Vector3.zero;
-            state.RawOrientation = state.OrientationCorrection;
-            state.OrientationCorrection = Quaternion.identity;
+            // state.RawPosition = state.PositionCorrection;
+            // state.PositionCorrection = state.PositionCorrection;
+            // state.RawOrientation = state.OrientationCorrection;
+            // state.OrientationCorrection = state.OrientationCorrection;
         }
     }
 }

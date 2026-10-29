@@ -23,7 +23,7 @@ namespace UI.Raid
             DeckEventManager.Register<DeckEventOnMainChestBuilt>(OnMainChestBuilt);
             DeckEventManager.Register<DeckEventOnMainChestDestroyed>(OnMainChestDestroyed);
 
-            startRaidButton.interactable = false;
+            // startRaidButton.interactable = false;
         }
 
         public override void DeInitialize()
@@ -38,26 +38,26 @@ namespace UI.Raid
         {
             _currentMainChest = obj.chest;
             _hasRaidTarget = true;
-            startRaidButton.interactable = true;
+            // startRaidButton.interactable = true;
         }
 
         private void OnMainChestDestroyed(DeckEventOnMainChestDestroyed obj)
         {
             _hasRaidTarget = false;
-            startRaidButton.interactable = false;
+            // startRaidButton.interactable = false;
             _currentMainChest = null;
         }
 
         private void OnRaidStarted(DeckEventOnRaidStarted obj)
         {
             _isRaidInProgress = true;
-            startRaidButton.interactable = false;
+            // startRaidButton.interactable = false;
         }
 
         private void OnRaidEnded(DeckEventOnRaidEnded obj)
         {
             _isRaidInProgress = false;
-            startRaidButton.interactable = _hasRaidTarget;
+            // startRaidButton.interactable = _hasRaidTarget;
         }
 
         public override async void AfterGameSessionInitialized()
@@ -73,10 +73,10 @@ namespace UI.Raid
 
         public void OnRaidStartClicked()
         {
-            if (!_hasRaidTarget)
-            {
-                return;
-            }
+            // if (!_hasRaidTarget)
+            // {
+                // return;
+            // }
 
             if (_isRaidInProgress)
             {

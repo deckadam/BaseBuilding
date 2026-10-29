@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5958929197684795123}
   - component: {fileID: 5958929197684794892}
+  - component: {fileID: 3774093058768966119}
   m_Layer: 0
   m_Name: Installer
   m_TagString: Untagged
@@ -48,7 +49,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d1f435960ab834498949505e82ca025, type: 2}
   - {fileID: 11400000, guid: 024c51ad03d84ca4eaff448350992d00, type: 2}
   - {fileID: 11400000, guid: ae9f148d60041934580ee920e6de3990, type: 2}
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 3774093058768966119}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -64,5 +66,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _parentNewObjectsUnderSceneContext: 0
-  _contractNames: []
+  _contractNames:
+  - MainScene
   _parentContractNames: []
+--- !u!114 &3774093058768966119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958929197684795121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91730e8bf82d478d949654c21e627e24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Data.Scene.DeckSceneBinder
+  brain: {fileID: 0}

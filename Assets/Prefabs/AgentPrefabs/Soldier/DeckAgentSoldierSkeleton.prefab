@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4361275764151054013}
   - component: {fileID: 2050337467971167272}
   - component: {fileID: 7960608074221257257}
+  - component: {fileID: 2915313440039821248}
   m_Layer: 0
   m_Name: DeckAgentSoldierSkeleton
   m_TagString: Untagged
@@ -69,6 +70,7 @@ MonoBehaviour:
   prefabId:
     _id: 44777459
   buildingData: {fileID: 11400000, guid: 3f5cf33b671f5954f8c67c7d12bf2858, type: 2}
+  agent: {fileID: 2915313440039821248}
 --- !u!114 &3556156121060120959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,3 +143,32 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2915313440039821248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148684047048518090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
+  m_Graph: {fileID: 3839245537405636650, guid: 1a8852de732a11a4fa90925a07218daa, type: 2}
+  m_BlackboardVariableOverridesList:
+  - rid: 2248246705832853723
+  m_OriginalGraph: {fileID: 0}
+  m_IsInitialised: 0
+  m_IsStarted: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 2248246705832853723
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 1
+          m_Value1: 0
+        Name: Self
+        m_Value: {fileID: 1148684047048518090}

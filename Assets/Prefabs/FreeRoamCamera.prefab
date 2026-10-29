@@ -55,7 +55,6 @@ GameObject:
   - component: {fileID: 8506323585614970749}
   - component: {fileID: 8506323585614970748}
   - component: {fileID: 8506323585614970747}
-  - component: {fileID: 8506323585614970750}
   - component: {fileID: 1432442068632658828}
   m_Layer: 0
   m_Name: FreeRoamCamera
@@ -143,18 +142,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26f16efee9b242ec9f6ec7b938d8f923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8506323585614970750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8506323585614970745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 699808d03f924cd0b46f66deebe20955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1432442068632658828

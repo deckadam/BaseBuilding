@@ -34,7 +34,7 @@ namespace Commands
                 _currentLootDuration += Time.deltaTime;
             }
 
-            DeckServiceProvider.GetService<DeckServiceRaid>().GetRaidController().OnChestLooted();
+            // DeckServiceProvider.GetService<DeckServiceRaid>().GetRaidController().OnChestLooted();
 
             return true;
         }

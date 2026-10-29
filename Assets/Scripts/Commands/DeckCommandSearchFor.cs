@@ -31,7 +31,6 @@ namespace Commands
 
             while (true)
             {
-                Debug.LogError("Searching");
                 await UniTask.NextFrame(token);
 
                 var searchedFor = finder.GetAgentsWithTag(DeckActionTag.Raider);

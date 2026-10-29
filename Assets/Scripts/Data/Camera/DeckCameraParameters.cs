@@ -9,6 +9,7 @@ namespace Data.Camera
         [SerializeField] private float cameraMovementSpeedMax;
         [SerializeField] private float minimumHeight;
         [SerializeField] private float maximumHeight;
+        [SerializeField] private float startingHeight;
         [SerializeField] private float zoomSpeed;
         [SerializeField] private float zoomMoveTowardsSpeed;
         [SerializeField] private float rotationSpeed;
@@ -19,6 +20,7 @@ namespace Data.Camera
         public float CameraMovementSpeedMax => cameraMovementSpeedMax;
         public float MinimumHeight => minimumHeight;
         public float MaximumHeight => maximumHeight;
+        public float StartingHeight => startingHeight;
         public float ZoomSpeed => zoomSpeed;
         public float ZoomMoveTowardsSpeed => zoomMoveTowardsSpeed;
         public float RotationSpeed => rotationSpeed;

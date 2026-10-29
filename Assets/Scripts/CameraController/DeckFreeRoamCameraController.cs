@@ -21,6 +21,7 @@ namespace CameraController
         private readonly Vector3 ViewPortMiddle = new(0.5f, 0.5f, 0);
         private DeckCameraParameters _cameraParameters;
         private CinemachineCamera _vCam;
+        private CinemachineBrain _brain;
         private CinemachineConfiner3D _confiner;
         private Transform _cachedTransform;
 
@@ -35,9 +36,10 @@ namespace CameraController
         private CancellationTokenSource _cancellationToken;
 
         [Inject]
-        private void Inject(DeckCameraParameters cameraParameters)
+        private void Inject(DeckCameraParameters cameraParameters,CinemachineBrain brain)
         {
             _cameraParameters = cameraParameters;
+            _brain = brain;
         }
 
         public override void Initialize()
@@ -48,7 +50,7 @@ namespace CameraController
             _camera = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera();
 
             _confiner.BoundingVolume = DeckServiceProvider.GetService<DeckServiceSession>().GetCurrentSession().GetCameraCollider();
-            _targetHeight = DeckServiceProvider.GetService<DeckServiceCamera>().GetCamera().transform.position.y;
+            _targetHeight = _cameraParameters.StartingHeight;
             CalculateZoomRatio();
 
             _groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -216,6 +218,8 @@ namespace CameraController
                 return;
             }
 
+            _cachedTransform.position = _brain.transform.position;
+            
             var movement = Vector3.zero;
 
             var forwardVector = Quaternion.Euler(0, _currentRotation, 0) * Vector3.forward;

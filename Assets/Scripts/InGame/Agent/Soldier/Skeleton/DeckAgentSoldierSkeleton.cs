@@ -1,4 +1,3 @@
-using Commands;
 using EventManager;
 using InGame.Agent.Raid;
 using Services.Raid.Events;
@@ -20,7 +19,7 @@ namespace InGame.Agent.Soldier.Skeleton
 
         private void OnRaidStarted(DeckEventOnRaidStarted obj)
         {
-            AddCommand(new DeckCommandSearchFor<DeckAgentRaider>(this, OnFound));
+            // AddCommand(new DeckCommandSearchFor<DeckAgentRaider>(this, OnFound));
         }
 
         private void OnFound(DeckAgentRaider raider)

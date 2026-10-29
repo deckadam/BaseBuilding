@@ -1,11 +1,13 @@
 ﻿using System;
 using Base;
+using Commands;
 using Components.Health;
 using Components.Inventory;
 using Components.ItemHolder;
 using Cysharp.Threading.Tasks;
 using Data.Agent;
 using UI.Notification;
+using UnityEngine;
 using Utility;
 
 namespace Components.DamageDealer
@@ -41,30 +43,40 @@ namespace Components.DamageDealer
                 return;
             }
 
-            if (!agent.TryGetDeckComponent<DeckComponentEquipmentManager>(out var equipmentManager))
+            //TODO: Handle equipments
+            
+            // if (!agent.TryGetDeckComponent<DeckComponentEquipmentManager>(out var equipmentManager))
+            // {
+                // return;
+            // }
+            // Debug.LogError("5");
+            //
+            // if (!agent.TryGetComponent<DeckComponentInventory>(out var inventoryComponent))
+            // {
+            //     return;
+            // }
+            // Debug.LogError("6");
+            //
+            // if (!inventoryComponent.TryGetItemWithTag(healthComponent.GetDamagingTags(), out var requiredItem))
+            // {
+            //     DeckEventNotificationRequested.Create("Can't damage this " + target.name).Send();
+            //     return;
+            // }
+            // Debug.LogError("7");
+
+            // equipmentManager.SetItemToHold(requiredItem);
+            // Debug.LogError("8");
+
+            var to = target.GetDeckComponent<DeckComponentHealth>();
+            if (to.IsDead)
             {
                 return;
             }
 
-            if (!agent.TryGetComponent<DeckComponentInventory>(out var inventoryComponent))
-            {
-                return;
-            }
+            OnAttackStart();
+            OnAttack();
 
-            if (!inventoryComponent.TryGetItemWithTag(healthComponent.GetDamagingTags(), out var requiredItem))
-            {
-                DeckEventNotificationRequested.Create("Can't damage this " + target.name).Send();
-                return;
-            }
-
-            equipmentManager.SetItemToHold(requiredItem);
-
-            // agent.AddCommand(new DeckCommandDealDamage(GetFinalDamageValue(),
-            // dataDamage.GetAttackRange(),
-            // this,
-            // healthComponent,
-            // continuous: true),
-            // true);
+            to.ReduceHealth(GetAgent(), GetFinalDamageValue(), true);
         }
 
         public void OnAttackStart()

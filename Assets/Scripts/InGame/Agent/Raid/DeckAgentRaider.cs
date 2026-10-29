@@ -1,6 +1,8 @@
 using System;
 using Base;
 using Commands;
+using Components.Movement;
+using Cysharp.Threading.Tasks;
 using Services;
 using Services.Map;
 using Services.Raid;
@@ -8,6 +10,7 @@ using Systems.SystemSave;
 using Unity.Collections;
 using UnityEngine;
 using Utility;
+using Random = UnityEngine.Random;
 
 namespace InGame.Agent.Raid
 {
@@ -24,16 +27,22 @@ namespace InGame.Agent.Raid
             SetState(DeckEnumRaiderState.NotInitialized);
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             _serviceRaid = DeckServiceProvider.GetService<DeckServiceRaid>();
             _serviceSession = DeckServiceProvider.GetService<DeckServiceSession>();
             _raidController = _serviceRaid.GetRaidController();
             _raidController.RegisterRaider(this);
+            //TODO: To Be Changed Later
+            await UniTask.NextFrame();
+            GetDeckComponent<DeckComponentMovement>().SetDestination(transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized * 2f);
+            await UniTask.WaitForSeconds(1f);
+            SetAgentReady();
         }
 
         public void EnterStateInitial()
         {
+            return;
             SetState(DeckEnumRaiderState.MoveTowardsChest);
             var chest = DeckServiceProvider.GetService<DeckServiceRaid>().GetMainChest();
             AddCommand(new DeckCommandMove(chest.GetPosition(), this).RegisterToOnCompleted(_raidController.OnRaiderReachedToChest));
@@ -41,6 +50,7 @@ namespace InGame.Agent.Raid
 
         public void EnterStateLootingChest(float startDuration = 0f)
         {
+            return;
             SetState(DeckEnumRaiderState.LootingChest);
             var gameSetting = _serviceSession.GetCurrentSession().GetGameSetting();
             AddCommand(new DeckCommandLootChest(_serviceRaid.GetMainChest(), this, gameSetting.TotalLootDuration - startDuration));
@@ -49,6 +59,7 @@ namespace InGame.Agent.Raid
 
         public void EnterStateGuardingLooter()
         {
+            return;
             SetState(DeckEnumRaiderState.GuardLooter);
             var guardingAgents = _raidController.GetGuardingAgents();
             var lootingAgent = _raidController.GetLootingRaider();
@@ -57,6 +68,7 @@ namespace InGame.Agent.Raid
 
         public void EnterStateRunAway()
         {
+            return;
             SetState(DeckEnumRaiderState.RunAway);
             var startingPoint = _serviceSession.GetCurrentSession().RaidStartPoint;
             AddCommand(new DeckCommandMove(startingPoint.GetPosition(), this).RegisterToOnCompleted(OnRunAwayFinished), true);
@@ -64,6 +76,7 @@ namespace InGame.Agent.Raid
 
         private void OnRunAwayFinished()
         {
+            return;
             SetState(DeckEnumRaiderState.Finished);
             _raidController.OnRaiderRanAway(this);
             RequestDestroy();
@@ -76,11 +89,13 @@ namespace InGame.Agent.Raid
 
         private void SetState(DeckEnumRaiderState state)
         {
+            return;
             currentRaiderState = state;
         }
 
         public void ForceState(DeckEnumRaiderState state, string currentStateSaveData)
         {
+            return;
             Initialize();
             switch (state)
             {

@@ -3,6 +3,7 @@ using GameManager.Data.GameSetting;
 using GameManager.Events;
 using InGame.Agent.Chest;
 using InGame.Agent.Chest.Events;
+using InGame.Agent.Raid;
 using Instancing;
 using Services.Raid.Events;
 using Utility;
@@ -45,11 +46,13 @@ namespace Services.Raid
 
         private void OnMainChestBuilt(DeckEventOnMainChestBuilt obj)
         {
+            return;
             _mainChest = obj.chest;
         }
 
         private void OnMainChestDestroyed(DeckEventOnMainChestDestroyed obj)
         {
+            return;
             _mainChest = null;
         }
 

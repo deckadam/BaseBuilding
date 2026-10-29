@@ -16,6 +16,7 @@ MonoBehaviour:
   cameraMovementSpeedMax: 50
   minimumHeight: 8
   maximumHeight: 40
+  startingHeight: 20
   zoomSpeed: 3
   zoomMoveTowardsSpeed: 1.2
   rotationSpeed: 20

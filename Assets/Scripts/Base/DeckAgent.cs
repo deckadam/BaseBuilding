@@ -35,6 +35,7 @@ namespace Base
         [SerializeField] private DeckId uniqueId;
         [SerializeField] private DeckId prefabId;
 
+        public bool IsAgentReady { get; private set; }
         public DeckId UniqueId => uniqueId;
         public DeckComponent[] Components => components;
         public bool WillSave => willSave;
@@ -195,7 +196,6 @@ namespace Base
             _allData = new Dictionary<Type, DeckDataAgent>();
             foreach (var deckDataAgent in allData)
             {
-                Debug.LogError(deckDataAgent.GetType());
                 _allData.Add(deckDataAgent.GetType(), deckDataAgent);
             }
 
@@ -437,7 +437,6 @@ namespace Base
 
         public T GetAgentData<T>() where T : DeckDataAgent
         {
-            Debug.LogError(typeof(T));
             return _allData[typeof(T)] as T;
         }
 
@@ -499,6 +498,16 @@ namespace Base
         public void SetScale(IDeckTranslatable scaler)
         {
             SelfTransform.localScale = scaler.GetScale();
+        }
+
+        public void SetAgentReady()
+        {
+            IsAgentReady = true;
+        }
+
+        public void SetAgentUnready()
+        {
+            IsAgentReady = false;
         }
     }
 }
