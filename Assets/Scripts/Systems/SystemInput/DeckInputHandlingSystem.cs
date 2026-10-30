@@ -80,6 +80,15 @@ namespace Systems.SystemInput
             CheckForMiddleMouseButtonClick();
             CheckForCameraRotation();
             CheckForCameraRotationReset();
+            CheckForWaypointPlacement();
+        }
+
+        private void CheckForWaypointPlacement()
+        {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                DeckEventOnWaypointPlacementRequested.Create(DeckServiceProvider.GetService<DeckServiceCamera>().GetCursorWorldPosition()).Send();
+            }
         }
 
         private void CheckForCameraRotationReset()
@@ -89,7 +98,6 @@ namespace Systems.SystemInput
                 DeckEventOnCameraRotationResetRequested.Create().Send();
             }
         }
-
 
         private bool _rotating;
 

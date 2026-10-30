@@ -145,9 +145,9 @@ namespace Base
 
         public T GetDeckComponent<T>() where T : class
         {
-            for (var i = 0; i < components.Length; i++)
+            foreach (var t in components)
             {
-                if (components[i] is T component)
+                if (t is T component)
                 {
                     return component;
                 }

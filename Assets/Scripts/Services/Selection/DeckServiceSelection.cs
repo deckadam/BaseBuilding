@@ -1,6 +1,7 @@
 ﻿using Base;
 using Commands;
 using EventManager;
+using General;
 using Services.Selection.Events;
 using Systems.SystemInput.Events;
 using Utility;
@@ -20,6 +21,7 @@ namespace Services.Selection
             _hotKeySelectionHandler.Initialize();
             DeckEventManager.Register<DeckEventOnCoreAgentDeath>(OnSelectableDeath);
             DeckEventManager.Register<DeckEventOnCoreAgentCreated>(OnCoreAgentCreated);
+            DeckEventManager.Register<DeckEventOnWaypointPlacementRequested>(OnWaypointPlacementRequested);
         }
 
         protected override void DeInitialize()
@@ -27,6 +29,16 @@ namespace Services.Selection
             _hotKeySelectionHandler.DeInitialize();
             DeckEventManager.Unregister<DeckEventOnCoreAgentDeath>(OnSelectableDeath);
             DeckEventManager.Unregister<DeckEventOnCoreAgentCreated>(OnCoreAgentCreated);
+            DeckEventManager.Unregister<DeckEventOnWaypointPlacementRequested>(OnWaypointPlacementRequested);
+        }
+
+        private void OnWaypointPlacementRequested(DeckEventOnWaypointPlacementRequested obj)
+        {
+            if (currentSelection != null)
+            {
+                var patrollable = currentSelection.GetComponent<IPatrollable>();
+                patrollable.AddPatrolPoint(obj.position);
+            }
         }
 
         public void OnSelection(DeckAgent selection)
@@ -45,7 +57,7 @@ namespace Services.Selection
         {
             if (possession == null)
             {
-                DeckLogger.Service("On posession on null object");
+                DeckLogger.Service("On possession on null object");
                 return;
             }
 

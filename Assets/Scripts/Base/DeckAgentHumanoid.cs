@@ -8,13 +8,15 @@ using Services.Building.Buildable;
 using Services.ItemVisual;
 using Unity.Behavior;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Base
 {
     public class DeckAgentHumanoid : DeckAgent
     {
+        [SerializeField] protected BehaviorGraphAgent behaviourAgent;
         [SerializeField] private DeckBuildable buildingData;
-        [SerializeField] private BehaviorGraphAgent agent;
+
         public Action<DeckAgentHumanoid> OnDeath;
 
         public void InitializeHumanoid()
@@ -27,12 +29,12 @@ namespace Base
             itemVisualInstance.transform.localPosition = Vector3.zero;
             itemVisualInstance.transform.localRotation = Quaternion.identity;
 
-            if (agent == null)
+            if (behaviourAgent == null)
             {
-                agent = GetComponent<BehaviorGraphAgent>();
+                behaviourAgent = GetComponent<BehaviorGraphAgent>();
             }
 
-            agent.SetVariableValue("SelfAnimator", GetComponentInChildren<Animator>());
+            behaviourAgent.SetVariableValue("SelfAnimator", GetComponentInChildren<Animator>());
         }
 
         public void AddCommand(DeckCommand command, bool isInterruptingCommand = false)

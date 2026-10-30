@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -8007485740852387135}
   - component: {fileID: 5513616443761142661}
   - component: {fileID: 8017151189786081761}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DeckAgentRaider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6d14e0233c3da4a489a5c842ebf616bd, type: 2}
   - {fileID: 11400000, guid: dc6023562db55b8459df10e67dddb333, type: 2}
   - {fileID: 11400000, guid: 9a4f9225f0a21b34bbf0c57ca0b01ed6, type: 2}
-  tags: 64000000
+  tags: 64000000i
   components:
   - {fileID: 438014476637800885}
   - {fileID: 5840971329052955599}
@@ -70,6 +70,7 @@ MonoBehaviour:
   prefabId:
     _id: 56004177
   buildingData: {fileID: 0}
+  agent: {fileID: 0}
   currentRaiderState: 0
 --- !u!114 &438014476637800885
 MonoBehaviour:
@@ -177,7 +178,7 @@ GameObject:
   - component: {fileID: 614917265942244848}
   - component: {fileID: 3167201259339973328}
   - component: {fileID: 547753763108404299}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,6 +225,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -245,9 +251,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &547753763108404299
 CapsuleCollider:

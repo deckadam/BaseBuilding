@@ -10,7 +10,7 @@ namespace Utility.Animators
         public void OnAttack()
         {
             var agent = GetComponentInParent<DeckAgent>();
-            agent.GetComponent<BehaviorGraphAgent>().GetVariable("Target", out BlackboardVariable<GameObject> target);
+            agent.GetComponent<BehaviorGraphAgent>().GetVariable("Target", out BlackboardVariable<DeckAgent> target);
             agent.GetDeckComponent<DeckComponentDamageDealer>().DealDamage(target.Value.GetComponent<DeckAgent>());
         }
     }

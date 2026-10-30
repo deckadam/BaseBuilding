@@ -10,6 +10,7 @@ using UnityEngine;
 public partial class HasTargetCondition : Condition
 {
     [SerializeReference] public BlackboardVariable<GameObject> Target;
+    [SerializeReference] public BlackboardVariable<float> Distance;
 
     public override bool IsTrue()
     {

@@ -1,11 +1,14 @@
+using System.Collections.Generic;
 using EventManager;
+using General;
 using InGame.Agent.Raid;
 using Services.Raid.Events;
+using Unity.Behavior;
 using UnityEngine;
 
 namespace InGame.Agent.Soldier.Skeleton
 {
-    public class DeckAgentSoldierSkeleton : DeckAgentSoldierBasic
+    public class DeckAgentSoldierSkeleton : DeckAgentSoldierBasic,IPatrollable
     {
         protected override void InternalHumanoidSpawnRequested()
         {
@@ -25,6 +28,12 @@ namespace InGame.Agent.Soldier.Skeleton
         private void OnFound(DeckAgentRaider raider)
         {
             Debug.LogError("Agent found", raider.gameObject);
+        }
+
+        public void AddPatrolPoint(Vector3 point)
+        {
+            behaviourAgent.GetVariable("PatrolPoints",out BlackboardVariable<List<Vector3>> points);
+            points.Value.Add(point);
         }
     }
 }
