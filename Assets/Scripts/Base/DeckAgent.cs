@@ -208,7 +208,7 @@ namespace Base
         {
         }
 
-        public override void OnSpawned()
+        public sealed override void OnSpawned()
         {
             if (_isSpawned)
             {
@@ -233,7 +233,11 @@ namespace Base
             }
 
             DeckServiceProvider.GetService<DeckServiceFinder>().RegisterAgent(this);
-            AfterSpawned();
+            InternalOnSpawned();
+        }
+
+        protected virtual void InternalOnSpawned()
+        {
         }
 
         private void DeInitialize()
@@ -388,10 +392,6 @@ namespace Base
         }
 
         protected virtual void LoadAdditionalData(string data)
-        {
-        }
-
-        protected virtual void AfterSpawned()
         {
         }
 

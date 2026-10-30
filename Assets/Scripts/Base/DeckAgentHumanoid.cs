@@ -68,7 +68,7 @@ namespace Base
             OnDeath?.Invoke(this);
         }
 
-        protected sealed override void AfterSpawned()
+        protected sealed override void InternalOnSpawned()
         {
             InternalHumanoidSpawnRequested();
         }

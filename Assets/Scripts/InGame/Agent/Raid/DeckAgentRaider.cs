@@ -3,6 +3,7 @@ using Base;
 using Commands;
 using Components.Movement;
 using Cysharp.Threading.Tasks;
+using InGame.Agent.Raid.Event;
 using Services;
 using Services.Map;
 using Services.Raid;
@@ -38,6 +39,12 @@ namespace InGame.Agent.Raid
             GetDeckComponent<DeckComponentMovement>().SetDestination(transform.position + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized * 2f);
             await UniTask.WaitForSeconds(1f);
             SetAgentReady();
+        }
+
+        protected override void OnAgentDestroyed()
+        {
+            Debug.LogError("Death requested");
+            DeckEventOnRaiderDeath.Create(this).Send();
         }
 
         public void EnterStateInitial()
